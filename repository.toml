@@ -1,0 +1,37 @@
+[repository]
+name = "lunasites"
+managed_by_uv = false
+changelog = "CHANGELOG.md"
+version = "version.txt"
+compose = "docker-compose.yml"
+
+[repository.towncrier]
+section = "Project"
+settings = "towncrier.toml"
+
+[backend]
+path = "backend"
+
+[backend.package]
+name = "lunasites"
+path = "backend"
+changelog = "backend/CHANGELOG.md"
+towncrier_settings = "backend/pyproject.toml"
+base_package = "Products.CMFPlone"
+publish = false
+
+[frontend]
+path = "frontend"
+
+[frontend.package]
+name = "volto-lunasites"
+path = "frontend/packages/volto-lunasites"
+changelog = "frontend/packages/volto-lunasites/CHANGELOG.md"
+towncrier_settings = "frontend/packages/volto-lunasites/towncrier.toml"
+base_package = "@plone/volto"
+publish = false
+
+[cookieplone]
+template = "project"
+template_version = "ed4fa08f29fbca564b8871163f66a67ed5f4acf4"
+generated_date = "2025-06-06 15:13:27"
