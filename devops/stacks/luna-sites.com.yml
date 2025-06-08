@@ -121,7 +121,7 @@ services:
     image: ghcr.io/luna-sites/lunasites-frontend:${STACK_PARAM:-latest}
     environment:
       RAZZLE_INTERNAL_API_PATH: http://backend:8080/Plone
-      RAZZLE_API_PATH: https:/luna-stes.com
+      RAZZLE_API_PATH: https:/luna-sites.com
     depends_on:
       - backend
     networks:
