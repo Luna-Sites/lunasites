@@ -8,11 +8,10 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME_PREFIX: ghcr.io//Luna-Sites/lunasites
+  IMAGE_NAME_PREFIX: ghcr.io/luna-stes/lunasites
   IMAGE_NAME_SUFFIX: varnish
 
 jobs:
-
   release:
     runs-on: ubuntu-latest
     permissions:
@@ -20,7 +19,6 @@ jobs:
       packages: write
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -32,8 +30,7 @@ jobs:
             ${{ env.IMAGE_NAME_PREFIX }}-${{ env.IMAGE_NAME_SUFFIX }}
           labels: |
             org.label-schema.docker.cmd=docker run -d -p 80:80 ${{ env.IMAGE_NAME_PREFIX }}-${{ env.IMAGE_NAME_SUFFIX }}:latest
-          flavor:
-            latest=false
+          flavor: latest=false
           tags: |
             type=ref,event=branch
             type=sha

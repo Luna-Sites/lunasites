@@ -22,8 +22,8 @@ make create-site
 
 ## Contribute
 
-- [Issue tracker](https://github.com//Luna-Sites/lunasites/issues)
-- [Source code](https://github.com//Luna-Sites/lunasites/)
+- [Issue tracker](https://github.com/luna-stes/lunasites/issues)
+- [Source code](https://github.com/luna-stes/lunasites/)
 
 ### Prerequisites ✅
 

@@ -3,8 +3,8 @@
 A new project using Plone 6.
 
 [![npm](https://img.shields.io/npm/v/volto-lunasites)](https://www.npmjs.com/package/volto-lunasites)
-[![](https://img.shields.io/badge/-Storybook-ff4785?logo=Storybook&logoColor=white&style=flat-square)](https:///Luna-Sites.github.io/volto-lunasites/)
-[![CI](https://github.com//Luna-Sites/lunasites/actions/workflows/main.yml/badge.svg)](https://github.com//Luna-Sites/lunasites/actions/workflows/main.yml)
+[![](https://img.shields.io/badge/-Storybook-ff4785?logo=Storybook&logoColor=white&style=flat-square)](https://luna-stes.github.io/volto-lunasites/)
+[![CI](https://github.com/luna-stes/lunasites/actions/workflows/main.yml/badge.svg)](https://github.com/luna-stes/lunasites/actions/workflows/main.yml)
 
 
 ## Features
