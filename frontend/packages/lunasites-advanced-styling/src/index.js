@@ -53,7 +53,7 @@ export const applyStyleWrapperToBlock = (blockConfig) => {
 
 const applyConfig = (config) => {
   const { settings } = config;
-  
+
   // Configure which blocks can use advanced styling (same as original volto-block-style)
   const whitelist = settings.pluggableStylesBlocksWhitelist;
   const blacklist = settings.pluggableStylesBlocksBlacklist;
@@ -65,11 +65,11 @@ const applyConfig = (config) => {
       (blacklist ? !blacklist.includes(name) : true) &&
       (whitelist ? whitelist.includes(name) : true),
   );
-  
+
   okBlocks.forEach((name) => {
     // Apply style wrapper to each block (wraps edit and view components)
     blocksConfig[name] = applyStyleWrapperToBlock(blocksConfig[name]);
-    
+
     // Apply the advanced styling schemaEnhancer to each block
     const existingEnhancer = blocksConfig[name].schemaEnhancer;
     blocksConfig[name] = {
@@ -83,7 +83,6 @@ const applyConfig = (config) => {
   // Add blocks that natively integrate with block styling
   config.settings.integratesBlockStyles = [
     ...(config.settings.integratesBlockStyles || []),
-    'slate',
     'text',
     'image',
     'video',

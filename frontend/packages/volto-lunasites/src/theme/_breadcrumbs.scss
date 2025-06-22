@@ -1,0 +1,44 @@
+body.contenttype-plone-site,
+body.contenttype-lrf,
+body.view-contentsview {
+  #main .breadcrumbs {
+    display: none;
+  }
+}
+
+#main .breadcrumbs {
+  padding: 20px 0;
+  background-color: $lightgrey;
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+
+    .divider {
+      transform: rotate(90deg);
+
+      &::before {
+        color: $black;
+        content: '\25B2';
+        font-size: 7px;
+      }
+    }
+
+    .home {
+      margin-right: 0.5em;
+
+      svg {
+        margin-bottom: -4px;
+      }
+    }
+
+    .section {
+      margin: 0 7px 0 4px;
+      @include marginal-description();
+
+      &.active {
+        font-weight: 700;
+      }
+    }
+  }
+}

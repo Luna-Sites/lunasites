@@ -1,0 +1,31 @@
+#page-document .block.separator {
+  // cancel the original padding from the add-on
+  &:not(.inner):not([role='presentation']) {
+    padding: 0 !important;
+  }
+
+  &.has--align--center,
+  &.inner {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  @include vertical-space-separator();
+}
+
+#page-edit .block-editor-separator {
+  &.has--backgroundColor--grey {
+    background-color: $lightgrey;
+  }
+  .block.separator {
+    &.inner {
+      margin-right: auto;
+      margin-left: auto;
+
+      .block.separator {
+        margin-right: auto;
+        margin-left: auto;
+      }
+    }
+  }
+}

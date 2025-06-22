@@ -1,22 +1,27 @@
 {
   "name": "volto-lunasites",
-  "version": "1.0.0-alpha.0",
-  "description": "A new project using Plone 6.",
+  "version": "5.0.2",
+  "description": "Volto Light Theme by kitconcept",
   "main": "src/index.js",
-  "addons": [],
+  "types": "src/types/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kitconcept/volto-light-theme.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kitconcept/volto-light-theme/issues"
+  },
+  "homepage": "https://github.com/kitconcept/volto-light-theme#readme",
+  "author": "kitconcept, GmbH",
   "license": "MIT",
   "keywords": [
     "volto-addon",
     "volto",
     "plone",
-    "react"
+    "react",
+    "light-theme",
+    "theme"
   ],
-  "author": "LunaSites",
-  "homepage": "https://github.com/luna-sites/lunasites#readme",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:/Luna-Sites/lunasites"
-  },
   "publishConfig": {
     "access": "public"
   },
@@ -25,16 +30,24 @@
     "dry-release": "release-it --dry-run",
     "release": "release-it",
     "release-major-alpha": "release-it major --preRelease=alpha",
-    "release-alpha": "release-it --preRelease=alpha"
-  },
-  "addons": [],
-  "dependencies": {},
-  "peerDependencies": {
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "release-alpha": "release-it --preRelease=alpha",
+    "release-rc": "release-it --preRelease=rc"
   },
   "devDependencies": {
-    "@plone/scripts": "^3.6.1",
-    "release-it": "^17.1.1"
+    "@plone/scripts": "^3.6.2",
+    "release-it": "^17.7.0"
+  },
+  "dependencies": {
+    "@plone/components": "workspace:*"
+  },
+  "peerDependencies": {
+    "@eeacms/volto-accordion-block": "^10.4.6",
+    "@kitconcept/volto-button-block": "^3.0.2",
+    "@kitconcept/volto-dsgvo-banner": "^2.3.2",
+    "@kitconcept/volto-heading-block": "^2.4.0",
+    "@kitconcept/volto-highlight-block": "^4.0.0",
+    "@kitconcept/volto-introduction-block": "^1.0.0",
+    "@kitconcept/volto-separator-block": "^4.1.2",
+    "@kitconcept/volto-slider-block": "^6.3.1"
   }
 }

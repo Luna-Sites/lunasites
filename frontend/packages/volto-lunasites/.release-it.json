@@ -10,7 +10,7 @@
       "python3 -c 'import json; data = json.load(open(\"../../package.json\")); data[\"version\"] = \"${version}\"; json.dump(data, open(\"../../package.json\", \"w\"), indent=2)'",
       "git add ../../CHANGELOG.md ../../package.json"
     ],
-    "after:release": "rm .changelog.draft README.md"
+    "after:release": "rm .changelog.draft"
   },
   "npm": {
     "publish": false

@@ -95,7 +95,7 @@ export function getStyle(name) {
 
 const StyleWrapperView = (props) => {
   const { styleData = {}, data = {}, mode = 'view' } = props;
-  
+
   // Debug logging
   if (mode === 'edit') {
     console.log('StyleWrapperView edit mode - styleData:', styleData);
@@ -187,7 +187,9 @@ const StyleWrapperView = (props) => {
 
   const ViewComponentWrapper = style?.viewComponent;
   const StyleWrapperRendered = styled ? (
-    nativeIntegration && !style_name?.includes('content-box') && mode !== 'edit' ? (
+    nativeIntegration &&
+    !style_name?.includes('content-box') &&
+    mode !== 'edit' ? (
       children
     ) : (
       <div {...attrs} ref={props.setRef}>
@@ -217,7 +219,15 @@ const StyleWrapperView = (props) => {
     console.log('StyleWrapperView - nativeIntegration:', nativeIntegration);
     console.log('StyleWrapperView - containerType:', containerType);
     console.log('StyleWrapperView - attrs:', attrs);
-    console.log('StyleWrapperView - will render wrapper div:', styled && !(nativeIntegration && !style_name?.includes('content-box') && mode !== 'edit'));
+    console.log(
+      'StyleWrapperView - will render wrapper div:',
+      styled &&
+        !(
+          nativeIntegration &&
+          !style_name?.includes('content-box') &&
+          mode !== 'edit'
+        ),
+    );
   }
 
   return useAsPageHeader ? (
