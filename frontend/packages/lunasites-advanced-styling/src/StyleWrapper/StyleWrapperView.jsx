@@ -1,14 +1,10 @@
 import React from 'react';
-import { createPortal } from 'react-dom';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import { BodyClass } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
-import { withCachedImages } from 'lunasites-advanced-styling/hocs';
-import { getFieldURL } from 'lunasites-advanced-styling/helpers';
-import './stretchStyleDefaultView.css';
-import './stretchStyleWideView.css';
-import './stretchStyleEdit.css';
+import { withCachedImages } from '../hocs';
+import { getFieldURL } from '../helpers';
 
 const getLineHeight = (fontSize) => {
   switch (fontSize) {
@@ -46,21 +42,7 @@ const h2rgb = (hex) => {
   return `${R}, ${G}, ${B},`;
 };
 
-function IsomorphicPortal({ children }) {
-  const [isClient, setIsClient] = React.useState(false);
-  const [target, setTarget] = React.useState(null);
-
-  React.useEffect(() => {
-    setIsClient(true);
-    setTarget(document.getElementById('page-header'));
-  }, []);
-
-  // Dacă nu suntem încă pe client sau nu avem target, redă direct children
-  if (!isClient || !target) return children;
-
-  // Altfel, portal modern
-  return createPortal(children, target);
-}
+// Removed IsomorphicPortal - no portal needed
 
 export function getInlineStyles(data, props = {}) {
   return {
@@ -113,6 +95,13 @@ export function getStyle(name) {
 
 const StyleWrapperView = (props) => {
   const { styleData = {}, data = {}, mode = 'view' } = props;
+  
+  // Debug logging
+  if (mode === 'edit') {
+    console.log('StyleWrapperView edit mode - styleData:', styleData);
+    console.log('StyleWrapperView edit mode - data:', data);
+    console.log('StyleWrapperView edit mode - props:', props);
+  }
   const {
     style_name,
     align,
@@ -146,6 +135,13 @@ const StyleWrapperView = (props) => {
     customId ||
     stretch;
 
+  // Debug styling calculation
+  if (mode === 'edit') {
+    console.log('StyleWrapperView - inlineStyles:', inlineStyles);
+    console.log('StyleWrapperView - styled:', styled);
+    console.log('StyleWrapperView - style:', style);
+  }
+
   const attrs = {
     style: inlineStyles,
     className: cx(
@@ -175,7 +171,6 @@ const StyleWrapperView = (props) => {
   };
 
   const nativeIntegration =
-    mode === 'view' &&
     config.settings.integratesBlockStyles.includes(containerType);
 
   const children = nativeIntegration
@@ -192,7 +187,7 @@ const StyleWrapperView = (props) => {
 
   const ViewComponentWrapper = style?.viewComponent;
   const StyleWrapperRendered = styled ? (
-    nativeIntegration && !style_name?.includes('content-box') ? (
+    nativeIntegration && !style_name?.includes('content-box') && mode !== 'edit' ? (
       children
     ) : (
       <div {...attrs} ref={props.setRef}>
@@ -217,10 +212,18 @@ const StyleWrapperView = (props) => {
     children
   );
 
+  // Debug final render decision
+  if (mode === 'edit') {
+    console.log('StyleWrapperView - nativeIntegration:', nativeIntegration);
+    console.log('StyleWrapperView - containerType:', containerType);
+    console.log('StyleWrapperView - attrs:', attrs);
+    console.log('StyleWrapperView - will render wrapper div:', styled && !(nativeIntegration && !style_name?.includes('content-box') && mode !== 'edit'));
+  }
+
   return useAsPageHeader ? (
     <React.Fragment>
       <BodyClass className="custom-page-header" />
-      <IsomorphicPortal>{StyleWrapperRendered}</IsomorphicPortal>
+      {StyleWrapperRendered}
     </React.Fragment>
   ) : (
     StyleWrapperRendered

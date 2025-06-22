@@ -1,12 +1,14 @@
 import React from 'react';
+import { composeSchema } from '@plone/volto/helpers';
+import { addAdvancedStyling } from './schemaEnhancer';
 import {
   BlockStyleWrapperEdit,
   BlockStyleWrapperView,
 } from './BlockStyleWrapper';
+
 import StyleSelectWidget from './Widgets/StyleSelect';
 import AlignWidget from './Widgets/Align';
 import StretchWidget from './Widgets/Stretch';
-
 import TextAlignWidget from './Widgets/TextAlign';
 import SliderWidget from './Widgets/Slider';
 import SizeWidget from './Widgets/Size';
@@ -16,7 +18,7 @@ import QuadSizeWidget from './Widgets/QuadSize';
 import './styles.less';
 
 /**
- * Given a block's config object, it wrapps the view and edit in style wrappers
+ * Given a block's config object, it wraps the view and edit in style wrappers
  */
 export const applyStyleWrapperToBlock = (blockConfig) => {
   const BaseEditComponent = blockConfig.edit;
@@ -51,44 +53,67 @@ export const applyStyleWrapperToBlock = (blockConfig) => {
 
 const applyConfig = (config) => {
   const { settings } = config;
+  
+  // Configure which blocks can use advanced styling (same as original volto-block-style)
   const whitelist = settings.pluggableStylesBlocksWhitelist;
   const blacklist = settings.pluggableStylesBlocksBlacklist;
   const { blocksConfig } = config.blocks;
 
+  // Apply advanced styling to eligible blocks
   const okBlocks = Object.keys(blocksConfig).filter(
     (name) =>
       (blacklist ? !blacklist.includes(name) : true) &&
       (whitelist ? whitelist.includes(name) : true),
   );
+  
   okBlocks.forEach((name) => {
+    // Apply style wrapper to each block (wraps edit and view components)
     blocksConfig[name] = applyStyleWrapperToBlock(blocksConfig[name]);
+    
+    // Apply the advanced styling schemaEnhancer to each block
+    const existingEnhancer = blocksConfig[name].schemaEnhancer;
+    blocksConfig[name] = {
+      ...blocksConfig[name],
+      schemaEnhancer: existingEnhancer
+        ? composeSchema(existingEnhancer, addAdvancedStyling)
+        : addAdvancedStyling,
+    };
   });
 
+  // Add blocks that natively integrate with block styling
   config.settings.integratesBlockStyles = [
     ...(config.settings.integratesBlockStyles || []),
     'slate',
+    'text',
+    'image',
+    'video',
+    'html',
+    'table',
+    'listing',
+    'description',
+    'title',
+    'toc',
+    'search',
+    'maps',
+    'teaser',
   ];
 
+  // Register all styling widgets (same as original volto-block-style)
   config.widgets.widget.style_select = StyleSelectWidget;
-  config.widgets.widget.style_align = AlignWidget; // avoid conflict for now
-  config.widgets.widget.style_stretch = StretchWidget; // Make stretch widget
-  config.widgets.widget.style_text_align = TextAlignWidget; // avoid conflict for now
-  config.widgets.widget.style_size = SizeWidget; // avoid conflict for now
+  config.widgets.widget.style_align = AlignWidget;
+  config.widgets.widget.style_stretch = StretchWidget;
+  config.widgets.widget.style_text_align = TextAlignWidget;
+  config.widgets.widget.style_size = SizeWidget;
   config.widgets.widget.style_simple_color = SimpleColorPicker;
   config.widgets.widget.slider = SliderWidget;
   config.widgets.widget.quad_size = QuadSizeWidget;
 
-  // types of blocks that natively integrate with the volto-block-style and
-  // allow passing the style as a prop;
-  config.settings.integratesBlockStyles = [
-    ...(config.settings.integratesBlockStyles || []),
-  ];
-
-  // Restrict block settings to Layout
+  // Restrict block settings to Layout (same as original)
   if (config.settings.layoutOnlyBlockStyles === undefined) {
     config.settings.layoutOnlyBlockStyles = false;
   }
 
+  // Set available colors (same as original volto-block-style)
   config.settings.available_colors = [
     '#bbdbec',
     '#9dc6d4',
