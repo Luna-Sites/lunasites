@@ -12,9 +12,11 @@ const addons = [
   '@kitconcept/volto-slider-block',
   '@kitconcept/volto-light-theme',
   'volto-lunasites',
+  'lunasites-advanced-styling',
 ];
 
 const theme = '@kitconcept/volto-light-theme';
+
 module.exports = {
   addons,
   theme,

@@ -47,7 +47,8 @@
     "@kitconcept/volto-introduction-block": "*",
     "@kitconcept/volto-logos-block": "*",
     "@kitconcept/volto-separator-block": "*",
-    "@kitconcept/volto-slider-block": "*"
+    "@kitconcept/volto-slider-block": "*",
+    "lunasites-advanced-styling": "workspace:*"
   },
   "devDependencies": {
     "mrs-developer": "^2.2.0"
