@@ -157,35 +157,7 @@ External link removal for all the blocks.
 
 // Content Layout Styling
 #page-document .blocks-group-wrapper {
-  & > h2,
-  & > h3,
-  & > h4,
-  & > h5,
-  & > h6,
-  & > ul,
-  & > ol,
-  & > li,
-  & > p,
-  & > span,
-  & > blockquote,
-  & > .block.image.align.left.medium,
-  & > .block.image.align.left.small,
-  & > .block.image.align.right.medium,
-  & > .block.video.align.left,
-  & > .block.video.align.right,
-  & > .styled-slate,
-  & > .block.maps.align.left,
-  & > .block.maps.align.right,
-  & > .block.image.align.right.small,
-  & > .block.video.align.center .video-inner,
-  & > .block.maps.align.center .maps-inner,
-  .block.image.align.center figure,
-  .event-details,
-  .download-event,
-  .block.separator.has--align--left .line,
-  .block.separator.has--align--center .line,
-  & > pre,
-  & > .block.code {
+  & > * {
     @include narrow-container-width();
     // Why was this for? Removing for now (Victor: 2023-07-06)
     // @include adjustMarginsToContainer($narrow-container-width + 2 * 36px);
