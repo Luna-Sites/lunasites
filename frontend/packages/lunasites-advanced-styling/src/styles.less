@@ -176,6 +176,143 @@
     top: 0 !important;
     transform: translateY(45%);
   }
+  
+  // Fixed height modal with scroll
+  .ui.modal {
+    &[style*="height: calc"] {
+      display: flex !important;
+      flex-direction: column !important;
+      
+      .header {
+        flex-shrink: 0 !important;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 0 !important;
+      }
+      
+      .content {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        padding: 20px !important;
+        max-height: none !important;
+      }
+    }
+  }
+  
+  .color-picker-panel {
+    position: fixed !important;
+    z-index: 10000 !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 700px !important;
+    max-width: 85vw !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    background: white !important;
+    border: 2px solid #333 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25) !important;
+    padding: 25px !important;
+    
+    .quick-colors {
+      margin-bottom: 20px;
+      
+      button {
+        min-width: 100px;
+        height: 45px;
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+        border: 2px solid rgba(255,255,255,0.3) !important;
+        border-radius: 25px !important;
+        margin: 5px;
+        
+        &:hover {
+          border: 2px solid rgba(255,255,255,0.8) !important;
+          transform: scale(1.05);
+        }
+      }
+    }
+    
+    .custom-colors {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 20px;
+      
+      button {
+        width: 35px;
+        height: 35px;
+        border: 2px solid rgba(0,0,0,0.1) !important;
+        border-radius: 50%;
+        
+        &:hover {
+          border: 2px solid rgba(0,0,0,0.4) !important;
+          transform: scale(1.1);
+        }
+      }
+    }
+    
+    h4 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+  }
+  
+  .wrapper {
+    position: relative;
+  }
+}
+
+// Border effects for background colors and gradients
+.has--backgroundColor,
+[style*="background: linear-gradient"],
+[style*="background: radial-gradient"] {
+  &.circular-border {
+    border-radius: 50%;
+    padding: 20px;
+    display: inline-block;
+    min-width: 100px;
+    min-height: 100px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  &.rounded-border {
+    border-radius: 15px;
+    padding: 15px;
+    border: 3px solid rgba(255,255,255,0.3);
+  }
+  
+  &.gradient-border {
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      background: linear-gradient(45deg, #fff, #000);
+      border-radius: inherit;
+      z-index: -1;
+    }
+  }
+}
+
+// Ensure gradients work properly
+.styled {
+  // Support for CSS gradients
+  &[style*="background: linear-gradient"],
+  &[style*="background: radial-gradient"] {
+    background-attachment: scroll;
+    background-size: 100% 100%;
+  }
 }
 
 .styleCard {

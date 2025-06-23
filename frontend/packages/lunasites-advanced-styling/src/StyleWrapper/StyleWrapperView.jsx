@@ -44,12 +44,36 @@ const h2rgb = (hex) => {
 
 // Removed IsomorphicPortal - no portal needed
 
+// Parse custom CSS string into object
+function parseCustomCSS(cssString) {
+  if (!cssString) return {};
+  
+  const styles = {};
+  try {
+    // Split by semicolon and process each property
+    cssString.split(';').forEach(rule => {
+      const [property, value] = rule.split(':').map(s => s.trim());
+      if (property && value) {
+        // Convert kebab-case to camelCase for React
+        const camelProperty = property.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+        styles[camelProperty] = value;
+      }
+    });
+  } catch (e) {
+    console.warn('Error parsing custom CSS:', e);
+  }
+  
+  return styles;
+}
+
 export function getInlineStyles(data, props = {}) {
+  const customStyles = parseCustomCSS(data.customCSS);
+  
   return {
     ...(data.hidden && props.mode !== 'edit' ? { display: 'none' } : {}),
     ...(data.backgroundColor
       ? {
-          backgroundColor: data.backgroundColor,
+          background: data.backgroundColor,
           '--background-color': data.backgroundColor,
         }
       : {}),
@@ -84,7 +108,8 @@ export function getInlineStyles(data, props = {}) {
     ...(data.clear && {
       clear: data.clear,
     }),
-    // fill in more
+    // Apply custom CSS styles (these can override defaults)
+    ...customStyles,
   };
 }
 
@@ -97,11 +122,7 @@ const StyleWrapperView = (props) => {
   const { styleData = {}, data = {}, mode = 'view' } = props;
 
   // Debug logging
-  if (mode === 'edit') {
-    console.log('StyleWrapperView edit mode - styleData:', styleData);
-    console.log('StyleWrapperView edit mode - data:', data);
-    console.log('StyleWrapperView edit mode - props:', props);
-  }
+
   const {
     style_name,
     align,
@@ -135,13 +156,6 @@ const StyleWrapperView = (props) => {
     customId ||
     stretch;
 
-  // Debug styling calculation
-  if (mode === 'edit') {
-    console.log('StyleWrapperView - inlineStyles:', inlineStyles);
-    console.log('StyleWrapperView - styled:', styled);
-    console.log('StyleWrapperView - style:', style);
-  }
-
   const attrs = {
     style: inlineStyles,
     className: cx(
@@ -151,6 +165,8 @@ const StyleWrapperView = (props) => {
       theme,
       align,
       props.className,
+      // Add custom classes
+      styleData.customClasses && styleData.customClasses.split(' ').filter(Boolean),
       {
         align,
         styled,
@@ -192,20 +208,26 @@ const StyleWrapperView = (props) => {
     mode !== 'edit' ? (
       children
     ) : (
-      <div {...attrs} ref={props.setRef}>
-        {Object.keys(props.images || {}).map((bgImage) => (
-          <img
-            key={`styled-bg-image-${bgImage}`}
-            alt=""
-            src={props.images[bgImage]?.src}
-            className={cx('bg', {
-              hidden:
-                backgroundImage !== bgImage || !props.images[bgImage]?.src,
-            })}
-          />
-        ))}
+      <div>
+        <div {...attrs} ref={props.setRef}>
+          {Object.keys(props.images || {}).map((bgImage) => (
+            <img
+              key={`styled-bg-image-${bgImage}`}
+              alt=""
+              src={props.images[bgImage]?.src}
+              className={cx('bg', {
+                hidden:
+                  backgroundImage !== bgImage || !props.images[bgImage]?.src,
+              })}
+            />
+          ))}
 
-        {ViewComponentWrapper ? <ViewComponentWrapper {...props} /> : children}
+          {ViewComponentWrapper ? (
+            <ViewComponentWrapper {...props} />
+          ) : (
+            children
+          )}
+        </div>
       </div>
     )
   ) : ViewComponentWrapper ? (
@@ -213,22 +235,6 @@ const StyleWrapperView = (props) => {
   ) : (
     children
   );
-
-  // Debug final render decision
-  if (mode === 'edit') {
-    console.log('StyleWrapperView - nativeIntegration:', nativeIntegration);
-    console.log('StyleWrapperView - containerType:', containerType);
-    console.log('StyleWrapperView - attrs:', attrs);
-    console.log(
-      'StyleWrapperView - will render wrapper div:',
-      styled &&
-        !(
-          nativeIntegration &&
-          !style_name?.includes('content-box') &&
-          mode !== 'edit'
-        ),
-    );
-  }
 
   return useAsPageHeader ? (
     <React.Fragment>

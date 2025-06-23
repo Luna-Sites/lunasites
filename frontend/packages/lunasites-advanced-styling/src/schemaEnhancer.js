@@ -275,6 +275,17 @@ export const addAdvancedStyling = ({ schema, formData, intl }) => {
       title: intl.formatMessage(messages.pCustomIdTitle),
       description: intl.formatMessage(messages.pCustomIdDescription),
     },
+    customCSS: {
+      title: 'Custom CSS',
+      description: 'Add custom CSS properties (e.g. "border: 1px solid red; transform: rotate(5deg);")',
+      widget: 'textarea',
+      placeholder: 'border: 1px solid red;\ntransform: rotate(5deg);',
+    },
+    customClasses: {
+      title: 'CSS Classes',
+      description: 'Add custom CSS class names (space separated)',
+      placeholder: 'my-custom-class another-class',
+    },
     isDropCap: {
       title: intl.formatMessage(messages.pIsDropCapTitle),
       description: intl.formatMessage(messages.pIsDropCapDescription),
@@ -334,41 +345,40 @@ export const addAdvancedStyling = ({ schema, formData, intl }) => {
     ...stylingProperties,
   };
 
-  // Organize all styling options in a single fieldset, one under another
-  schema.properties.styles.schema.fieldsets[0].fields = [
-    // Presets
-    'style_name',
-    
-    // Standard styling
-    'textAlign',
-    'fontSize', 
-    'fontWeight',
-    'align',
-    'stretch',
-    'size',
-    'isDropCap',
-    
-    // Decorations
-    'backgroundImage',
-    'backgroundColor',
-    'textColor',
-    'borderRadius',
-    'shadowDepth',
-    'shadowColor',
-    
-    // Layout
-    'margin',
-    'padding',
-    
-    // Advanced
-    'useAsPageHeader',
-    'theme',
-    'hidden',
-    'height',
-    'isScreenHeight',
-    'customClass',
-    'customId',
-    'clear',
+  // Organize styling options in single vertical fieldset
+  schema.properties.styles.schema.fieldsets = [
+    {
+      id: 'styling',
+      title: 'Styling',
+      fields: [
+        'style_name',
+        'textAlign',
+        'fontSize',
+        'fontWeight',
+        'textColor',
+        'isDropCap',
+        'backgroundImage',
+        'backgroundColor',
+        'borderRadius',
+        'shadowDepth',
+        'shadowColor',
+        'align',
+        'stretch',
+        'size',
+        'margin',
+        'padding',
+        'height',
+        'isScreenHeight',
+        'clear',
+        'useAsPageHeader',
+        'theme',
+        'hidden',
+        'customClass',
+        'customId',
+        'customClasses',
+        'customCSS',
+      ],
+    },
   ];
 
   return schema;

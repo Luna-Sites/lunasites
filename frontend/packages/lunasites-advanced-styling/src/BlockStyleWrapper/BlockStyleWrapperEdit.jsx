@@ -7,10 +7,6 @@ import { StyleWrapperView } from '../StyleWrapper';
 const BlockStyleWrapperEdit = (props) => {
   const { data = {}, children } = props;
 
-  // Debug: log the styling data
-  console.log('BlockStyleWrapperEdit - data.styles:', data.styles);
-  console.log('BlockStyleWrapperEdit - props:', props);
-
   return (
     <StyleWrapperView mode="edit" {...props} styleData={data.styles || {}}>
       {children}
