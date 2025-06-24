@@ -49,6 +49,17 @@
     "@kitconcept/volto-separator-block": "*",
     "@kitconcept/volto-slider-block": "*",
     "@plone-collective/volto-footer": "*",
+    "@eeacms/volto-tabs-block": "*",
+    "@eeacms/volto-group-block": "*",
+    "@eeacms/volto-columns-block": "*",
+    "@eeacms/volto-block-divider": "*",
+    "@eeacms/volto-statistic-block": "*",
+    "@eeacms/volto-pdf-block": "*",
+    "@eeacms/volto-slate-footnote": "*",
+    "@eeacms/volto-block-toc": "*",
+    "@eeacms/volto-metadata-block": "*",
+    "@eeacms/volto-quote-block": "*",
+    "@eeacms/volto-tags-block": "*",
     "lunasites-advanced-styling": "workspace:*"
   },
   "devDependencies": {
