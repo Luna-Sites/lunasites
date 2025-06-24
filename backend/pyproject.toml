@@ -28,6 +28,7 @@ dependencies = [
     "plone.restapi",
     "plone.volto",
     "kitconcept.voltolighttheme",
+    "collective.volto.footer",
 ]
 
 [project.optional-dependencies]

@@ -15,12 +15,6 @@ importers:
       '@eeacms/volto-accordion-block':
         specifier: '*'
         version: 10.4.6
-      '@eeacms/volto-eea-design-system':
-        specifier: '*'
-        version: 1.37.0(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@eeacms/volto-eea-website-theme':
-        specifier: '*'
-        version: 3.7.0(@plone/volto@core+packages+volto)(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@kitconcept/volto-banner-block':
         specifier: '*'
         version: 1.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -51,6 +45,9 @@ importers:
       '@kitconcept/volto-slider-block':
         specifier: '*'
         version: 6.3.1(@plone/volto@core+packages+volto)(embla-carousel@8.6.0)(react@18.2.0)
+      '@plone-collective/volto-footer':
+        specifier: '*'
+        version: 1.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@plone/registry':
         specifier: workspace:*
         version: link:core/packages/registry
@@ -2559,31 +2556,8 @@ packages:
   '@dual-bundle/import-meta-resolve@4.1.0':
     resolution: {integrity: sha512-+nxncfwHM5SgAtrVzgpzJOI1ol0PkumhVo469KCf9lUi21IGcY90G98VuHm9VRrUypmAzawAHO9bs6hqeADaVg==}
 
-  '@eeacms/countup@2.0.7':
-    resolution: {integrity: sha512-k4PFivRQRAWmQlyHglyB5+db9CcmSbvTly7EZ4bJPsapef1f5DiAdWjX7g1iRHNEbFqcu2r6u2DxBO9f/gb7Sg==}
-    peerDependencies:
-      react: '>=16.8.0'
-
   '@eeacms/volto-accordion-block@10.4.6':
     resolution: {integrity: sha512-IZfAg8By1dZA2SSr4MNu2gFCs0F67/ZMAlpdqkevSMvkBREjny97cEFtMjkhGyOc3MBTp1vd0TtqvL3cN1GehQ==}
-
-  '@eeacms/volto-block-style@7.2.1':
-    resolution: {integrity: sha512-4ENeyvBUvzkNXRXooPS0+7FA0sTvWvIDZFo1Yw+bPViEP3L1GzWGzpawCfFpwn70C6ccLVYjW2tp4OLbT9R4QQ==}
-
-  '@eeacms/volto-block-toc@7.0.0':
-    resolution: {integrity: sha512-OBTnkPzx80J/VhktOEByS2wBqRAnVyihd+XP8t6ilvPlpH5fJ4SPhJRisfLFMBIDmyB1fMNio6uEcqNIdyNqbQ==}
-
-  '@eeacms/volto-corsproxy@4.0.0':
-    resolution: {integrity: sha512-ZRARIIlpz8p8AGtKK4ddl+IaDKpZ20JxL78JvI19srty3M4dRdgZQymtTtQh0YWS665gL8GdpZCHfq8L3FdRyw==}
-
-  '@eeacms/volto-eea-design-system@1.37.0':
-    resolution: {integrity: sha512-Jc38fIr2RGQ7hXahq+lfxPYA/8MHe16bDkkx5RzgBkfUVQPAvI1Tk1IR80oxsuY6Z2OUvsSrOX/Eatkn+IdZCg==}
-
-  '@eeacms/volto-eea-website-theme@3.7.0':
-    resolution: {integrity: sha512-6ZYYuYf1o/HXW9V9dCNGY6rFS4UhbvmyP/tIKe4VisMeU7JFOQQZlrQJaCd0QBIiTynnoWMNAqL/fmdE/U3weQ==}
-
-  '@eeacms/volto-group-block@7.1.1':
-    resolution: {integrity: sha512-B6ahCHMzaGR9pCTlc2T+k76zeg+a+O7h0G0Li67ij2eSKBCvsPBxcNSMz+sibTVGcvENgIFtjpQpFzC7aczH6w==}
 
   '@eeacms/volto-resize-helper@2.0.0':
     resolution: {integrity: sha512-f2dCXoUvwXxB3JB5Smf34h2lrrCAMcutO0wzOq/M8G/0cakmVHH0Lzvx9CK/kTGXyzE6Myv9IEbbCY4xRXcdFA==}
@@ -2962,9 +2936,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
       react-dom: ^16.8.0 || ^17 || ^18
-
-  '@fontsource/roboto@4.5.8':
-    resolution: {integrity: sha512-CnD7zLItIzt86q4Sj3kZUiLcBk1dSk81qcqgMGaZe7SQ1P8hFNxhMl5AZthK1zrDM5m74VVhaOpuMGIL4gagaA==}
 
   '@formatjs/ecma402-abstract@2.3.4':
     resolution: {integrity: sha512-qrycXDeaORzIqNhBOx0btnhpD1c+/qFIHAN9znofuMJX6QBwtbrmlpWfD4oiUUD2vJUOIYFA/gYtg2KAMGG7sA==}
@@ -3676,6 +3647,12 @@ packages:
   '@pkgr/core@0.2.7':
     resolution: {integrity: sha512-YLT9Zo3oNPJoBjBc4q8G2mjU4tqIbf5CEOORbUUr48dCD9q3umJ3IPlVqOqDakPfd2HuwccBaqlGhN4Gmr5OWg==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  '@plone-collective/volto-footer@1.0.0':
+    resolution: {integrity: sha512-rOm7CLMIesC6zGDv3J1UYPWSCyfD7YA8SoQO9H1/7g5szGJn6yYZUQET3dhPLDnf8vnqtWRHy7cuARtMibleLA==}
+    peerDependencies:
+      react: 18.2.0
+      react-dom: 18.2.0
 
   '@plone/components@2.0.0-alpha.9':
     resolution: {integrity: sha512-/UkeVcjuLl33xVDdDFUdxAEFIjsHOrRgPtgTCJhmf4US+AW0QgvLNzi3O/8azn5nWdQTaOGXSxujGypAX0HyRA==}
@@ -10527,9 +10504,6 @@ packages:
   lodash.sortby@4.7.0:
     resolution: {integrity: sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==}
 
-  lodash.throttle@4.1.1:
-    resolution: {integrity: sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==}
-
   lodash.truncate@4.4.2:
     resolution: {integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==}
 
@@ -12527,12 +12501,6 @@ packages:
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
-  react-lazy-load-image-component@1.5.6:
-    resolution: {integrity: sha512-M0jeJtOlTHgThOfgYM9krSqYbR6ShxROy/KVankwbw9/amPKG1t5GSGN1sei6Cyu8+QJVuyAUvQ+LFtCVTTlKw==}
-    peerDependencies:
-      react: ^15.x.x || ^16.x.x || ^17.x.x || ^18.x.x
-      react-dom: ^15.x.x || ^16.x.x || ^17.x.x || ^18.x.x
-
   react-lifecycles-compat@3.0.4:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
 
@@ -12659,12 +12627,6 @@ packages:
     peerDependencies:
       react: ^0.14.0 || ^15.0.1 || ^16.0.0
       react-dom: ^0.14.0 || ^15.0.1 || ^16.0.0
-
-  react-slick@0.30.3:
-    resolution: {integrity: sha512-B4x0L9GhkEWUMApeHxr/Ezp2NncpGc+5174R02j+zFiWuYboaq98vmxwlpafZfMjZic1bjdIqqmwLDcQY0QaFA==}
-    peerDependencies:
-      react: ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   react-sortable-hoc@2.0.0:
     resolution: {integrity: sha512-JZUw7hBsAHXK7PTyErJyI7SopSBFRcFHDjWW5SWjcugY0i6iH7f+eJkY8cJmGMlZ1C9xz1J3Vjz0plFpavVeRg==}
@@ -12919,9 +12881,6 @@ packages:
 
   remark-stringify@11.0.0:
     resolution: {integrity: sha512-1OSmLd3awB/t8qdoEOMazZkNsfVTeY4fTsgzcQFdXNq8ToTN4ZGwrMnlda4K6smTFKD+GRV6O48i6Z4iKgPPpw==}
-
-  remixicon@4.6.0:
-    resolution: {integrity: sha512-bKM5odjqE1yzVxEZGJE7F79WHhNrJFIKHXR+GG+P1IWXn8AnJZhl8SbIRDJsNAvIqx4VPkNwjuHfc42tutMDpQ==}
 
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
@@ -13465,9 +13424,6 @@ packages:
   smart-buffer@4.2.0:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
     engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
-
-  smoothscroll-polyfill@0.4.4:
-    resolution: {integrity: sha512-TK5ZA9U5RqCwMpfoMq/l1mrH0JAR7y7KRvOBx0n2869aLxch+gT9GhN3yUfjiw+d/DiF1mKo14+hd62JyMmoBg==}
 
   snapdragon-node@2.1.1:
     resolution: {integrity: sha512-O27l4xaMYt/RSQ5TR3vpWCAB5Kb/czIcqUFOM/C4fYcLnbZUc1PkjTAMjof2pBWaSTwOUd6qUHcFGVGj7aIwnw==}
@@ -14560,11 +14516,6 @@ packages:
     peerDependencies:
       react: '>=16.13'
 
-  use-elapsed-time@3.0.2:
-    resolution: {integrity: sha512-2EY9lJ5DWbAvT8wWiEp6Ztnl46DjXz2j78uhWbXaz/bg3OfpbgVucCAlcN8Bih6hTJfFTdVYX9L6ySMn5py/wQ==}
-    peerDependencies:
-      react: '>=16.8.0'
-
   use-memo-one@1.1.3:
     resolution: {integrity: sha512-g66/K7ZQGYrI6dy8GLpVcMsBp4s17xNkYJVSMvTEevGy3nDxHOfE6z8BVE22+5G5x7t3+bhzrlTDB7ObrEE0cQ==}
     peerDependencies:
@@ -14769,11 +14720,6 @@ packages:
         optional: true
       jsdom:
         optional: true
-
-  volto-subsites@4.0.2:
-    resolution: {integrity: sha512-s3zRhDXAZF8U7SOGoSUHPaAIqX2I/gIBZMB94QdLTm1e3Lao7hc3KQRtbWs//4YOAjYYedxQpVUePpJVLEaM5g==}
-    peerDependencies:
-      '@plone/volto': '>=16.0.0-alpha.38'
 
   vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}
@@ -16331,58 +16277,9 @@ snapshots:
 
   '@dual-bundle/import-meta-resolve@4.1.0': {}
 
-  '@eeacms/countup@2.0.7(react@18.2.0)':
-    dependencies:
-      react: 18.2.0
-      use-elapsed-time: 3.0.2(react@18.2.0)
-
   '@eeacms/volto-accordion-block@10.4.6':
     dependencies:
       '@eeacms/volto-widget-theme-picker': 2.0.0
-
-  '@eeacms/volto-block-style@7.2.1(react@18.2.0)':
-    dependencies:
-      '@eeacms/volto-resize-helper': 2.0.0
-      '@eeacms/volto-widget-theme-picker': 2.0.0
-      react-color: 2.18.1(react@18.2.0)
-    transitivePeerDependencies:
-      - react
-
-  '@eeacms/volto-block-toc@7.0.0':
-    dependencies:
-      github-slugger: 1.4.0
-      smoothscroll-polyfill: 0.4.4
-
-  '@eeacms/volto-corsproxy@4.0.0': {}
-
-  '@eeacms/volto-eea-design-system@1.37.0(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@eeacms/countup': 2.0.7(react@18.2.0)
-      '@eeacms/volto-corsproxy': 4.0.0
-      '@fontsource/roboto': 4.5.8
-      react-lazy-load-image-component: 1.5.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react-slick: 0.30.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      remixicon: 4.6.0
-      slick-carousel: 1.8.1(jquery@3.7.1)
-    transitivePeerDependencies:
-      - jquery
-      - react
-      - react-dom
-
-  '@eeacms/volto-eea-website-theme@3.7.0(@plone/volto@core+packages+volto)(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@eeacms/volto-block-style': 7.2.1(react@18.2.0)
-      '@eeacms/volto-block-toc': 7.0.0
-      '@eeacms/volto-eea-design-system': 1.37.0(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@eeacms/volto-group-block': 7.1.1
-      volto-subsites: 4.0.2(@plone/volto@core+packages+volto)
-    transitivePeerDependencies:
-      - '@plone/volto'
-      - jquery
-      - react
-      - react-dom
-
-  '@eeacms/volto-group-block@7.1.1': {}
 
   '@eeacms/volto-resize-helper@2.0.0': {}
 
@@ -16649,8 +16546,6 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-is: 16.13.1
-
-  '@fontsource/roboto@4.5.8': {}
 
   '@formatjs/ecma402-abstract@2.3.4':
     dependencies:
@@ -17748,6 +17643,11 @@ snapshots:
     optional: true
 
   '@pkgr/core@0.2.7': {}
+
+  '@plone-collective/volto-footer@1.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
 
   '@plone/components@2.0.0-alpha.9(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(storybook@8.6.14(prettier@3.2.5))':
     dependencies:
@@ -26837,8 +26737,6 @@ snapshots:
 
   lodash.sortby@4.7.0: {}
 
-  lodash.throttle@4.1.1: {}
-
   lodash.truncate@4.4.2: {}
 
   lodash.uniq@4.5.0: {}
@@ -29620,13 +29518,6 @@ snapshots:
 
   react-is@18.3.1: {}
 
-  react-lazy-load-image-component@1.5.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    dependencies:
-      lodash.debounce: 4.0.8
-      lodash.throttle: 4.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
   react-lifecycles-compat@3.0.4: {}
 
   react-medium-image-zoom@3.0.15(prop-types@15.7.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
@@ -29771,16 +29662,6 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
 
   react-slick@0.25.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    dependencies:
-      classnames: 2.5.1
-      enquire.js: 2.1.6
-      json2mq: 0.2.0
-      lodash.debounce: 4.0.8
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      resize-observer-polyfill: 1.5.1
-
-  react-slick@0.30.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       classnames: 2.5.1
       enquire.js: 2.1.6
@@ -30253,8 +30134,6 @@ snapshots:
       '@types/mdast': 4.0.4
       mdast-util-to-markdown: 2.1.2
       unified: 11.0.5
-
-  remixicon@4.6.0: {}
 
   remove-trailing-separator@1.1.0: {}
 
@@ -30901,8 +30780,6 @@ snapshots:
       jquery: 3.7.1
 
   smart-buffer@4.2.0: {}
-
-  smoothscroll-polyfill@0.4.4: {}
 
   snapdragon-node@2.1.1:
     dependencies:
@@ -32214,10 +32091,6 @@ snapshots:
       dequal: 2.0.3
       react: 18.2.0
 
-  use-elapsed-time@3.0.2(react@18.2.0):
-    dependencies:
-      react: 18.2.0
-
   use-memo-one@1.1.3(react@18.2.0):
     dependencies:
       react: 18.2.0
@@ -32719,10 +32592,6 @@ snapshots:
       - sugarss
       - supports-color
       - terser
-
-  volto-subsites@4.0.2(@plone/volto@core+packages+volto):
-    dependencies:
-      '@plone/volto': link:core/packages/volto
 
   vue-template-compiler@2.7.16:
     dependencies:

@@ -48,8 +48,7 @@
     "@kitconcept/volto-logos-block": "*",
     "@kitconcept/volto-separator-block": "*",
     "@kitconcept/volto-slider-block": "*",
-    "@eeacms/volto-eea-design-system": "*",
-    "@eeacms/volto-eea-website-theme": "*",
+    "@plone-collective/volto-footer": "*",
     "lunasites-advanced-styling": "workspace:*"
   },
   "devDependencies": {

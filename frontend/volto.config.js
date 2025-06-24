@@ -10,7 +10,7 @@ const addons = [
   '@kitconcept/volto-logos-block',
   '@kitconcept/volto-separator-block',
   '@kitconcept/volto-slider-block',
-
+  '@plone-collective/volto-footer',
   'volto-lunasites',
   'lunasites-advanced-styling',
 ];
