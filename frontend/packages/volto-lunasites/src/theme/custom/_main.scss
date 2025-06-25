@@ -1,2 +1,40 @@
 // Intentionally empty
 // Used for customizations in other add-ons
+
+.view-editview {
+  footer.ui.inverted.grey.segment {
+    background-color: transparent !important;
+  }
+  footer {
+    .blocks-container {
+      width: 100%;
+    }
+  }
+}
+
+.view-viewview {
+  footer.ui.inverted.grey.segment {
+    background-color: transparent !important;
+  }
+  .styled-with-bg:has(#footer) {
+    padding: 0;
+  }
+  footer {
+    .blocks-container {
+      width: 100%;
+    }
+    .blocks-container > * {
+      padding: 0;
+    }
+  }
+  footer.ui.grey.inverted {
+    padding: 0;
+    background: transparent;
+  }
+}
+.blocks-group-wrapper {
+  .blocks-group-wrapper {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}
