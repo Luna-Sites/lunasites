@@ -61,6 +61,7 @@
     "@eeacms/volto-metadata-block": "*",
     "@eeacms/volto-quote-block": "*",
     "@eeacms/volto-tags-block": "*",
+    "volto-statistics": "workspace:*",
     "lunasites-advanced-styling": "workspace:*"
   },
   "devDependencies": {
