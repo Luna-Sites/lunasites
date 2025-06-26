@@ -24,6 +24,7 @@ const addons = [
   'volto-lunasites',
   'lunasites-advanced-styling',
   '@plone-collective/volto-footer',
+  'volto-statistics',
 ];
 
 module.exports = {
