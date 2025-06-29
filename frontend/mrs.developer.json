@@ -6,5 +6,13 @@
     "https": "https://github.com/plone/volto.git",
     "tag": "18.22.0",
     "filterBlobs": true
+  },
+  "volto-super-hero": {
+    "output": "packages",
+    "package": "Luna-sites/volto-super-hero",
+    "url": "https://github.com/Luna-Sites/volto-super-hero.git",
+    "path": "src",
+    "branch": "remove_addons_dependency",
+    "develop": true
   }
 }

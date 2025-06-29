@@ -258,7 +258,6 @@ const BlocksForm = (props) => {
   );
 
   const editBlockWrapper = children || defaultBlockWrapper;
-
   // Remove invalid blocks on saving
   // Note they are alreaady filtered by DragDropList, but we also want them
   // to be removed when the user saves the page next. Otherwise the invalid
@@ -325,6 +324,7 @@ const BlocksForm = (props) => {
           >
             {(dragProps) => {
               const { child, childId, index } = dragProps;
+
               const blockProps = {
                 allowedBlocks,
                 showRestricted,

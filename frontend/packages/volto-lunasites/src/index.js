@@ -14,6 +14,7 @@ import { disableBgColorSchema } from './components/Blocks/disableBgColorSchema';
 import BlockSettingsSchema from '@plone/volto/components/manage/Blocks/Block/Schema';
 
 import ContainerQueriesPolyfill from './components/CQPolyfill';
+import AppExtras from './components/AppExtras/AppExtras';
 import { Container } from '@plone/components';
 import TopSideFacets from './components/Blocks/Search/TopSideFacets';
 
@@ -53,6 +54,7 @@ defineMessages({
 });
 
 const applyConfig = (config) => {
+  config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;
   config.settings.navDepth = 3;
   config.settings.enableFatMenu = true;
@@ -68,17 +70,6 @@ const applyConfig = (config) => {
 
   config.settings.siteLabel = '';
   config.settings.intranetHeader = false;
-
-  // Remove Hero Block
-  if (config.blocks.blocksConfig?.hero) {
-    config.blocks.blocksConfig.hero.restricted = true;
-  }
-
-  // No required blocks (eg. Title)
-  config.blocks.requiredBlocks = [
-    ...config.blocks.requiredBlocks,
-    'eventMetadata',
-  ];
 
   // Register our custom Container component
   config.registerComponent({
@@ -151,6 +142,14 @@ const applyConfig = (config) => {
 
   config.settings.slidingSearchAnimation = true;
   config.settings.openExternalLinkInNewTab = true;
+
+  config.settings.appExtras = [
+    ...config.settings.appExtras,
+    {
+      match: '',
+      component: AppExtras,
+    },
+  ];
 
   config.blocks.blocksConfig.accordion = {
     ...config.blocks.blocksConfig.accordion,
@@ -245,6 +244,15 @@ const applyConfig = (config) => {
     ...config.blocks.blocksConfig.introduction,
     unwantedButtons: ['heading-three', 'blockquote'],
   };
+  config.blocks.blocksConfig.title.restricted = false;
+  config.blocks.blocksConfig.gridBlock.allowedBlocks = [
+    'image',
+    'listing',
+    'slate',
+    'teaser',
+    'video',
+  ];
+  config.blocks.requiredBlocks = [];
 
   config.blocks.blocksConfig.slate = {
     ...config.blocks.blocksConfig.slate,
