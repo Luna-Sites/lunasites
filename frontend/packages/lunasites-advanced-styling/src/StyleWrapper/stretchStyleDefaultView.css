@@ -343,3 +343,12 @@ body:not(.is-authenticated):not(.document_wide_view).stretch {
     margin: 0 -1.3vw;
   }
 }
+
+/* Full background section styles */
+.styled-with-full-bg {
+  position: relative;
+}
+
+.styled-with-full-bg > div {
+  position: relative;
+}

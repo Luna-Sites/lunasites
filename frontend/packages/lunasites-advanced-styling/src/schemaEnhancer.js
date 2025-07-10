@@ -7,6 +7,18 @@ const messages = defineMessages({
     id: 'Styling',
     defaultMessage: 'Styling',
   },
+  text: {
+    id: 'fieldsets-text',
+    defaultMessage: 'Text',
+  },
+  advanced: {
+    id: 'advanced',
+    defaultMessage: 'Advanced',
+  },
+  background: {
+    id: 'fieldsets-background',
+    defaultMessage: 'Background',
+  },
   default: {
     id: 'fieldsets-default',
     defaultMessage: 'Default',
@@ -163,12 +175,30 @@ const messages = defineMessages({
     id: 'properties-clear-description',
     defaultMessage: 'Pushes selected block under floated content',
   },
+  // Specific styles messages
+  filled: {
+    id: 'filled',
+    defaultMessage: 'Filled',
+  },
+  width: {
+    id: 'width',
+    defaultMessage: 'Width',
+  },
+  buttonColor: {
+    id: 'buttonColor',
+    defaultMessage: 'Button Color',
+  },
+  blockSpecific: {
+    id: 'blockSpecific',
+    defaultMessage: 'Block Specific',
+  },
 });
 
 /**
  * Original volto-block-style schema recreated for Volto's native sidebar
  * Maintains the exact same functionality but integrated into sidebar instead of popup
  */
+
 export const addAdvancedStyling = ({ schema, formData, intl }) => {
   // First add the base styling fieldset
   addStyling({ schema, formData, intl });
@@ -241,6 +271,22 @@ export const addAdvancedStyling = ({ schema, formData, intl }) => {
       title: intl.formatMessage(messages.pSize),
       widget: 'style_size',
     },
+    text: {
+      title: intl.formatMessage(messages.text),
+      widget: 'heading',
+    },
+    advanced: {
+      title: intl.formatMessage(messages.advanced),
+      widget: 'heading',
+    },
+    background: {
+      title: intl.formatMessage(messages.background),
+      widget: 'heading',
+    },
+    layout: {
+      title: intl.formatMessage(messages.layout),
+      widget: 'heading',
+    },
     height: {
       title: intl.formatMessage(messages.pHeightTitle),
       widget: 'text',
@@ -277,7 +323,8 @@ export const addAdvancedStyling = ({ schema, formData, intl }) => {
     },
     customCSS: {
       title: 'Custom CSS',
-      description: 'Add custom CSS properties (e.g. "border: 1px solid red; transform: rotate(5deg);")',
+      description:
+        'Add custom CSS properties (e.g. "border: 1px solid red; transform: rotate(5deg);")',
       widget: 'textarea',
       placeholder: 'border: 1px solid red;\ntransform: rotate(5deg);',
     },
@@ -346,40 +393,77 @@ export const addAdvancedStyling = ({ schema, formData, intl }) => {
   };
 
   // Organize styling options in single vertical fieldset
-  schema.properties.styles.schema.fieldsets = [
-    {
-      id: 'styling',
-      title: 'Styling',
-      fields: [
-        'style_name',
-        'textAlign',
-        'fontSize',
-        'fontWeight',
-        'textColor',
-        'isDropCap',
-        'backgroundImage',
-        'backgroundColor',
-        'borderRadius',
-        'shadowDepth',
-        'shadowColor',
-        'align',
-        'stretch',
-        'size',
-        'margin',
-        'padding',
-        'height',
-        'isScreenHeight',
-        'clear',
-        'useAsPageHeader',
-        'theme',
-        'hidden',
-        'customClass',
-        'customId',
-        'customClasses',
-        'customCSS',
-      ],
-    },
-  ];
+  const stylingFieldset = {
+    id: 'styling',
+    title: 'Styling',
+    fields: [
+      'text',
+      'textAlign',
+      'fontSize',
+      'fontWeight',
+      'textColor',
+      'isDropCap',
+      'background',
+      'backgroundImage',
+      'backgroundColor',
+      'borderRadius',
+      'shadowDepth',
+      'shadowColor',
+      'layout',
+      'align',
+      'stretch',
+      'size',
+      'margin',
+      'padding',
+      'height',
+      'isScreenHeight',
+      'advanced',
+      'clear',
+      'useAsPageHeader',
+      'style_name',
+      'theme',
+      'hidden',
+      'customClass',
+      'customId',
+      'customClasses',
+      'customCSS',
+    ],
+  };
+
+  if (schema.disabledStyling) {
+    stylingFieldset.fields = stylingFieldset.fields.filter(
+      (f) => !schema.disabledStyling.includes(f),
+    );
+  }
+
+  if (schema.specificStyling) {
+    const { messages, fieldset, fields } = schema.specificStyling;
+    const intl = schema.specificStyling.intl;
+
+    // Translate titles
+    fieldset.title = intl.formatMessage(messages.blockSpecific);
+    for (const field in fields) {
+      fields[field].title = intl.formatMessage(messages[field]);
+    }
+
+    schema.fieldsets.push({
+      id: 'specificStyles',
+      title: fieldset.title,
+      fields: Object.keys(fields),
+    });
+    schema.properties.specificStyles = {
+      title: 'Specific Styles',
+      widget: 'object',
+      schema: {
+        fieldsets: [
+          { id: 'default', title: 'Default', fields: Object.keys(fields) },
+        ],
+        properties: fields,
+      },
+    };
+  }
+
+  schema.properties.styles.schema.fieldsets = [stylingFieldset];
 
   return schema;
 };

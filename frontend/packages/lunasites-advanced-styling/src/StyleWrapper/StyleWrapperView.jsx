@@ -149,6 +149,7 @@ const StyleWrapperView = (props) => {
     style ||
     align ||
     size ||
+    styleData.backgroundFullColor ||
     customClass ||
     theme ||
     isDropCap ||
@@ -171,6 +172,7 @@ const StyleWrapperView = (props) => {
         align,
         styled,
         'styled-with-bg': styleData.backgroundColor || backgroundImage,
+        'styled-with-full-bg': styleData.backgroundFullColor,
         'screen-height': isScreenHeight,
         'full-width': align === 'full',
         stretch: stretch === 'stretch',
@@ -210,6 +212,20 @@ const StyleWrapperView = (props) => {
     ) : (
       <div>
         <div {...attrs} ref={props.setRef}>
+          {styleData.backgroundFullColor && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '100vw',
+                height: '100%',
+                background: styleData.backgroundFullColor,
+                zIndex: -1,
+              }}
+            />
+          )}
           {Object.keys(props.images || {}).map((bgImage) => (
             <img
               key={`styled-bg-image-${bgImage}`}

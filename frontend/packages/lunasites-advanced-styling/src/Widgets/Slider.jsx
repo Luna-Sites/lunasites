@@ -20,8 +20,8 @@ export class Slider extends Component {
     let value = this.props.value
       ? this.props.value
       : props.multiple
-      ? [...props.settings.start]
-      : props.settings.start;
+        ? [...props.settings.start]
+        : props.settings.start;
     this.state = {
       value: value,
       position: props.multiple ? [] : 0,
@@ -272,7 +272,6 @@ export class Slider extends Component {
       pageX = event.pageX;
     } else {
       // eslint-disable-next-line
-      console.log('PageX undefined');
     }
     let value = this.determineValue(this.innerLeft, this.innerRight, pageX);
     if (pageX >= this.innerLeft && pageX <= this.innerRight) {

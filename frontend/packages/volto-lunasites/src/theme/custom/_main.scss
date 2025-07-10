@@ -226,23 +226,31 @@
   padding-top: 0 !important;
 }
 
-@media only screen and (min-width: 992px) {
-  .view-homepage:not(.view-editview):not(.view-addview) .content-area,
-  .view-homepage-inverse:not(.view-editview):not(.view-addview) .content-area {
-    margin-top: -160px !important;
-  }
+.view-homepage:not(.view-editview):not(.view-addview) .content-area,
+.view-homepage-inverse:not(.view-editview):not(.view-addview) .content-area {
+  margin-top: -160px !important;
 }
-@media only screen and (min-width: 768px) {
-  .view-homepage:not(.view-editview):not(.view-addview) .content-area,
-  .view-homepage-inverse:not(.view-editview):not(.view-addview) .content-area {
-    margin-top: -200px !important;
-  }
+
+.view-homepage:not(.view-editview):not(.view-addview) .content-area,
+.view-homepage-inverse:not(.view-editview):not(.view-addview) .content-area {
+  margin-top: -200px !important;
 }
+
 // inherit color of description and link from homepage cards
-.view-homepage:not(.view-editview):not(.view-addview) .ui.items > .item > .content > .description,
+.view-homepage:not(.view-editview):not(.view-addview)
+  .ui.items
+  > .item
+  > .content
+  > .description,
 .view-homepage:not(.view-editview):not(.view-addview) .grid-block-teaser a,
-.view-homepage-inverse:not(.view-editview):not(.view-addview) .ui.items > .item > .content > .description,
-.view-homepage-inverse:not(.view-editview):not(.view-addview) .grid-block-teaser a {
+.view-homepage-inverse:not(.view-editview):not(.view-addview)
+  .ui.items
+  > .item
+  > .content
+  > .description,
+.view-homepage-inverse:not(.view-editview):not(.view-addview)
+  .grid-block-teaser
+  a {
   color: inherit;
 }
 
@@ -279,4 +287,13 @@
   > .styled-columnsBlock:first-of-type
   .content-box-inner {
   padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+}
+
+.styled-with-full-bg {
+  padding: 1rem;
+  margin-top: 1em;
+}
+
+.block {
+  margin-bottom: 0;
 }

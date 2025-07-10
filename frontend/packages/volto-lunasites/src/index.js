@@ -1,5 +1,6 @@
-import { defineMessages } from 'react-intl';
+// ... rest of the file
 import { cloneDeep } from 'lodash';
+import { defineMessages } from 'react-intl';
 
 import { composeSchema, getPreviousNextBlock } from '@plone/volto/helpers';
 import {
@@ -142,7 +143,33 @@ const applyConfig = (config) => {
 
   config.settings.slidingSearchAnimation = true;
   config.settings.openExternalLinkInNewTab = true;
-
+  config.blocks.blocksConfig.__button = {
+    ...config.blocks.blocksConfig.__button,
+    schemaEnhancer: ButtonStylingSchema,
+    colors: BG_COLORS,
+    disabledStyling: ['textAlign', 'align', 'size'],
+    specificStyling: {
+      intl: null, // Will be injected by the enhancer
+      fieldset: {
+        id: 'blockSpecific',
+        title: 'Block Specific',
+      },
+      fields: {
+        width: {
+          title: 'Width',
+          type: 'text',
+        },
+        filled: {
+          title: 'Filled',
+          type: 'boolean',
+        },
+        buttonColor: {
+          title: 'Button Color',
+          widget: 'style_simple_color',
+        },
+      },
+    },
+  };
   config.settings.appExtras = [
     ...config.settings.appExtras,
     {
@@ -311,6 +338,27 @@ const applyConfig = (config) => {
     ...config.blocks.blocksConfig.__button,
     schemaEnhancer: ButtonStylingSchema,
     colors: BG_COLORS,
+    disabledStyling: ['textAlign', 'align', 'size'],
+    specificStyling: {
+      fieldset: {
+        id: 'blockSpecific',
+        title: 'Block Specific',
+      },
+      fields: {
+        width: {
+          title: 'Width',
+          type: 'text',
+        },
+        filled: {
+          title: 'Filled',
+          type: 'boolean',
+        },
+        buttonColor: {
+          title: 'Button Color',
+          widget: 'style_simple_color',
+        },
+      },
+    },
   };
 
   config.blocks.blocksConfig.eventMetadata = {

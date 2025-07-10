@@ -14,6 +14,7 @@ import SliderWidget from './Widgets/Slider';
 import SizeWidget from './Widgets/Size';
 import SimpleColorPicker from './Widgets/SimpleColorPicker';
 import QuadSizeWidget from './Widgets/QuadSize';
+import HeadlineWidget from './Widgets/HeadlineWidget';
 
 import './styles.less';
 
@@ -106,6 +107,7 @@ const applyConfig = (config) => {
   config.widgets.widget.style_simple_color = SimpleColorPicker;
   config.widgets.widget.slider = SliderWidget;
   config.widgets.widget.quad_size = QuadSizeWidget;
+  config.widgets.widget.heading = HeadlineWidget;
 
   // Restrict block settings to Layout (same as original)
   if (config.settings.layoutOnlyBlockStyles === undefined) {

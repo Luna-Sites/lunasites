@@ -106,6 +106,10 @@ const messages = defineMessages({
     id: 'properties-background-color',
     defaultMessage: 'Background color',
   },
+  pBackgroundFullColor: {
+    id: 'properties-background-full-color',
+    defaultMessage: 'Background section color',
+  },
   pTextColor: {
     id: 'properties-text-color',
     defaultMessage: 'Text color',
@@ -198,6 +202,7 @@ export const StyleSchema = (props) => {
         fields: [
           'backgroundImage',
           'backgroundColor',
+          'backgroundFullColor',
           'textColor',
           'borderRadius',
           'shadowDepth',
@@ -307,6 +312,12 @@ export const StyleSchema = (props) => {
       },
       backgroundColor: {
         title: intl.formatMessage(messages.pBackgroundColor),
+        type: 'color',
+        widget: 'style_simple_color',
+        available_colors: config.settings.available_colors,
+      },
+      backgroundFullColor: {
+        title: intl.formatMessage(messages.pBackgroundFullColor),
         type: 'color',
         widget: 'style_simple_color',
         available_colors: config.settings.available_colors,
