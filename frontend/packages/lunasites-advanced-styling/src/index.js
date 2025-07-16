@@ -1,6 +1,7 @@
 import React from 'react';
 import { composeSchema } from '@plone/volto/helpers';
 import { addAdvancedStyling } from './schemaEnhancer';
+import { blockSpecificEnhancer, createBlockSpecificConfig, withBlockSpecificStyling } from './blockSpecificEnhancer';
 import {
   BlockStyleWrapperEdit,
   BlockStyleWrapperView,
@@ -154,6 +155,15 @@ const applyConfig = (config) => {
 };
 
 export default applyConfig;
+
+// Export block-specific enhancer functions and addAdvancedStyling
+export { blockSpecificEnhancer, createBlockSpecificConfig, withBlockSpecificStyling };
+export { addAdvancedStyling } from './schemaEnhancer';
+export { BlockStyleWrapperEdit, BlockStyleWrapperView } from './BlockStyleWrapper';
+export { StyleWrapperView } from './StyleWrapper';
+export { getAdvancedStylingSchema } from './getAdvancedStylingSchema';
+export { defaultStylingProperties } from './defaultStylingProperties';
+export { getAdvancedStyling } from './getAdvancedStyling';
 
 export const installDemoStyles = (config) => {
   config.settings.pluggableStyles = [

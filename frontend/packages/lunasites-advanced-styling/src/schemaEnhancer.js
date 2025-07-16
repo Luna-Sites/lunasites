@@ -119,6 +119,10 @@ const messages = defineMessages({
     id: 'properties-background-color',
     defaultMessage: 'Background color',
   },
+  pBackgroundFullColor: {
+    id: 'properties-background-full-color',
+    defaultMessage: 'Background section',
+  },
   pTextColor: {
     id: 'properties-text-color',
     defaultMessage: 'Text color',
@@ -199,197 +203,18 @@ const messages = defineMessages({
  * Maintains the exact same functionality but integrated into sidebar instead of popup
  */
 
+import { getAdvancedStylingSchema } from './getAdvancedStylingSchema';
+
 export const addAdvancedStyling = ({ schema, formData, intl }) => {
   // First add the base styling fieldset
   addStyling({ schema, formData, intl });
 
-  // Recreate the original volto-block-style schema with all fieldsets
-  const stylingProperties = {
-    theme: {
-      title: intl.formatMessage(messages.pThemeTitle),
-      description: intl.formatMessage(messages.pThemeDescription),
-      widget: 'theme_picker',
-      colors: [
-        ...(config.settings && config.settings.themeColors
-          ? config.settings.themeColors.map(({ value, title }) => ({
-              name: value,
-              label: title,
-            }))
-          : []),
-      ],
-    },
-    style_name: {
-      title: intl.formatMessage(messages.pStyleName),
-      widget: 'style_select',
-    },
-    textAlign: {
-      title: intl.formatMessage(messages.pTextAlign),
-      widget: 'style_text_align',
-    },
-    align: {
-      title: intl.formatMessage(messages.pAlign),
-      widget: 'style_align',
-    },
-    stretch: {
-      title: intl.formatMessage(messages.pStretch),
-      widget: 'style_stretch',
-    },
-    fontSize: {
-      title: intl.formatMessage(messages.pFontSizeTitle),
-      description: intl.formatMessage(messages.pFontSizeDescription),
-      choices: [
-        ['xx-small', 'xx-small'],
-        ['x-small', 'x-small'],
-        ['small', 'small'],
-        ['medium', 'medium'],
-        ['large', 'large'],
-        ['x-large', 'x-large'],
-        ['xx-large', 'xx-large'],
-        ['xxx-large', 'xxx-large'],
-      ],
-    },
-    fontWeight: {
-      title: intl.formatMessage(messages.pFontWeightTitle),
-      description: intl.formatMessage(messages.pFontWeightDescription),
-      choices: [
-        ['300', 'Light'],
-        ['400', 'Regular'],
-        ['500', 'Medium'],
-        ['600', 'SemiBold'],
-        ['700', 'Bold'],
-      ],
-    },
-    margin: {
-      title: intl.formatMessage(messages.pMargin),
-      widget: 'quad_size',
-    },
-    padding: {
-      title: intl.formatMessage(messages.pPadding),
-      widget: 'quad_size',
-    },
-    size: {
-      title: intl.formatMessage(messages.pSize),
-      widget: 'style_size',
-    },
-    text: {
-      title: intl.formatMessage(messages.text),
-      widget: 'heading',
-    },
-    advanced: {
-      title: intl.formatMessage(messages.advanced),
-      widget: 'heading',
-    },
-    background: {
-      title: intl.formatMessage(messages.background),
-      widget: 'heading',
-    },
-    layout: {
-      title: intl.formatMessage(messages.layout),
-      widget: 'heading',
-    },
-    height: {
-      title: intl.formatMessage(messages.pHeightTitle),
-      widget: 'text',
-      description: intl.formatMessage(messages.pHeightDescription),
-    },
-    isScreenHeight: {
-      title: intl.formatMessage(messages.pIsScreenHeightTitle),
-      description: intl.formatMessage(messages.pIsScreenHeightDescription),
-      type: 'boolean',
-    },
-    backgroundImage: {
-      title: intl.formatMessage(messages.pBackgroundImage),
-      widget: 'url',
-    },
-    backgroundColor: {
-      title: intl.formatMessage(messages.pBackgroundColor),
-      type: 'color',
-      widget: 'style_simple_color',
-      available_colors: config.settings.available_colors,
-    },
-    textColor: {
-      title: intl.formatMessage(messages.pTextColor),
-      type: 'color',
-      widget: 'style_simple_color',
-      available_colors: config.settings.available_colors,
-    },
-    customClass: {
-      title: intl.formatMessage(messages.pCustomClassTitle),
-      description: intl.formatMessage(messages.pCustomClassDescription),
-    },
-    customId: {
-      title: intl.formatMessage(messages.pCustomIdTitle),
-      description: intl.formatMessage(messages.pCustomIdDescription),
-    },
-    customCSS: {
-      title: 'Custom CSS',
-      description:
-        'Add custom CSS properties (e.g. "border: 1px solid red; transform: rotate(5deg);")',
-      widget: 'textarea',
-      placeholder: 'border: 1px solid red;\ntransform: rotate(5deg);',
-    },
-    customClasses: {
-      title: 'CSS Classes',
-      description: 'Add custom CSS class names (space separated)',
-      placeholder: 'my-custom-class another-class',
-    },
-    isDropCap: {
-      title: intl.formatMessage(messages.pIsDropCapTitle),
-      description: intl.formatMessage(messages.pIsDropCapDescription),
-      type: 'boolean',
-    },
-    useAsPageHeader: {
-      title: 'Use as page header',
-      description: 'Use this block as page header',
-      type: 'boolean',
-    },
-    hidden: {
-      title: intl.formatMessage(messages.pHiddenTitle),
-      description: intl.formatMessage(messages.pHiddenDescription),
-      type: 'boolean',
-    },
-    shadowDepth: {
-      widget: 'slider',
-      title: intl.formatMessage(messages.pShadowDepth),
-      settings: {
-        min: 0,
-        max: 24,
-        step: 1,
-        start: 0,
-      },
-    },
-    shadowColor: {
-      title: intl.formatMessage(messages.pShadowColor),
-      type: 'color',
-      widget: 'style_simple_color',
-      available_colors: config.settings.available_colors,
-    },
-    borderRadius: {
-      widget: 'slider',
-      title: intl.formatMessage(messages.pBorderRadius),
-      settings: {
-        min: 0,
-        max: 24,
-        step: 1,
-        start: 0,
-      },
-    },
-    clear: {
-      title: intl.formatMessage(messages.pClearTitle),
-      description: intl.formatMessage(messages.pClearDescription),
-      choices: [
-        [null, 'None'],
-        ['left', 'Left'],
-        ['right', 'Right'],
-        ['both', 'Both'],
-      ],
-    },
-  };
+  const advancedStylingSchema = getAdvancedStylingSchema(intl);
 
   // Add all styling properties to the styles schema
   schema.properties.styles.schema.properties = {
     ...schema.properties.styles.schema.properties,
-    ...stylingProperties,
+    ...advancedStylingSchema.properties,
   };
 
   // Organize styling options in single vertical fieldset
@@ -400,12 +225,14 @@ export const addAdvancedStyling = ({ schema, formData, intl }) => {
       'text',
       'textAlign',
       'fontSize',
-      'fontWeight',
+      // 'fontWeight',
       'textColor',
-      'isDropCap',
+      // 'isDropCap',
       'background',
       'backgroundImage',
       'backgroundColor',
+      'backgroundFullColor',
+
       'borderRadius',
       'shadowDepth',
       'shadowColor',

@@ -41,13 +41,21 @@ export function groupByBGColor(blocks, blocks_layout) {
   let currentArr = [];
   let currentBGColor;
 
-  blocks_layout.items.forEach((blockId) => {
+  // Handle cases where blocks_layout might be undefined or missing items
+  const items = blocks_layout?.items || [];
+  
+  items.forEach((blockId) => {
     let currentBlockColor =
       blocks[blockId]?.styles?.backgroundColor ?? 'transparent';
 
     currentArr.push(blockId);
   });
-  result.push(currentArr);
+  
+  // Only push to result if we have items
+  if (currentArr.length > 0) {
+    result.push(currentArr);
+  }
+  
   return result;
 }
 
@@ -60,8 +68,8 @@ const RenderBlocks = (props) => {
   const CustomTag = props.as || React.Fragment;
 
   const grouped = groupByBGColor(
-    content[blocksFieldname],
-    content[blocksLayoutFieldname],
+    content[blocksFieldname] || {},
+    content[blocksLayoutFieldname] || {},
   );
 
   return hasBlocksData(content) ? (

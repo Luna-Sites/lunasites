@@ -226,6 +226,13 @@ External link removal for all the blocks.
   &:last-child {
     margin-bottom: -1rem !important;
   }
+  .accordion-block .blocks-group-wrapper {
+    padding-left: 10px;
+  }
+  .accordion-block .blocks-group-wrapper:last-child {
+    padding-bottom: 1.5rem !important;
+    overflow: hidden;
+  }
 }
 
 // Setting a default, for all blocks

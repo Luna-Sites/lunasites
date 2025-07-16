@@ -1,6 +1,9 @@
 // Intentionally empty
 // Used for customizations in other add-ons
 
+// Import button block customizations
+@import 'button-block';
+
 .view-editview,
 .view-addview {
   footer.ui.inverted.grey.segment {
@@ -14,6 +17,7 @@
 }
 
 .view-viewview,
+.view-editview,
 .view-addview {
   footer.ui.inverted.grey.segment {
     background-color: transparent !important;
@@ -296,4 +300,148 @@
 
 .block {
   margin-bottom: 0;
+}
+.accordion-block {
+  .blocks-group-wrapper:last-child {
+    margin-bottom: 1rem !important;
+  }
+}
+
+.ui.styled.accordion,
+.ui.styled.accordion .accordion {
+  background-color: transparent;
+}
+.accordion-block .ui.styled.accordion .title.accordion-title.active > span,
+.block-editor-accordion
+  .ui.styled.accordion
+  .title.accordion-title.active
+  > span {
+  color: inherit;
+}
+.ui.styled.accordion .active.title {
+}
+
+.accordion-block {
+  .ui.input > input {
+    color: inherit !important;
+  }
+}
+.accordion-block .ui.styled.accordion .title.accordion-title > span,
+.accordion-block
+  .ui.styled.accordion
+  .title.accordion-title
+  .input-accordion-title,
+.block-editor-accordion .ui.styled.accordion .title.accordion-title > span,
+.block-editor-accordion
+  .ui.styled.accordion
+  .title.accordion-title
+  .input-accordion-title {
+  color: inherit;
+}
+
+.accordion-block .ui.styled.accordion .title,
+.ui.styled.accordion .accordion .title {
+  color: inherit;
+}
+.accordion-block .ui.styled.accordion .title.accordion-title > svg,
+.block-editor-accordion .ui.styled.accordion .title.accordion-title > svg {
+  height: 50px !important;
+  fill: currentColor !important;
+  transform: rotate(-90deg);
+}
+
+.accordion-block .ui.styled.accordion .title.accordion-title.active > svg,
+.block-editor-accordion
+  .ui.styled.accordion
+  .title.accordion-title.active
+  > svg {
+  fill: currentColor !important;
+  transform: rotate(180deg);
+}
+
+// Individual accordion panel styling (similar to volto-super-hero pattern)
+.accordion-block {
+  .accordion-panel {
+    // Individual panel background color using CSS variables
+    &.panel-custom-bg {
+      .accordion-content {
+        background-color: var(--panel-bg-color) !important;
+      }
+    }
+
+    // Individual panel text color using CSS variables
+    &.panel-custom-text {
+      .accordion-content {
+        color: var(--panel-text-color) !important;
+
+        // Apply text color to all content within the panel
+        .block,
+        .slate p,
+        .slate h1,
+        .slate h2,
+        .slate h3,
+        .slate h4,
+        .slate h5,
+        .slate h6 {
+          color: var(--panel-text-color) !important;
+        }
+      }
+    }
+
+    // Individual panel title color using CSS variables
+    &.panel-custom-title {
+      .accordion-title {
+        color: var(--panel-title-color) !important;
+
+        span {
+          color: var(--panel-title-color) !important;
+        }
+
+        // Apply title color to SVG icons as well
+        svg {
+          fill: var(--panel-title-color) !important;
+        }
+      }
+    }
+
+    // Individual panel border styling
+    &.panel-with-border {
+      .accordion-content {
+        border: 2px solid var(--panel-title-color, #ccc);
+        border-radius: 4px;
+        margin-top: 0.5rem;
+        padding: 1rem;
+      }
+    }
+
+    // Enhanced styling for better visual appearance
+    .accordion-content-wrapper {
+      // Ensure proper spacing within panel content
+      .block:first-child {
+        margin-top: 0;
+      }
+
+      .block:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Ensure smooth transitions for individual panel styles
+  .ui.styled.accordion .accordion-content,
+  .ui.styled.accordion .accordion-title {
+    transition: all 0.3s ease;
+  }
+}
+
+// Edit mode styling for accordion (minimal since we use sidebar for editing)
+.accordion-block-edit {
+  // Simple preview styling in edit mode
+  .accordion-edit-mode {
+    opacity: 0.9;
+
+    .accordion-title {
+      cursor: pointer;
+    }
+  }
 }

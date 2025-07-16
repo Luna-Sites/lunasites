@@ -22,8 +22,8 @@ const addons = [
   '@eeacms/volto-quote-block',
   '@eeacms/volto-tags-block',
   '@plone-collective/volto-footer',
-  'volto-lunasites',
   'lunasites-advanced-styling',
+  'volto-lunasites',
   'volto-super-hero',
 ];
 

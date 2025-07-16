@@ -1,0 +1,18 @@
+/* Force title color styling */
+.accordion-block {
+  .ui.accordion {
+    .accordion-title {
+      &.custom-title-color {
+        color: var(--title-color) !important;
+        
+        span {
+          color: var(--title-color) !important;
+        }
+        
+        .input-accordion-title input {
+          color: var(--title-color) !important;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,114 @@
+/**
+ * Button block specific styling customizations
+ * Applies block-specific styles (buttonColor, filled) configured through blockSpecificEnhancer
+ */
+
+.block.__button {
+
+  .ui.button {
+    &.button-custom-color {
+      // Base styles for custom colored buttons
+      transition: all 0.3s ease;
+
+      &.button-filled {
+        // Filled button styles - applied inline via style attribute
+        &:hover {
+          opacity: 0.9;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+      }
+
+      &.button-outline {
+        // Outline button styles - applied inline via style attribute
+        background-color: transparent !important;
+        border: 2px solid;
+
+        &:hover {
+          // On hover, fill with the custom color
+          background-color: var(--button-hover-color, currentColor) !important;
+          color: var(--button-hover-text-color, white) !important;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+      }
+    }
+
+    // Enhanced button styles for better visual appearance
+    &[data-filled='true'] {
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &[data-filled='false'] {
+      font-weight: 500;
+      border-width: 2px;
+      background-color: transparent !important;
+
+      &:hover {
+        border-width: 2px;
+      }
+    }
+
+    // Custom color data attribute for CSS variable approach
+    &[data-custom-color] {
+      --button-hover-color: attr(data-custom-color);
+    }
+  }
+}
+
+// Enhanced alignment styles to work with custom button styling
+.block.__button {
+  .align {
+    &.left {
+      text-align: left;
+    }
+
+    &.right {
+      text-align: right;
+    }
+
+    &.center {
+      text-align: center;
+    }
+
+    &.full {
+      .ui.button {
+        width: 100% !important;
+        display: block;
+      }
+    }
+  }
+}
+
+// Edit mode specific styles
+.has-sidebar-opened .block.__button {
+  .ui.button {
+    pointer-events: none; // Prevent button clicks in edit mode
+  }
+}
+
+// Responsive button styles
+@media (max-width: 768px) {
+  .block.__button {
+    .ui.button {
+      font-size: 0.9rem;
+      padding: 0.8rem 1.5rem;
+    }
+
+    .align.full .ui.button {
+      font-size: 1rem;
+      padding: 1rem 2rem;
+    }
+  }
+}

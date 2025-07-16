@@ -66,7 +66,7 @@ function parseCustomCSS(cssString) {
   return styles;
 }
 
-export function getInlineStyles(data, props = {}) {
+export function getInlineStyles(data, props = {}, addBackgroundPadding = false) {
   const customStyles = parseCustomCSS(data.customCSS);
   
   return {
@@ -75,6 +75,7 @@ export function getInlineStyles(data, props = {}) {
       ? {
           background: data.backgroundColor,
           '--background-color': data.backgroundColor,
+          ...(addBackgroundPadding && !data.padding ? { padding: '1em' } : {}),
         }
       : {}),
     ...(data.textColor
@@ -86,6 +87,7 @@ export function getInlineStyles(data, props = {}) {
       : {}),
     ...(data.fontWeight ? { fontWeight: data.fontWeight } : {}),
     ...(data.height ? { height: data.height } : {}),
+    ...(data.width ? { width: data.width } : {}),
     ...(data.isScreenHeight && props.screen.height
       ? {
           minHeight: (

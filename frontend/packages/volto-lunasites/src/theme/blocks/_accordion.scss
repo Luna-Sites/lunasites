@@ -1,38 +1,42 @@
 // Adjust in case the grid add-on is still in place.
 .block.accordion [data-rbd-draggable-context-id] {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
-
+.ui.styled.accordion .title,
+.ui.styled.accordion .accordion .title {
+  padding-top: 15px;
+}
 .accordion-block,
 .block-editor-accordion {
   .ui.styled.accordion {
-    border-top: 1px solid $black;
+    overflow: hidden;
+    padding-left: 10px;
+    border-top: 1px solid currentColor;
 
     &:last-child {
-      border-bottom: 1px solid $black;
+      border-bottom: 1px solid currentColor;
     }
     .title.accordion-title {
-      padding: 20px 0 20px 0;
       background-color: unset;
 
       & > svg {
         height: 50px !important;
-        fill: $grey !important;
+        fill: currentColor !important;
         transform: rotate(-90deg);
       }
 
       & > span,
       .input-accordion-title {
         @include introduction();
-        color: $darkGrey;
+        color: inherit;
       }
 
       &.active > span {
-        color: $black;
+        color: inherit;
       }
 
       &.active > svg {
-        fill: $black !important;
+        fill: currentColor !important;
         transform: rotate(180deg);
       }
     }
@@ -83,7 +87,7 @@
             padding: 0;
             margin-bottom: 10px;
             background-color: transparent;
-            color: $grey;
+            color: inherit;
             text-transform: none;
             @include marginal-title();
           }
@@ -116,6 +120,6 @@
 #page-add .block-editor-accordion.has--backgroundColor--grey,
 #page-edit .block-editor-accordion.has--backgroundColor--grey {
   .accordion.ui.fluid.styled {
-    background-color: $lightgrey;
+    background-color: inherit;
   }
 }

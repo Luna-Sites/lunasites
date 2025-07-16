@@ -21,6 +21,10 @@ import TopSideFacets from './components/Blocks/Search/TopSideFacets';
 
 import GridListingBlockTemplate from './components/Blocks/Listing/GridTemplate';
 import { ButtonStylingSchema } from './components/Blocks/Button/schema';
+import {
+  withBlockSpecificStyling,
+  addAdvancedStyling,
+} from 'lunasites-advanced-styling';
 
 import { imageBlockSchemaEnhancer } from './components/Blocks/Image/schema';
 import { ImageBlockDataAdapter } from './components/Blocks/Image/adapter';
@@ -36,6 +40,7 @@ import EventView from './components/Theme/EventView';
 import { tocBlockSchemaEnhancer } from './components/Blocks/Toc/schema';
 import { mapsBlockSchemaEnhancer } from './components/Blocks/Maps/schema';
 import { sliderBlockSchemaEnhancer } from './components/Blocks/Slider/schema';
+
 import EventMetadataView from './components/Blocks/EventMetadata/View';
 
 const BG_COLORS = [
@@ -61,6 +66,29 @@ const applyConfig = (config) => {
   config.settings.enableFatMenu = true;
   config.settings.slate.useLinkedHeadings = false;
   config.settings.contentMetadataTagsImageField = 'preview_image';
+
+  // Block-specific styling configurations
+  const blockSpecificConfigs = {
+    // Button block with disabled styles and specific options
+    __button: {
+      disabled: ['textAlign', 'align', 'size'],
+      specificStyles: {
+        title: 'Button Options',
+        fields: {
+          buttonColor: {
+            title: 'Button Color',
+            type: 'color',
+            widget: 'style_simple_color',
+          },
+          filled: {
+            title: 'Filled',
+            type: 'boolean',
+            description: 'Filled button or outline only',
+          },
+        },
+      },
+    },
+  };
 
   // Initial block for event content type
   config.blocks.initialBlocks.Event = [
@@ -143,32 +171,13 @@ const applyConfig = (config) => {
 
   config.settings.slidingSearchAnimation = true;
   config.settings.openExternalLinkInNewTab = true;
+
   config.blocks.blocksConfig.__button = {
     ...config.blocks.blocksConfig.__button,
-    schemaEnhancer: ButtonStylingSchema,
+    schemaEnhancer: withBlockSpecificStyling(addAdvancedStyling, {
+      __button: blockSpecificConfigs['__button'],
+    }),
     colors: BG_COLORS,
-    disabledStyling: ['textAlign', 'align', 'size'],
-    specificStyling: {
-      intl: null, // Will be injected by the enhancer
-      fieldset: {
-        id: 'blockSpecific',
-        title: 'Block Specific',
-      },
-      fields: {
-        width: {
-          title: 'Width',
-          type: 'text',
-        },
-        filled: {
-          title: 'Filled',
-          type: 'boolean',
-        },
-        buttonColor: {
-          title: 'Button Color',
-          widget: 'style_simple_color',
-        },
-      },
-    },
   };
   config.settings.appExtras = [
     ...config.settings.appExtras,
@@ -191,23 +200,20 @@ const applyConfig = (config) => {
       'separator',
     ],
     colors: BG_COLORS,
-    schemaEnhancer: composeSchema(
-      AccordionSchemaEnhancer,
-      defaultStylingSchema,
-    ),
+    schemaEnhancer: composeSchema(AccordionSchemaEnhancer, addAdvancedStyling),
     sidebarTab: 1,
   };
 
   config.blocks.blocksConfig.slateTable = {
     ...config.blocks.blocksConfig.slateTable,
-    schemaEnhancer: defaultStylingSchema,
+    schemaEnhancer: addAdvancedStyling,
     colors: BG_COLORS,
   };
 
   config.blocks.blocksConfig.listing = {
     ...config.blocks.blocksConfig.listing,
     colors: BG_COLORS,
-    schemaEnhancer: defaultStylingSchema,
+    schemaEnhancer: addAdvancedStyling,
     allowed_headline_tags: [['h2', 'h2']],
     variations: [
       ...config.blocks.blocksConfig.listing.variations,
@@ -284,7 +290,7 @@ const applyConfig = (config) => {
   config.blocks.blocksConfig.slate = {
     ...config.blocks.blocksConfig.slate,
     colors: BG_COLORS,
-    schemaEnhancer: defaultStylingSchema,
+    schemaEnhancer: addAdvancedStyling,
     sidebarTab: 1,
   };
 
@@ -293,7 +299,7 @@ const applyConfig = (config) => {
     group: 'teasers',
     imageScale: 'larger',
     colors: BG_COLORS,
-    schemaEnhancer: composeSchema(defaultStylingSchema, teaserSchemaEnhancer),
+    schemaEnhancer: composeSchema(addAdvancedStyling, teaserSchemaEnhancer),
   };
 
   config.blocks.blocksConfig.video = {
@@ -318,7 +324,7 @@ const applyConfig = (config) => {
     sidebarTab: 0,
     allowed_headings: [['h2', 'h2']],
     colors: BG_COLORS,
-    schemaEnhancer: defaultStylingSchema,
+    schemaEnhancer: addAdvancedStyling,
   };
 
   config.blocks.blocksConfig.search = {
@@ -332,33 +338,6 @@ const applyConfig = (config) => {
         isDefault: true,
       },
     ],
-  };
-
-  config.blocks.blocksConfig.__button = {
-    ...config.blocks.blocksConfig.__button,
-    schemaEnhancer: ButtonStylingSchema,
-    colors: BG_COLORS,
-    disabledStyling: ['textAlign', 'align', 'size'],
-    specificStyling: {
-      fieldset: {
-        id: 'blockSpecific',
-        title: 'Block Specific',
-      },
-      fields: {
-        width: {
-          title: 'Width',
-          type: 'text',
-        },
-        filled: {
-          title: 'Filled',
-          type: 'boolean',
-        },
-        buttonColor: {
-          title: 'Button Color',
-          widget: 'style_simple_color',
-        },
-      },
-    },
   };
 
   config.blocks.blocksConfig.eventMetadata = {
@@ -381,7 +360,7 @@ const applyConfig = (config) => {
       ...config.blocks.blocksConfig.separator,
       schemaEnhancer: composeSchema(
         config.blocks.blocksConfig.separator.schemaEnhancer,
-        defaultStylingSchema,
+        addAdvancedStyling,
       ),
       colors: BG_COLORS,
     };
@@ -392,7 +371,7 @@ const applyConfig = (config) => {
   // TOC Block
   config.blocks.blocksConfig.toc = {
     ...config.blocks.blocksConfig.toc,
-    schemaEnhancer: composeSchema(tocBlockSchemaEnhancer, defaultStylingSchema),
+    schemaEnhancer: composeSchema(addAdvancedStyling, tocBlockSchemaEnhancer),
     // remove horizontal variation
     variations: [config.blocks.blocksConfig.toc.variations[0]],
   };
@@ -401,6 +380,13 @@ const applyConfig = (config) => {
   config.blocks.blocksConfig.slider = {
     ...config.blocks.blocksConfig.slider,
     schemaEnhancer: sliderBlockSchemaEnhancer,
+  };
+
+  // Columns Block
+  config.blocks.blocksConfig.columnsBlock = {
+    ...config.blocks.blocksConfig.columnsBlock,
+    schemaEnhancer: addAdvancedStyling,
+    colors: BG_COLORS,
   };
 
   return config;
