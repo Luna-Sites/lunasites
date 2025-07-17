@@ -10,12 +10,21 @@ COPY --chown=node pnpm-workspace.yaml /app/
 
 RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 <<EOT
     set -e
+    # Merge package.json files
     python3 -c "import json; orig_data = json.load(open('package.json.temp')); orig_deps = orig_data['dependencies']; data = json.load(open('package.json')); data['dependencies'].update(orig_deps); json.dump(data, open('package.json', 'w'), indent=2)"
     rm package.json.temp
-    pnpm dlx mrs-developer missdev --no-config --fetch-https
-    pnpm install && pnpm build:deps
+
+    # Install all dependencies, including addons from package.json
+    pnpm install --silent
+
+    # Build dependencies
+    pnpm --silent --filter @plone/registry --filter @plone/components build
+
+    # Build the project
     pnpm build
-    pnpm install --prod
+
+    # Install production dependencies
+    pnpm install --prod --silent
 EOT
 
 FROM plone/frontend-prod-config:${VOLTO_VERSION}
