@@ -38,7 +38,6 @@
     "@kitconcept/volto-light-theme": "7.0.0-alpha.8",
     "@plone/registry": "workspace:*",
     "volto-lunasites": "workspace:*",
-    "@plonegovbr/volto-social-media": "2.0.0-alpha.6",
     "@eeacms/volto-accordion-block": "*",
     "@kitconcept/volto-banner-block": "*",
     "@kitconcept/volto-button-block": "*",
