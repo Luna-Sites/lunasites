@@ -6,5 +6,167 @@
     "https": "https://github.com/plone/volto.git",
     "tag": "18.22.0",
     "filterBlobs": true
+  },
+  "volto-accordion-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-accordion-block",
+    "url": "git@github.com:eea/volto-accordion-block.git",
+    "https": "https://github.com/eea/volto-accordion-block.git"
+  },
+  "volto-banner-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@kitconcept/volto-banner-block",
+    "url": "git@github.com:kitconcept/volto-banner-block.git",
+    "https": "https://github.com/kitconcept/volto-banner-block.git"
+  },
+  "volto-button-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@kitconcept/volto-button-block",
+    "url": "git@github.com:kitconcept/volto-button-block.git",
+    "https": "https://github.com/kitconcept/volto-button-block.git"
+  },
+  "volto-carousel-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@kitconcept/volto-carousel-block",
+    "url": "git@github.com:kitconcept/volto-carousel-block.git",
+    "https": "https://github.com/kitconcept/volto-carousel-block.git"
+  },
+  "volto-heading-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@kitconcept/volto-heading-block",
+    "url": "git@github.com:kitconcept/volto-heading-block.git",
+    "https": "https://github.com/kitconcept/volto-heading-block.git"
+  },
+  "volto-highlight-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@kitconcept/volto-highlight-block",
+    "url": "git@github.com:kitconcept/volto-highlight-block.git",
+    "https": "https://github.com/kitconcept/volto-highlight-block.git"
+  },
+  "volto-introduction-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@kitconcept/volto-introduction-block",
+    "url": "git@github.com:kitconcept/volto-introduction-block.git",
+    "https": "https://github.com/kitconcept/volto-introduction-block.git"
+  },
+  "volto-logos-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@kitconcept/volto-logos-block",
+    "url": "git@github.com:kitconcept/volto-logos-block.git",
+    "https": "https://github.com/kitconcept/volto-logos-block.git"
+  },
+  "volto-separator-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@kitconcept/volto-separator-block",
+    "url": "git@github.com:kitconcept/volto-separator-block.git",
+    "https": "https://github.com/kitconcept/volto-separator-block.git"
+  },
+  "volto-slider-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@kitconcept/volto-slider-block",
+    "url": "git@github.com:kitconcept/volto-slider-block.git",
+    "https": "https://github.com/kitconcept/volto-slider-block.git"
+  },
+  "volto-footer": {
+    "develop": false,
+    "output": "packages",
+    "package": "@plone-collective/volto-footer",
+    "url": "git@github.com:collective/volto-footer.git",
+    "https": "https://github.com/collective/volto-footer.git"
+  },
+  "volto-tabs-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-tabs-block",
+    "url": "git@github.com:eea/volto-tabs-block.git",
+    "https": "https://github.com/eea/volto-tabs-block.git"
+  },
+  "volto-group-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-group-block",
+    "url": "git@github.com:eea/volto-group-block.git",
+    "https": "https://github.com/eea/volto-group-block.git"
+  },
+  "volto-columns-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-columns-block",
+    "url": "git@github.com:eea/volto-columns-block.git",
+    "https": "https://github.com/eea/volto-columns-block.git"
+  },
+  "volto-block-divider": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-block-divider",
+    "url": "git@github.com:eea/volto-block-divider.git",
+    "https": "https://github.com/eea/volto-block-divider.git"
+  },
+  "volto-statistic-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-statistic-block",
+    "url": "git@github.com:eea/volto-statistic-block.git",
+    "https": "https://github.com/eea/volto-statistic-block.git"
+  },
+  "volto-pdf-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-pdf-block",
+    "url": "git@github.com:eea/volto-pdf-block.git",
+    "https": "https://github.com/eea/volto-pdf-block.git"
+  },
+  "volto-slate-footnote": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-slate-footnote",
+    "url": "git@github.com:eea/volto-slate-footnote.git",
+    "https": "https://github.com/eea/volto-slate-footnote.git"
+  },
+  "volto-block-toc": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-block-toc",
+    "url": "git@github.com:eea/volto-block-toc.git",
+    "https": "https://github.com/eea/volto-block-toc.git"
+  },
+  "volto-metadata-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-metadata-block",
+    "url": "git@github.com:eea/volto-metadata-block.git",
+    "https": "https://github.com/eea/volto-metadata-block.git"
+  },
+  "volto-quote-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-quote-block",
+    "url": "git@github.com:eea/volto-quote-block.git",
+    "https": "https://github.com/eea/volto-quote-block.git"
+  },
+  "volto-tags-block": {
+    "develop": false,
+    "output": "packages",
+    "package": "@eeacms/volto-tags-block",
+    "url": "git@github.com:eea/volto-tags-block.git",
+    "https": "https://github.com/eea/volto-tags-block.git"
+  },
+  "volto-super-hero": {
+    "develop": false,
+    "output": "packages",
+    "package": "volto-super-hero",
+    "url": "git@github.com:Luna-Sites/volto-super-hero.git",
+    "https": "https://github.com/Luna-Sites/volto-super-hero.git",
+    "branch": "master"
   }
 }
