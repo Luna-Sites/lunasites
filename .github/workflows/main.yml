@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME_PREFIX: ghcr.io/luna-sites/lunasites
+  IMAGE_NAME_PREFIX: ghcr.io/Luna-Sites/lunasites
   NODE_VERSION: "22.x"
   PYTHON_VERSION: "3.12"
 
@@ -77,6 +77,7 @@ jobs:
       image-name-suffix: backend
       python-version: ${{ needs.config.outputs.PYTHON_VERSION }}
       plone-version: ${{ needs.config.outputs.PLONE_VERSION }}
+    if: ${{ needs.config.outputs.backend == 'true' }}
     permissions:
       contents: read
       packages: write
@@ -87,6 +88,7 @@ jobs:
       - config
     with:
       python-version: ${{ needs.config.outputs.PYTHON_VERSION }}
+    if: ${{ needs.config.outputs.docs == 'true' }}
 
   frontend:
     uses: ./.github/workflows/frontend.yml
@@ -98,6 +100,7 @@ jobs:
       image-name-suffix: frontend
       node-version: ${{ needs.config.outputs.NODE_VERSION }}
       volto-version: ${{ needs.config.outputs.VOLTO_VERSION }}
+    if: ${{ needs.config.outputs.frontend == 'true' }}
     permissions:
       contents: read
       packages: write

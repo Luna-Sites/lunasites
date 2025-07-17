@@ -88,4 +88,3 @@ jobs:
             VOLTO_VERSION=${{ inputs.volto-version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          retry: 3
