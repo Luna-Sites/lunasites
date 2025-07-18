@@ -90,15 +90,15 @@ importers:
       '@plone/volto':
         specifier: workspace:*
         version: link:core/packages/volto
+      luna-super-hero:
+        specifier: 8.0.0
+        version: 8.0.0(embla-carousel@8.6.0)(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       lunasites-advanced-styling:
         specifier: workspace:*
         version: link:packages/lunasites-advanced-styling
       volto-lunasites:
         specifier: workspace:*
         version: link:packages/volto-lunasites
-      volto-super-hero:
-        specifier: github:Luna-Sites/volto-super-hero#master
-        version: https://codeload.github.com/Luna-Sites/volto-super-hero/tar.gz/c9eeb440de034505cf87c7441c68379157395dc6(embla-carousel@8.6.0)(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
       mrs-developer:
         specifier: ^2.2.0
@@ -10633,6 +10633,9 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
 
+  luna-super-hero@8.0.0:
+    resolution: {integrity: sha512-ns90G3mmihm0OrpzvO2s+XLfI973JKV5ZMtOypkWQYPL8gqpjcXPl404PV/GBj6MyK8oGLK56BLpb9wL/yuH6Q==}
+
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
@@ -14813,10 +14816,6 @@ packages:
         optional: true
       jsdom:
         optional: true
-
-  volto-super-hero@https://codeload.github.com/Luna-Sites/volto-super-hero/tar.gz/c9eeb440de034505cf87c7441c68379157395dc6:
-    resolution: {tarball: https://codeload.github.com/Luna-Sites/volto-super-hero/tar.gz/c9eeb440de034505cf87c7441c68379157395dc6}
-    version: 7.1.0
 
   vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}
@@ -26932,6 +26931,20 @@ snapshots:
 
   lru-cache@7.18.3: {}
 
+  luna-super-hero@8.0.0(embla-carousel@8.6.0)(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@eeacms/volto-object-widget': 7.0.0
+      embla-carousel-autoplay: 8.6.0(embla-carousel@8.6.0)
+      embla-carousel-react: 8.6.0(react@18.2.0)
+      react-slick: 0.30.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      remixicon: 4.6.0
+      slick-carousel: 1.8.1(jquery@3.7.1)
+    transitivePeerDependencies:
+      - embla-carousel
+      - jquery
+      - react
+      - react-dom
+
   lz-string@1.5.0: {}
 
   macos-release@3.3.0: {}
@@ -32927,21 +32940,6 @@ snapshots:
       - supports-color
       - terser
     optional: true
-
-  volto-super-hero@https://codeload.github.com/Luna-Sites/volto-super-hero/tar.gz/c9eeb440de034505cf87c7441c68379157395dc6(embla-carousel@8.6.0)(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    dependencies:
-      '@eeacms/volto-object-widget': 7.0.0
-      '@eeacms/volto-widget-theme-picker': 2.0.0
-      embla-carousel-autoplay: 8.6.0(embla-carousel@8.6.0)
-      embla-carousel-react: 8.6.0(react@18.2.0)
-      react-slick: 0.30.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      remixicon: 4.6.0
-      slick-carousel: 1.8.1(jquery@3.7.1)
-    transitivePeerDependencies:
-      - embla-carousel
-      - jquery
-      - react
-      - react-dom
 
   vue-template-compiler@2.7.16:
     dependencies:

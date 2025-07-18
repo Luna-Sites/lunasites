@@ -61,7 +61,7 @@
     "@eeacms/volto-quote-block": "*",
     "@eeacms/volto-tags-block": "*",
     "lunasites-advanced-styling": "workspace:*",
-    "volto-super-hero": "github:Luna-Sites/volto-super-hero#master"
+    "luna-super-hero": "8.0.0"
   },
   "devDependencies": {
     "mrs-developer": "^2.2.0"

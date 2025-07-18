@@ -32,7 +32,7 @@ const messages = defineMessages({
   },
 });
 
-// Individual accordion panel schema (similar to heroSlideSchema in volto-super-hero)
+// Individual accordion panel schema (similar to heroSlideSchema in luna-super-hero)
 export const accordionPanelSchema = (intl) => {
   const advancedStyling = getAdvancedStyling(intl);
 
@@ -68,7 +68,7 @@ export const accordionPanelSchema = (intl) => {
   };
 };
 
-// Main accordion block schema (similar to HeroBlockSchema in volto-super-hero)
+// Main accordion block schema (similar to HeroBlockSchema in luna-super-hero)
 export const AccordionBlockSchema = (props) => {
   const { intl, activeObject, setActiveObject } = props;
 
@@ -82,7 +82,7 @@ export const AccordionBlockSchema = (props) => {
       },
     ],
     properties: {
-      // Panels using object_list widget (similar to slides in volto-super-hero)
+      // Panels using object_list widget (similar to slides in luna-super-hero)
       panels: {
         widget: 'object_list',
         title: intl.formatMessage(messages.panels),

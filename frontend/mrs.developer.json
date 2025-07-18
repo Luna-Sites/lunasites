@@ -161,12 +161,12 @@
     "url": "git@github.com:eea/volto-tags-block.git",
     "https": "https://github.com/eea/volto-tags-block.git"
   },
-  "volto-super-hero": {
+  "luna-super-hero": {
     "develop": false,
     "output": "packages",
-    "package": "volto-super-hero",
-    "url": "git@github.com:Luna-Sites/volto-super-hero.git",
-    "https": "https://github.com/Luna-Sites/volto-super-hero.git",
+    "package": "luna-super-hero",
+    "url": "git@github.com:Luna-Sites/luna-super-hero.git",
+    "https": "https://github.com/Luna-Sites/luna-super-hero.git",
     "branch": "master"
   }
 }
