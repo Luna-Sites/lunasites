@@ -9,11 +9,6 @@
   footer.ui.inverted.grey.segment {
     background-color: transparent !important;
   }
-  footer {
-    .blocks-container {
-      width: 100%;
-    }
-  }
 }
 
 .view-viewview,
@@ -22,9 +17,7 @@
   footer.ui.inverted.grey.segment {
     background-color: transparent !important;
   }
-  .styled-with-bg:has(#footer) {
-    padding: 0;
-  }
+
   footer {
     .blocks-container {
       width: 100%;
@@ -444,4 +437,10 @@
       cursor: pointer;
     }
   }
+}
+footer.ui.inverted.grey.segment {
+  color: black;
+}
+footer .blocks-container a {
+  color: inherit;
 }
