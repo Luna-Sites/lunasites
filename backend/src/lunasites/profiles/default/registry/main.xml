@@ -3,6 +3,24 @@
           i18n:domain="lunasites"
 >
 
+  <!-- CORS Configuration for plone.restapi -->
+  <record name="plone.restapi.cors_policy">
+    <field type="plone.registry.field.Dict">
+      <title>CORS Policy</title>
+      <description>CORS policy configuration</description>
+      <key_type type="plone.registry.field.ASCIILine" />
+      <value_type type="plone.registry.field.TextLine" />
+    </field>
+    <value>
+      <element key="allow_origin">*</element>
+      <element key="allow_credentials">true</element>
+      <element key="allow_headers">Accept,Accept-Encoding,Authorization,Content-Type,Origin,X-Requested-With</element>
+      <element key="allow_methods">DELETE,GET,OPTIONS,PATCH,POST,PUT</element>
+      <element key="expose_headers">Content-Length,X-My-Header</element>
+      <element key="max_age">3600</element>
+    </value>
+  </record>
+
   <!-- -*- extra stuff goes here -*- -->
 
 </registry>
