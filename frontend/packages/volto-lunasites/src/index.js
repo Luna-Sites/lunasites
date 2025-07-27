@@ -43,6 +43,10 @@ import { sliderBlockSchemaEnhancer } from './components/Blocks/Slider/schema';
 
 import EventMetadataView from './components/Blocks/EventMetadata/View';
 
+// Color Schema System
+import { ColorSchemaProvider, ColorSchemaField } from './components';
+import { colorSchemaInherit } from './reducers';
+
 const BG_COLORS = [
   { name: 'transparent', label: 'Transparent' },
   { name: 'grey', label: 'Grey' },
@@ -60,6 +64,15 @@ defineMessages({
 });
 
 const applyConfig = (config) => {
+  // Add color schema reducers
+  config.addonReducers = {
+    ...config.addonReducers,
+    colorSchemaInherit,
+  };
+
+  // Register color schema widget
+  config.widgets.widget.color_schema = ColorSchemaField;
+
   config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;
   config.settings.navDepth = 3;
@@ -184,6 +197,10 @@ const applyConfig = (config) => {
     {
       match: '',
       component: AppExtras,
+    },
+    {
+      match: '',
+      component: ColorSchemaProvider,
     },
   ];
 

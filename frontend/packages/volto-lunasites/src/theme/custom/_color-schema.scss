@@ -1,0 +1,221 @@
+// Luna Sites Color Schema CSS Variables
+// This file provides CSS custom properties for the color schema system
+
+:root {
+  // Default color schema values
+  --lunasites-background-color: #ffffff;
+  --lunasites-primary-color: #0070ae;
+  --lunasites-secondary-color: #e73d5c;
+  --lunasites-header-color: #2c3e50;
+  --lunasites-text-color: #333333;
+  --lunasites-accent-color: #6bb535;
+  
+  // Derived colors (auto-generated from primary colors)
+  --lunasites-primary-light: color-mix(in srgb, var(--lunasites-primary-color) 80%, white);
+  --lunasites-primary-dark: color-mix(in srgb, var(--lunasites-primary-color) 80%, black);
+  --lunasites-secondary-light: color-mix(in srgb, var(--lunasites-secondary-color) 80%, white);
+  --lunasites-secondary-dark: color-mix(in srgb, var(--lunasites-secondary-color) 80%, black);
+}
+
+// Utility classes for applying color schema
+.color-schema-bg {
+  background-color: var(--lunasites-background-color) !important;
+}
+
+.color-schema-primary {
+  color: var(--lunasites-primary-color) !important;
+}
+
+.color-schema-primary-bg {
+  background-color: var(--lunasites-primary-color) !important;
+}
+
+.color-schema-secondary {
+  color: var(--lunasites-secondary-color) !important;
+}
+
+.color-schema-secondary-bg {
+  background-color: var(--lunasites-secondary-color) !important;
+}
+
+.color-schema-header {
+  color: var(--lunasites-header-color) !important;
+}
+
+.color-schema-header-bg {
+  background-color: var(--lunasites-header-color) !important;
+}
+
+.color-schema-text {
+  color: var(--lunasites-text-color) !important;
+}
+
+.color-schema-accent {
+  color: var(--lunasites-accent-color) !important;
+}
+
+.color-schema-accent-bg {
+  background-color: var(--lunasites-accent-color) !important;
+}
+
+// Integration with common website elements
+body {
+  background-color: var(--lunasites-background-color);
+  color: var(--lunasites-text-color);
+}
+
+// Header and navigation
+.ui.menu {
+  background-color: var(--lunasites-header-color);
+  
+  .item {
+    color: var(--lunasites-text-color);
+    
+    &:hover {
+      background-color: var(--lunasites-primary-color);
+    }
+  }
+}
+
+// Primary buttons and links
+.ui.primary.button,
+.ui.button.primary {
+  background-color: var(--lunasites-primary-color) !important;
+  
+  &:hover {
+    background-color: var(--lunasites-primary-dark) !important;
+  }
+}
+
+.ui.secondary.button,
+.ui.button.secondary {
+  background-color: var(--lunasites-secondary-color) !important;
+  
+  &:hover {
+    background-color: var(--lunasites-secondary-dark) !important;
+  }
+}
+
+// Links
+a {
+  color: var(--lunasites-primary-color);
+  
+  &:hover {
+    color: var(--lunasites-primary-dark);
+  }
+}
+
+// Block-specific color schema integration
+.block {
+  // Allow blocks to inherit color schema
+  &.color-schema-aware {
+    background-color: inherit;
+    color: inherit;
+    
+    // Headers within blocks
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--lunasites-header-color);
+    }
+    
+    // Buttons within blocks
+    .ui.button {
+      &.use-primary {
+        background-color: var(--lunasites-primary-color);
+        color: white;
+      }
+      
+      &.use-secondary {
+        background-color: var(--lunasites-secondary-color);
+        color: white;
+      }
+      
+      &.use-accent {
+        background-color: var(--lunasites-accent-color);
+        color: white;
+      }
+    }
+  }
+}
+
+// Squarespace-like section styling
+.section {
+  &.use-color-schema {
+    background-color: var(--lunasites-background-color);
+    color: var(--lunasites-text-color);
+    
+    &.primary-bg {
+      background-color: var(--lunasites-primary-color);
+      color: white;
+    }
+    
+    &.secondary-bg {
+      background-color: var(--lunasites-secondary-color);
+      color: white;
+    }
+    
+    &.header-bg {
+      background-color: var(--lunasites-header-color);
+      color: white;
+    }
+  }
+}
+
+// Form elements
+.ui.form {
+  .field {
+    label {
+      color: var(--lunasites-text-color);
+    }
+  }
+  
+  input, textarea {
+    border-color: var(--lunasites-primary-color);
+    
+    &:focus {
+      border-color: var(--lunasites-primary-dark);
+      box-shadow: 0 0 0 1px var(--lunasites-primary-color);
+    }
+  }
+}
+
+// Cards and content blocks
+.ui.card {
+  &.color-schema-card {
+    background-color: var(--lunasites-background-color);
+    border: 1px solid var(--lunasites-primary-color);
+    
+    .header {
+      color: var(--lunasites-header-color);
+    }
+    
+    .meta {
+      color: var(--lunasites-text-color);
+      opacity: 0.8;
+    }
+  }
+}
+
+// Loading and transition states
+.color-schema-transition {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+// Responsive design helpers
+@media (max-width: 768px) {
+  .color-schema-mobile {
+    // Mobile-specific color adjustments
+    .ui.menu {
+      background-color: var(--lunasites-primary-color);
+    }
+  }
+}
+
+// Dark mode support (if background is dark)
+@media (prefers-color-scheme: dark) {
+  :root {
+    // These will be overridden by the color schema widget
+    // but provide fallbacks for dark mode
+    --lunasites-background-color: #1a1a1a;
+    --lunasites-text-color: #ffffff;
+  }
+}

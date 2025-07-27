@@ -1,0 +1,14 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="lunasites">
+
+  <!-- Color Schema REST API Service -->
+  <adapter
+      factory=".color_schema.ColorSchemaService"
+      for="* zope.publisher.interfaces.http.IHTTPRequest"
+      provides="zope.publisher.interfaces.IPublishTraverse"
+      name="color-schema"
+      />
+
+</configure>

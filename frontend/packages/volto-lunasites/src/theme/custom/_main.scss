@@ -4,6 +4,152 @@
 // Import button block customizations
 @import 'button-block';
 
+// Import color schema system
+@import 'color-schema';
+
+// Color Schema Field Widget Styles
+.color-schema-field {
+  width: 100% !important;
+  max-width: 100% !important;
+
+  // Ensure all child elements stay within sidebar width
+  * {
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  // Grid layout styling
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+
+    .color-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin: 0;
+      min-height: 40px;
+
+      .color-label {
+        font-size: 9px;
+        font-weight: 500;
+        color: #666;
+        text-align: center;
+        line-height: 1.1;
+        word-break: break-word;
+        margin: 0;
+      }
+    }
+  }
+
+  // Dropdown styles
+  .ui.dropdown {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    .menu {
+      max-width: 100% !important;
+      width: 100% !important;
+    }
+  }
+
+  // Button styles
+  .ui.button {
+    &.mini {
+      font-size: 10px !important;
+      padding: 3px 6px !important;
+    }
+
+    &.fluid {
+      width: 100% !important;
+    }
+  }
+
+  // SimpleColorPicker compact styling for grid
+  .color-grid {
+    .simple-color-picker-widget,
+    .wrapper {
+      width: 100% !important;
+      height: 24px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+
+      .ui.button.group {
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        border: 1px solid #ccc !important;
+        border-radius: 3px !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+
+        .ui.button {
+          margin: 0 !important;
+          padding: 0 !important;
+          border: none !important;
+          min-height: auto !important;
+          min-width: auto !important;
+          line-height: 1 !important;
+
+          &:first-child {
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 0 !important;
+            flex: none !important;
+            box-sizing: border-box !important;
+          }
+
+          &:last-child {
+            display: none !important;
+          }
+        }
+      }
+    }
+
+    // Add borders between grid items
+    .color-item {
+      position: relative;
+
+      &:not(:nth-child(3n))::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -4px;
+        width: 1px;
+        height: 100%;
+        background: #e0e0e0;
+      }
+
+      &:nth-child(-n + 3)::before {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: #e0e0e0;
+      }
+    }
+  }
+}
+
+// Sidebar specific styling
+.sidebar .color-schema-field {
+  width: 100% !important;
+  max-width: 100% !important;
+
+  // Remove any default margins/padding that could cause overflow
+  .field-wrapper {
+    padding: 0;
+    margin: 0;
+  }
+}
+
 .view-editview,
 .view-addview {
   footer.ui.inverted.grey.segment {
@@ -290,9 +436,28 @@
   padding: 1rem;
   margin-top: 1em;
 }
-
+footer {
+  [data-rbd-draggable-context-id] {
+    margin-bottom: 0px;
+  }
+}
 .block {
   margin-bottom: 0;
+}
+#main .breadcrumbs {
+  background-color: transparent !important;
+}
+.color-grid {
+  button {
+    padding: 0 !important;
+    width: 65px !important;
+    height: 50px !important;
+    margin: 0 !important;
+    min-height: auto !important;
+    min-width: auto !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
+  }
 }
 .accordion-block {
   .blocks-group-wrapper:last-child {
@@ -312,6 +477,7 @@
   color: inherit;
 }
 .ui.styled.accordion .active.title {
+  color: inherit;
 }
 
 .accordion-block {
@@ -443,4 +609,7 @@ footer.ui.inverted.grey.segment {
 }
 footer .blocks-container a {
   color: inherit;
+}
+.metadataform-fieldset-layout {
+  display: none;
 }

@@ -14,6 +14,7 @@ import TextAlignWidget from './Widgets/TextAlign';
 import SliderWidget from './Widgets/Slider';
 import SizeWidget from './Widgets/Size';
 import SimpleColorPicker from './Widgets/SimpleColorPicker';
+import ColorSchemaWidget from './Widgets/ColorSchemaWidget';
 import QuadSizeWidget from './Widgets/QuadSize';
 import HeadlineWidget from './Widgets/HeadlineWidget';
 
@@ -106,6 +107,7 @@ const applyConfig = (config) => {
   config.widgets.widget.style_text_align = TextAlignWidget;
   config.widgets.widget.style_size = SizeWidget;
   config.widgets.widget.style_simple_color = SimpleColorPicker;
+  config.widgets.widget.color_schema = ColorSchemaWidget;
   config.widgets.widget.slider = SliderWidget;
   config.widgets.widget.quad_size = QuadSizeWidget;
   config.widgets.widget.heading = HeadlineWidget;
