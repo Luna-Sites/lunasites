@@ -13,7 +13,8 @@ const ColorSchemaField = (props) => {
     background_color: '',
     primary_color: '',
     secondary_color: '',
-    header_color: '',
+    header_bg_color: '',
+    header_text_color: '',
     text_color: '',
     accent_color: '',
     ...value,
@@ -42,9 +43,14 @@ const ColorSchemaField = (props) => {
       description: 'Secondary accent',
     },
     {
-      key: 'header_color',
-      label: 'Header',
-      description: 'Navigation color',
+      key: 'header_bg_color',
+      label: 'Header BG',
+      description: 'Header background',
+    },
+    {
+      key: 'header_text_color',
+      label: 'Header Text',
+      description: 'Header text color',
     },
     {
       key: 'text_color',
@@ -137,7 +143,8 @@ const ColorSchemaField = (props) => {
         background_color: inherited.background_color || '',
         primary_color: inherited.primary_color || '',
         secondary_color: inherited.secondary_color || '',
-        header_color: inherited.header_color || '',
+        header_bg_color: inherited.header_bg_color || '',
+        header_text_color: inherited.header_text_color || '',
         text_color: inherited.text_color || '',
         accent_color: inherited.accent_color || '',
       };
@@ -164,7 +171,8 @@ const ColorSchemaField = (props) => {
       background_color: '#ffffff',
       primary_color: '#0070ae',
       secondary_color: '#e73d5c',
-      header_color: '#2c3e50',
+      header_bg_color: '#ffffff',
+      header_text_color: '#2c3e50',
       text_color: '#333333',
       accent_color: '#6bb535',
     };
@@ -235,7 +243,8 @@ const ColorSchemaField = (props) => {
       background_color: '',
       primary_color: '',
       secondary_color: '',
-      header_color: '',
+      header_bg_color: '',
+      header_text_color: '',
       text_color: '',
       accent_color: '',
     };
@@ -275,7 +284,7 @@ const ColorSchemaField = (props) => {
 
     Object.entries(schema).forEach(([key, value]) => {
       if (value) {
-        root.style.setProperty(`--lunasites-${key.replace('_', '-')}`, value);
+        root.style.setProperty(`--lunasites-${key.replace(/_/g, '-')}`, value);
       }
     });
 

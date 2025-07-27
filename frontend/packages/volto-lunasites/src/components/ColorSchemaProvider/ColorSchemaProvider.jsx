@@ -34,7 +34,8 @@ const ColorSchemaProvider = ({ children }) => {
       background_color: '#ffffff',
       primary_color: '#0070ae',
       secondary_color: '#e73d5c',
-      header_color: '#2c3e50',
+      header_bg_color: '#ffffff',
+      header_text_color: '#2c3e50',
       text_color: '#333333',
       accent_color: '#6bb535',
     };
@@ -45,7 +46,7 @@ const ColorSchemaProvider = ({ children }) => {
     // Apply CSS variables
     Object.entries(finalSchema).forEach(([key, value]) => {
       if (value) {
-        root.style.setProperty(`--lunasites-${key.replace('_', '-')}`, value);
+        root.style.setProperty(`--lunasites-${key.replace(/_/g, '-')}`, value);
       }
     });
 

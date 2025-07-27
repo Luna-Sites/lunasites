@@ -479,6 +479,16 @@ footer {
 .ui.styled.accordion .active.title {
   color: inherit;
 }
+.navigation ul.desktop-menu .submenu-wrapper .submenu .submenu-inner .close {
+  background-color: transparent;
+}
+
+.sidebar-container .ui.styled.accordion .active.title {
+  color: initial;
+}
+.sidebar-container h3 {
+  color: black;
+}
 
 .accordion-block {
   .ui.input > input {
@@ -612,4 +622,10 @@ footer .blocks-container a {
 }
 .metadataform-fieldset-layout {
   display: none;
+}
+
+.sidebar-container {
+  .dropzone-text {
+    color: grey;
+  }
 }

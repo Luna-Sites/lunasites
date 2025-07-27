@@ -5,6 +5,7 @@ from plone.supermodel import model
 from zope import schema
 from zope.component import adapter
 from zope.interface import implementer, provider
+from eea.schema.slate.field import SlateJSONField
 
 from lunasites import _
 
@@ -36,6 +37,29 @@ class IColorSchemaBehavior(model.Schema):
         required=False,
         missing_value={},
         default={},
+    )
+    
+    directives.widget(
+        'logo_image',
+        frontendOptions={
+            'widget': 'object_browser',
+            'pattern_options': {
+                'selectableTypes': ['Image'],
+                'maximumSelectionSize': 1,
+            }
+        }
+    )
+    
+    logo_image = schema.TextLine(
+        title=_('Logo Image'),
+        description=_('Upload or select custom logo image. Leave empty to use default logo.'),
+        required=False,
+    )
+    
+    logo_text = SlateJSONField(
+        title=_('Logo Text'),
+        description=_('Custom text logo with rich formatting. If filled, this will override logo image.'),
+        required=False,
     )
 
 

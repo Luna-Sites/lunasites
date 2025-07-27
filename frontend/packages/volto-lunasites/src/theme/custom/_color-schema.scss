@@ -6,15 +6,32 @@
   --lunasites-background-color: #ffffff;
   --lunasites-primary-color: #0070ae;
   --lunasites-secondary-color: #e73d5c;
-  --lunasites-header-color: #2c3e50;
+  --lunasites-header-bg-color: #ffffff;
+  --lunasites-header-text-color: #2c3e50;
   --lunasites-text-color: #333333;
   --lunasites-accent-color: #6bb535;
-  
+
   // Derived colors (auto-generated from primary colors)
-  --lunasites-primary-light: color-mix(in srgb, var(--lunasites-primary-color) 80%, white);
-  --lunasites-primary-dark: color-mix(in srgb, var(--lunasites-primary-color) 80%, black);
-  --lunasites-secondary-light: color-mix(in srgb, var(--lunasites-secondary-color) 80%, white);
-  --lunasites-secondary-dark: color-mix(in srgb, var(--lunasites-secondary-color) 80%, black);
+  --lunasites-primary-light: color-mix(
+    in srgb,
+    var(--lunasites-primary-color) 80%,
+    white
+  );
+  --lunasites-primary-dark: color-mix(
+    in srgb,
+    var(--lunasites-primary-color) 80%,
+    black
+  );
+  --lunasites-secondary-light: color-mix(
+    in srgb,
+    var(--lunasites-secondary-color) 80%,
+    white
+  );
+  --lunasites-secondary-dark: color-mix(
+    in srgb,
+    var(--lunasites-secondary-color) 80%,
+    black
+  );
 }
 
 // Utility classes for applying color schema
@@ -39,11 +56,11 @@
 }
 
 .color-schema-header {
-  color: var(--lunasites-header-color) !important;
+  color: var(--lunasites-header-text-color) !important;
 }
 
 .color-schema-header-bg {
-  background-color: var(--lunasites-header-color) !important;
+  background-color: var(--lunasites-header-bg-color) !important;
 }
 
 .color-schema-text {
@@ -64,15 +81,417 @@ body {
   color: var(--lunasites-text-color);
 }
 
-// Header and navigation
+// Header and navigation - apply background to all header containers
+#main .header-wrapper,
+.header-wrapper {
+  background-color: var(--lunasites-header-bg-color) !important;
+
+  .header {
+    background-color: var(--lunasites-header-bg-color) !important;
+  }
+}
+
+// Apply to body class variations as well
+body .header-wrapper {
+  background-color: var(--lunasites-header-bg-color) !important;
+}
+
 .ui.menu {
-  background-color: var(--lunasites-header-color);
-  
+  background-color: var(--lunasites-header-bg-color);
+
   .item {
-    color: var(--lunasites-text-color);
-    
+    color: var(--lunasites-header-text-color);
+
     &:hover {
       background-color: var(--lunasites-primary-color);
+    }
+  }
+}
+
+// Apply header colors to all header elements
+.header-wrapper .header {
+  // Navigation elements
+  .logo-nav-wrapper .navigation {
+    .desktop.menu a.item {
+      color: var(--lunasites-header-text-color) !important;
+    }
+
+    .mobile-menu .mobile-menu-nav a.item {
+      color: var(--lunasites-header-text-color) !important;
+
+      &.active {
+        border-bottom-color: var(--lunasites-header-text-color) !important;
+      }
+    }
+  }
+
+  // Search elements
+  .search-wrapper .search {
+    button {
+      color: var(--lunasites-header-text-color) !important;
+
+      svg {
+        color: var(--lunasites-header-text-color) !important;
+        fill: var(--lunasites-header-text-color) !important;
+      }
+    }
+
+    .search-bar {
+      input {
+        color: var(--lunasites-header-text-color) !important;
+
+        &::placeholder {
+          color: var(--lunasites-header-text-color) !important;
+          opacity: 0.7;
+        }
+      }
+
+      button {
+        color: var(--lunasites-header-text-color) !important;
+
+        svg {
+          fill: var(--lunasites-header-text-color) !important;
+        }
+      }
+    }
+  }
+
+  // Tools section (Site Map, Contact, etc.)
+  .tools-wrapper .tools {
+    a {
+      color: var(--lunasites-header-text-color) !important;
+    }
+
+    .anontools a {
+      color: var(--lunasites-header-text-color) !important;
+    }
+  }
+
+  // Mobile hamburger menu
+  .mobile-nav {
+    .hamburger-wrapper .hamburger {
+      color: var(--lunasites-header-text-color) !important;
+
+      .hamburger-box .hamburger-inner,
+      .hamburger-box .hamburger-inner::before,
+      .hamburger-box .hamburger-inner::after {
+        background-color: var(--lunasites-header-text-color) !important;
+      }
+    }
+  }
+}
+
+// Logo styling for text logos
+.logo-text-content {
+  color: var(--lunasites-header-text-color) !important;
+  
+  .slate {
+    margin: 0 !important;
+    
+    p {
+      margin: 0 !important;
+      color: inherit !important;
+      font-weight: bold !important;
+      font-size: 1.2em !important;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      margin: 0 !important;
+      color: inherit !important;
+    }
+    
+    // Remove any default block styling
+    .block {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
+}
+
+.logo-link-text {
+  display: inline-block !important;
+  
+  &:hover {
+    text-decoration: none !important;
+  }
+}
+
+.logo-link-image {
+  display: inline-block !important;
+}
+
+// Additional hamburger styling to ensure all states are covered
+.hamburger,
+.hamburger--collapse {
+  .hamburger-box {
+    .hamburger-inner {
+      background-color: var(--lunasites-header-text-color) !important;
+
+      &::before,
+      &::after {
+        background-color: var(--lunasites-header-text-color) !important;
+      }
+    }
+  }
+}
+
+// Mobile navigation hamburger specific
+.mobile-nav .hamburger-wrapper {
+  .hamburger,
+  .hamburger--collapse {
+    color: var(--lunasites-header-text-color) !important;
+
+    .hamburger-box .hamburger-inner {
+      background-color: var(--lunasites-header-text-color) !important;
+
+      &::before,
+      &::after {
+        background-color: var(--lunasites-header-text-color) !important;
+      }
+    }
+  }
+}
+
+.section-search .items_total {
+  color: var(--lunasites-text-color) !important;
+}
+
+.section-search .items_total .button-active {
+  color: var(--lunasites-text-color) !important;
+}
+
+.section-search .items_total .sort-by {
+  color: var(--lunasites-text-color) !important;
+}
+
+.section-search .items_total .button-sort {
+  color: var(--lunasites-text-color) !important;
+}
+// Specific selectors for hamburger pseudo-elements
+.hamburger-wrapper .hamburger::before,
+.hamburger-wrapper .hamburger::after {
+  background-color: var(--lunasites-header-text-color) !important;
+}
+
+.hamburger-wrapper .hamburger {
+  color: var(--lunasites-header-text-color) !important;
+
+  &::before,
+  &::after {
+    background-color: var(--lunasites-header-text-color) !important;
+  }
+}
+
+// Mobile menu drawer
+.menu-drawer,
+.menu-drawer-enter-done {
+  background-color: var(--lunasites-header-bg-color) !important;
+  color: var(--lunasites-header-text-color) !important;
+
+  // Menu sections and items
+  ul.sections {
+    li {
+      color: var(--lunasites-header-text-color) !important;
+      border-bottom-color: var(--lunasites-header-text-color) !important;
+
+      a {
+        color: var(--lunasites-header-text-color) !important;
+      }
+
+      &.current::before {
+        border-left-color: var(--lunasites-header-text-color) !important;
+      }
+    }
+  }
+
+  // Mobile tools
+  ul.mobile-tools {
+    li {
+      color: var(--lunasites-header-text-color) !important;
+
+      a {
+        color: var(--lunasites-header-text-color) !important;
+      }
+
+      span {
+        color: var(--lunasites-header-text-color) !important;
+      }
+    }
+  }
+
+  // Search in mobile menu
+  .search-hero {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 1rem !important;
+
+    .ui.form {
+      flex: 1 !important;
+      margin-right: 1rem !important;
+    }
+
+    .ui.input input {
+      color: var(--lunasites-header-text-color) !important;
+      background-color: transparent !important;
+
+      &::placeholder {
+        color: var(--lunasites-header-text-color) !important;
+        opacity: 0.7;
+      }
+    }
+
+    button {
+      color: var(--lunasites-header-text-color) !important;
+      flex-shrink: 0 !important;
+
+      svg {
+        fill: var(--lunasites-header-text-color) !important;
+      }
+    }
+  }
+
+  // Search header layout fix
+  .search-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 1rem !important;
+
+    .search-wrapper {
+      flex: 1 !important;
+      margin-right: 1rem !important;
+    }
+  }
+
+  // Back button and other buttons in menu drawer
+  button {
+    color: var(--lunasites-header-text-color) !important;
+    background-color: transparent !important;
+
+    svg {
+      fill: var(--lunasites-header-text-color) !important;
+    }
+
+    span {
+      color: var(--lunasites-header-text-color) !important;
+    }
+  }
+
+  // Subsection navigation buttons
+  .subsection {
+    .button-wrapper button {
+      color: var(--lunasites-header-text-color) !important;
+
+      span {
+        color: var(--lunasites-header-text-color) !important;
+      }
+    }
+  }
+}
+
+.header-wrapper .header .search-wrapper .search .search-bar {
+  color: var(--lunasites-header-text-color) !important;
+  background: var(--lunasites-header-bg-color) !important;
+}
+.navigation ul.desktop-menu .submenu-inner .subitem-wrapper {
+  border-left: 1px solid var(--lunasites-header-text-color) !important;
+}
+.header-wrapper
+  .header
+  .search-wrapper
+  .search
+  .search-bar
+  .ui.container
+  form
+  .searchbox
+  input {
+  background-color: transparent !important;
+}
+.header-wrapper
+  .header
+  .search-wrapper
+  .search
+  .search-bar
+  .ui.container
+  form
+  .searchbox {
+  border-bottom: 2px solid var(--lunasites-header-text-color) !important;
+  button svg {
+    color: var(--lunasites-header-text-color) !important;
+  }
+}
+.header-wrapper
+  .header
+  .search-wrapper
+  .search
+  .search-bar
+  .ui.container
+  form
+  .searchbox
+  button
+  svg {
+  color: var(--lunasites-header-text-color) !important;
+}
+// Navigation fat menu items
+.navigation {
+  .item {
+    color: var(--lunasites-header-text-color) !important;
+
+    &.active::before,
+    &:hover::before {
+      border-bottom-color: var(--lunasites-header-text-color) !important;
+    }
+  }
+
+  ul.desktop-menu {
+    & > li > button,
+    & > li > a {
+      color: var(--lunasites-header-text-color) !important;
+    }
+
+    // Submenu styling
+    .submenu-wrapper .submenu {
+      background: var(--lunasites-header-bg-color);
+      .submenu-inner {
+        h2 {
+          color: var(--lunasites-header-text-color) !important;
+        }
+
+        a {
+          color: var(--lunasites-header-text-color) !important;
+
+          span {
+            color: var(--lunasites-header-text-color) !important;
+          }
+
+          &:hover span {
+            border-bottom-color: var(--lunasites-header-text-color) !important;
+          }
+        }
+
+        .close {
+          color: var(--lunasites-header-text-color) !important;
+
+          svg {
+            fill: var(--lunasites-header-text-color) !important;
+          }
+        }
+
+        // Subitem wrapper links
+        .subitem-wrapper a {
+          color: var(--lunasites-header-text-color) !important;
+
+          span {
+            color: var(--lunasites-header-text-color) !important;
+          }
+        }
+
+        // Sub-submenu items
+        .sub-submenu ul li a {
+          color: var(--lunasites-header-text-color) !important;
+        }
+      }
     }
   }
 }
@@ -81,7 +500,7 @@ body {
 .ui.primary.button,
 .ui.button.primary {
   background-color: var(--lunasites-primary-color) !important;
-  
+
   &:hover {
     background-color: var(--lunasites-primary-dark) !important;
   }
@@ -90,7 +509,7 @@ body {
 .ui.secondary.button,
 .ui.button.secondary {
   background-color: var(--lunasites-secondary-color) !important;
-  
+
   &:hover {
     background-color: var(--lunasites-secondary-dark) !important;
   }
@@ -99,7 +518,7 @@ body {
 // Links
 a {
   color: var(--lunasites-primary-color);
-  
+
   &:hover {
     color: var(--lunasites-primary-dark);
   }
@@ -111,24 +530,29 @@ a {
   &.color-schema-aware {
     background-color: inherit;
     color: inherit;
-    
+
     // Headers within blocks
-    h1, h2, h3, h4, h5, h6 {
-      color: var(--lunasites-header-color);
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: var(--lunasites-header-text-color);
     }
-    
+
     // Buttons within blocks
     .ui.button {
       &.use-primary {
         background-color: var(--lunasites-primary-color);
         color: white;
       }
-      
+
       &.use-secondary {
         background-color: var(--lunasites-secondary-color);
         color: white;
       }
-      
+
       &.use-accent {
         background-color: var(--lunasites-accent-color);
         color: white;
@@ -142,38 +566,20 @@ a {
   &.use-color-schema {
     background-color: var(--lunasites-background-color);
     color: var(--lunasites-text-color);
-    
+
     &.primary-bg {
       background-color: var(--lunasites-primary-color);
       color: white;
     }
-    
+
     &.secondary-bg {
       background-color: var(--lunasites-secondary-color);
       color: white;
     }
-    
-    &.header-bg {
-      background-color: var(--lunasites-header-color);
-      color: white;
-    }
-  }
-}
 
-// Form elements
-.ui.form {
-  .field {
-    label {
-      color: var(--lunasites-text-color);
-    }
-  }
-  
-  input, textarea {
-    border-color: var(--lunasites-primary-color);
-    
-    &:focus {
-      border-color: var(--lunasites-primary-dark);
-      box-shadow: 0 0 0 1px var(--lunasites-primary-color);
+    &.header-bg {
+      background-color: var(--lunasites-header-bg-color);
+      color: var(--lunasites-header-text-color);
     }
   }
 }
@@ -183,11 +589,11 @@ a {
   &.color-schema-card {
     background-color: var(--lunasites-background-color);
     border: 1px solid var(--lunasites-primary-color);
-    
+
     .header {
-      color: var(--lunasites-header-color);
+      color: var(--lunasites-header-text-color);
     }
-    
+
     .meta {
       color: var(--lunasites-text-color);
       opacity: 0.8;
@@ -197,7 +603,10 @@ a {
 
 // Loading and transition states
 .color-schema-transition {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 // Responsive design helpers
