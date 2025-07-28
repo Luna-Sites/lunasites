@@ -6,7 +6,6 @@ FROM plone/frontend-builder:${VOLTO_VERSION} AS builder
 # Optimizează memoria pentru Node.js și pnpm - memorie foarte mare
 ENV NODE_OPTIONS="--max-old-space-size=16384"
 ENV PNPM_STORE_DIR="/app/.pnpm-store"
-ENV RAZZLE_INTERNAL_API_PATH=http://backend:8080/luna
 
 # Copiere surse
 COPY --chown=node packages/volto-lunasites /app/packages/volto-lunasites
@@ -29,8 +28,8 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
 RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
     pnpm install
 
-# Build Volto cu RAZZLE_INTERNAL_API_PATH setat
-RUN RAZZLE_INTERNAL_API_PATH=http://backend:8080/luna VOLTOCONFIG=$(pwd)/volto.config.js pnpm build
+# Build Volto
+RUN  pnpm build
 
 # Instalează doar deps de producție
 RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
@@ -55,5 +54,3 @@ RUN <<EOT
     corepack prepare pnpm@9.1.1 --activate
 EOT
 USER node
-
-CMD ["sh", "-c", "RAZZLE_INTERNAL_API_PATH=http://backend:8080/luna pnpm start:prod"]
