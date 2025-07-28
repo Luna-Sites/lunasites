@@ -6,6 +6,7 @@ FROM plone/frontend-builder:${VOLTO_VERSION} AS builder
 # Optimizează memoria pentru Node.js și pnpm - memorie foarte mare
 ENV NODE_OPTIONS="--max-old-space-size=16384"
 ENV PNPM_STORE_DIR="/app/.pnpm-store"
+ENV RAZZLE_API_PATH=${RAZZLE_API_PATH}
 
 # Copiere surse
 COPY --chown=node packages/volto-lunasites /app/packages/volto-lunasites
@@ -28,9 +29,7 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
 RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
     pnpm install
 
-# Build Volto
-RUN  pnpm build
-
+# NU facem build aici - îl facem la runtime când avem RAZZLE_API_PATH
 # Instalează doar deps de producție
 RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
     pnpm install --prod
@@ -44,6 +43,7 @@ LABEL maintainer="LunaSites <dobriceanionut@luna-sites.com>" \
       org.label-schema.vendor="LunaSites"
 
 COPY --from=builder /app/ /app/
+COPY --chown=node entrypoint.sh /entrypoint.sh
 
 USER root
 RUN <<EOT
@@ -52,5 +52,8 @@ RUN <<EOT
     corepack enable pnpm
     corepack use pnpm@9.1.1
     corepack prepare pnpm@9.1.1 --activate
+    chmod +x /entrypoint.sh
 EOT
 USER node
+
+ENTRYPOINT ["/entrypoint.sh"]
