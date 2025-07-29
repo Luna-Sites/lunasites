@@ -47,6 +47,17 @@ RUN pnpm build
 # Create symlink for build directory
 RUN ln -sf /app/core/packages/volto/build /app/build
 
+# Create symlinks for @plone packages in node_modules
+RUN mkdir -p /app/node_modules/@plone \
+ && ln -sf /app/core/packages/volto-slate /app/node_modules/@plone/volto-slate \
+ && ln -sf /app/core/packages/volto /app/node_modules/@plone/volto \
+ && ln -sf /app/core/packages/registry /app/node_modules/@plone/registry \
+ && ln -sf /app/core/packages/client /app/node_modules/@plone/client \
+ && ln -sf /app/core/packages/components /app/node_modules/@plone/components \
+ && ln -sf /app/core/packages/helpers /app/node_modules/@plone/helpers \
+ && ln -sf /app/core/packages/providers /app/node_modules/@plone/providers \
+ && ln -sf /app/core/packages/types /app/node_modules/@plone/types
+
 # Copy entrypoint
 COPY entrypoint.sh /app/
 
