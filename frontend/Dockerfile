@@ -4,7 +4,7 @@ WORKDIR /app/
 
 # Install Python and other dependencies needed for the build
 RUN apt-get update \
- && apt-get install -y --no-install-recommends python3 python3-json \
+ && apt-get install -y --no-install-recommends python3 git ca-certificates \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && corepack enable
@@ -12,6 +12,9 @@ RUN apt-get update \
 # Optimizează memoria pentru Node.js și pnpm - memorie foarte mare
 ENV NODE_OPTIONS="--max-old-space-size=16384"
 ENV PNPM_STORE_DIR="/app/.pnpm-store"
+
+# Copy base package.json first
+COPY --chown=node package.json /app/
 
 # Copiere surse
 COPY --chown=node packages/volto-lunasites /app/packages/volto-lunasites
