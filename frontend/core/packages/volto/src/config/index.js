@@ -29,7 +29,7 @@ const host = process.env.HOST || 'localhost';
 const port = process.env.PORT || '3000';
 
 const apiPath =
-  process.env.RAZZLE_API_PATH ||
+  (typeof window !== 'undefined' ? window.env?.RAZZLE_API_PATH : process.env.RAZZLE_API_PATH) ||
   (__DEVELOPMENT__ ? `http://${host}:${port}` : '');
 
 const getServerURL = (url) => {
@@ -58,10 +58,10 @@ console.log(process.env);
 // if in PROD, assume it's RAZZLE_API_PATH server name (no /api or alikes) or fallback
 // to DEV settings if RAZZLE_API_PATH is not present
 const publicURL =
-  process.env.RAZZLE_PUBLIC_URL ||
+  (typeof window !== 'undefined' ? window.env?.RAZZLE_PUBLIC_URL : process.env.RAZZLE_PUBLIC_URL) ||
   (__DEVELOPMENT__
     ? `http://${host}:${port}`
-    : getServerURL(process.env.RAZZLE_API_PATH) || `http://${host}:${port}`);
+    : getServerURL(typeof window !== 'undefined' ? window.env?.RAZZLE_API_PATH : process.env.RAZZLE_API_PATH) || `http://${host}:${port}`);
 
 const serverConfig =
   typeof __SERVER__ !== 'undefined' && __SERVER__
