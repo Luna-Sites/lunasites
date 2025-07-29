@@ -36,7 +36,7 @@ const getServerURL = (url) => {
   if (!url) return;
   const apiPathURL = parseUrl(url);
   return `${apiPathURL.protocol}//${apiPathURL.hostname}${
-    apiPathURL.port !== 'null' && apiPathURL.port !== null
+    apiPathURL.port && apiPathURL.port !== 'null' && apiPathURL.port !== null
       ? `:${apiPathURL.port}`
       : ''
   }`;
