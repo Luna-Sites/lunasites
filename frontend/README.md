@@ -7,7 +7,7 @@ A new project using Plone 6.
 [![CI](https://github.com/luna-sites/lunasites/actions/workflows/main.yml/badge.svg)](https://github.com/luna-sites/lunasites/actions/workflows/main.yml)
 
 
-## Features
+## Features 
 
 <!-- List your awesome features here -->
 
