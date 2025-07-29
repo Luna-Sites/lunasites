@@ -237,6 +237,9 @@ const defaultModify = ({
         new TerserPlugin({
           terserOptions: {
             parse: { ecma: 'ESNext' },
+            compress: {
+              drop_console: false,
+            },
           },
         }),
       ],
