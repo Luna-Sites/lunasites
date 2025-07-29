@@ -1,7 +1,13 @@
-# syntax=docker/dockerfile:1
+FROM node:18-bullseye-slim
 
-ARG VOLTO_VERSION
-FROM plone/frontend-builder:${VOLTO_VERSION} AS builder
+WORKDIR /app/
+
+# Install Python and other dependencies needed for the build
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends python3 python3-json \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && corepack enable
 
 # Optimizează memoria pentru Node.js și pnpm - memorie foarte mare
 ENV NODE_OPTIONS="--max-old-space-size=16384"
@@ -33,21 +39,12 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
 ENV NODE_ENV=production
 
 # Build Volto cu RAZZLE_API_PATH setat explicit
-RUN  pnpm build
+RUN pnpm build
 
-# Imaginea finală
-FROM node:18-bullseye-slim
-
-LABEL maintainer="LunaSites <dobriceanionut@luna-sites.com>" \
-      org.label-schema.name="lunasites-frontend" \
-      org.label-schema.description="LunaSites frontend image." \
-      org.label-schema.vendor="LunaSites"
-
-COPY --from=builder /app/ /app/
+# Copy entrypoint
 COPY entrypoint.sh /app/
-WORKDIR /app/
 
-# Update apt packages
+# Update apt packages and install runtime dependencies
 RUN runDeps="openssl ca-certificates patch gosu git make tmux locales-all" \
  && apt-get update \
  && apt-get install -y --no-install-recommends $runDeps \
@@ -56,8 +53,7 @@ RUN runDeps="openssl ca-certificates patch gosu git make tmux locales-all" \
  && npm install -g mrs-developer \
  && mkdir -p /app/src/addons \
  && rm -rf /app/src/addons/* \
- && find /app/ -not -user node -exec chown node {} \+ \
- && corepack enable
+ && find /app/ -not -user node -exec chown node {} \+
 
 USER node
 
@@ -66,7 +62,8 @@ ENV NODE_OPTIONS=--max_old_space_size=$MAX_OLD_SPACE_SIZE
 
 RUN rm -rf /home/node/.cache \
  && rm -rf /home/node/.yarn \
- && rm -rf /home/node/.npm
+ && rm -rf /home/node/.npm \
+ && rm -rf /app/.pnpm-store
 
 USER root
 
