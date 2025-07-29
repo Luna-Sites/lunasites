@@ -36,7 +36,7 @@ ENV NODE_ENV=production
 RUN  pnpm build
 
 # Imaginea finală
-FROM plone/frontend-prod-config:${VOLTO_VERSION}
+FROM node:18-bullseye-slim
 
 LABEL maintainer="LunaSites <dobriceanionut@luna-sites.com>" \
       org.label-schema.name="lunasites-frontend" \
@@ -44,13 +44,32 @@ LABEL maintainer="LunaSites <dobriceanionut@luna-sites.com>" \
       org.label-schema.vendor="LunaSites"
 
 COPY --from=builder /app/ /app/
+WORKDIR /app/
+
+# Update apt packages
+RUN runDeps="openssl ca-certificates patch gosu git make tmux locales-all" \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends $runDeps \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && npm install -g mrs-developer \
+ && mkdir -p /app/src/addons \
+ && rm -rf /app/src/addons/* \
+ && find /app/ -not -user node -exec chown node {} \+ \
+ && corepack enable
+
+USER node
+
+ARG MAX_OLD_SPACE_SIZE=16384
+ENV NODE_OPTIONS=--max_old_space_size=$MAX_OLD_SPACE_SIZE
+
+RUN rm -rf /home/node/.cache \
+ && rm -rf /home/node/.yarn \
+ && rm -rf /home/node/.npm
 
 USER root
-RUN <<EOT
-    set -e
-    npm i -g corepack@latest
-    corepack enable pnpm
-    corepack use pnpm@9.1.1
-    corepack prepare pnpm@9.1.1 --activate
-EOT
-USER node
+
+EXPOSE 3000 3001
+
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["pnpm", "start:prod"]
