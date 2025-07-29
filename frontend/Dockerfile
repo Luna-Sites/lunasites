@@ -44,6 +44,9 @@ ENV NODE_ENV=production
 # Build Volto cu RAZZLE_API_PATH setat explicit
 RUN pnpm build
 
+# Create symlink for build directory
+RUN ln -sf /app/core/packages/volto/build /app/build
+
 # Copy entrypoint
 COPY entrypoint.sh /app/
 
