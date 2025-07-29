@@ -61,7 +61,7 @@
     "@eeacms/volto-quote-block": "*",
     "@eeacms/volto-tags-block": "*",
     "lunasites-advanced-styling": "workspace:*",
-    "luna-super-hero": "8.0.0"
+    "luna-super-hero": "8.0.1"
   },
   "devDependencies": {
     "mrs-developer": "^2.2.0"
