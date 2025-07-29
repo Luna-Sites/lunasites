@@ -44,6 +44,7 @@ LABEL maintainer="LunaSites <dobriceanionut@luna-sites.com>" \
       org.label-schema.vendor="LunaSites"
 
 COPY --from=builder /app/ /app/
+COPY entrypoint.sh /app/
 WORKDIR /app/
 
 # Update apt packages
