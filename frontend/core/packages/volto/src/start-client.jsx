@@ -25,6 +25,10 @@ function reactIntlErrorHandler(error) {
 }
 
 export default function client() {
+  console.log('🚀 VOLTO CLIENT STARTED - Production Deploy Test');
+  console.log('Environment:', process.env.NODE_ENV);
+  console.log('API Path:', process.env.RAZZLE_API_PATH);
+  console.log('test', window.env);
   const api = new Api();
 
   const store = configureStore(window.__data, history, api);
