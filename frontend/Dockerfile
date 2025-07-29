@@ -4,7 +4,7 @@ WORKDIR /app/
 
 # Install Python and other dependencies needed for the build
 RUN apt-get update \
- && apt-get install -y --no-install-recommends python3 git ca-certificates \
+ && apt-get install -y --no-install-recommends python3 git ca-certificates make \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && corepack enable
