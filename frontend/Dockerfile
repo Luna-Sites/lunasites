@@ -6,6 +6,7 @@ FROM plone/frontend-builder:${VOLTO_VERSION} AS builder
 # Optimizează memoria pentru Node.js și pnpm - memorie foarte mare
 ENV NODE_OPTIONS="--max-old-space-size=16384"
 ENV PNPM_STORE_DIR="/app/.pnpm-store"
+ENV NODE_ENV=production
 
 # Copiere surse
 COPY --chown=node packages/volto-lunasites /app/packages/volto-lunasites
@@ -30,10 +31,6 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
 
 # Build Volto
 RUN  pnpm build
-
-# Instalează doar deps de producție
-RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
-    pnpm install --prod
 
 # Imaginea finală
 FROM plone/frontend-prod-config:${VOLTO_VERSION}
