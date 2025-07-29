@@ -33,7 +33,7 @@
     "storybook-build": "VOLTOCONFIG=$(pwd)/volto.config.js pnpm --filter @plone/volto build-storybook -c $(pwd)/.storybook"
   },
   "dependencies": {
-    "@plone/volto": "18.22.0",
+    "@plone/volto": "github:plone/volto#test-rancher",
     "@plone/components": "*",
     "@kitconcept/volto-light-theme": "7.0.0-alpha.8",
     "@plone/registry": "workspace:*",
