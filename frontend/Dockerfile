@@ -32,8 +32,8 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
 # Set production environment pentru build
 ENV NODE_ENV=production
 
-# Build Volto
-RUN  pnpm build
+# Build Volto cu RAZZLE_API_PATH setat explicit
+RUN RAZZLE_API_PATH=https://luna.luna-sites.com pnpm build
 
 # Imaginea finală
 FROM node:18-bullseye-slim
