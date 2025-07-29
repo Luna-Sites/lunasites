@@ -14,7 +14,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "start": "VOLTOCONFIG=$(pwd)/volto.config.js pnpm --filter @plone/volto start",
-    "start:prod": "NODE_ENV=production node build/server.js",
+    "start:prod": "pnpm --filter @plone/volto start:prod",
     "build": "VOLTOCONFIG=$(pwd)/volto.config.js pnpm --filter @plone/volto build",
     "build:deps": "pnpm --filter @plone/registry --filter @plone/components build",
     "i18n": "pnpm --filter volto-lunasites i18n && VOLTOCONFIG=$(pwd)/volto.config.js pnpm --filter @plone/volto i18n",
@@ -60,8 +60,8 @@
     "@eeacms/volto-metadata-block": "*",
     "@eeacms/volto-quote-block": "*",
     "@eeacms/volto-tags-block": "*",
-    "lunasites-advanced-styling": "workspace:*",
-    "luna-super-hero": "8.0.0"
+    "luna-super-hero": "8.0.0",
+    "lunasites-advanced-styling": "workspace:*"
   },
   "devDependencies": {
     "mrs-developer": "^2.2.0"
