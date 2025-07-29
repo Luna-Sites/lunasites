@@ -35,7 +35,16 @@ const apiPath =
 const getServerURL = (url) => {
   if (!url) return;
   const apiPathURL = parseUrl(url);
-  console.log(url,apiPathURL);
+  console.log(
+    'wtf',
+    url,
+    apiPathURL,
+    `${apiPathURL.protocol}//${apiPathURL.hostname}${
+      apiPathURL.port && apiPathURL.port !== 'null' && apiPathURL.port !== null
+        ? `:${apiPathURL.port}`
+        : ''
+    }`,
+  );
   return `${apiPathURL.protocol}//${apiPathURL.hostname}${
     apiPathURL.port && apiPathURL.port !== 'null' && apiPathURL.port !== null
       ? `:${apiPathURL.port}`
