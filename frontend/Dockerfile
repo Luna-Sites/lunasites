@@ -33,7 +33,7 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
 ENV NODE_ENV=production
 
 # Build Volto cu RAZZLE_API_PATH setat explicit
-RUN RAZZLE_API_PATH=https://luna.luna-sites.com pnpm build
+RUN  pnpm build
 
 # Imaginea finală
 FROM node:18-bullseye-slim
