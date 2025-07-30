@@ -4,7 +4,7 @@ dynamic = ["version"]
 description = "A new project using Plone 6."
 readme = "README.md"
 license = "GPL-2.0-only"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 authors = [
     { name = "LunaSites", email = "dobriceanionut@luna-sites.com" },
 ]
