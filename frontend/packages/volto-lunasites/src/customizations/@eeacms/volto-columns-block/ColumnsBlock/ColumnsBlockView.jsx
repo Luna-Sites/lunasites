@@ -56,8 +56,8 @@ const ColumnsBlockView = (props) => {
                     verticalAlign === 'middle'
                       ? 'center'
                       : verticalAlign === 'bottom'
-                      ? 'flex-end'
-                      : 'flex-start',
+                        ? 'flex-end'
+                        : 'flex-start',
                 }}
               >
                 <RenderBlocks

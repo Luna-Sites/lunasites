@@ -298,7 +298,7 @@ const Edit = (props) => {
   const blockState = {};
   const panelData = properties;
   const panels = getPanels(panelData);
-  
+
   // Debug logging for edit mode
   if (data.panels) {
     console.log('Edit mode - data.panels:', data.panels);

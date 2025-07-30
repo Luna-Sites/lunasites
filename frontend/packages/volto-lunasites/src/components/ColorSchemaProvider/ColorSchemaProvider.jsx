@@ -6,11 +6,12 @@ const ColorSchemaProvider = ({ children }) => {
   const dispatch = useDispatch();
   const pathname = useSelector((state) => state.router.location?.pathname);
   const colorSchemaInherit = useSelector(
-    (state) => state?.colorSchemaInherit?.data?.['lunasites.behaviors.color_schema.IColorSchemaBehavior']?.data?.color_schema
+    (state) =>
+      state?.colorSchemaInherit?.data?.[
+        'lunasites.behaviors.color_schema.IColorSchemaBehavior'
+      ]?.data?.color_schema,
   );
-  const loading = useSelector(
-    (state) => state?.colorSchemaInherit?.loading
-  );
+  const loading = useSelector((state) => state?.colorSchemaInherit?.loading);
 
   // Load inherited color schema when pathname changes
   useEffect(() => {
@@ -28,7 +29,7 @@ const ColorSchemaProvider = ({ children }) => {
 
   const applyCSSVariables = (schema) => {
     const root = document.documentElement;
-    
+
     // Default fallbacks
     const defaultSchema = {
       background_color: '#ffffff',
@@ -53,35 +54,37 @@ const ColorSchemaProvider = ({ children }) => {
     // Generate derived colors
     if (finalSchema.primary_color) {
       const primaryColor = finalSchema.primary_color;
-      
+
       // Create lighter and darker variants using CSS color-mix
       root.style.setProperty(
-        '--lunasites-primary-light', 
-        `color-mix(in srgb, ${primaryColor} 80%, white)`
+        '--lunasites-primary-light',
+        `color-mix(in srgb, ${primaryColor} 80%, white)`,
       );
       root.style.setProperty(
-        '--lunasites-primary-dark', 
-        `color-mix(in srgb, ${primaryColor} 80%, black)`
+        '--lunasites-primary-dark',
+        `color-mix(in srgb, ${primaryColor} 80%, black)`,
       );
     }
 
     if (finalSchema.secondary_color) {
       const secondaryColor = finalSchema.secondary_color;
-      
+
       root.style.setProperty(
-        '--lunasites-secondary-light', 
-        `color-mix(in srgb, ${secondaryColor} 80%, white)`
+        '--lunasites-secondary-light',
+        `color-mix(in srgb, ${secondaryColor} 80%, white)`,
       );
       root.style.setProperty(
-        '--lunasites-secondary-dark', 
-        `color-mix(in srgb, ${secondaryColor} 80%, black)`
+        '--lunasites-secondary-dark',
+        `color-mix(in srgb, ${secondaryColor} 80%, black)`,
       );
     }
 
     // Trigger a custom event to notify other components
-    window.dispatchEvent(new CustomEvent('colorSchemaApplied', {
-      detail: { schema: finalSchema }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('colorSchemaApplied', {
+        detail: { schema: finalSchema },
+      }),
+    );
   };
 
   return <>{children}</>;

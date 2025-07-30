@@ -184,22 +184,27 @@ body .header-wrapper {
 // Logo styling for text logos
 .logo-text-content {
   color: var(--lunasites-header-text-color) !important;
-  
+
   .slate {
     margin: 0 !important;
-    
+
     p {
       margin: 0 !important;
       color: inherit !important;
       font-weight: bold !important;
       font-size: 1.2em !important;
     }
-    
-    h1, h2, h3, h4, h5, h6 {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       margin: 0 !important;
       color: inherit !important;
     }
-    
+
     // Remove any default block styling
     .block {
       margin: 0 !important;
@@ -210,7 +215,7 @@ body .header-wrapper {
 
 .logo-link-text {
   display: inline-block !important;
-  
+
   &:hover {
     text-decoration: none !important;
   }

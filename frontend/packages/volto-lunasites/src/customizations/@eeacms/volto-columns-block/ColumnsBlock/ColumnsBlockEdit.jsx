@@ -316,8 +316,8 @@ class ColumnsBlockEdit extends React.Component {
                           column.grid_vertical_align === 'middle'
                             ? 'center'
                             : column.grid_vertical_align === 'bottom'
-                            ? 'flex-end'
-                            : 'flex-start',
+                              ? 'flex-end'
+                              : 'flex-start',
                       }}
                     >
                       <BlocksForm

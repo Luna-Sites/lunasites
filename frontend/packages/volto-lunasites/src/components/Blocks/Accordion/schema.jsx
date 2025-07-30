@@ -3,10 +3,10 @@ export function AccordionSchemaEnhancer({ schema, formData, intl }) {
   if (schema.fieldsets) {
     schema.fieldsets = schema.fieldsets.filter((item) => item.id !== 'options');
   }
-  
+
   // Some other opinionated defaults - only set if properties exist
   schema.required = [];
-  
+
   // Check if properties exist before setting defaults (for backwards compatibility)
   if (schema.properties?.right_arrows) {
     schema.properties.right_arrows.default = true;

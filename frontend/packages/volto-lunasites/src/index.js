@@ -26,6 +26,20 @@ import {
   addAdvancedStyling,
 } from 'lunasites-advanced-styling';
 
+import { Editor, Transforms, Text } from 'slate';
+import alignLeftIcon from '@plone/volto/icons/align-left.svg';
+import alignRightIcon from '@plone/volto/icons/align-right.svg';
+import alignCenterIcon from '@plone/volto/icons/align-center.svg';
+import alignJustifyIcon from '@plone/volto/icons/align-justify.svg';
+
+import {
+  MarkElementButton,
+  ToolbarButton,
+  BlockButton,
+} from '@plone/volto-slate/editor/ui';
+
+import { useSlate } from 'slate-react';
+import { useCallback } from 'react';
 import { imageBlockSchemaEnhancer } from './components/Blocks/Image/schema';
 import { ImageBlockDataAdapter } from './components/Blocks/Image/adapter';
 
@@ -46,6 +60,51 @@ import EventMetadataView from './components/Blocks/EventMetadata/View';
 // Color Schema System
 import { ColorSchemaProvider, ColorSchemaField } from './components';
 import { colorSchemaInherit } from './reducers';
+
+const isBlockClassActive = (editor, format) => {
+  if (!editor.selection) return false;
+  // TODO: someone fix this
+  const levels = Array.from(Editor.levels(editor, editor.selection));
+  if (levels.length < 2) return false;
+  const [, [node]] = levels;
+  return node.styleName === format;
+};
+const toggleBlockClassFormat = (editor, format) => {
+  const levels = Array.from(Editor.levels(editor, editor.selection));
+  // TODO: someone fix this
+  if (levels.length < 2) return false;
+  const [, [, path]] = levels;
+  Transforms.setNodes(
+    editor,
+    { styleName: format },
+    {
+      at: path,
+    },
+  );
+  return;
+};
+function BlockClassButton({ format, icon, ...props }) {
+  const editor = useSlate();
+
+  const isActive = isBlockClassActive(editor, format);
+
+  const handleMouseDown = useCallback(
+    (event) => {
+      event.preventDefault();
+      toggleBlockClassFormat(editor, format);
+    },
+    [editor, format], // , isActive
+  );
+
+  return (
+    <ToolbarButton
+      {...props}
+      active={isActive}
+      onMouseDown={handleMouseDown}
+      icon={icon}
+    />
+  );
+}
 
 const BG_COLORS = [
   { name: 'transparent', label: 'Transparent' },
@@ -384,6 +443,108 @@ const applyConfig = (config) => {
   }
 
   config.views.contentTypesViews.Event = EventView;
+
+  // Text Align buttons
+
+  // Align left
+  if (!config.settings.slate.toolbarButtons.includes('text-left')) {
+    config.settings.slate.buttons['text-left'] = (props) => (
+      <BlockClassButton
+        format="text-left"
+        icon={alignLeftIcon}
+        title="Align left"
+        {...props}
+      />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'separator',
+      'text-left',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'separator',
+      'text-left',
+    ];
+  }
+
+  // Align center
+  if (!config.settings.slate.toolbarButtons.includes('text-center')) {
+    config.settings.slate.buttons['text-center'] = (props) => (
+      <BlockClassButton
+        format="text-center"
+        icon={alignCenterIcon}
+        title="Align center"
+        {...props}
+      />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'text-center',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'text-center',
+    ];
+  }
+
+  // Align right
+  if (!config.settings.slate.toolbarButtons.includes('text-right')) {
+    config.settings.slate.buttons['text-right'] = (props) => (
+      <BlockClassButton
+        format="text-right"
+        icon={alignRightIcon}
+        title="Align right"
+        {...props}
+      />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'text-right',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'text-right',
+    ];
+  }
+
+  // Align justify
+  if (!config.settings.slate.toolbarButtons.includes('text-justify')) {
+    config.settings.slate.buttons['text-justify'] = (props) => (
+      <BlockClassButton
+        format="text-justify"
+        icon={alignJustifyIcon}
+        title="Align justify"
+        {...props}
+      />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'text-justify',
+      'separator',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'text-justify',
+      'separator',
+    ];
+  }
+
+  // Clear formatting
+  if (!config.settings.slate.toolbarButtons.includes('clearformatting')) {
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'clearformatting',
+    ];
+  }
 
   // TOC Block
   config.blocks.blocksConfig.toc = {
