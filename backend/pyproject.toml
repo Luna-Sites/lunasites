@@ -27,7 +27,6 @@ dependencies = [
     "plone.api",
     "plone.restapi",
     "plone.volto",
-    "kitconcept.voltolighttheme",
     "collective.volto.footer",
     "eea.schema.slate"
 
