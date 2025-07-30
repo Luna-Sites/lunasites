@@ -72,10 +72,6 @@ const View = (props) => {
     : getPanels(data.data);
 
   // Debug logging for data structure
-  if (data.panels) {
-    console.log('Accordion data (panels structure):', data);
-    console.log('Processed panels:', panels);
-  }
 
   const metadata = props.metadata || props.properties;
   const diffView =
@@ -232,21 +228,6 @@ const View = (props) => {
             }),
           };
 
-          // Debug logging
-          if (
-            panel?.panel_backgroundColor ||
-            panel?.panel_textColor ||
-            panel?.panel_titleColor
-          ) {
-            console.log('View mode panel styles found:', {
-              id,
-              panel,
-              panelStyles,
-            });
-          }
-
-          console.log({ panelInlineStyles });
-          console.log({ color: panel?.panel_titleColor || 'inherit' });
           return accordionBlockHasValue(panel) ? (
             <Accordion
               key={id}

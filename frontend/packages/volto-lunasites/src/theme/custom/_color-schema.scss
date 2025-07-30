@@ -82,17 +82,20 @@ body {
 }
 
 // Header and navigation - apply background to all header containers
-#main .header-wrapper,
-.header-wrapper {
-  background-color: var(--lunasites-header-bg-color) !important;
-
-  .header {
+// Exclude homepage views to allow transparent header integration with blocks
+body:not(.view-homepage):not(.view-homepage-inverse) {
+  #main .header-wrapper,
+  .header-wrapper {
     background-color: var(--lunasites-header-bg-color) !important;
+
+    .header {
+      background-color: var(--lunasites-header-bg-color) !important;
+    }
   }
 }
 
-// Apply to body class variations as well
-body .header-wrapper {
+// Apply to body class variations as well - exclude homepage views
+body:not(.view-homepage):not(.view-homepage-inverse) .header-wrapper {
   background-color: var(--lunasites-header-bg-color) !important;
 }
 

@@ -194,6 +194,15 @@
   .breadcrumbs {
     display: none !important;
   }
+  
+  // Transparent header for homepage integration with blocks
+  .header-wrapper {
+    background-color: transparent !important;
+    
+    .header {
+      background-color: transparent !important;
+    }
+  }
 
   // use homepage text color for color of cards that are within a content-box that has a variant class
   .content-box[class*='ary'] [class='ui fluid card'] {
@@ -220,7 +229,7 @@
   }
   .navigation .item.active::before,
   .navigation .item:hover::before {
-    border-bottom: 9px solid white;
+    border-bottom: 4px solid white;
   }
   .search-button button svg {
     color: white;
@@ -628,4 +637,8 @@ footer .blocks-container a {
   .dropzone-text {
     color: grey;
   }
+}
+.header-wrapper .blocks-group-wrapper {
+  padding-top: 0px;
+  padding-bottom: 0px;
 }

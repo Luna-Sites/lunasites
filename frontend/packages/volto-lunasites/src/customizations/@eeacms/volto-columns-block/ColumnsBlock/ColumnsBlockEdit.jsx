@@ -252,7 +252,7 @@ class ColumnsBlockEdit extends React.Component {
 
     const { gridSizes, variants } = config.blocks.blocksConfig[COLUMNSBLOCK];
     const isInitialized = data?.columns && data?.columns?.length > 0;
-    console.log({ columns }, { data });
+
     return (
       <div
         role="presentation"
@@ -299,7 +299,6 @@ class ColumnsBlockEdit extends React.Component {
             </div>
             <Grid columns={gridSize} className="column-grid" stackable>
               {columns.map((column, index) => {
-                console.log({ column });
                 return (
                   <Grid.Column
                     className={cx('block-column', column.column_class)}
@@ -316,8 +315,8 @@ class ColumnsBlockEdit extends React.Component {
                           column.grid_vertical_align === 'middle'
                             ? 'center'
                             : column.grid_vertical_align === 'bottom'
-                            ? 'flex-end'
-                            : 'flex-start',
+                              ? 'flex-end'
+                              : 'flex-start',
                       }}
                     >
                       <BlocksForm
