@@ -5,14 +5,20 @@
   .logo-nav-wrapper {
     display: flex;
     flex-direction: row;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
-    padding-top: 25px;
-    padding-bottom: 35px;
+    padding-top: 12px;
+    padding-bottom: 12px;
 
     .logo {
       flex: 1 1 0;
       align-self: center;
+      
+      img {
+        max-height: 50px;
+        width: auto;
+        object-fit: contain;
+      }
     }
 
     .navigation {
@@ -30,12 +36,12 @@
         justify-content: flex-end;
 
         a.item {
-          padding: 0 5px;
-          margin: 0 5px;
+          padding: 0 8px;
+          margin: 0 2px;
           color: $black;
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 600;
-          line-height: 24px;
+          line-height: 20px;
           text-align: center;
         }
       }
@@ -91,8 +97,8 @@
       }
 
       button {
-        width: 64px;
-        height: 64px;
+        width: 40px;
+        height: 40px;
         border: none;
         border-radius: 50%;
         background-color: transparent;
@@ -218,11 +224,11 @@
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
-    padding-top: 16px;
+    padding-top: 8px;
 
     .intranet {
-      padding: 10px $spacing-small;
-      margin-top: -16px;
+      padding: 6px $spacing-small;
+      margin-top: -8px;
       margin-left: 213px;
       background-color: $secondary-grey;
       @media only screen and (max-width: $narrow-container-width) {
@@ -237,7 +243,7 @@
     }
 
     .language-selector {
-      padding-left: 40px;
+      padding-left: 20px;
     }
 
     .language-selector a {
@@ -249,9 +255,9 @@
     }
 
     .tools a {
-      margin-right: 10px;
+      margin-right: 8px;
       color: $black;
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
     }
 
@@ -312,7 +318,7 @@
       }
       .navigation {
         flex-basis: 100%;
-        margin: 29px auto 0 auto;
+        margin: 16px auto 0 auto;
       }
     }
 
@@ -399,7 +405,7 @@ body.has-toolbar.has-sidebar {
 
 /* Fat menu implementation */
 .navigation {
-  height: 64px;
+  height: 48px;
 
   @media only screen and (max-width: $tablet-breakpoint) {
     display: none !important;
@@ -408,17 +414,17 @@ body.has-toolbar.has-sidebar {
   .item {
     position: relative;
     color: $black;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    line-height: 24px;
+    line-height: 20px;
     text-transform: initial;
 
     &.active::before,
     &:hover::before {
       position: absolute;
-      bottom: -49px;
+      bottom: -25px;
       width: 100%;
-      border-bottom: 9px solid $black;
+      border-bottom: 4px solid $black;
       content: '';
     }
   }
@@ -445,15 +451,16 @@ body.has-toolbar.has-sidebar {
     & > li > button,
     & > li > a {
       padding: 0;
-      padding-top: 20px;
-      padding-bottom: 6px;
+      padding-top: 12px;
+      padding-bottom: 4px;
       border: none;
-      border-bottom: 9px solid transparent;
+      border-bottom: 4px solid transparent;
       margin: 0;
-      margin-left: 20px;
+      margin-left: 16px;
       background: none;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 600;
+      font-size: 16px;
       text-transform: none;
     }
     & > li > a {
