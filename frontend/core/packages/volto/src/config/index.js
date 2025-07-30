@@ -63,6 +63,11 @@ const publicURL =
     ? `http://${host}:${port}`
     : getServerURL(typeof window !== 'undefined' ? window.env?.RAZZLE_API_PATH : process.env.RAZZLE_API_PATH) || `http://${host}:${port}`);
 
+console.log('Final config values:');
+console.log('apiPath:', apiPath);
+console.log('publicURL:', publicURL);
+console.log('__DEVELOPMENT__:', __DEVELOPMENT__);
+
 const serverConfig =
   typeof __SERVER__ !== 'undefined' && __SERVER__
     ? require('./server').default
