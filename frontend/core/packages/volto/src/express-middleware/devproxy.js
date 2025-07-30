@@ -77,7 +77,7 @@ export default function devProxyMiddleware() {
         config.settings.proxyRewriteTarget ||
         `/VirtualHostBase/${apiPathURL.protocol.slice(0, -1)}/${
           apiPathURL.hostname
-        }:${apiPathURL.port}${instancePath}/++api++/VirtualHostRoot`;
+        }${apiPathURL.port ? ':' + apiPathURL.port : ''}${instancePath}/++api++/VirtualHostRoot`;
 
       return `${target}${path.replace('/++api++', '')}`;
     },
