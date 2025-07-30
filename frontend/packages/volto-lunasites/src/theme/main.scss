@@ -88,5 +88,41 @@ p {
   --text-align: center;
   --justify-content: center;
 }
+
+// Font family classes for Slate blocks
+.has--fontFamily--Inter,
+.font-inter {
+  font-family: 'Inter', sans-serif !important;
+}
+
+.has--fontFamily--Metropolis,
+.font-metropolis {
+  font-family: 'Metropolis', sans-serif !important;
+}
+
+.has--fontFamily--Arial,
+.font-arial {
+  font-family: 'Arial', sans-serif !important;
+}
+
+.has--fontFamily--Helvetica,
+.font-helvetica {
+  font-family: 'Helvetica', sans-serif !important;
+}
+
+.has--fontFamily--Times\ New\ Roman,
+.font-times {
+  font-family: 'Times New Roman', serif !important;
+}
+
+.has--fontFamily--Georgia,
+.font-georgia {
+  font-family: 'Georgia', serif !important;
+}
+
+.has--fontFamily--Courier\ New,
+.font-courier {
+  font-family: 'Courier New', monospace !important;
+}
 /* No CSS beyond this point except next line */
 /* No CSS beyond this point */

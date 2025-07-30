@@ -1,0 +1,67 @@
+.font-selector-wrapper {
+  display: inline-block;
+  margin: 0 4px;
+
+  .font-selector {
+    min-width: 120px !important;
+    font-size: 12px !important;
+    
+    .dropdown.icon {
+      font-size: 10px !important;
+    }
+
+    .text {
+      font-size: 12px !important;
+      padding: 4px 8px !important;
+    }
+
+    .menu {
+      min-width: 160px !important;
+      
+      .item {
+        font-size: 12px !important;
+        padding: 8px 12px !important;
+        
+        &:hover {
+          background-color: #f5f5f5 !important;
+        }
+      }
+    }
+  }
+}
+
+// Font family classes for Slate blocks
+.has--fontFamily--Inter,
+.font-inter {
+  font-family: 'Inter', sans-serif !important;
+}
+
+.has--fontFamily--Metropolis,
+.font-metropolis {
+  font-family: 'Metropolis', sans-serif !important;
+}
+
+.has--fontFamily--Arial,
+.font-arial {
+  font-family: 'Arial', sans-serif !important;
+}
+
+.has--fontFamily--Helvetica,
+.font-helvetica {
+  font-family: 'Helvetica', sans-serif !important;
+}
+
+.has--fontFamily--Times\ New\ Roman,
+.font-times {
+  font-family: 'Times New Roman', serif !important;
+}
+
+.has--fontFamily--Georgia,
+.font-georgia {
+  font-family: 'Georgia', serif !important;
+}
+
+.has--fontFamily--Courier\ New,
+.font-courier {
+  font-family: 'Courier New', monospace !important;
+}

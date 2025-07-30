@@ -31,6 +31,7 @@ import alignLeftIcon from '@plone/volto/icons/align-left.svg';
 import alignRightIcon from '@plone/volto/icons/align-right.svg';
 import alignCenterIcon from '@plone/volto/icons/align-center.svg';
 import alignJustifyIcon from '@plone/volto/icons/align-justify.svg';
+import FontSelector from './components/FontSelector';
 
 import {
   MarkElementButton,
@@ -535,6 +536,25 @@ const applyConfig = (config) => {
       ...config.settings.slate.expandedToolbarButtons,
       'text-justify',
       'separator',
+    ];
+  }
+
+  // Font selector
+  if (!config.settings.slate.toolbarButtons.includes('font-selector')) {
+    config.settings.slate.buttons['font-selector'] = (props) => (
+      <FontSelector {...props} />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'separator',
+      'font-selector',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'separator',
+      'font-selector',
     ];
   }
 
