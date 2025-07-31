@@ -17,6 +17,8 @@ const ColorSchemaField = (props) => {
     header_text_color: '',
     text_color: '',
     accent_color: '',
+    dropdown_color: '',
+    dropdown_font_color: '',
     ...value,
   });
   const [presets, setPresets] = React.useState([]);
@@ -61,6 +63,16 @@ const ColorSchemaField = (props) => {
       key: 'accent_color',
       label: 'Accent',
       description: 'Emphasis color',
+    },
+    {
+      key: 'dropdown_color',
+      label: 'Dropdown BG',
+      description: 'Dropdown background',
+    },
+    {
+      key: 'dropdown_font_color',
+      label: 'Dropdown Text',
+      description: 'Dropdown font color',
     },
   ];
 
@@ -169,6 +181,8 @@ const ColorSchemaField = (props) => {
       header_text_color: '#2c3e50',
       text_color: '#333333',
       accent_color: '#6bb535',
+      dropdown_color: '#ffffff',
+      dropdown_font_color: '#212529',
     };
 
     const current = {};
@@ -241,6 +255,8 @@ const ColorSchemaField = (props) => {
       header_text_color: '',
       text_color: '',
       accent_color: '',
+        dropdown_color: '',
+      dropdown_font_color: '',
     };
     setColorSchema(emptySchema);
     onChange(id, {}); // Save empty object

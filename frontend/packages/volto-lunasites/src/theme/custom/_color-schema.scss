@@ -10,6 +10,8 @@
   --lunasites-header-text-color: #2c3e50;
   --lunasites-text-color: #333333;
   --lunasites-accent-color: #6bb535;
+  --lunasites-dropdown-color: #ffffff;
+  --lunasites-dropdown-font-color: #212529;
 
   // Derived colors (auto-generated from primary colors)
   --lunasites-primary-light: color-mix(
@@ -73,6 +75,19 @@
 
 .color-schema-accent-bg {
   background-color: var(--lunasites-accent-color) !important;
+}
+
+.color-schema-dropdown {
+  background-color: var(--lunasites-dropdown-color) !important;
+  color: var(--lunasites-dropdown-font-color) !important;
+}
+
+.color-schema-dropdown-bg {
+  background-color: var(--lunasites-dropdown-color) !important;
+}
+
+.color-schema-dropdown-text {
+  color: var(--lunasites-dropdown-font-color) !important;
 }
 
 // Integration with common website elements
@@ -187,22 +202,27 @@ body:not(.view-homepage):not(.view-homepage-inverse) .header-wrapper {
 // Logo styling for text logos
 .logo-text-content {
   color: var(--lunasites-header-text-color) !important;
-  
+
   .slate {
     margin: 0 !important;
-    
+
     p {
       margin: 0 !important;
       color: inherit !important;
       font-weight: bold !important;
       font-size: 1.2em !important;
     }
-    
-    h1, h2, h3, h4, h5, h6 {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       margin: 0 !important;
       color: inherit !important;
     }
-    
+
     // Remove any default block styling
     .block {
       margin: 0 !important;
@@ -213,7 +233,7 @@ body:not(.view-homepage):not(.view-homepage-inverse) .header-wrapper {
 
 .logo-link-text {
   display: inline-block !important;
-  
+
   &:hover {
     text-decoration: none !important;
   }
@@ -285,24 +305,29 @@ body:not(.view-homepage):not(.view-homepage-inverse) .header-wrapper {
   }
 }
 
-// Mobile menu drawer
+// Mobile menu drawer - use dropdown colors
 .menu-drawer,
 .menu-drawer-enter-done {
-  background-color: var(--lunasites-header-bg-color) !important;
-  color: var(--lunasites-header-text-color) !important;
+  background-color: var(--lunasites-dropdown-color) !important;
+  color: var(--lunasites-dropdown-font-color) !important;
+
+  // Move menu lower to show navigation - only on mobile
+  @media (max-width: 768px) {
+    top: 200px !important;
+  }
 
   // Menu sections and items
   ul.sections {
     li {
-      color: var(--lunasites-header-text-color) !important;
-      border-bottom-color: var(--lunasites-header-text-color) !important;
+      color: var(--lunasites-dropdown-font-color) !important;
+      border-bottom-color: var(--lunasites-dropdown-font-color) !important;
 
       a {
-        color: var(--lunasites-header-text-color) !important;
+        color: var(--lunasites-dropdown-font-color) !important;
       }
 
       &.current::before {
-        border-left-color: var(--lunasites-header-text-color) !important;
+        border-left-color: var(--lunasites-dropdown-font-color) !important;
       }
     }
   }
@@ -310,14 +335,14 @@ body:not(.view-homepage):not(.view-homepage-inverse) .header-wrapper {
   // Mobile tools
   ul.mobile-tools {
     li {
-      color: var(--lunasites-header-text-color) !important;
+      color: var(--lunasites-dropdown-font-color) !important;
 
       a {
-        color: var(--lunasites-header-text-color) !important;
+        color: var(--lunasites-dropdown-font-color) !important;
       }
 
       span {
-        color: var(--lunasites-header-text-color) !important;
+        color: var(--lunasites-dropdown-font-color) !important;
       }
     }
   }
@@ -335,21 +360,21 @@ body:not(.view-homepage):not(.view-homepage-inverse) .header-wrapper {
     }
 
     .ui.input input {
-      color: var(--lunasites-header-text-color) !important;
+      color: var(--lunasites-dropdown-font-color) !important;
       background-color: transparent !important;
 
       &::placeholder {
-        color: var(--lunasites-header-text-color) !important;
+        color: var(--lunasites-dropdown-font-color) !important;
         opacity: 0.7;
       }
     }
 
     button {
-      color: var(--lunasites-header-text-color) !important;
+      color: var(--lunasites-dropdown-font-color) !important;
       flex-shrink: 0 !important;
 
       svg {
-        fill: var(--lunasites-header-text-color) !important;
+        fill: var(--lunasites-dropdown-font-color) !important;
       }
     }
   }
@@ -369,25 +394,25 @@ body:not(.view-homepage):not(.view-homepage-inverse) .header-wrapper {
 
   // Back button and other buttons in menu drawer
   button {
-    color: var(--lunasites-header-text-color) !important;
+    color: var(--lunasites-dropdown-font-color) !important;
     background-color: transparent !important;
 
     svg {
-      fill: var(--lunasites-header-text-color) !important;
+      fill: var(--lunasites-dropdown-font-color) !important;
     }
 
     span {
-      color: var(--lunasites-header-text-color) !important;
+      color: var(--lunasites-dropdown-font-color) !important;
     }
   }
 
   // Subsection navigation buttons
   .subsection {
     .button-wrapper button {
-      color: var(--lunasites-header-text-color) !important;
+      color: var(--lunasites-dropdown-font-color) !important;
 
       span {
-        color: var(--lunasites-header-text-color) !important;
+        color: var(--lunasites-dropdown-font-color) !important;
       }
     }
   }
@@ -453,46 +478,67 @@ body:not(.view-homepage):not(.view-homepage-inverse) .header-wrapper {
       color: var(--lunasites-header-text-color) !important;
     }
 
-    // Submenu styling
+    // Submenu styling - use dropdown colors for submenus
     .submenu-wrapper .submenu {
-      background: var(--lunasites-header-bg-color);
+      background: var(--lunasites-dropdown-color) !important;
+      border: var(--lunasites-toolbar-border-thickness) solid
+        var(--lunasites-dropdown-color) !important;
+
       .submenu-inner {
         h2 {
-          color: var(--lunasites-header-text-color) !important;
+          color: var(--lunasites-dropdown-font-color) !important;
         }
 
         a {
-          color: var(--lunasites-header-text-color) !important;
+          color: var(--lunasites-dropdown-font-color) !important;
 
           span {
-            color: var(--lunasites-header-text-color) !important;
+            color: var(--lunasites-dropdown-font-color) !important;
           }
 
-          &:hover span {
-            border-bottom-color: var(--lunasites-header-text-color) !important;
+          &:hover {
+            opacity: 0.8;
+
+            span {
+              border-bottom-color: var(
+                --lunasites-dropdown-font-color
+              ) !important;
+            }
           }
         }
 
         .close {
-          color: var(--lunasites-header-text-color) !important;
+          color: var(--lunasites-dropdown-font-color) !important;
 
           svg {
-            fill: var(--lunasites-header-text-color) !important;
+            fill: var(--lunasites-dropdown-font-color) !important;
           }
         }
 
         // Subitem wrapper links
         .subitem-wrapper a {
-          color: var(--lunasites-header-text-color) !important;
+          color: var(--lunasites-dropdown-font-color) !important;
 
           span {
-            color: var(--lunasites-header-text-color) !important;
+            color: var(--lunasites-dropdown-font-color) !important;
+          }
+
+          &:hover {
+            opacity: 0.8;
           }
         }
 
         // Sub-submenu items
-        .sub-submenu ul li a {
-          color: var(--lunasites-header-text-color) !important;
+        .sub-submenu {
+          background-color: var(--lunasites-dropdown-color) !important;
+
+          ul li a {
+            color: var(--lunasites-dropdown-font-color) !important;
+
+            &:hover {
+              opacity: 0.8;
+            }
+          }
         }
       }
     }
@@ -629,5 +675,9 @@ a {
     // but provide fallbacks for dark mode
     --lunasites-background-color: #1a1a1a;
     --lunasites-text-color: #ffffff;
+    --lunasites-toolbar-color: #343a40;
+    --lunasites-toolbar-font-color: #ffffff;
+    --lunasites-dropdown-color: #495057;
+    --lunasites-dropdown-font-color: #ffffff;
   }
 }

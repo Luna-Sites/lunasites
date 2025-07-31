@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
-import { ConditionalLink, MaybeWrap } from '@plone/volto/components';
+import { MaybeWrap } from '@plone/volto/components';
 import { isInternalURL } from '@plone/volto/helpers';
 import cx from 'classnames';
 
@@ -66,16 +66,35 @@ const View = (props) => {
     }
   }
 
-  // Add hover effects through CSS classes
+  // Handle click prevention in edit mode
+  const handleClick = (e) => {
+    if (isEditMode) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
+  // Add hover effects through CSS classes and edit mode styling
   const buttonClasses = cx(
     'ui button',
     {
       'button-filled': filled,
       'button-outline': !filled,
       'button-custom-color': buttonColor,
+      'button-edit-mode': isEditMode,
     },
     className,
   );
+
+  // Add edit mode styles
+  const finalButtonStyles = {
+    ...buttonStyles,
+    ...(isEditMode && {
+      pointerEvents: 'none',
+      cursor: 'default',
+      opacity: 0.7,
+    }),
+  };
 
   return (
     <MaybeWrap
@@ -83,28 +102,49 @@ const View = (props) => {
       as="div"
       className={cx('block __button', {
         [data.align]: data.align,
+        'edit-mode': isEditMode,
       })}
       style={containerStyles}
     >
       <div className={cx('align', data.inneralign)}>
-        <ConditionalLink
-          to={href}
-          condition={href}
-          openLinkInNewTab={data.openLinkInNewTab}
-        >
+        {href && !isEditMode ? (
+          isInternal ? (
+            <Button
+              as="a"
+              href={href}
+              className={buttonClasses}
+              style={finalButtonStyles}
+              data-filled={filled}
+              data-custom-color={buttonColor}
+            >
+              {data.title || 'Button'}
+            </Button>
+          ) : (
+            <Button
+              as="a"
+              href={href}
+              target={target}
+              rel={rel}
+              className={buttonClasses}
+              style={finalButtonStyles}
+              data-filled={filled}
+              data-custom-color={buttonColor}
+            >
+              {data.title || 'Button'}
+            </Button>
+          )
+        ) : (
           <Button
-            as={href ? 'a' : 'div'}
-            href={isInternal ? null : href}
-            target={target}
-            rel={rel}
+            as="div"
             className={buttonClasses}
-            style={buttonStyles}
+            style={finalButtonStyles}
+            onClick={handleClick}
             data-filled={filled}
             data-custom-color={buttonColor}
           >
             {data.title || 'Button'}
           </Button>
-        </ConditionalLink>
+        )}
       </div>
     </MaybeWrap>
   );

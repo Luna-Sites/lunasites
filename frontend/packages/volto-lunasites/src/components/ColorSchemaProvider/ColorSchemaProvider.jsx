@@ -38,6 +38,12 @@ const ColorSchemaProvider = ({ children }) => {
       header_text_color: '#2c3e50',
       text_color: '#333333',
       accent_color: '#6bb535',
+      toolbar_color: '#f8f9fa',
+      toolbar_font_color: '#212529',
+      toolbar_border_color: '#dee2e6',
+      toolbar_border_thickness: '1px',
+      dropdown_color: '#ffffff',
+      dropdown_font_color: '#212529',
     };
 
     // Merge with defaults

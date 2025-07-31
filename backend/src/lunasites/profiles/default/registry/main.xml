@@ -36,6 +36,12 @@
       <element key="header_color">#2c3e50</element>
       <element key="text_color">#333333</element>
       <element key="accent_color">#6bb535</element>
+      <element key="toolbar_color">#f8f9fa</element>
+      <element key="toolbar_font_color">#212529</element>
+      <element key="toolbar_border_color">#dee2e6</element>
+      <element key="toolbar_border_thickness">1px</element>
+      <element key="dropdown_color">#ffffff</element>
+      <element key="dropdown_font_color">#212529</element>
     </value>
   </record>
 
@@ -47,11 +53,11 @@
       <value_type type="plone.registry.field.Text" />
     </field>
     <value>
-      <element>{"name": "Modern Blue", "background_color": "#ffffff", "primary_color": "#0070ae", "secondary_color": "#e73d5c", "header_color": "#2c3e50", "text_color": "#333333", "accent_color": "#6bb535"}</element>
-      <element>{"name": "Elegant Dark", "background_color": "#1a1a1a", "primary_color": "#3498db", "secondary_color": "#e74c3c", "header_color": "#2c3e50", "text_color": "#ecf0f1", "accent_color": "#2ecc71"}</element>
-      <element>{"name": "Warm Sunset", "background_color": "#fef9e7", "primary_color": "#f39c12", "secondary_color": "#e67e22", "header_color": "#8e44ad", "text_color": "#2c3e50", "accent_color": "#27ae60"}</element>
-      <element>{"name": "Cool Mint", "background_color": "#f0fff4", "primary_color": "#16a085", "secondary_color": "#1abc9c", "header_color": "#34495e", "text_color": "#2c3e50", "accent_color": "#9b59b6"}</element>
-      <element>{"name": "Professional Gray", "background_color": "#f8f9fa", "primary_color": "#495057", "secondary_color": "#6c757d", "header_color": "#343a40", "text_color": "#212529", "accent_color": "#007bff"}</element>
+      <element>{"name": "Modern Blue", "background_color": "#ffffff", "primary_color": "#0070ae", "secondary_color": "#e73d5c", "header_color": "#2c3e50", "text_color": "#333333", "accent_color": "#6bb535", "toolbar_color": "#f8f9fa", "toolbar_font_color": "#212529", "toolbar_border_color": "#dee2e6", "toolbar_border_thickness": "1px", "dropdown_color": "#ffffff", "dropdown_font_color": "#212529"}</element>
+      <element>{"name": "Elegant Dark", "background_color": "#1a1a1a", "primary_color": "#3498db", "secondary_color": "#e74c3c", "header_color": "#2c3e50", "text_color": "#ecf0f1", "accent_color": "#2ecc71", "toolbar_color": "#343a40", "toolbar_font_color": "#ffffff", "toolbar_border_color": "#495057", "toolbar_border_thickness": "1px", "dropdown_color": "#495057", "dropdown_font_color": "#ffffff"}</element>
+      <element>{"name": "Warm Sunset", "background_color": "#fef9e7", "primary_color": "#f39c12", "secondary_color": "#e67e22", "header_color": "#8e44ad", "text_color": "#2c3e50", "accent_color": "#27ae60", "toolbar_color": "#fff3cd", "toolbar_font_color": "#856404", "toolbar_border_color": "#ffeaa7", "toolbar_border_thickness": "1px", "dropdown_color": "#ffffff", "dropdown_font_color": "#856404"}</element>
+      <element>{"name": "Cool Mint", "background_color": "#f0fff4", "primary_color": "#16a085", "secondary_color": "#1abc9c", "header_color": "#34495e", "text_color": "#2c3e50", "accent_color": "#9b59b6", "toolbar_color": "#d1ecf1", "toolbar_font_color": "#0c5460", "toolbar_border_color": "#bee5eb", "toolbar_border_thickness": "1px", "dropdown_color": "#ffffff", "dropdown_font_color": "#0c5460"}</element>
+      <element>{"name": "Professional Gray", "background_color": "#f8f9fa", "primary_color": "#495057", "secondary_color": "#6c757d", "header_color": "#343a40", "text_color": "#212529", "accent_color": "#007bff", "toolbar_color": "#e9ecef", "toolbar_font_color": "#495057", "toolbar_border_color": "#ced4da", "toolbar_border_thickness": "1px", "dropdown_color": "#ffffff", "dropdown_font_color": "#495057"}</element>
     </value>
   </record>
 
