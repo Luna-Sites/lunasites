@@ -30,38 +30,71 @@
   }
 }
 
-// Font family classes for Slate blocks
-.has--fontFamily--Inter,
+// Modern Sans-Serif Font Classes
 .font-inter {
   font-family: 'Inter', sans-serif !important;
 }
 
-.has--fontFamily--Metropolis,
 .font-metropolis {
   font-family: 'Metropolis', sans-serif !important;
 }
 
-.has--fontFamily--Arial,
+.font-poppins {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.font-roboto {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.font-opensans {
+  font-family: 'Open Sans', sans-serif !important;
+}
+
+.font-lato {
+  font-family: 'Lato', sans-serif !important;
+}
+
+// System Font Classes
 .font-arial {
   font-family: 'Arial', sans-serif !important;
 }
 
-.has--fontFamily--Helvetica,
 .font-helvetica {
   font-family: 'Helvetica', sans-serif !important;
 }
 
-.has--fontFamily--Times\ New\ Roman,
-.font-times {
-  font-family: 'Times New Roman', serif !important;
+// Elegant Serif Font Classes
+.font-playfair {
+  font-family: 'Playfair Display', serif !important;
 }
 
-.has--fontFamily--Georgia,
+.font-merriweather {
+  font-family: 'Merriweather', serif !important;
+}
+
+.font-crimsontext {
+  font-family: 'Crimson Text', serif !important;
+}
+
+// Classic Font Classes
 .font-georgia {
   font-family: 'Georgia', serif !important;
 }
 
-.has--fontFamily--Courier\ New,
+.font-times {
+  font-family: 'Times New Roman', serif !important;
+}
+
+// Monospace Font Classes
+.font-firacode {
+  font-family: 'Fira Code', monospace !important;
+}
+
 .font-courier {
   font-family: 'Courier New', monospace !important;
 }

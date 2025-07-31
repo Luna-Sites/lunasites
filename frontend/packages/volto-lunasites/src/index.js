@@ -561,7 +561,6 @@ const applyConfig = (config) => {
 
   // Font size selector
   if (!config.settings.slate.toolbarButtons.includes('font-size-selector')) {
-    console.log('Registering font-size-selector button');
     config.settings.slate.buttons['font-size-selector'] = (props) => (
       <FontSizeSelector {...props} />
     );
