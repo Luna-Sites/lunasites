@@ -118,10 +118,16 @@ const FontSelector = ({ ...props }) => {
   const handleFontChange = useCallback(
     (event, { value }) => {
       event.preventDefault();
+      event.stopPropagation();
       toggleInlineFontFormat(editor, value);
     },
     [editor],
   );
+
+  const handleMouseDown = useCallback((event) => {
+    // Prevent mousedown from taking focus away from the editor
+    event.preventDefault();
+  }, []);
 
   const renderLabel = (label) => ({
     content: label.text,
@@ -129,7 +135,11 @@ const FontSelector = ({ ...props }) => {
   });
 
   return (
-    <div className="font-selector-wrapper" {...props}>
+    <div
+      className="font-selector-wrapper"
+      {...props}
+      onMouseDown={handleMouseDown}
+    >
       <Dropdown
         className="font-selector"
         selection
@@ -139,6 +149,8 @@ const FontSelector = ({ ...props }) => {
         onChange={handleFontChange}
         renderLabel={renderLabel}
         placeholder="Font"
+        selectOnBlur={false}
+        selectOnNavigation={false}
       />
     </div>
   );
