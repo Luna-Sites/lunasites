@@ -139,7 +139,6 @@ const FontSelector = ({ ...props }) => {
         onChange={handleFontChange}
         renderLabel={renderLabel}
         placeholder="Font"
-        icon="font"
       />
     </div>
   );
