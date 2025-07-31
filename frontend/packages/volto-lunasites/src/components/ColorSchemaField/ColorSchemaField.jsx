@@ -85,7 +85,6 @@ const ColorSchemaField = (props) => {
   const loadInheritedSchema = async () => {
     try {
       let cleanedUrl = pathname;
-      console.log(cleanedUrl);
 
       // First clean the URL from /edit or /add
       if (pathname?.endsWith('/edit')) {
@@ -94,11 +93,9 @@ const ColorSchemaField = (props) => {
       if (pathname?.endsWith('/add')) {
         cleanedUrl = cleanedUrl.slice(0, -'/add'.length);
       }
-      console.log(cleanedUrl);
       // Then check if we need to use ++api++
       if (isUrlExcluded(pathname) || pathname.includes('/controlpanel'))
         cleanedUrl = window.location.origin + '/++api++' + cleanedUrl;
-      console.log({ cleanedUrl });
       const response = await fetch(
         `${cleanedUrl}/@inherit?expand.inherit.behaviors=lunasites.behaviors.color_schema.IColorSchemaBehavior`,
         {
@@ -109,17 +106,12 @@ const ColorSchemaField = (props) => {
           },
         },
       );
-      console.log(
-        `${cleanedUrl}/@inherit?expand.inherit.behaviors=lunasites.behaviors.color_schema.IColorSchemaBehavior`,
-      );
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Inherit data:', data);
         const inheritedData =
           data['lunasites.behaviors.color_schema.IColorSchemaBehavior']?.data
             ?.color_schema || {};
-        console.log('Extracted color schema:', inheritedData);
         setInheritedSchema(inheritedData);
       }
     } catch (error) {

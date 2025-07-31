@@ -62,9 +62,6 @@ const Logo = () => {
           if (pathname?.includes('/controlpanel')) {
             return;
           }
-          console.log(
-            `${cleanedUrl}/++api++/${pathname}/@inherit?expand.inherit.behaviors=lunasites.behaviors.color_schema.IColorSchemaBehavior`,
-          );
           const response = await fetch(
             `${cleanedUrl}/++api++/${pathname}/@inherit?expand.inherit.behaviors=lunasites.behaviors.color_schema.IColorSchemaBehavior`,
             {
@@ -153,7 +150,6 @@ const Logo = () => {
     );
   };
 
-  console.log(logoImage, logoText);
   return (
     <UniversalLink
       href={settings.isMultilingual ? `/${toBackendLang(lang)}` : '/'}

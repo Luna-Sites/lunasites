@@ -73,15 +73,6 @@ const CustomAccordionEdit = (props) => {
     }),
   };
 
-  // Debug logging
-  if (
-    panel?.panel_backgroundColor ||
-    panel?.panel_textColor ||
-    panel?.panel_titleColor
-  ) {
-    console.log('Edit mode panel styles found:', { uid, panel, panelStyles });
-  }
-
   return (
     <Accordion
       className={
