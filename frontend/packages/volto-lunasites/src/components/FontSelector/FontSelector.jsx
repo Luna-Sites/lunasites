@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useSlate } from 'slate-react';
-import { Editor, Transforms } from 'slate';
+import { Editor } from 'slate';
 import { Dropdown } from 'semantic-ui-react';
 import './FontSelector.scss';
 
@@ -55,35 +55,60 @@ const FONT_OPTIONS = [
   },
 ];
 
-const isBlockFontActive = (editor, fontClass) => {
+const toggleInlineFontFormat = (editor, fontClass) => {
   if (!editor.selection) return false;
-  const levels = Array.from(Editor.levels(editor, editor.selection));
-  if (levels.length < 2) return false;
-  const [, [node]] = levels;
-  return node.styleName === fontClass;
-};
 
-const toggleBlockFontFormat = (editor, fontClass) => {
-  const levels = Array.from(Editor.levels(editor, editor.selection));
-  if (levels.length < 2) return false;
-  const [, [, path]] = levels;
-  
-  Transforms.setNodes(
-    editor,
-    { styleName: fontClass || undefined },
-    {
-      at: path,
-    },
-  );
+  // List of all font style properties to remove (with style- prefix)
+  const fontStyleProps = [
+    'style-font-inter',
+    'style-font-metropolis',
+    'style-font-arial',
+    'style-font-helvetica',
+    'style-font-times',
+    'style-font-georgia',
+    'style-font-courier',
+  ];
+
+  // Remove all existing font marks
+  fontStyleProps.forEach((styleProp) => {
+    if (Editor.marks(editor)?.[styleProp]) {
+      Editor.removeMark(editor, styleProp);
+    }
+  });
+
+  // Apply new font mark if specified (with style- prefix)
+  if (fontClass) {
+    const styleProp = `style-${fontClass}`;
+    Editor.addMark(editor, styleProp, true);
+  }
+
   return true;
 };
 
 const getCurrentFont = (editor) => {
   if (!editor.selection) return '';
-  const levels = Array.from(Editor.levels(editor, editor.selection));
-  if (levels.length < 2) return '';
-  const [, [node]] = levels;
-  return node.styleName || '';
+  const marks = Editor.marks(editor);
+  if (!marks) return '';
+
+  // Check which font style property is active
+  const fontStyleProps = [
+    'style-font-inter',
+    'style-font-metropolis',
+    'style-font-arial',
+    'style-font-helvetica',
+    'style-font-times',
+    'style-font-georgia',
+    'style-font-courier',
+  ];
+
+  for (const styleProp of fontStyleProps) {
+    if (marks[styleProp]) {
+      // Return the font class without the style- prefix
+      return styleProp.substring(6);
+    }
+  }
+
+  return '';
 };
 
 const FontSelector = ({ ...props }) => {
@@ -93,7 +118,7 @@ const FontSelector = ({ ...props }) => {
   const handleFontChange = useCallback(
     (event, { value }) => {
       event.preventDefault();
-      toggleBlockFontFormat(editor, value);
+      toggleInlineFontFormat(editor, value);
     },
     [editor],
   );
