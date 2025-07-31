@@ -32,6 +32,7 @@ import alignRightIcon from '@plone/volto/icons/align-right.svg';
 import alignCenterIcon from '@plone/volto/icons/align-center.svg';
 import alignJustifyIcon from '@plone/volto/icons/align-justify.svg';
 import FontSelector from './components/FontSelector';
+import FontSizeSelector from './components/FontSizeSelector';
 
 import {
   MarkElementButton,
@@ -558,10 +559,31 @@ const applyConfig = (config) => {
     ];
   }
 
+  // Font size selector
+  if (!config.settings.slate.toolbarButtons.includes('font-size-selector')) {
+    console.log('Registering font-size-selector button');
+    config.settings.slate.buttons['font-size-selector'] = (props) => (
+      <FontSizeSelector {...props} />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'separator',
+      'font-size-selector',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'separator',
+      'font-size-selector',
+    ];
+  }
+
   // Clear formatting
   if (!config.settings.slate.toolbarButtons.includes('clearformatting')) {
     config.settings.slate.toolbarButtons = [
       ...config.settings.slate.toolbarButtons,
+      'separator',
       'clearformatting',
     ];
   }
