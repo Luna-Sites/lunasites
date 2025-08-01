@@ -297,22 +297,27 @@ const DraggableGridBlock = ({
         className="drag-handle"
         style={{
           position: 'absolute',
-          top: '8px',
-          left: '8px', // Moved to top-left for better UX
+          top: '10px',
+          left: '10px',
           width: '24px',
-          height: '20px',
-          background: isDragging ? '#007bc1' : 'rgba(0, 123, 193, 0.8)',
-          borderRadius: '4px',
+          height: '18px',
+          background: isDragging ? 
+            'linear-gradient(135deg, #007bc1 0%, #0056b3 100%)' : 
+            'linear-gradient(135deg, rgba(0, 123, 193, 0.9) 0%, rgba(0, 86, 179, 0.9) 100%)',
+          borderRadius: '6px',
           cursor: isDragging ? 'grabbing' : 'grab',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '14px',
+          fontSize: '12px',
           color: 'white',
-          opacity: selected ? 1 : 0.8,
-          transition: isDragging ? 'none' : 'all 0.2s ease',
-          zIndex: 10,
-          boxShadow: isDragging ? '0 4px 8px rgba(0, 0, 0, 0.2)' : '0 2px 4px rgba(0, 0, 0, 0.1)'
+          opacity: selected ? 1 : 0.75,
+          transition: isDragging ? 'none' : 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          zIndex: 15,
+          boxShadow: isDragging ? 
+            '0 8px 16px rgba(0, 123, 193, 0.3), 0 4px 8px rgba(0, 0, 0, 0.1)' : 
+            '0 2px 8px rgba(0, 123, 193, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1)',
+          backdropFilter: 'blur(8px)'
         }}
         title="Drag to move"
         onMouseDown={handleMouseDown}
@@ -334,14 +339,17 @@ const DraggableGridBlock = ({
             onMouseDown={(e) => handleResizeStart(e, 'nw')}
             style={{
               position: 'absolute',
-              top: '-4px',
-              left: '-4px',
-              width: '8px',
-              height: '8px',
-              background: '#007bc1',
+              top: '-3px',
+              left: '-3px',
+              width: '10px',
+              height: '10px',
+              background: 'linear-gradient(135deg, #007bc1 0%, #0056b3 100%)',
               cursor: 'nw-resize',
-              borderRadius: '2px',
-              zIndex: 15
+              borderRadius: '50%', // Circular handles
+              zIndex: 15,
+              border: '2px solid white',
+              boxShadow: '0 2px 8px rgba(0, 123, 193, 0.3)',
+              transition: 'all 0.2s ease'
             }}
           />
           <div 
@@ -349,14 +357,17 @@ const DraggableGridBlock = ({
             onMouseDown={(e) => handleResizeStart(e, 'ne')}
             style={{
               position: 'absolute',
-              top: '-4px',
-              right: '-4px',
-              width: '8px',
-              height: '8px',
-              background: '#007bc1',
+              top: '-3px',
+              right: '-3px',
+              width: '10px',
+              height: '10px',
+              background: 'linear-gradient(135deg, #007bc1 0%, #0056b3 100%)',
               cursor: 'ne-resize',
-              borderRadius: '2px',
-              zIndex: 15
+              borderRadius: '50%',
+              zIndex: 15,
+              border: '2px solid white',
+              boxShadow: '0 2px 8px rgba(0, 123, 193, 0.3)',
+              transition: 'all 0.2s ease'
             }}
           />
           <div 
@@ -364,14 +375,17 @@ const DraggableGridBlock = ({
             onMouseDown={(e) => handleResizeStart(e, 'sw')}
             style={{
               position: 'absolute',
-              bottom: '-4px',
-              left: '-4px',
-              width: '8px',
-              height: '8px',
-              background: '#007bc1',
+              bottom: '-3px',
+              left: '-3px',
+              width: '10px',
+              height: '10px',
+              background: 'linear-gradient(135deg, #007bc1 0%, #0056b3 100%)',
               cursor: 'sw-resize',
-              borderRadius: '2px',
-              zIndex: 15
+              borderRadius: '50%',
+              zIndex: 15,
+              border: '2px solid white',
+              boxShadow: '0 2px 8px rgba(0, 123, 193, 0.3)',
+              transition: 'all 0.2s ease'
             }}
           />
           <div 
@@ -379,14 +393,17 @@ const DraggableGridBlock = ({
             onMouseDown={(e) => handleResizeStart(e, 'se')}
             style={{
               position: 'absolute',
-              bottom: '-4px',
-              right: '-4px',
-              width: '8px',
-              height: '8px',
-              background: '#007bc1',
+              bottom: '-3px',
+              right: '-3px',
+              width: '10px',
+              height: '10px',
+              background: 'linear-gradient(135deg, #007bc1 0%, #0056b3 100%)',
               cursor: 'se-resize',
-              borderRadius: '2px',
-              zIndex: 15
+              borderRadius: '50%',
+              zIndex: 15,
+              border: '2px solid white',
+              boxShadow: '0 2px 8px rgba(0, 123, 193, 0.3)',
+              transition: 'all 0.2s ease'
             }}
           />
           
@@ -396,15 +413,18 @@ const DraggableGridBlock = ({
             onMouseDown={(e) => handleResizeStart(e, 'n')}
             style={{
               position: 'absolute',
-              top: '-4px',
+              top: '-3px',
               left: '50%',
               transform: 'translateX(-50%)',
-              width: '16px',
-              height: '8px',
-              background: '#007bc1',
+              width: '20px',
+              height: '6px',
+              background: 'linear-gradient(90deg, #007bc1 0%, #0056b3 100%)',
               cursor: 'n-resize',
-              borderRadius: '2px',
-              zIndex: 15
+              borderRadius: '3px',
+              zIndex: 15,
+              border: '1px solid white',
+              boxShadow: '0 2px 6px rgba(0, 123, 193, 0.3)',
+              transition: 'all 0.2s ease'
             }}
           />
           <div 
@@ -412,15 +432,18 @@ const DraggableGridBlock = ({
             onMouseDown={(e) => handleResizeStart(e, 's')}
             style={{
               position: 'absolute',
-              bottom: '-4px',
+              bottom: '-3px',
               left: '50%',
               transform: 'translateX(-50%)',
-              width: '16px',
-              height: '8px',
-              background: '#007bc1',
+              width: '20px',
+              height: '6px',
+              background: 'linear-gradient(90deg, #007bc1 0%, #0056b3 100%)',
               cursor: 's-resize',
-              borderRadius: '2px',
-              zIndex: 15
+              borderRadius: '3px',
+              zIndex: 15,
+              border: '1px solid white',
+              boxShadow: '0 2px 6px rgba(0, 123, 193, 0.3)',
+              transition: 'all 0.2s ease'
             }}
           />
           <div 
@@ -428,15 +451,18 @@ const DraggableGridBlock = ({
             onMouseDown={(e) => handleResizeStart(e, 'w')}
             style={{
               position: 'absolute',
-              left: '-4px',
+              left: '-3px',
               top: '50%',
               transform: 'translateY(-50%)',
-              width: '8px',
-              height: '16px',
-              background: '#007bc1',
+              width: '6px',
+              height: '20px',
+              background: 'linear-gradient(0deg, #007bc1 0%, #0056b3 100%)',
               cursor: 'w-resize',
-              borderRadius: '2px',
-              zIndex: 15
+              borderRadius: '3px',
+              zIndex: 15,
+              border: '1px solid white',
+              boxShadow: '0 2px 6px rgba(0, 123, 193, 0.3)',
+              transition: 'all 0.2s ease'
             }}
           />
           <div 
@@ -444,15 +470,18 @@ const DraggableGridBlock = ({
             onMouseDown={(e) => handleResizeStart(e, 'e')}
             style={{
               position: 'absolute',
-              right: '-4px',
+              right: '-3px',
               top: '50%',
               transform: 'translateY(-50%)',
-              width: '8px',
-              height: '16px',
-              background: '#007bc1',
+              width: '6px',
+              height: '20px',
+              background: 'linear-gradient(0deg, #007bc1 0%, #0056b3 100%)',
               cursor: 'e-resize',
-              borderRadius: '2px',
-              zIndex: 15
+              borderRadius: '3px',
+              zIndex: 15,
+              border: '1px solid white',
+              boxShadow: '0 2px 6px rgba(0, 123, 193, 0.3)',
+              transition: 'all 0.2s ease'
             }}
           />
         </>
@@ -463,17 +492,22 @@ const DraggableGridBlock = ({
         <div 
           style={{
             position: 'absolute',
-            bottom: '4px',
-            right: '4px', // Moved to right since drag handle is now on left
-            fontSize: '10px',
-            background: 'rgba(0, 0, 0, 0.7)',
+            bottom: '8px',
+            right: '8px',
+            fontSize: '9px',
+            background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.9) 100%)',
             color: 'white',
-            padding: '2px 6px',
-            borderRadius: '3px',
-            pointerEvents: 'none'
+            padding: '3px 6px',
+            borderRadius: '6px',
+            pointerEvents: 'none',
+            fontFamily: 'monospace',
+            fontWeight: '500',
+            backdropFilter: 'blur(4px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
           }}
         >
-          {position.x},{position.y} ({position.width}×{position.height})
+          {position.x},{position.y} • {position.width}×{position.height}
         </div>
       )}
     </div>

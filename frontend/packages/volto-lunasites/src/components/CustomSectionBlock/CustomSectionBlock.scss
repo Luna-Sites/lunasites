@@ -155,48 +155,59 @@
   .grid-item {
     display: flex;
     flex-direction: column;
-    transition: grid-column 0.15s ease, grid-row 0.15s ease; // Smooth grid snapping
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); // Smooth material design easing
     
+    // Subtle hover elevation
     &:hover {
-      border-color: rgba(0, 123, 193, 0.4) !important;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+      border-color: rgba(0, 123, 193, 0.25) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.08) !important;
+      transform: translateY(-1px); // Subtle lift effect
     }
     
+    // Clear selection state with ring
     &.selected {
       border-color: #007bc1 !important;
-      box-shadow: 0 0 0 2px rgba(0, 123, 193, 0.3) !important;
+      box-shadow: 0 0 0 3px rgba(0, 123, 193, 0.15), 0 4px 12px rgba(0, 123, 193, 0.2) !important;
+      transform: translateY(-1px);
     }
     
+    // Dragging state with premium feel
     &.dragging {
       z-index: 1000;
-      box-shadow: 0 12px 30px rgba(0, 123, 193, 0.3) !important; // Blue shadow for dragging
-      border-color: rgba(0, 123, 193, 0.8) !important;
-      transition: grid-column 0.1s ease, grid-row 0.1s ease; // Smooth snapping
+      box-shadow: 0 20px 40px rgba(0, 123, 193, 0.25), 0 8px 16px rgba(0, 123, 193, 0.15) !important;
+      border-color: #007bc1 !important;
+      background-color: rgba(0, 123, 193, 0.02) !important;
+      transition: grid-column 0.15s cubic-bezier(0.4, 0, 0.2, 1), grid-row 0.15s cubic-bezier(0.4, 0, 0.2, 1);
       
       .draggable-grid-block {
-        transform: scale(1.05) !important; // Bigger scale for dragged block
+        transform: scale(1.03) rotateZ(1deg) !important; // Subtle rotation for dynamic feel
+        opacity: 0.95;
+      }
+    }
+    
+    // Moved blocks with warm feedback
+    &.moved {
+      border-color: rgba(255, 145, 77, 0.6) !important; // Warmer orange
+      background-color: rgba(255, 145, 77, 0.08) !important;
+      box-shadow: 0 4px 12px rgba(255, 145, 77, 0.2) !important;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); // Slower, smoother transitions
+      
+      .draggable-grid-block {
+        transform: scale(0.97) translateY(-2px); // Subtle lift with scale
         opacity: 0.9;
       }
     }
     
-    &.moved {
-      border-color: rgba(255, 165, 0, 0.8) !important; // Orange border for moved blocks
-      background-color: rgba(255, 165, 0, 0.1) !important;
-      transition: grid-column 0.3s ease, grid-row 0.3s ease; // Slower, smoother transitions
-      
-      .draggable-grid-block {
-        transform: scale(0.95); // More noticeable scale to show it's being moved
-        opacity: 0.8;
-      }
-    }
-    
+    // Resizing state with success color
     &.resizing {
-      border-color: rgba(0, 200, 100, 0.6) !important; // Green border for resizing blocks
-      background-color: rgba(0, 200, 100, 0.05) !important;
-      transition: grid-column 0.1s ease, grid-row 0.1s ease; // Fast resize feedback
+      border-color: rgba(16, 185, 129, 0.6) !important; // Modern green
+      background-color: rgba(16, 185, 129, 0.08) !important;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2) !important;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       
       .draggable-grid-block {
-        transform: scale(1.02); // Slightly larger during resize
+        transform: scale(1.02) translateY(-1px);
+        opacity: 0.95;
       }
     }
   }
@@ -323,17 +334,18 @@
     }
   }
   
-  // Resize handles styling
+  // Modern resize handles styling
   .resize-handle {
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
     &:hover {
-      background: #005d99 !important;
-      transform: scale(1.2);
+      background: linear-gradient(135deg, #0056b3 0%, #004080 100%) !important;
+      transform: scale(1.3);
+      box-shadow: 0 4px 12px rgba(0, 123, 193, 0.4) !important;
     }
     
     &:active {
-      background: #004080 !important;
+      background: linear-gradient(135deg, #004080 0%, #003060 100%) !important;
       transform: scale(1.1);
     }
   }

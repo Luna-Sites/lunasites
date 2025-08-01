@@ -128,14 +128,14 @@ const GridLayout = ({
       gridColumn: `${position.x + 1} / span ${position.width}`,
       gridRow: `${position.y + 1} / span ${position.height}`,
       minHeight: `${position.height * rowHeight + (position.height - 1) * 8}px`,
-      border: '1px solid rgba(0, 123, 193, 0.2)',
-      borderRadius: '6px',
-      backgroundColor: 'white',
-      padding: '4px', // Reduced padding to prevent overflow
+      border: '1px solid rgba(0, 0, 0, 0.08)',
+      borderRadius: '12px', // More modern rounded corners
+      backgroundColor: '#ffffff',
+      padding: '8px', // Better content spacing
       position: 'relative',
       overflow: 'hidden',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-      transition: 'all 0.2s ease',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08)', // Subtle layered shadow
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', // Smoother easing
     };
 
     const content = children({ blockId, position });
