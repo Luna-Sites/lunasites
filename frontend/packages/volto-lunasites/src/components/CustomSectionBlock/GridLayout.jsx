@@ -16,16 +16,52 @@ const GridLayout = ({
 }) => {
   const [tempPositions, setTempPositions] = React.useState({});
   const [draggingBlocks, setDraggingBlocks] = React.useState(new Set());
+  const [movedBlocks, setMovedBlocks] = React.useState(new Set());
   const { columns, rowHeight, positions } = gridConfig;
   
   // Merge temp positions with actual positions for visual updates during drag
   const currentPositions = { ...positions, ...tempPositions };
   
   const handleTempPositionUpdate = (blockId, tempPosition) => {
-    setTempPositions(prev => ({
-      ...prev,
-      [blockId]: tempPosition
-    }));
+    // Check for collisions and move conflicting blocks
+    const newTempPositions = { ...tempPositions };
+    const allPositions = { ...positions, ...newTempPositions };
+    
+    // Find blocks that would collide with the new position
+    const conflictingBlocks = [];
+    Object.entries(allPositions).forEach(([otherBlockId, otherPos]) => {
+      if (otherBlockId !== blockId && otherPos) {
+        // Check if blocks overlap
+        if (!(tempPosition.x >= otherPos.x + otherPos.width || 
+              tempPosition.x + tempPosition.width <= otherPos.x || 
+              tempPosition.y >= otherPos.y + otherPos.height || 
+              tempPosition.y + tempPosition.height <= otherPos.y)) {
+          conflictingBlocks.push({ id: otherBlockId, position: otherPos });
+        }
+      }
+    });
+    
+    // Move conflicting blocks to available positions
+    const newMovedBlocks = new Set();
+    conflictingBlocks.forEach(({ id: conflictId, position: conflictPos }) => {
+      const newPos = findAvailablePositionForBlock(
+        conflictPos.x, 
+        conflictPos.y + tempPosition.height, // Try to move below the dragged block
+        conflictPos.width, 
+        conflictPos.height, 
+        conflictId,
+        { ...allPositions, [blockId]: tempPosition }
+      );
+      newTempPositions[conflictId] = newPos;
+      newMovedBlocks.add(conflictId);
+    });
+    
+    setMovedBlocks(newMovedBlocks);
+    
+    // Set the dragged block's position
+    newTempPositions[blockId] = tempPosition;
+    
+    setTempPositions(newTempPositions);
     setDraggingBlocks(prev => new Set([...prev, blockId]));
   };
   
@@ -40,6 +76,64 @@ const GridLayout = ({
       newSet.delete(blockId);
       return newSet;
     });
+    setMovedBlocks(new Set()); // Clear moved blocks when drag ends
+  };
+  
+  // Helper function to find available position for a block
+  const findAvailablePositionForBlock = (startX, startY, width, height, excludeBlockId, allPositions) => {
+    const columns = gridConfig.columns;
+    
+    // Check if position is available
+    const isPositionAvailable = (x, y, w, h) => {
+      // Check bounds
+      if (x < 0 || y < 0 || x + w > columns) return false;
+      
+      // Check collisions with other blocks
+      for (const [otherId, pos] of Object.entries(allPositions)) {
+        if (otherId !== excludeBlockId && pos) {
+          if (!(x >= pos.x + pos.width || 
+                x + w <= pos.x || 
+                y >= pos.y + pos.height || 
+                y + h <= pos.y)) {
+            return false; // Collision detected
+          }
+        }
+      }
+      return true;
+    };
+
+    // Try the target position first
+    if (isPositionAvailable(startX, startY, width, height)) {
+      return { x: startX, y: startY, width, height };
+    }
+
+    // Search for nearby available positions in a spiral pattern
+    for (let radius = 1; radius <= Math.max(columns, 20); radius++) {
+      for (let dx = -radius; dx <= radius; dx++) {
+        for (let dy = -radius; dy <= radius; dy++) {
+          if (Math.abs(dx) === radius || Math.abs(dy) === radius) {
+            const testX = startX + dx;
+            const testY = startY + dy;
+            
+            if (isPositionAvailable(testX, testY, width, height)) {
+              return { x: testX, y: testY, width, height };
+            }
+          }
+        }
+      }
+    }
+
+    // Fallback: find any available position
+    for (let y = 0; y < 50; y++) {
+      for (let x = 0; x <= columns - width; x++) {
+        if (isPositionAvailable(x, y, width, height)) {
+          return { x, y, width, height };
+        }
+      }
+    }
+
+    // Ultimate fallback: return original position (shouldn't happen)
+    return { x: startX, y: startY, width, height };
   };
   
   // Calculate the total height needed for the grid using current positions
@@ -82,7 +176,7 @@ const GridLayout = ({
     return (
       <div
         key={blockId}
-        className={`grid-item ${draggingBlocks.has(blockId) ? 'dragging' : ''}`}
+        className={`grid-item ${draggingBlocks.has(blockId) ? 'dragging' : ''} ${movedBlocks.has(blockId) ? 'moved' : ''}`}
         style={itemStyle}
         data-block-id={blockId}
       >
