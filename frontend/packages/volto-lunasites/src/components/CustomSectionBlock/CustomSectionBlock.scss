@@ -262,7 +262,8 @@
   position: relative;
   
   &:hover .drag-handle {
-    opacity: 0.8 !important;
+    opacity: 1 !important;
+    transform: scale(1.05);
   }
   
   &.selected .drag-handle {
@@ -280,15 +281,17 @@
   
   .drag-handle {
     transition: all 0.2s ease;
+    opacity: 0.8 !important; // Always show drag handle with some opacity
     
     &:hover {
       background: #005d99 !important;
-      transform: scale(1.1);
+      transform: scale(1.15);
+      opacity: 1 !important;
     }
     
     &:active {
       cursor: grabbing;
-      transform: scale(0.95);
+      transform: scale(0.9);
     }
   }
 }

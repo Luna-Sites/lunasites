@@ -25,7 +25,7 @@ const GridDragLayer = ({
       const relativeX = e.clientX - rect.left;
       const relativeY = e.clientY - rect.top;
 
-      // Calculate grid position
+      // Calculate grid position with improved snapping
       const padding = 16;
       const gap = 8;
       const adjustedX = Math.max(0, relativeX - padding);
@@ -35,8 +35,9 @@ const GridDragLayer = ({
       const cellWidth = availableWidth / columns;
       const cellHeight = rowHeight + gap;
 
-      const gridX = Math.floor(adjustedX / cellWidth);
-      const gridY = Math.floor(adjustedY / cellHeight);
+      // Improved grid snapping - use rounding instead of floor for better centering
+      const gridX = Math.round(adjustedX / cellWidth);
+      const gridY = Math.round(adjustedY / cellHeight);
 
       // Get block info
       const blockId = draggedElement.getAttribute('data-block-id');
@@ -159,7 +160,7 @@ const GridDragLayer = ({
       const relativeX = e.clientX - rect.left;
       const relativeY = e.clientY - rect.top;
 
-      // Calculate snap position
+      // Calculate snap position with improved precision
       const padding = 16;
       const gap = 8;
       const adjustedX = Math.max(0, relativeX - padding);
@@ -169,8 +170,9 @@ const GridDragLayer = ({
       const cellWidth = availableWidth / columns;
       const cellHeight = rowHeight + gap;
 
-      const gridX = Math.floor(adjustedX / cellWidth);
-      const gridY = Math.floor(adjustedY / cellHeight);
+      // Use rounding for better grid snapping
+      const gridX = Math.round(adjustedX / cellWidth);
+      const gridY = Math.round(adjustedY / cellHeight);
 
       const positionData = draggedElement.getAttribute('data-position');
       if (positionData) {
@@ -179,11 +181,15 @@ const GridDragLayer = ({
         const snapX = Math.min(Math.max(0, gridX), maxX);
         const snapY = Math.max(0, gridY);
 
+        // Check if this position would cause collision
+        const wouldCollide = !isPositionAvailableForPreview(snapX, snapY, currentPos.width, currentPos.height, draggedElement.getAttribute('data-block-id'));
+        
         setSnapPreview({
           x: snapX,
           y: snapY,
           width: currentPos.width,
-          height: currentPos.height
+          height: currentPos.height,
+          collision: wouldCollide
         });
       }
     };
@@ -198,6 +204,49 @@ const GridDragLayer = ({
     layer.addEventListener('mousemove', handleMouseMove);
     layer.addEventListener('mouseenter', handleMouseEnter);
     layer.addEventListener('mouseleave', handleMouseLeave);
+
+    // Helper function for preview collision detection
+    const isPositionAvailableForPreview = (x, y, width, height, excludeBlockId) => {
+      const currentPositions = {};
+      const gridItems = layer.querySelectorAll('.grid-item[data-block-id]');
+      
+      gridItems.forEach(item => {
+        const id = item.getAttribute('data-block-id');
+        if (id && id !== excludeBlockId) {
+          const style = window.getComputedStyle(item);
+          const gridColumn = style.gridColumn;
+          const gridRow = style.gridRow;
+          
+          if (gridColumn && gridRow) {
+            const columnMatch = gridColumn.match(/(\d+) \/ span (\d+)/);
+            const rowMatch = gridRow.match(/(\d+) \/ span (\d+)/);
+            
+            if (columnMatch && rowMatch) {
+              currentPositions[id] = {
+                x: parseInt(columnMatch[1]) - 1,
+                y: parseInt(rowMatch[1]) - 1,
+                width: parseInt(columnMatch[2]),
+                height: parseInt(rowMatch[2])
+              };
+            }
+          }
+        }
+      });
+
+      // Check bounds
+      if (x < 0 || y < 0 || x + width > columns) return false;
+      
+      // Check collisions
+      for (const pos of Object.values(currentPositions)) {
+        if (!(x >= pos.x + pos.width || 
+              x + width <= pos.x || 
+              y >= pos.y + pos.height || 
+              y + height <= pos.y)) {
+          return false;
+        }
+      }
+      return true;
+    };
 
     return () => {
       layer.removeEventListener('mouseup', handleMouseUp);
@@ -227,8 +276,8 @@ const GridDragLayer = ({
             position: 'absolute',
             gridColumn: `${snapPreview.x + 1} / span ${snapPreview.width}`,
             gridRow: `${snapPreview.y + 1} / span ${snapPreview.height}`,
-            background: 'rgba(0, 123, 193, 0.2)',
-            border: '2px solid rgba(0, 123, 193, 0.6)',
+            background: snapPreview.collision ? 'rgba(255, 68, 68, 0.2)' : 'rgba(0, 123, 193, 0.2)',
+            border: `2px solid ${snapPreview.collision ? 'rgba(255, 68, 68, 0.6)' : 'rgba(0, 123, 193, 0.6)'}`,
             borderRadius: '6px',
             pointerEvents: 'none',
             zIndex: 998,
@@ -236,10 +285,10 @@ const GridDragLayer = ({
             placeItems: 'center',
             fontSize: '12px',
             fontWeight: '600',
-            color: '#007bc1'
+            color: snapPreview.collision ? '#ff4444' : '#007bc1'
           }}
         >
-          Drop here
+          {snapPreview.collision ? 'Cannot drop' : 'Drop here'}
         </div>
       )}
       

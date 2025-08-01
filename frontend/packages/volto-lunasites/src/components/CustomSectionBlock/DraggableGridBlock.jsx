@@ -15,12 +15,22 @@ const DraggableGridBlock = ({
   const dragStartPos = React.useRef({ x: 0, y: 0 });
 
   const handleMouseDown = (e) => {
-    // Only allow dragging from the drag handle or when block is selected
+    // Allow dragging from anywhere on the block if selected, or from drag handle
     const isDragHandle = e.target.closest('.drag-handle');
     const isBlockSelected = selected;
     
+    // Always allow drag from drag handle, or from anywhere if block is selected
     if (!isDragHandle && !isBlockSelected) {
+      // If block is not selected, select it first but don't start drag
+      if (onSelect) {
+        onSelect(blockId);
+      }
       return;
+    }
+    
+    // Start drag immediately if drag handle is used or block is selected
+    if (!isDragHandle && !isBlockSelected) {
+      return; // Safety check
     }
 
     e.preventDefault();
@@ -119,7 +129,7 @@ const DraggableGridBlock = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        cursor: selected ? (isDragging ? 'grabbing' : 'grab') : 'pointer',
+        cursor: isDragging ? 'grabbing' : (selected ? 'grab' : 'pointer'),
         position: 'relative',
         transition: isDragging ? 'none' : 'all 0.2s ease',
         opacity: isDragging ? 0.3 : 1,
@@ -133,22 +143,34 @@ const DraggableGridBlock = ({
           position: 'absolute',
           top: '4px',
           right: '4px',
-          width: '20px',
-          height: '20px',
-          background: 'rgba(0, 123, 193, 0.8)',
+          width: '24px',
+          height: '24px',
+          background: isDragging ? 'rgba(0, 123, 193, 1)' : 'rgba(0, 123, 193, 0.9)',
           borderRadius: '4px',
-          cursor: 'grab',
+          cursor: isDragging ? 'grabbing' : 'grab',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '12px',
+          fontSize: '14px',
           color: 'white',
-          opacity: selected ? 1 : 0,
-          transition: 'opacity 0.2s ease',
-          zIndex: 10
+          opacity: selected ? 1 : 0.7,
+          transition: 'all 0.2s ease',
+          zIndex: 10,
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
         }}
         title="Drag to move"
-        onMouseDown={(e) => e.stopPropagation()} // Ensure drag handle gets the event
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          // Force the mousedown to trigger on the parent
+          const parentElement = e.currentTarget.parentElement;
+          const mouseEvent = new MouseEvent('mousedown', {
+            clientX: e.clientX,
+            clientY: e.clientY,
+            bubbles: true,
+            cancelable: true
+          });
+          parentElement.dispatchEvent(mouseEvent);
+        }}
       >
         ⋮⋮
       </div>
