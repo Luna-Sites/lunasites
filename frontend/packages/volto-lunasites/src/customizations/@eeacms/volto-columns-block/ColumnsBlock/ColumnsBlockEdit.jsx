@@ -252,6 +252,7 @@ class ColumnsBlockEdit extends React.Component {
 
     const { gridSizes, variants } = config.blocks.blocksConfig[COLUMNSBLOCK];
     const isInitialized = data?.columns && data?.columns?.length > 0;
+
     return (
       <div
         role="presentation"

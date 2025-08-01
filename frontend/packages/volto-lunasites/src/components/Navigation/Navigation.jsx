@@ -11,8 +11,6 @@ import { getBaseUrl, hasApiExpander } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
 
 import { getNavigation } from '@plone/volto/actions';
-import { Icon } from '@plone/volto/components';
-import clearSVG from '@plone/volto/icons/clear.svg';
 import NavItem from '@plone/volto/components/theme/Navigation/NavItem';
 
 const messages = defineMessages({
@@ -29,6 +27,7 @@ const messages = defineMessages({
 const Navigation = ({ pathname }) => {
   const [desktopMenuOpen, setDesktopMenuOpen] = useState(null);
   const [currentOpenIndex, setCurrentOpenIndex] = useState(null);
+  const [hoverTimeout, setHoverTimeout] = useState(null);
   const navigation = useRef(null);
   const dispatch = useDispatch();
   const intl = useIntl();
@@ -63,18 +62,27 @@ const Navigation = ({ pathname }) => {
   };
 
   const openMenu = (index) => {
-    if (index === currentOpenIndex) {
-      setDesktopMenuOpen(null);
-      setCurrentOpenIndex(null);
-    } else {
-      setDesktopMenuOpen(index);
-      setCurrentOpenIndex(index);
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      setHoverTimeout(null);
     }
+    setDesktopMenuOpen(index);
+    setCurrentOpenIndex(index);
   };
 
-  const closeMenu = (index) => {
-    setDesktopMenuOpen(null);
-    setCurrentOpenIndex(null);
+  const closeMenu = () => {
+    const timeout = setTimeout(() => {
+      setDesktopMenuOpen(null);
+      setCurrentOpenIndex(null);
+    }, 200);
+    setHoverTimeout(timeout);
+  };
+
+  const cancelClose = () => {
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      setHoverTimeout(null);
+    }
   };
 
   useEffect(() => {
@@ -99,12 +107,13 @@ const Navigation = ({ pathname }) => {
     >
       <div className={'computer large screen widescreen only'}>
         <ul className="desktop-menu">
-          {items.map((item, index) => (
+          {items.filter((item) => item.url !== '' && item.url !== '/').map((item, index) => (
             <li key={item.url}>
               {enableFatMenu ? (
                 <>
                   <button
-                    onClick={() => openMenu(index)}
+                    onMouseEnter={() => openMenu(index)}
+                    onMouseLeave={closeMenu}
                     className={cx('item', {
                       active:
                         desktopMenuOpen === index ||
@@ -116,7 +125,11 @@ const Navigation = ({ pathname }) => {
                     {item.title}
                   </button>
 
-                  <div className="submenu-wrapper">
+                  <div 
+                    className="submenu-wrapper"
+                    onMouseEnter={cancelClose}
+                    onMouseLeave={closeMenu}
+                  >
                     <div
                       className={cx('submenu', {
                         active: desktopMenuOpen === index,
@@ -125,18 +138,14 @@ const Navigation = ({ pathname }) => {
                       <div className="submenu-inner">
                         <NavLink
                           to={item.url === '' ? '/' : item.url}
-                          onClick={() => closeMenu()}
+                          onClick={() => {
+                            setDesktopMenuOpen(null);
+                            setCurrentOpenIndex(null);
+                          }}
                           className="submenu-header"
                         >
                           <h2>{item.nav_title ?? item.title}</h2>
                         </NavLink>
-                        <button
-                          className="close"
-                          onClick={closeMenu}
-                          aria-label={intl.formatMessage(messages.closeMenu)}
-                        >
-                          <Icon name={clearSVG} size="48px" />
-                        </button>
                         <ul>
                           {item.items &&
                             item.items.length > 0 &&
@@ -144,7 +153,10 @@ const Navigation = ({ pathname }) => {
                               <li className="subitem-wrapper" key={subitem.url}>
                                 <NavLink
                                   to={subitem.url}
-                                  onClick={() => closeMenu()}
+                                  onClick={() => {
+                                    setDesktopMenuOpen(null);
+                                    setCurrentOpenIndex(null);
+                                  }}
                                   className={cx({
                                     current: isActive(subitem.url),
                                   })}
@@ -165,7 +177,10 @@ const Navigation = ({ pathname }) => {
                                         >
                                           <NavLink
                                             to={subsubitem.url}
-                                            onClick={() => closeMenu()}
+                                            onClick={() => {
+                                              setDesktopMenuOpen(null);
+                                              setCurrentOpenIndex(null);
+                                            }}
                                             className={cx({
                                               current: isActive(subsubitem.url),
                                             })}

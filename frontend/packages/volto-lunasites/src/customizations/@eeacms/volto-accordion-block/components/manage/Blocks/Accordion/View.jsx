@@ -71,6 +71,8 @@ const View = (props) => {
       ])
     : getPanels(data.data);
 
+  // Debug logging for data structure
+
   const metadata = props.metadata || props.properties;
   const diffView =
     location?.pathname.slice(
@@ -225,6 +227,7 @@ const View = (props) => {
               '--title-color': panelStyles.titleColor,
             }),
           };
+
           return accordionBlockHasValue(panel) ? (
             <Accordion
               key={id}

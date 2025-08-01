@@ -225,20 +225,8 @@ const MobileNavigation = (props) => {
             </div>
           </div>
           <ul className="sections">
-            <li className="header">
-              <Link
-                to={
-                  settings.isMultilingual
-                    ? `/${toBackendLang(currentLang)}`
-                    : '/'
-                }
-                onClick={closeMenus}
-              >
-                <FormattedMessage id="Home" defaultMessage="Home" />
-              </Link>
-            </li>
             {items &&
-              items.map((section, index) => (
+              items.filter((item) => item.url !== '' && item.url !== '/').map((section, index) => (
                 <MenuItem
                   key={section.url}
                   section={section}
