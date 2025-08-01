@@ -1,0 +1,158 @@
+// Custom Section Block Styles
+.custom-section-block {
+  // Base section styling
+  min-height: 100px;
+  position: relative;
+  margin-bottom: 2rem;
+  
+  // Match group block enhanced styling
+  border-radius: 8px;
+  padding: 2rem;
+  background: var(--section-background, transparent);
+  
+  // Title styling
+  .custom-section-title {
+    margin-bottom: 1.5rem;
+    color: var(--section-title-color, inherit);
+  }
+}
+
+.custom-section-block-edit {
+  // Edit mode styling
+  border: 1px dashed transparent;
+  transition: border-color 0.2s ease;
+  
+  &.selected {
+    border-color: var(--selected-border-color, #007bc1);
+  }
+  
+  // Title input field
+  .custom-section-title-input {
+    margin-bottom: 1rem;
+    
+    .section-title-field {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      background: transparent;
+      
+      &:focus {
+        outline: none;
+        border-color: var(--focus-border-color, #007bc1);
+        background: rgba(255, 255, 255, 0.8);
+      }
+      
+      &::placeholder {
+        color: var(--placeholder-color, #999);
+        font-weight: normal;
+      }
+    }
+  }
+  
+  // Content area
+  .custom-section-content {
+    min-height: 60px;
+    position: relative;
+  }
+  
+  // Empty state styling
+  .custom-section-empty {
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  // Block rendering area
+  .section-blocks {
+    .section-child-block {
+      margin-bottom: 1.5rem;
+      
+      &:last-of-type {
+        margin-bottom: 1rem; // Space before add button
+      }
+    }
+    
+    .unknown-block {
+      padding: 1rem;
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 4px;
+      color: #856404;
+      font-style: italic;
+    }
+    
+    // Style the add more button - override FloatingAddButton positioning
+    .custom-section-add-more {
+      margin-top: 1rem;
+      position: relative;
+      
+      .floating-add-button-container {
+        position: static !important; // Override absolute positioning
+        transform: none !important; // Remove centering transform
+        top: auto !important;
+        left: auto !important;
+        width: auto;
+        min-height: auto;
+        
+        .floating-add-content {
+          flex-direction: row !important; // Horizontal layout
+          align-items: center;
+          gap: 0.5rem;
+          
+          .floating-add-button {
+            padding: 0.5rem 1rem !important; // Smaller padding for inline button
+            font-size: 0.9rem !important;
+            box-shadow: 0 2px 4px rgba(0, 126, 177, 0.15) !important; // Subtler shadow
+          }
+          
+          .floating-helper-text {
+            display: none !important; // Hide helper text for add-more button
+          }
+        }
+      }
+    }
+  }
+}
+
+// Enhanced group styling compatibility
+.section-block {
+  &.custom-section-block,
+  &.custom-section-block-edit {
+    // Apply same enhanced styling as groups
+    background: rgba(248, 249, 250, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    
+    // Hover effect in edit mode
+    &:hover {
+      background: rgba(248, 249, 250, 0.8);
+      border-color: rgba(0, 123, 193, 0.3);
+    }
+    
+    // Selected state
+    &.selected {
+      border-color: #007bc1;
+      box-shadow: 0 0 0 2px rgba(0, 123, 193, 0.2);
+    }
+  }
+}
+
+// Style integration with theme
+.has-toolbar .custom-section-block-edit {
+  margin-top: 1rem;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .custom-section-block,
+  .custom-section-block-edit {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}

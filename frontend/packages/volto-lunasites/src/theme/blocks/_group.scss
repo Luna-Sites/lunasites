@@ -96,33 +96,31 @@
     }
   }
 
-  // Empty section styling - more specific targeting
-  .blocks-form:empty + * {
-    &::after {
-      content: "Empty section - add blocks to get started";
-      color: #6c757d;
-      font-style: italic;
-      font-size: 0.9rem;
-      display: block;
-      text-align: center;
-      padding: 2rem;
+  // Empty section styling
+  &.empty-section {
+    fieldset {
+      border-style: dashed;
+      border-color: #ccd5db;
+      background-color: #f8f9fa;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+
+      &:hover {
+        border-color: #007eb1;
+        background-color: #f0f7ff;
+      }
     }
-  }
 
-  // When section has no blocks, make it more obvious
-  fieldset:has(.blocks-form:empty) {
-    border-style: dashed;
-    border-color: #ccd5db;
-    background-color: #f8f9fa;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 150px;
-
-    &:hover {
-      border-color: #007eb1;
-      background-color: #f0f7ff;
+    // Hide the blocks form when empty to make room for floating button
+    .blocks-form {
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
     }
   }
 }

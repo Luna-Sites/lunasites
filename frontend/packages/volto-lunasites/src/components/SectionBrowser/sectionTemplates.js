@@ -8,24 +8,22 @@ export const sectionTemplates = {
     description: 'Empty section where you can add any blocks you want',
     thumbnail: '/static/section-thumbnails/blank.png',
     template: () => {
-      const groupId = uuid();
+      const sectionId = uuid();
 
       return {
         blocks: {
-          [groupId]: {
-            '@type': 'group',
-            data: {
-              blocks: {},
-              blocks_layout: {
-                items: [],
-              },
+          [sectionId]: {
+            '@type': 'customSection',
+            blocks: {},
+            blocks_layout: {
+              items: [],
             },
             styles: {},
-            theme: 'default',
+            title: '',
           },
         },
         blocks_layout: {
-          items: [groupId],
+          items: [sectionId],
         },
       };
     },

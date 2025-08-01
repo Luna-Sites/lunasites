@@ -47,6 +47,13 @@ import EventMetadataView from './components/Blocks/EventMetadata/View';
 import { ColorSchemaProvider, ColorSchemaField } from './components';
 import { colorSchemaInherit } from './reducers';
 
+// Custom Section Block
+import { 
+  CustomSectionBlockEdit, 
+  CustomSectionBlockView, 
+  CustomSectionBlockSchema 
+} from './components';
+
 const BG_COLORS = [
   { name: 'transparent', label: 'Transparent' },
   { name: 'grey', label: 'Grey' },
@@ -404,6 +411,22 @@ const applyConfig = (config) => {
     ...config.blocks.blocksConfig.columnsBlock,
     schemaEnhancer: addAdvancedStyling,
     colors: BG_COLORS,
+  };
+
+  // Custom Section Block
+  config.blocks.blocksConfig.customSection = {
+    id: 'customSection',
+    title: 'Custom Section',
+    icon: descriptionSVG,
+    group: 'common',
+    view: CustomSectionBlockView,
+    edit: CustomSectionBlockEdit,
+    schema: CustomSectionBlockSchema,
+    restricted: false,
+    mostUsed: false,
+    sidebarTab: 1,
+    colors: BG_COLORS,
+    schemaEnhancer: addAdvancedStyling,
   };
 
   return config;
