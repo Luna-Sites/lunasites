@@ -26,7 +26,7 @@ const GridDragLayer = ({
       const relativeY = e.clientY - rect.top;
 
       // Calculate grid position with improved snapping
-      const padding = 16;
+      const padding = 8; // Match the grid padding
       const gap = 8;
       const adjustedX = Math.max(0, relativeX - padding);
       const adjustedY = Math.max(0, relativeY - padding);
@@ -161,7 +161,7 @@ const GridDragLayer = ({
       const relativeY = e.clientY - rect.top;
 
       // Calculate snap position with improved precision
-      const padding = 16;
+      const padding = 8; // Match the grid padding
       const gap = 8;
       const adjustedX = Math.max(0, relativeX - padding);
       const adjustedY = Math.max(0, relativeY - padding);

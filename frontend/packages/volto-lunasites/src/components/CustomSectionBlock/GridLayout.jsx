@@ -23,53 +23,69 @@ const GridLayout = ({
   // Merge temp positions with actual positions for visual updates during drag
   const currentPositions = { ...positions, ...tempPositions };
   
-  const handleTempPositionUpdate = (blockId, tempPosition, isResize = false) => {
-    // Check for collisions and move conflicting blocks
-    const newTempPositions = { ...tempPositions };
-    const allPositions = { ...positions, ...newTempPositions };
+  // Throttle temp position updates for better performance
+  const tempUpdateTimeout = React.useRef(null);
+  
+  const handleTempPositionUpdate = React.useCallback((blockId, tempPosition, isResize = false) => {
+    // Clear previous timeout
+    if (tempUpdateTimeout.current) {
+      clearTimeout(tempUpdateTimeout.current);
+    }
     
-    // Find blocks that would collide with the new position
-    const conflictingBlocks = [];
-    Object.entries(allPositions).forEach(([otherBlockId, otherPos]) => {
-      if (otherBlockId !== blockId && otherPos) {
-        // Check if blocks overlap
-        if (!(tempPosition.x >= otherPos.x + otherPos.width || 
-              tempPosition.x + tempPosition.width <= otherPos.x || 
-              tempPosition.y >= otherPos.y + otherPos.height || 
-              tempPosition.y + tempPosition.height <= otherPos.y)) {
-          conflictingBlocks.push({ id: otherBlockId, position: otherPos });
-        }
-      }
-    });
-    
-    // Move conflicting blocks to available positions
-    const newMovedBlocks = new Set();
-    conflictingBlocks.forEach(({ id: conflictId, position: conflictPos }) => {
-      const newPos = findAvailablePositionForBlock(
-        conflictPos.x, 
-        conflictPos.y + tempPosition.height, // Try to move below the dragged block
-        conflictPos.width, 
-        conflictPos.height, 
-        conflictId,
-        { ...allPositions, [blockId]: tempPosition }
-      );
-      newTempPositions[conflictId] = newPos;
-      newMovedBlocks.add(conflictId);
-    });
-    
-    setMovedBlocks(newMovedBlocks);
-    
-    // Set the dragged block's position
-    newTempPositions[blockId] = tempPosition;
-    
-    setTempPositions(newTempPositions);
+    // Set immediate position update
+    setTempPositions(prev => ({ ...prev, [blockId]: tempPosition }));
     
     if (isResize) {
       setResizingBlocks(prev => new Set([...prev, blockId]));
     } else {
       setDraggingBlocks(prev => new Set([...prev, blockId]));
     }
-  };
+    
+    // Throttle collision detection to improve performance
+    tempUpdateTimeout.current = setTimeout(() => {
+      // Check for collisions and move conflicting blocks
+      const newTempPositions = { ...tempPositions, [blockId]: tempPosition };
+      const allPositions = { ...positions, ...newTempPositions };
+      
+      // Find blocks that would collide with the new position
+      const conflictingBlocks = [];
+      Object.entries(allPositions).forEach(([otherBlockId, otherPos]) => {
+        if (otherBlockId !== blockId && otherPos) {
+          // Check if blocks overlap
+          if (!(tempPosition.x >= otherPos.x + otherPos.width || 
+                tempPosition.x + tempPosition.width <= otherPos.x || 
+                tempPosition.y >= otherPos.y + otherPos.height || 
+                tempPosition.y + tempPosition.height <= otherPos.y)) {
+            conflictingBlocks.push({ id: otherBlockId, position: otherPos });
+          }
+        }
+      });
+      
+      // Only update if there are conflicts to resolve
+      if (conflictingBlocks.length > 0) {
+        const finalTempPositions = { ...newTempPositions };
+        const newMovedBlocks = new Set();
+        
+        conflictingBlocks.forEach(({ id: conflictId, position: conflictPos }) => {
+          const newPos = findAvailablePositionForBlock(
+            conflictPos.x, 
+            conflictPos.y + tempPosition.height,
+            conflictPos.width, 
+            conflictPos.height, 
+            conflictId,
+            { ...allPositions, [blockId]: tempPosition }
+          );
+          finalTempPositions[conflictId] = newPos;
+          newMovedBlocks.add(conflictId);
+        });
+        
+        setTempPositions(finalTempPositions);
+        setMovedBlocks(newMovedBlocks);
+      } else {
+        setMovedBlocks(new Set());
+      }
+    }, 16); // ~60fps throttling
+  }, [tempPositions, positions]);
   
   const clearTempPosition = (blockId) => {
     setTempPositions(prev => {
@@ -161,7 +177,7 @@ const GridLayout = ({
     backgroundColor: 'rgba(248, 249, 250, 0.3)',
     border: '1px dashed rgba(0, 123, 193, 0.3)',
     borderRadius: '8px',
-    padding: '16px',
+    padding: '8px', // Reduced padding to fix spacing
   };
 
   const renderGridItem = (blockId) => {
@@ -175,7 +191,7 @@ const GridLayout = ({
       border: '1px solid rgba(0, 123, 193, 0.2)',
       borderRadius: '6px',
       backgroundColor: 'white',
-      padding: '8px',
+      padding: '4px', // Reduced padding to prevent overflow
       position: 'relative',
       overflow: 'hidden',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',

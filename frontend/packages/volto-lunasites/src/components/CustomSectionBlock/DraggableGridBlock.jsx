@@ -22,24 +22,18 @@ const DraggableGridBlock = ({
   const resizeStartData = React.useRef(null);
 
   const handleMouseDown = (e) => {
-    // Allow dragging from anywhere on the block if selected, or from drag handle
+    // Only allow dragging from drag handle to avoid blocking block editing
     const isDragHandle = e.target.closest('.drag-handle');
-    const isBlockSelected = selected;
     
-    // Always allow drag from drag handle, or from anywhere if block is selected
-    if (!isDragHandle && !isBlockSelected) {
-      // If block is not selected, select it first but don't start drag
-      if (onSelect) {
+    if (!isDragHandle) {
+      // If not drag handle, just select the block but allow event to propagate
+      if (onSelect && !selected) {
         onSelect(blockId);
       }
       return;
     }
-    
-    // Start drag immediately if drag handle is used or block is selected
-    if (!isDragHandle && !isBlockSelected) {
-      return; // Safety check
-    }
 
+    // Only prevent default for drag handle
     e.preventDefault();
     e.stopPropagation();
     
@@ -54,36 +48,43 @@ const DraggableGridBlock = ({
       onStartDrag(blockId);
     }
 
+    // Cache grid calculations for better performance
+    const gridLayer = document.querySelector('.grid-drag-layer');
+    const rect = gridLayer?.getBoundingClientRect();
+    const padding = 8; // Match the reduced grid padding
+    const gap = 8;
+    const columns = gridConfig?.columns || 12;
+    const rowHeight = gridConfig?.rowHeight || 60;
+    const availableWidth = rect ? rect.width - (2 * padding) - ((columns - 1) * gap) : 0;
+    const cellWidth = availableWidth / columns;
+    const cellHeight = rowHeight + gap;
+    const maxX = Math.max(0, columns - position.width);
+    
+    let lastSnapX = position.x;
+    let lastSnapY = position.y;
+    
     const handleMouseMove = (moveEvent) => {
-      // Calculate grid snap position during drag
-      const gridLayer = document.querySelector('.grid-drag-layer');
-      if (gridLayer) {
-        const rect = gridLayer.getBoundingClientRect();
-        const relativeX = moveEvent.clientX - rect.left;
-        const relativeY = moveEvent.clientY - rect.top;
-        
-        const padding = 16;
-        const gap = 8;
-        const adjustedX = Math.max(0, relativeX - padding);
-        const adjustedY = Math.max(0, relativeY - padding);
-        
-        const columns = gridConfig?.columns || 12;
-        const rowHeight = gridConfig?.rowHeight || 60;
-        const availableWidth = rect.width - (2 * padding) - ((columns - 1) * gap);
-        const cellWidth = availableWidth / columns;
-        const cellHeight = rowHeight + gap;
-        
-        const gridX = Math.round(adjustedX / cellWidth);
-        const gridY = Math.round(adjustedY / cellHeight);
-        
-        const maxX = Math.max(0, columns - position.width);
-        const snapX = Math.min(Math.max(0, gridX), maxX);
-        const snapY = Math.max(0, gridY);
-        
+      if (!rect) return;
+      
+      const relativeX = moveEvent.clientX - rect.left;
+      const relativeY = moveEvent.clientY - rect.top;
+      
+      const adjustedX = Math.max(0, relativeX - padding);
+      const adjustedY = Math.max(0, relativeY - padding);
+      
+      const gridX = Math.round(adjustedX / cellWidth);
+      const gridY = Math.round(adjustedY / cellHeight);
+      
+      const snapX = Math.min(Math.max(0, gridX), maxX);
+      const snapY = Math.max(0, gridY);
+      
+      // Only update if position actually changed to reduce redraws
+      if (snapX !== lastSnapX || snapY !== lastSnapY) {
+        lastSnapX = snapX;
+        lastSnapY = snapY;
         setSnapPosition({ x: snapX, y: snapY });
         
-        // Update the actual grid position temporarily for visual snapping
-        if (onTempPositionUpdate && (snapX !== position.x || snapY !== position.y)) {
+        if (onTempPositionUpdate) {
           onTempPositionUpdate(blockId, { ...position, x: snapX, y: snapY });
         }
       }
@@ -159,7 +160,7 @@ const DraggableGridBlock = ({
       const deltaY = moveEvent.clientY - startY;
       
       // Calculate grid cell dimensions
-      const padding = 16;
+      const padding = 8; // Match the grid padding
       const gap = 8;
       const columns = gridConfig?.columns || 12;
       const rowHeight = gridConfig?.rowHeight || 60;
@@ -276,7 +277,6 @@ const DraggableGridBlock = ({
     <div 
       className={`draggable-grid-block ${selected ? 'selected' : ''} ${isDragging ? 'being-dragged' : ''}`}
       onClick={handleClick}
-      onMouseDown={handleMouseDown}
       data-block-id={blockId}
       style={{ 
         height: '100%',
@@ -313,18 +313,7 @@ const DraggableGridBlock = ({
           boxShadow: isDragging ? '0 4px 8px rgba(0, 0, 0, 0.2)' : '0 2px 4px rgba(0, 0, 0, 0.1)'
         }}
         title="Drag to move"
-        onMouseDown={(e) => {
-          e.stopPropagation();
-          // Force the mousedown to trigger on the parent
-          const parentElement = e.currentTarget.parentElement;
-          const mouseEvent = new MouseEvent('mousedown', {
-            clientX: e.clientX,
-            clientY: e.clientY,
-            bubbles: true,
-            cancelable: true
-          });
-          parentElement.dispatchEvent(mouseEvent);
-        }}
+        onMouseDown={handleMouseDown}
       >
         ⋮⋮
       </div>
