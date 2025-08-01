@@ -23,16 +23,9 @@ const GridLayout = ({
   // Merge temp positions with actual positions for visual updates during drag
   const currentPositions = { ...positions, ...tempPositions };
   
-  // Throttle temp position updates for better performance
-  const tempUpdateTimeout = React.useRef(null);
-  
+  // Simple position update without automatic collision avoidance
   const handleTempPositionUpdate = React.useCallback((blockId, tempPosition, isResize = false) => {
-    // Clear previous timeout
-    if (tempUpdateTimeout.current) {
-      clearTimeout(tempUpdateTimeout.current);
-    }
-    
-    // Set immediate position update
+    // Set immediate position update for the dragged block only
     setTempPositions(prev => ({ ...prev, [blockId]: tempPosition }));
     
     if (isResize) {
@@ -41,69 +34,16 @@ const GridLayout = ({
       setDraggingBlocks(prev => new Set([...prev, blockId]));
     }
     
-    // Throttle collision detection to improve performance
-    tempUpdateTimeout.current = setTimeout(() => {
-      // Check for collisions and move conflicting blocks
-      const newTempPositions = { ...tempPositions, [blockId]: tempPosition };
-      const allPositions = { ...positions, ...newTempPositions };
-      
-      // Find blocks that would collide with the new position
-      const conflictingBlocks = [];
-      Object.entries(allPositions).forEach(([otherBlockId, otherPos]) => {
-        if (otherBlockId !== blockId && otherPos) {
-          // Check if blocks overlap
-          if (!(tempPosition.x >= otherPos.x + otherPos.width || 
-                tempPosition.x + tempPosition.width <= otherPos.x || 
-                tempPosition.y >= otherPos.y + otherPos.height || 
-                tempPosition.y + tempPosition.height <= otherPos.y)) {
-            conflictingBlocks.push({ id: otherBlockId, position: otherPos });
-          }
-        }
-      });
-      
-      // Only update if there are conflicts to resolve
-      if (conflictingBlocks.length > 0) {
-        const finalTempPositions = { ...newTempPositions };
-        const newMovedBlocks = new Set();
-        
-        conflictingBlocks.forEach(({ id: conflictId, position: conflictPos }) => {
-          const newPos = findAvailablePositionForBlock(
-            conflictPos.x, 
-            conflictPos.y + tempPosition.height,
-            conflictPos.width, 
-            conflictPos.height, 
-            conflictId,
-            { ...allPositions, [blockId]: tempPosition }
-          );
-          finalTempPositions[conflictId] = newPos;
-          newMovedBlocks.add(conflictId);
-        });
-        
-        setTempPositions(finalTempPositions);
-        setMovedBlocks(newMovedBlocks);
-      } else {
-        setMovedBlocks(new Set());
-      }
-    }, 16); // ~60fps throttling
-  }, [tempPositions, positions]);
+    // Clear moved blocks - no automatic collision avoidance during drag
+    setMovedBlocks(new Set());
+  }, []);
   
   const clearTempPosition = (blockId) => {
-    setTempPositions(prev => {
-      const newTemp = { ...prev };
-      delete newTemp[blockId];
-      return newTemp;
-    });
-    setDraggingBlocks(prev => {
-      const newSet = new Set(prev);
-      newSet.delete(blockId);
-      return newSet;
-    });
-    setResizingBlocks(prev => {
-      const newSet = new Set(prev);
-      newSet.delete(blockId);
-      return newSet;
-    });
-    setMovedBlocks(new Set()); // Clear moved blocks when drag/resize ends
+    // Clear all temporary states immediately to prevent flickering
+    setTempPositions({});
+    setDraggingBlocks(new Set());
+    setResizingBlocks(new Set());
+    setMovedBlocks(new Set());
   };
   
   // Helper function to find available position for a block

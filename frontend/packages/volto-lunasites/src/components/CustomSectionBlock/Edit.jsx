@@ -278,39 +278,21 @@ const CustomSectionBlockEdit = (props) => {
                 }}
               </GridLayout>
               
-              {/* Grid Position Controls */}
+              {/* Grid Info */}
               <div style={{
                 position: 'absolute',
-                top: '16px',
-                right: '16px',
-                zIndex: 10,
-                background: 'rgba(255, 255, 255, 0.9)',
-                padding: '8px',
+                bottom: '60px', // Above the add button
+                left: '16px',
+                zIndex: 5, // Lower z-index so it doesn't block interactions
+                background: 'rgba(0, 0, 0, 0.7)',
+                color: 'white',
+                padding: '6px 8px',
                 borderRadius: '4px',
-                fontSize: '12px',
-                border: '1px solid rgba(0, 123, 193, 0.2)'
+                fontSize: '11px',
+                maxWidth: '250px',
+                pointerEvents: 'none' // Allow clicks to pass through
               }}>
-                <div>Click blocks to select</div>
-                {selectedChildBlock && (
-                  <div style={{ marginTop: '4px' }}>
-                    <div>Position: {gridConfig.positions[selectedChildBlock]?.x || 0},{gridConfig.positions[selectedChildBlock]?.y || 0}</div>
-                    <button
-                      onClick={() => setShowPositionControls(true)}
-                      style={{
-                        marginTop: '4px',
-                        padding: '2px 6px',
-                        fontSize: '10px',
-                        background: '#007bc1',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '3px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Edit Position
-                    </button>
-                  </div>
-                )}
+                <div>💡 Click to select • Drag ⋮⋮ to move • Drag corners to resize</div>
               </div>
               
               {/* Add Block Button for Grid Mode */}

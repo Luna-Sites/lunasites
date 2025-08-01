@@ -169,21 +169,24 @@
     
     &.dragging {
       z-index: 1000;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-      transition: grid-column 0.05s ease, grid-row 0.05s ease; // Fast snapping during drag
+      box-shadow: 0 12px 30px rgba(0, 123, 193, 0.3) !important; // Blue shadow for dragging
+      border-color: rgba(0, 123, 193, 0.8) !important;
+      transition: grid-column 0.1s ease, grid-row 0.1s ease; // Smooth snapping
       
       .draggable-grid-block {
-        transform: scale(1.02) !important;
+        transform: scale(1.05) !important; // Bigger scale for dragged block
+        opacity: 0.9;
       }
     }
     
     &.moved {
-      border-color: rgba(255, 165, 0, 0.6) !important; // Orange border for moved blocks
-      background-color: rgba(255, 165, 0, 0.05) !important;
-      transition: grid-column 0.2s ease, grid-row 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+      border-color: rgba(255, 165, 0, 0.8) !important; // Orange border for moved blocks
+      background-color: rgba(255, 165, 0, 0.1) !important;
+      transition: grid-column 0.3s ease, grid-row 0.3s ease; // Slower, smoother transitions
       
       .draggable-grid-block {
-        transform: scale(0.98); // Slightly smaller to indicate it's being moved
+        transform: scale(0.95); // More noticeable scale to show it's being moved
+        opacity: 0.8;
       }
     }
     
