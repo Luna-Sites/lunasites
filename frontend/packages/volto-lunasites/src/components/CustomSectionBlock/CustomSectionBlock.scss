@@ -269,11 +269,8 @@
     opacity: 1 !important;
   }
   
-  &.dragging {
-    opacity: 0.8;
-    transform: rotate(2deg);
-    z-index: 1000;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  &.being-dragged {
+    opacity: 0.3 !important;
     
     .drag-handle {
       opacity: 1 !important;
@@ -293,6 +290,31 @@
       cursor: grabbing;
       transform: scale(0.95);
     }
+  }
+}
+
+// Drag Preview Styles
+.drag-preview {
+  transition: none !important;
+  animation: none !important;
+  pointer-events: none !important;
+  
+  * {
+    pointer-events: none !important;
+  }
+  
+  // Enhance the preview appearance
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 123, 193, 0.1);
+    border: 2px solid rgba(0, 123, 193, 0.5);
+    border-radius: 8px;
+    pointer-events: none;
   }
 }
 

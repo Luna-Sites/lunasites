@@ -10,6 +10,10 @@ const DraggableGridBlock = ({
   onStartDrag,
   onEndDrag
 }) => {
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [dragPreview, setDragPreview] = React.useState(null);
+  const dragStartPos = React.useRef({ x: 0, y: 0 });
+
   const handleMouseDown = (e) => {
     // Only allow dragging from the drag handle or when block is selected
     const isDragHandle = e.target.closest('.drag-handle');
@@ -20,9 +24,18 @@ const DraggableGridBlock = ({
     }
 
     e.preventDefault();
+    e.stopPropagation();
     
     const element = e.currentTarget;
-    element.classList.add('dragging');
+    const rect = element.getBoundingClientRect();
+    
+    // Store initial mouse position relative to element
+    dragStartPos.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+    
+    setIsDragging(true);
     element.setAttribute('data-block-id', blockId);
     element.setAttribute('data-position', JSON.stringify(position));
     
@@ -30,22 +43,52 @@ const DraggableGridBlock = ({
       onStartDrag(blockId);
     }
 
+    // Create drag preview
+    const preview = element.cloneNode(true);
+    preview.style.position = 'fixed';
+    preview.style.pointerEvents = 'none';
+    preview.style.zIndex = '10000';
+    preview.style.width = rect.width + 'px';
+    preview.style.height = rect.height + 'px';
+    preview.style.opacity = '0.8';
+    preview.style.transform = 'rotate(3deg)';
+    preview.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.3)';
+    preview.style.borderRadius = '8px';
+    preview.classList.add('drag-preview');
+    
+    document.body.appendChild(preview);
+    setDragPreview(preview);
+
     const handleMouseMove = (moveEvent) => {
-      // Update element position to follow mouse
-      const rect = element.parentElement.getBoundingClientRect();
-      const x = moveEvent.clientX - rect.left;
-      const y = moveEvent.clientY - rect.top;
-      
-      element.style.transform = `translate(${x - element.offsetWidth/2}px, ${y - element.offsetHeight/2}px)`;
-      element.style.zIndex = '1000';
-      element.style.pointerEvents = 'none';
+      if (preview) {
+        preview.style.left = (moveEvent.clientX - dragStartPos.current.x) + 'px';
+        preview.style.top = (moveEvent.clientY - dragStartPos.current.y) + 'px';
+      }
     };
 
-    const handleMouseUp = () => {
-      element.classList.remove('dragging');
-      element.style.transform = '';
-      element.style.zIndex = '';
-      element.style.pointerEvents = '';
+    const handleMouseUp = (upEvent) => {
+      setIsDragging(false);
+      
+      if (preview && preview.parentNode) {
+        document.body.removeChild(preview);
+      }
+      setDragPreview(null);
+      
+      // Find the drop target under the mouse
+      const dropTarget = document.elementFromPoint(upEvent.clientX, upEvent.clientY);
+      const gridLayer = dropTarget?.closest('.grid-drag-layer');
+      
+      if (gridLayer && gridLayer.onMouseUp) {
+        gridLayer.onMouseUp(upEvent);
+      } else {
+        // Manually trigger drop calculation
+        const event = new MouseEvent('mouseup', {
+          clientX: upEvent.clientX,
+          clientY: upEvent.clientY,
+          bubbles: true
+        });
+        gridLayer?.dispatchEvent(event);
+      }
       
       if (onEndDrag) {
         onEndDrag(blockId);
@@ -68,7 +111,7 @@ const DraggableGridBlock = ({
 
   return (
     <div 
-      className={`draggable-grid-block ${selected ? 'selected' : ''}`}
+      className={`draggable-grid-block ${selected ? 'selected' : ''} ${isDragging ? 'being-dragged' : ''}`}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       data-block-id={blockId}
@@ -76,9 +119,11 @@ const DraggableGridBlock = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        cursor: selected ? 'grab' : 'pointer',
+        cursor: selected ? (isDragging ? 'grabbing' : 'grab') : 'pointer',
         position: 'relative',
-        transition: 'all 0.2s ease'
+        transition: isDragging ? 'none' : 'all 0.2s ease',
+        opacity: isDragging ? 0.3 : 1,
+        userSelect: 'none'
       }}
     >
       {/* Drag Handle */}
