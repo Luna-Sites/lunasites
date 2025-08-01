@@ -35,7 +35,6 @@ const ColumnsBlockView = (props) => {
           const columnSettings = column?.settings || {};
           const verticalAlign = column.grid_vertical_align || 'top';
           const advancedStyling = columnSettings.advanced_styling || {};
-          console.log({ column });
           return (
             <Grid.Column
               key={column.id}
@@ -56,8 +55,8 @@ const ColumnsBlockView = (props) => {
                     verticalAlign === 'middle'
                       ? 'center'
                       : verticalAlign === 'bottom'
-                      ? 'flex-end'
-                      : 'flex-start',
+                        ? 'flex-end'
+                        : 'flex-start',
                 }}
               >
                 <RenderBlocks

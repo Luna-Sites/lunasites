@@ -118,7 +118,7 @@ const Logo = () => {
     // Priority 1: Text logo (highest priority)
     if (logoText && logoText.length > 0) {
       const serializedText = serializeNodesToText(logoText);
-      
+
       // If serializeText returns empty string, skip to image
       if (serializedText && serializedText.trim() !== '') {
         const textContent = {
@@ -145,10 +145,11 @@ const Logo = () => {
     // Priority 2: Custom image logo
     if (logoImage) {
       // Handle NamedBlobImage object structure
-      const imageSrc = typeof logoImage === 'string' 
-        ? logoImage 
-        : logoImage.download || logoImage['@id'] || logoImage;
-        
+      const imageSrc =
+        typeof logoImage === 'string'
+          ? logoImage
+          : logoImage.download || logoImage['@id'] || logoImage;
+
       return (
         <img
           src={flattenToAppURL(imageSrc)}
@@ -172,7 +173,6 @@ const Logo = () => {
     );
   };
 
-  console.log(logoImage, logoText);
   return (
     <UniversalLink
       href={settings.isMultilingual ? `/${toBackendLang(lang)}` : '/'}

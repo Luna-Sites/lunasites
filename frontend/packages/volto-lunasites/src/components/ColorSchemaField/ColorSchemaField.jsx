@@ -255,7 +255,7 @@ const ColorSchemaField = (props) => {
       header_text_color: '',
       text_color: '',
       accent_color: '',
-        dropdown_color: '',
+      dropdown_color: '',
       dropdown_font_color: '',
     };
     setColorSchema(emptySchema);

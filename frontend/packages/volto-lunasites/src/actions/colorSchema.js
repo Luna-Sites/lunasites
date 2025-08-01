@@ -15,14 +15,14 @@ const isUrlExcluded = (url) => {
 
 export const getColorSchemaInherit = (url) => {
   let cleanedUrl = url;
-  
+
   if (isUrlExcluded(url) || url.includes('/controlpanel'))
     cleanedUrl = window.location.origin + '/++api++';
-  
+
   if (url.endsWith('/edit')) {
     cleanedUrl = url.slice(0, -'/edit'.length);
   }
-  
+
   return {
     type: GET_COLOR_SCHEMA_INHERIT,
     request: {
