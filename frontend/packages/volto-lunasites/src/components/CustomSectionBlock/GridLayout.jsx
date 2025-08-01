@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DraggableBlock from './DraggableBlock';
-import GridDropZone from './GridDropZone';
+import DraggableGridBlock from './DraggableGridBlock';
+import GridDragLayer from './GridDragLayer';
 
 const GridLayout = ({ 
   children, 
@@ -61,16 +61,14 @@ const GridLayout = ({
         data-block-id={blockId}
       >
         {isDragEnabled ? (
-          <DraggableBlock
+          <DraggableGridBlock
             blockId={blockId}
             position={position}
-            onUpdatePosition={onUpdatePosition}
             selected={selectedBlock === blockId}
             onSelect={onSelectBlock}
-            gridConfig={gridConfig}
           >
             {content}
-          </DraggableBlock>
+          </DraggableGridBlock>
         ) : (
           <div 
             className={`non-draggable-block ${selectedBlock === blockId ? 'selected' : ''}`}
@@ -151,13 +149,13 @@ const GridLayout = ({
   );
 
   return isDragEnabled ? (
-    <GridDropZone 
+    <GridDragLayer 
       gridConfig={gridConfig}
       onDropBlock={onUpdatePosition}
       className={className}
     >
       {gridContent}
-    </GridDropZone>
+    </GridDragLayer>
   ) : (
     gridContent
   );

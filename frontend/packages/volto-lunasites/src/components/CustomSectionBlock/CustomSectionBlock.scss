@@ -257,6 +257,76 @@
   }
 }
 
+// Native Drag & Drop Styles
+.draggable-grid-block {
+  position: relative;
+  
+  &:hover .drag-handle {
+    opacity: 0.8 !important;
+  }
+  
+  &.selected .drag-handle {
+    opacity: 1 !important;
+  }
+  
+  &.dragging {
+    opacity: 0.8;
+    transform: rotate(2deg);
+    z-index: 1000;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+    
+    .drag-handle {
+      opacity: 1 !important;
+      background: #005d99 !important;
+    }
+  }
+  
+  .drag-handle {
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: #005d99 !important;
+      transform: scale(1.1);
+    }
+    
+    &:active {
+      cursor: grabbing;
+      transform: scale(0.95);
+    }
+  }
+}
+
+.grid-drag-layer {
+  &:hover {
+    .grid-guide {
+      opacity: 0.3;
+    }
+  }
+  
+  // Show drop zones when dragging
+  &.dragging {
+    .grid-guide {
+      opacity: 0.6 !important;
+    }
+    
+    &::after {
+      content: 'Drop here to position block';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 123, 193, 0.9);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      pointer-events: none;
+      z-index: 999;
+    }
+  }
+}
+
 // Grid mode toggle
 .grid-mode-toggle {
   display: flex;

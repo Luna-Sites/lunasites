@@ -200,7 +200,7 @@ const CustomSectionBlockEdit = (props) => {
       {/* Content Area */}
       <div className="custom-section-content">
         {isGridMode ? (
-          // Grid Layout Mode (temporarily without drag & drop to avoid conflicts)
+          // Grid Layout Mode with Native Drag & Drop
           isEmpty ? (
             <GridLayout
               gridConfig={gridConfig}
@@ -209,7 +209,7 @@ const CustomSectionBlockEdit = (props) => {
               onUpdatePosition={updateBlockPosition}
               selectedBlock={selectedChildBlock}
               onSelectBlock={setSelectedChildBlock}
-              isDragEnabled={false}
+              isDragEnabled={true}
               className="empty"
             >
               <FloatingAddButton
@@ -229,7 +229,7 @@ const CustomSectionBlockEdit = (props) => {
                 onUpdatePosition={updateBlockPosition}
                 selectedBlock={selectedChildBlock}
                 onSelectBlock={setSelectedChildBlock}
-                isDragEnabled={false}
+                isDragEnabled={true}
               >
                 {({ blockId, position }) => {
                   const childBlock = blocks[blockId];
