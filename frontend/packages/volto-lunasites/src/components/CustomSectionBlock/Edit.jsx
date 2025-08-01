@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuid } from 'uuid';
 import FloatingAddButton from '../FloatingAddButton';
+import GridLayout from './GridLayout';
+import PositionControls from './PositionControls';
 
 const CustomSectionBlockEdit = (props) => {
   const {
@@ -17,12 +19,30 @@ const CustomSectionBlockEdit = (props) => {
   } = props;
 
   const [selectedChildBlock, setSelectedChildBlock] = useState(null);
+  const [showPositionControls, setShowPositionControls] = useState(false);
 
   const {
     blocks = {},
-    blocks_layout = { items: [] },
+    blocks_layout = { 
+      items: [],
+      mode: 'linear', // 'linear' or 'grid'
+      grid: {
+        columns: 12,
+        rowHeight: 60,
+        positions: {}
+      }
+    },
     title = '',
   } = data;
+
+  // Grid configuration
+  const gridConfig = {
+    columns: blocks_layout.grid?.columns || 12,
+    rowHeight: blocks_layout.grid?.rowHeight || 60,
+    positions: blocks_layout.grid?.positions || {}
+  };
+
+  const isGridMode = blocks_layout.mode === 'grid';
 
   const isEmpty = !blocks_layout.items || blocks_layout.items.length === 0;
 
@@ -34,15 +54,115 @@ const CustomSectionBlockEdit = (props) => {
     onChangeBlock(block, newData);
   };
 
+  // Grid helper functions
+  const findEmptyGridPosition = (width = 4, height = 3) => {
+    const positions = gridConfig.positions;
+    const columns = gridConfig.columns;
+    
+    // Simple algorithm: find first available position
+    for (let y = 0; y < 20; y++) {
+      for (let x = 0; x <= columns - width; x++) {
+        if (isPositionAvailable(x, y, width, height, positions)) {
+          return { x, y, width, height };
+        }
+      }
+    }
+    
+    // Fallback: stack at bottom
+    const maxY = Math.max(0, ...Object.values(positions).map(pos => pos.y + pos.height));
+    return { x: 0, y: maxY, width, height };
+  };
+
+  const isPositionAvailable = (x, y, width, height, positions) => {
+    for (let checkY = y; checkY < y + height; checkY++) {
+      for (let checkX = x; checkX < x + width; checkX++) {
+        for (const pos of Object.values(positions)) {
+          if (checkX >= pos.x && checkX < pos.x + pos.width &&
+              checkY >= pos.y && checkY < pos.y + pos.height) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  };
+
+  const updateBlockPosition = (blockId, position) => {
+    const newBlocksLayout = {
+      ...blocks_layout,
+      grid: {
+        ...blocks_layout.grid,
+        positions: {
+          ...gridConfig.positions,
+          [blockId]: position
+        }
+      }
+    };
+    
+    const newData = {
+      ...data,
+      blocks_layout: newBlocksLayout,
+    };
+    
+    onChangeBlock(block, newData);
+  };
+
+  const toggleGridMode = () => {
+    const newMode = isGridMode ? 'linear' : 'grid';
+    const newBlocksLayout = {
+      ...blocks_layout,
+      mode: newMode,
+    };
+
+    // When switching to grid mode, assign initial positions to existing blocks
+    if (newMode === 'grid' && blocks_layout.items.length > 0) {
+      const newPositions = {};
+      blocks_layout.items.forEach((blockId, index) => {
+        const y = Math.floor(index / 2) * 4; // Rows of 2 blocks, 4 units tall each
+        const x = (index % 2) * 6; // 2 columns, 6 units wide each
+        newPositions[blockId] = { x, y, width: 6, height: 4 };
+      });
+      
+      newBlocksLayout.grid = {
+        ...blocks_layout.grid,
+        positions: newPositions
+      };
+    }
+
+    const newData = {
+      ...data,
+      blocks_layout: newBlocksLayout,
+    };
+    
+    onChangeBlock(block, newData);
+  };
+
   const handleAddBlock = (blockData) => {
     const blockId = uuid();
     const newBlocks = {
       ...blocks,
       [blockId]: blockData,
     };
-    const newBlocksLayout = {
+    
+    let newBlocksLayout = {
+      ...blocks_layout,
       items: [...blocks_layout.items, blockId],
     };
+
+    // If in grid mode, assign position to new block
+    if (isGridMode) {
+      const position = findEmptyGridPosition();
+      newBlocksLayout = {
+        ...newBlocksLayout,
+        grid: {
+          ...blocks_layout.grid,
+          positions: {
+            ...gridConfig.positions,
+            [blockId]: position
+          }
+        }
+      };
+    }
 
     const newData = {
       ...data,
@@ -66,84 +186,237 @@ const CustomSectionBlockEdit = (props) => {
         />
       </div>
 
+      {/* Grid Mode Toggle */}
+      <div className="grid-mode-toggle">
+        <span className="toggle-label">Layout Mode:</span>
+        <span className={`mode-label ${!isGridMode ? 'active' : ''}`}>Linear</span>
+        <div
+          className={`toggle-switch ${isGridMode ? 'active' : ''}`}
+          onClick={toggleGridMode}
+        />
+        <span className={`mode-label ${isGridMode ? 'active' : ''}`}>Grid</span>
+      </div>
+
       {/* Content Area */}
       <div className="custom-section-content">
-        {isEmpty ? (
-          <FloatingAddButton
-            onAddBlock={handleAddBlock}
-            blockId={block}
-            blocksConfig={blocksConfig}
-            properties={properties}
-            className="custom-section-empty"
-          />
-        ) : (
-          <div className="section-blocks">
-            {blocks_layout.items.map((childBlockId) => {
-              const childBlock = blocks[childBlockId];
-              if (!childBlock) return null;
-              
-              // Use edit component in edit mode
-              const BlockComponent = blocksConfig?.[childBlock['@type']]?.edit;
-              
-              return (
-                <div 
-                  key={childBlockId} 
-                  className={`section-child-block ${selectedChildBlock === childBlockId ? 'selected' : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedChildBlock(childBlockId);
-                    console.log('Block clicked:', childBlockId, childBlock);
-                  }}
-                  style={{ 
-                    cursor: 'pointer',
-                    border: selectedChildBlock === childBlockId ? '2px solid #007bc1' : '1px solid transparent',
-                    borderRadius: '4px',
-                    padding: '0.5rem'
-                  }}
-                >
-                  {BlockComponent ? (
-                    <BlockComponent
-                      data={childBlock}
-                      properties={properties}
-                      block={childBlockId}
-                      pathname={pathname || properties?.['@id'] || ''}
-                      manage={manage !== false}
-                      onChangeBlock={(blockId, blockData) => {
-                        console.log('Block data changed:', blockId, blockData);
-                        // Update the block within our section
-                        const newBlocks = {
-                          ...blocks,
-                          [blockId]: blockData,
-                        };
-                        const newData = {
-                          ...data,
-                          blocks: newBlocks,
-                        };
-                        onChangeBlock(block, newData);
+        {isGridMode ? (
+          // Grid Layout Mode (temporarily without drag & drop to avoid conflicts)
+          isEmpty ? (
+            <GridLayout
+              gridConfig={gridConfig}
+              blocks={blocks}
+              blocks_layout={blocks_layout}
+              onUpdatePosition={updateBlockPosition}
+              selectedBlock={selectedChildBlock}
+              onSelectBlock={setSelectedChildBlock}
+              isDragEnabled={false}
+              className="empty"
+            >
+              <FloatingAddButton
+                onAddBlock={handleAddBlock}
+                blockId={block}
+                blocksConfig={blocksConfig}
+                properties={properties}
+                className="custom-section-empty"
+              />
+            </GridLayout>
+          ) : (
+            <div style={{ position: 'relative' }}>
+              <GridLayout
+                gridConfig={gridConfig}
+                blocks={blocks}
+                blocks_layout={blocks_layout}
+                onUpdatePosition={updateBlockPosition}
+                selectedBlock={selectedChildBlock}
+                onSelectBlock={setSelectedChildBlock}
+                isDragEnabled={false}
+              >
+                {({ blockId, position }) => {
+                  const childBlock = blocks[blockId];
+                  if (!childBlock) return null;
+                  
+                  const BlockComponent = blocksConfig?.[childBlock['@type']]?.edit;
+                  
+                  return (
+                    <div 
+                      className="section-child-block"
+                      style={{ 
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column'
                       }}
-                      selected={selectedChildBlock === childBlockId}
-                      index={blocks_layout.items.indexOf(childBlockId)}
-                      blocksConfig={blocksConfig}
-                    />
-                  ) : (
-                    <div className="unknown-block">
-                      Unknown block type: {childBlock['@type']}
+                    >
+                      {BlockComponent ? (
+                        <BlockComponent
+                          data={childBlock}
+                          properties={properties}
+                          block={blockId}
+                          pathname={pathname || properties?.['@id'] || ''}
+                          manage={manage !== false}
+                          onChangeBlock={(blockId, blockData) => {
+                            const newBlocks = {
+                              ...blocks,
+                              [blockId]: blockData,
+                            };
+                            const newData = {
+                              ...data,
+                              blocks: newBlocks,
+                            };
+                            onChangeBlock(block, newData);
+                          }}
+                          selected={selectedChildBlock === blockId}
+                          index={blocks_layout.items.indexOf(blockId)}
+                          blocksConfig={blocksConfig}
+                        />
+                      ) : (
+                        <div className="unknown-block">
+                          Unknown block type: {childBlock['@type']}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                }}
+              </GridLayout>
+              
+              {/* Grid Position Controls */}
+              <div style={{
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                zIndex: 10,
+                background: 'rgba(255, 255, 255, 0.9)',
+                padding: '8px',
+                borderRadius: '4px',
+                fontSize: '12px',
+                border: '1px solid rgba(0, 123, 193, 0.2)'
+              }}>
+                <div>Click blocks to select</div>
+                {selectedChildBlock && (
+                  <div style={{ marginTop: '4px' }}>
+                    <div>Position: {gridConfig.positions[selectedChildBlock]?.x || 0},{gridConfig.positions[selectedChildBlock]?.y || 0}</div>
+                    <button
+                      onClick={() => setShowPositionControls(true)}
+                      style={{
+                        marginTop: '4px',
+                        padding: '2px 6px',
+                        fontSize: '10px',
+                        background: '#007bc1',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '3px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Edit Position
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              {/* Add Block Button for Grid Mode */}
+              <div style={{
+                position: 'absolute',
+                bottom: '16px',
+                right: '16px',
+                zIndex: 10
+              }}>
+                <FloatingAddButton
+                  onAddBlock={handleAddBlock}
+                  blockId={block}
+                  blocksConfig={blocksConfig}
+                  properties={properties}
+                  className="grid-add-button"
+                  inline={true}
+                />
+              </div>
+            </div>
+          )
+        ) : (
+          // Linear Layout Mode (Original)
+          isEmpty ? (
             <FloatingAddButton
               onAddBlock={handleAddBlock}
               blockId={block}
               blocksConfig={blocksConfig}
               properties={properties}
-              className="custom-section-add-more"
-              inline={true}
+              className="custom-section-empty"
             />
-          </div>
+          ) : (
+            <div className={`section-blocks linear-layout`}>
+              {blocks_layout.items.map((childBlockId) => {
+                const childBlock = blocks[childBlockId];
+                if (!childBlock) return null;
+                
+                const BlockComponent = blocksConfig?.[childBlock['@type']]?.edit;
+                
+                return (
+                  <div 
+                    key={childBlockId} 
+                    className={`section-child-block ${selectedChildBlock === childBlockId ? 'selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedChildBlock(childBlockId);
+                    }}
+                    style={{ 
+                      cursor: 'pointer',
+                      border: selectedChildBlock === childBlockId ? '2px solid #007bc1' : '1px solid transparent',
+                      borderRadius: '4px',
+                      padding: '0.5rem'
+                    }}
+                  >
+                    {BlockComponent ? (
+                      <BlockComponent
+                        data={childBlock}
+                        properties={properties}
+                        block={childBlockId}
+                        pathname={pathname || properties?.['@id'] || ''}
+                        manage={manage !== false}
+                        onChangeBlock={(blockId, blockData) => {
+                          const newBlocks = {
+                            ...blocks,
+                            [blockId]: blockData,
+                          };
+                          const newData = {
+                            ...data,
+                            blocks: newBlocks,
+                          };
+                          onChangeBlock(block, newData);
+                        }}
+                        selected={selectedChildBlock === childBlockId}
+                        index={blocks_layout.items.indexOf(childBlockId)}
+                        blocksConfig={blocksConfig}
+                      />
+                    ) : (
+                      <div className="unknown-block">
+                        Unknown block type: {childBlock['@type']}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+              <FloatingAddButton
+                onAddBlock={handleAddBlock}
+                blockId={block}
+                blocksConfig={blocksConfig}
+                properties={properties}
+                className="custom-section-add-more"
+                inline={true}
+              />
+            </div>
+          )
         )}
       </div>
+      
+      {/* Position Controls Modal */}
+      {showPositionControls && selectedChildBlock && (
+        <PositionControls
+          blockId={selectedChildBlock}
+          position={gridConfig.positions[selectedChildBlock] || { x: 0, y: 0, width: 6, height: 4 }}
+          onUpdatePosition={updateBlockPosition}
+          gridConfig={gridConfig}
+          onClose={() => setShowPositionControls(false)}
+        />
+      )}
     </div>
   );
 };
@@ -154,7 +427,15 @@ CustomSectionBlockEdit.propTypes = {
   onSelectBlock: PropTypes.func,
   data: PropTypes.shape({
     blocks: PropTypes.object,
-    blocks_layout: PropTypes.object,
+    blocks_layout: PropTypes.shape({
+      items: PropTypes.array,
+      mode: PropTypes.oneOf(['linear', 'grid']),
+      grid: PropTypes.shape({
+        columns: PropTypes.number,
+        rowHeight: PropTypes.number,
+        positions: PropTypes.object,
+      }),
+    }),
     title: PropTypes.string,
   }),
   selected: PropTypes.bool,
@@ -169,7 +450,15 @@ CustomSectionBlockEdit.propTypes = {
 CustomSectionBlockEdit.defaultProps = {
   data: {
     blocks: {},
-    blocks_layout: { items: [] },
+    blocks_layout: { 
+      items: [],
+      mode: 'linear',
+      grid: {
+        columns: 12,
+        rowHeight: 60,
+        positions: {}
+      }
+    },
     title: '',
   },
   selected: false,

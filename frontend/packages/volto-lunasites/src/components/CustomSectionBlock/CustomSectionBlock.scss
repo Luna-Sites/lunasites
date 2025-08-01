@@ -148,11 +148,259 @@
   margin-top: 1rem;
 }
 
+// Grid Layout Styles
+.grid-layout {
+  position: relative;
+  
+  .grid-item {
+    display: flex;
+    flex-direction: column;
+    
+    &:hover {
+      border-color: rgba(0, 123, 193, 0.4) !important;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    &.selected {
+      border-color: #007bc1 !important;
+      box-shadow: 0 0 0 2px rgba(0, 123, 193, 0.3) !important;
+    }
+    
+    &.dragging {
+      opacity: 0.7;
+      transform: rotate(2deg);
+      z-index: 1000;
+    }
+  }
+  
+  .grid-guide {
+    transition: opacity 0.2s ease;
+    opacity: 0;
+  }
+  
+  &:hover .grid-guide {
+    opacity: 1;
+  }
+  
+  // Empty grid state
+  &.empty {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .floating-add-button-container {
+      position: static !important;
+      transform: none !important;
+    }
+  }
+}
+
+// Drag & Drop Styles
+.draggable-block {
+  position: relative;
+  
+  &:hover .drag-handle {
+    opacity: 0.8 !important;
+  }
+  
+  &.selected .drag-handle {
+    opacity: 1 !important;
+  }
+  
+  &.dragging {
+    opacity: 0.7;
+    transform: rotate(2deg);
+    z-index: 1000;
+    
+    .drag-handle {
+      opacity: 1 !important;
+      background: #007bc1 !important;
+    }
+  }
+  
+  .drag-handle {
+    transition: opacity 0.2s ease;
+    
+    &:hover {
+      background: #005d99 !important;
+      cursor: grab;
+    }
+    
+    &:active {
+      cursor: grabbing;
+    }
+  }
+}
+
+.non-draggable-block {
+  &.selected {
+    outline: 2px solid #007bc1;
+    outline-offset: 2px;
+  }
+}
+
+// Drop Zone Styles
+.grid-drop-zone {
+  &.drop-over {
+    transition: all 0.2s ease;
+    
+    &.can-drop {
+      background-color: rgba(0, 123, 193, 0.05) !important;
+      border-color: rgba(0, 123, 193, 0.3) !important;
+    }
+    
+    &.cannot-drop {
+      background-color: rgba(255, 68, 68, 0.05) !important;
+      border-color: rgba(255, 68, 68, 0.3) !important;
+    }
+  }
+}
+
+// Grid mode toggle
+.grid-mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: rgba(248, 249, 250, 0.8);
+  border: 1px solid rgba(0, 123, 193, 0.2);
+  border-radius: 6px;
+  
+  .toggle-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .toggle-switch {
+    position: relative;
+    width: 48px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    
+    &.active {
+      background: #007bc1;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    &.active::after {
+      transform: translateX(24px);
+    }
+  }
+  
+  .mode-label {
+    font-size: 0.8rem;
+    color: #666;
+    
+    &.active {
+      color: #007bc1;
+      font-weight: 600;
+    }
+  }
+}
+
+// Layout mode styles
+.section-blocks {
+  &.linear-layout {
+    .section-child-block {
+      margin-bottom: 1.5rem;
+      
+      &:last-of-type {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+  
+  &.grid-layout {
+    margin: 0;
+    
+    .section-child-block {
+      margin: 0;
+    }
+  }
+}
+
+// Grid configuration panel
+.grid-config-panel {
+  background: rgba(248, 249, 250, 0.9);
+  border: 1px solid rgba(0, 123, 193, 0.2);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  
+  .config-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #555;
+      min-width: 100px;
+    }
+    
+    input {
+      padding: 0.25rem 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 80px;
+      
+      &:focus {
+        outline: none;
+        border-color: #007bc1;
+      }
+    }
+  }
+}
+
 // Responsive adjustments
 @media (max-width: 768px) {
   .custom-section-block,
   .custom-section-block-edit {
     padding: 1.5rem;
     margin-bottom: 1.5rem;
+  }
+  
+  .grid-layout {
+    // Force linear layout on mobile
+    display: block !important;
+    
+    .grid-item {
+      display: block !important;
+      margin-bottom: 1rem !important;
+      position: static !important;
+      grid-column: unset !important;
+      grid-row: unset !important;
+    }
+  }
+  
+  .grid-mode-toggle {
+    .toggle-label,
+    .mode-label {
+      font-size: 0.8rem;
+    }
   }
 }
