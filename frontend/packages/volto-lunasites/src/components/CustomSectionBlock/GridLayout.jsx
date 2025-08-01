@@ -17,12 +17,13 @@ const GridLayout = ({
   const [tempPositions, setTempPositions] = React.useState({});
   const [draggingBlocks, setDraggingBlocks] = React.useState(new Set());
   const [movedBlocks, setMovedBlocks] = React.useState(new Set());
+  const [resizingBlocks, setResizingBlocks] = React.useState(new Set());
   const { columns, rowHeight, positions } = gridConfig;
   
   // Merge temp positions with actual positions for visual updates during drag
   const currentPositions = { ...positions, ...tempPositions };
   
-  const handleTempPositionUpdate = (blockId, tempPosition) => {
+  const handleTempPositionUpdate = (blockId, tempPosition, isResize = false) => {
     // Check for collisions and move conflicting blocks
     const newTempPositions = { ...tempPositions };
     const allPositions = { ...positions, ...newTempPositions };
@@ -62,7 +63,12 @@ const GridLayout = ({
     newTempPositions[blockId] = tempPosition;
     
     setTempPositions(newTempPositions);
-    setDraggingBlocks(prev => new Set([...prev, blockId]));
+    
+    if (isResize) {
+      setResizingBlocks(prev => new Set([...prev, blockId]));
+    } else {
+      setDraggingBlocks(prev => new Set([...prev, blockId]));
+    }
   };
   
   const clearTempPosition = (blockId) => {
@@ -76,7 +82,12 @@ const GridLayout = ({
       newSet.delete(blockId);
       return newSet;
     });
-    setMovedBlocks(new Set()); // Clear moved blocks when drag ends
+    setResizingBlocks(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(blockId);
+      return newSet;
+    });
+    setMovedBlocks(new Set()); // Clear moved blocks when drag/resize ends
   };
   
   // Helper function to find available position for a block
@@ -176,7 +187,7 @@ const GridLayout = ({
     return (
       <div
         key={blockId}
-        className={`grid-item ${draggingBlocks.has(blockId) ? 'dragging' : ''} ${movedBlocks.has(blockId) ? 'moved' : ''}`}
+        className={`grid-item ${draggingBlocks.has(blockId) ? 'dragging' : ''} ${movedBlocks.has(blockId) ? 'moved' : ''} ${resizingBlocks.has(blockId) ? 'resizing' : ''}`}
         style={itemStyle}
         data-block-id={blockId}
       >
@@ -189,6 +200,7 @@ const GridLayout = ({
             gridConfig={gridConfig}
             onTempPositionUpdate={handleTempPositionUpdate}
             onClearTempPosition={clearTempPosition}
+            onUpdateSize={onUpdatePosition}
           >
             {content}
           </DraggableGridBlock>

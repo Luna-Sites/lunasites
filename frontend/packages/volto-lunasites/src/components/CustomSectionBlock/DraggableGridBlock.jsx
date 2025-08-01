@@ -11,11 +11,15 @@ const DraggableGridBlock = ({
   onEndDrag,
   gridConfig,
   onTempPositionUpdate,
-  onClearTempPosition
+  onClearTempPosition,
+  onUpdateSize
 }) => {
   const [isDragging, setIsDragging] = React.useState(false);
+  const [isResizing, setIsResizing] = React.useState(false);
+  const [resizeDirection, setResizeDirection] = React.useState(null);
   const [snapPosition, setSnapPosition] = React.useState(null);
   const originalPosition = React.useRef(null);
+  const resizeStartData = React.useRef(null);
 
   const handleMouseDown = (e) => {
     // Allow dragging from anywhere on the block if selected, or from drag handle
@@ -129,6 +133,145 @@ const DraggableGridBlock = ({
     }
   };
 
+  const handleResizeStart = (e, direction) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setIsResizing(true);
+    setResizeDirection(direction);
+    
+    const gridLayer = document.querySelector('.grid-drag-layer');
+    if (gridLayer) {
+      const rect = gridLayer.getBoundingClientRect();
+      resizeStartData.current = {
+        startX: e.clientX,
+        startY: e.clientY,
+        startPosition: { ...position },
+        gridRect: rect
+      };
+    }
+    
+    const handleMouseMove = (moveEvent) => {
+      if (!resizeStartData.current) return;
+      
+      const { startX, startY, startPosition, gridRect } = resizeStartData.current;
+      const deltaX = moveEvent.clientX - startX;
+      const deltaY = moveEvent.clientY - startY;
+      
+      // Calculate grid cell dimensions
+      const padding = 16;
+      const gap = 8;
+      const columns = gridConfig?.columns || 12;
+      const rowHeight = gridConfig?.rowHeight || 60;
+      const availableWidth = gridRect.width - (2 * padding) - ((columns - 1) * gap);
+      const cellWidth = availableWidth / columns;
+      const cellHeight = rowHeight + gap;
+      
+      // Calculate grid units moved
+      const gridDeltaX = Math.round(deltaX / cellWidth);
+      const gridDeltaY = Math.round(deltaY / cellHeight);
+      
+      let newPosition = { ...startPosition };
+      
+      // Apply resize based on direction
+      switch (direction) {
+        case 'se': // Southeast - resize width and height
+          newPosition.width = Math.max(1, Math.min(columns - startPosition.x, startPosition.width + gridDeltaX));
+          newPosition.height = Math.max(1, startPosition.height + gridDeltaY);
+          break;
+        case 'sw': // Southwest - resize width (left) and height
+          const newWidth = Math.max(1, startPosition.width - gridDeltaX);
+          const newX = Math.max(0, startPosition.x + startPosition.width - newWidth);
+          newPosition.x = newX;
+          newPosition.width = newWidth;
+          newPosition.height = Math.max(1, startPosition.height + gridDeltaY);
+          break;
+        case 'ne': // Northeast - resize width and height (top)
+          newPosition.width = Math.max(1, Math.min(columns - startPosition.x, startPosition.width + gridDeltaX));
+          const newHeight = Math.max(1, startPosition.height - gridDeltaY);
+          const newY = Math.max(0, startPosition.y + startPosition.height - newHeight);
+          newPosition.y = newY;
+          newPosition.height = newHeight;
+          break;
+        case 'nw': // Northwest - resize both dimensions from top-left
+          const nwNewWidth = Math.max(1, startPosition.width - gridDeltaX);
+          const nwNewHeight = Math.max(1, startPosition.height - gridDeltaY);
+          newPosition.x = Math.max(0, startPosition.x + startPosition.width - nwNewWidth);
+          newPosition.y = Math.max(0, startPosition.y + startPosition.height - nwNewHeight);
+          newPosition.width = nwNewWidth;
+          newPosition.height = nwNewHeight;
+          break;
+        case 'e': // East - resize width only
+          newPosition.width = Math.max(1, Math.min(columns - startPosition.x, startPosition.width + gridDeltaX));
+          break;
+        case 'w': // West - resize width from left
+          const wNewWidth = Math.max(1, startPosition.width - gridDeltaX);
+          newPosition.x = Math.max(0, startPosition.x + startPosition.width - wNewWidth);
+          newPosition.width = wNewWidth;
+          break;
+        case 's': // South - resize height only
+          newPosition.height = Math.max(1, startPosition.height + gridDeltaY);
+          break;
+        case 'n': // North - resize height from top
+          const nNewHeight = Math.max(1, startPosition.height - gridDeltaY);
+          newPosition.y = Math.max(0, startPosition.y + startPosition.height - nNewHeight);
+          newPosition.height = nNewHeight;
+          break;
+      }
+      
+      // Update temporary position for visual feedback
+      if (onTempPositionUpdate) {
+        onTempPositionUpdate(blockId, newPosition, true); // Pass isResize = true
+      }
+    };
+    
+    const handleMouseUp = () => {
+      setIsResizing(false);
+      setResizeDirection(null);
+      
+      // Get the final resized position from temp positions
+      const gridLayer = document.querySelector('.grid-drag-layer');
+      const blockElement = gridLayer?.querySelector(`[data-block-id="${blockId}"]`);
+      
+      if (blockElement) {
+        const style = window.getComputedStyle(blockElement);
+        const gridColumn = style.gridColumn;
+        const gridRow = style.gridRow;
+        
+        if (gridColumn && gridRow) {
+          const columnMatch = gridColumn.match(/(\d+) \/ span (\d+)/);
+          const rowMatch = gridRow.match(/(\d+) \/ span (\d+)/);
+          
+          if (columnMatch && rowMatch) {
+            const finalPosition = {
+              x: parseInt(columnMatch[1]) - 1,
+              y: parseInt(rowMatch[1]) - 1,
+              width: parseInt(columnMatch[2]),
+              height: parseInt(rowMatch[2])
+            };
+            
+            // Trigger final position update
+            if (onUpdateSize) {
+              onUpdateSize(blockId, finalPosition);
+            }
+          }
+        }
+      }
+      
+      // Clear temporary position
+      if (onClearTempPosition) {
+        onClearTempPosition(blockId);
+      }
+      
+      resizeStartData.current = null;
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
   return (
     <div 
       className={`draggable-grid-block ${selected ? 'selected' : ''} ${isDragging ? 'being-dragged' : ''}`}
@@ -139,12 +282,12 @@ const DraggableGridBlock = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        cursor: isDragging ? 'grabbing' : (selected ? 'grab' : 'pointer'),
+        cursor: isDragging ? 'grabbing' : (isResizing ? 'resizing' : (selected ? 'grab' : 'pointer')),
         position: 'relative',
         transition: 'none', // Let CSS Grid handle transitions
-        opacity: isDragging ? 0.8 : 1,
+        opacity: (isDragging || isResizing) ? 0.8 : 1,
         userSelect: 'none',
-        transform: isDragging ? 'scale(1.02)' : 'scale(1)', // Slight scale up when dragging
+        transform: (isDragging || isResizing) ? 'scale(1.02)' : 'scale(1)', // Slight scale up when dragging/resizing
       }}
     >
       {/* Drag Handle */}
@@ -190,6 +333,139 @@ const DraggableGridBlock = ({
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {children}
       </div>
+      
+      {/* Resize Handles - only show when selected */}
+      {selected && (
+        <>
+          {/* Corner handles */}
+          <div 
+            className="resize-handle nw" 
+            onMouseDown={(e) => handleResizeStart(e, 'nw')}
+            style={{
+              position: 'absolute',
+              top: '-4px',
+              left: '-4px',
+              width: '8px',
+              height: '8px',
+              background: '#007bc1',
+              cursor: 'nw-resize',
+              borderRadius: '2px',
+              zIndex: 15
+            }}
+          />
+          <div 
+            className="resize-handle ne" 
+            onMouseDown={(e) => handleResizeStart(e, 'ne')}
+            style={{
+              position: 'absolute',
+              top: '-4px',
+              right: '-4px',
+              width: '8px',
+              height: '8px',
+              background: '#007bc1',
+              cursor: 'ne-resize',
+              borderRadius: '2px',
+              zIndex: 15
+            }}
+          />
+          <div 
+            className="resize-handle sw" 
+            onMouseDown={(e) => handleResizeStart(e, 'sw')}
+            style={{
+              position: 'absolute',
+              bottom: '-4px',
+              left: '-4px',
+              width: '8px',
+              height: '8px',
+              background: '#007bc1',
+              cursor: 'sw-resize',
+              borderRadius: '2px',
+              zIndex: 15
+            }}
+          />
+          <div 
+            className="resize-handle se" 
+            onMouseDown={(e) => handleResizeStart(e, 'se')}
+            style={{
+              position: 'absolute',
+              bottom: '-4px',
+              right: '-4px',
+              width: '8px',
+              height: '8px',
+              background: '#007bc1',
+              cursor: 'se-resize',
+              borderRadius: '2px',
+              zIndex: 15
+            }}
+          />
+          
+          {/* Edge handles */}
+          <div 
+            className="resize-handle n" 
+            onMouseDown={(e) => handleResizeStart(e, 'n')}
+            style={{
+              position: 'absolute',
+              top: '-4px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '16px',
+              height: '8px',
+              background: '#007bc1',
+              cursor: 'n-resize',
+              borderRadius: '2px',
+              zIndex: 15
+            }}
+          />
+          <div 
+            className="resize-handle s" 
+            onMouseDown={(e) => handleResizeStart(e, 's')}
+            style={{
+              position: 'absolute',
+              bottom: '-4px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '16px',
+              height: '8px',
+              background: '#007bc1',
+              cursor: 's-resize',
+              borderRadius: '2px',
+              zIndex: 15
+            }}
+          />
+          <div 
+            className="resize-handle w" 
+            onMouseDown={(e) => handleResizeStart(e, 'w')}
+            style={{
+              position: 'absolute',
+              left: '-4px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '8px',
+              height: '16px',
+              background: '#007bc1',
+              cursor: 'w-resize',
+              borderRadius: '2px',
+              zIndex: 15
+            }}
+          />
+          <div 
+            className="resize-handle e" 
+            onMouseDown={(e) => handleResizeStart(e, 'e')}
+            style={{
+              position: 'absolute',
+              right: '-4px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '8px',
+              height: '16px',
+              background: '#007bc1',
+              cursor: 'e-resize',
+              borderRadius: '2px',
+              zIndex: 15
+            }}
+          />
+        </>
+      )}
 
       {/* Position Info (Debug) */}
       {selected && (
@@ -232,6 +508,7 @@ DraggableGridBlock.propTypes = {
   }),
   onTempPositionUpdate: PropTypes.func,
   onClearTempPosition: PropTypes.func,
+  onUpdateSize: PropTypes.func,
 };
 
 DraggableGridBlock.defaultProps = {
@@ -242,6 +519,7 @@ DraggableGridBlock.defaultProps = {
   gridConfig: { columns: 12, rowHeight: 60 },
   onTempPositionUpdate: () => {},
   onClearTempPosition: () => {},
+  onUpdateSize: () => {},
 };
 
 export default DraggableGridBlock;
