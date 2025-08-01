@@ -72,8 +72,10 @@ const DraggableGridBlock = ({
       const adjustedX = Math.max(0, relativeX - padding);
       const adjustedY = Math.max(0, relativeY - padding);
       
-      const gridX = Math.round(adjustedX / cellWidth);
-      const gridY = Math.round(adjustedY / cellHeight);
+      // Use floor instead of round for more cursor-following behavior
+      // Add small threshold to prevent micro-movements
+      const gridX = Math.floor((adjustedX + cellWidth * 0.3) / cellWidth);
+      const gridY = Math.floor((adjustedY + cellHeight * 0.3) / cellHeight);
       
       const snapX = Math.min(Math.max(0, gridX), maxX);
       const snapY = Math.max(0, gridY);
@@ -296,16 +298,16 @@ const DraggableGridBlock = ({
         style={{
           position: 'absolute',
           top: '8px',
-          right: '8px',
-          width: '20px',
+          left: '8px', // Moved to top-left for better UX
+          width: '24px',
           height: '20px',
           background: isDragging ? '#007bc1' : 'rgba(0, 123, 193, 0.8)',
-          borderRadius: '3px',
+          borderRadius: '4px',
           cursor: isDragging ? 'grabbing' : 'grab',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '12px',
+          fontSize: '14px',
           color: 'white',
           opacity: selected ? 1 : 0.8,
           transition: isDragging ? 'none' : 'all 0.2s ease',
@@ -462,7 +464,7 @@ const DraggableGridBlock = ({
           style={{
             position: 'absolute',
             bottom: '4px',
-            left: '4px',
+            right: '4px', // Moved to right since drag handle is now on left
             fontSize: '10px',
             background: 'rgba(0, 0, 0, 0.7)',
             color: 'white',
