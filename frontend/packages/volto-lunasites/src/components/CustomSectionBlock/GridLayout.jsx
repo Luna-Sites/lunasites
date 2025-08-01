@@ -14,10 +14,36 @@ const GridLayout = ({
   isDragEnabled = true,
   className = ''
 }) => {
+  const [tempPositions, setTempPositions] = React.useState({});
+  const [draggingBlocks, setDraggingBlocks] = React.useState(new Set());
   const { columns, rowHeight, positions } = gridConfig;
   
-  // Calculate the total height needed for the grid
-  const maxY = Math.max(0, ...Object.values(positions).map(pos => pos.y + pos.height));
+  // Merge temp positions with actual positions for visual updates during drag
+  const currentPositions = { ...positions, ...tempPositions };
+  
+  const handleTempPositionUpdate = (blockId, tempPosition) => {
+    setTempPositions(prev => ({
+      ...prev,
+      [blockId]: tempPosition
+    }));
+    setDraggingBlocks(prev => new Set([...prev, blockId]));
+  };
+  
+  const clearTempPosition = (blockId) => {
+    setTempPositions(prev => {
+      const newTemp = { ...prev };
+      delete newTemp[blockId];
+      return newTemp;
+    });
+    setDraggingBlocks(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(blockId);
+      return newSet;
+    });
+  };
+  
+  // Calculate the total height needed for the grid using current positions
+  const maxY = Math.max(0, ...Object.values(currentPositions).map(pos => pos.y + pos.height));
   const totalRows = Math.max(8, maxY); // Minimum 8 rows for empty sections
   
   const gridStyle = {
@@ -34,7 +60,7 @@ const GridLayout = ({
   };
 
   const renderGridItem = (blockId) => {
-    const position = positions[blockId];
+    const position = currentPositions[blockId];
     if (!position) return null;
 
     const itemStyle = {
@@ -56,7 +82,7 @@ const GridLayout = ({
     return (
       <div
         key={blockId}
-        className="grid-item"
+        className={`grid-item ${draggingBlocks.has(blockId) ? 'dragging' : ''}`}
         style={itemStyle}
         data-block-id={blockId}
       >
@@ -66,6 +92,9 @@ const GridLayout = ({
             position={position}
             selected={selectedBlock === blockId}
             onSelect={onSelectBlock}
+            gridConfig={gridConfig}
+            onTempPositionUpdate={handleTempPositionUpdate}
+            onClearTempPosition={clearTempPosition}
           >
             {content}
           </DraggableGridBlock>

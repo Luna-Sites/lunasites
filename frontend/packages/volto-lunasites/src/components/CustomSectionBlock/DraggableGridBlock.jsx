@@ -8,11 +8,14 @@ const DraggableGridBlock = ({
   selected,
   onSelect,
   onStartDrag,
-  onEndDrag
+  onEndDrag,
+  gridConfig,
+  onTempPositionUpdate,
+  onClearTempPosition
 }) => {
   const [isDragging, setIsDragging] = React.useState(false);
-  const [dragPreview, setDragPreview] = React.useState(null);
-  const dragStartPos = React.useRef({ x: 0, y: 0 });
+  const [snapPosition, setSnapPosition] = React.useState(null);
+  const originalPosition = React.useRef(null);
 
   const handleMouseDown = (e) => {
     // Allow dragging from anywhere on the block if selected, or from drag handle
@@ -37,15 +40,9 @@ const DraggableGridBlock = ({
     e.stopPropagation();
     
     const element = e.currentTarget;
-    const rect = element.getBoundingClientRect();
-    
-    // Store initial mouse position relative to element
-    dragStartPos.current = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    };
     
     setIsDragging(true);
+    originalPosition.current = position;
     element.setAttribute('data-block-id', blockId);
     element.setAttribute('data-position', JSON.stringify(position));
     
@@ -53,36 +50,49 @@ const DraggableGridBlock = ({
       onStartDrag(blockId);
     }
 
-    // Create drag preview
-    const preview = element.cloneNode(true);
-    preview.style.position = 'fixed';
-    preview.style.pointerEvents = 'none';
-    preview.style.zIndex = '10000';
-    preview.style.width = rect.width + 'px';
-    preview.style.height = rect.height + 'px';
-    preview.style.opacity = '0.8';
-    preview.style.transform = 'rotate(3deg)';
-    preview.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.3)';
-    preview.style.borderRadius = '8px';
-    preview.classList.add('drag-preview');
-    
-    document.body.appendChild(preview);
-    setDragPreview(preview);
-
     const handleMouseMove = (moveEvent) => {
-      if (preview) {
-        preview.style.left = (moveEvent.clientX - dragStartPos.current.x) + 'px';
-        preview.style.top = (moveEvent.clientY - dragStartPos.current.y) + 'px';
+      // Calculate grid snap position during drag
+      const gridLayer = document.querySelector('.grid-drag-layer');
+      if (gridLayer) {
+        const rect = gridLayer.getBoundingClientRect();
+        const relativeX = moveEvent.clientX - rect.left;
+        const relativeY = moveEvent.clientY - rect.top;
+        
+        const padding = 16;
+        const gap = 8;
+        const adjustedX = Math.max(0, relativeX - padding);
+        const adjustedY = Math.max(0, relativeY - padding);
+        
+        const columns = gridConfig?.columns || 12;
+        const rowHeight = gridConfig?.rowHeight || 60;
+        const availableWidth = rect.width - (2 * padding) - ((columns - 1) * gap);
+        const cellWidth = availableWidth / columns;
+        const cellHeight = rowHeight + gap;
+        
+        const gridX = Math.round(adjustedX / cellWidth);
+        const gridY = Math.round(adjustedY / cellHeight);
+        
+        const maxX = Math.max(0, columns - position.width);
+        const snapX = Math.min(Math.max(0, gridX), maxX);
+        const snapY = Math.max(0, gridY);
+        
+        setSnapPosition({ x: snapX, y: snapY });
+        
+        // Update the actual grid position temporarily for visual snapping
+        if (onTempPositionUpdate && (snapX !== position.x || snapY !== position.y)) {
+          onTempPositionUpdate(blockId, { ...position, x: snapX, y: snapY });
+        }
       }
     };
 
     const handleMouseUp = (upEvent) => {
       setIsDragging(false);
+      setSnapPosition(null);
       
-      if (preview && preview.parentNode) {
-        document.body.removeChild(preview);
+      // Clear temp position to allow final drop calculation
+      if (onClearTempPosition) {
+        onClearTempPosition(blockId);
       }
-      setDragPreview(null);
       
       // Find the drop target under the mouse
       const dropTarget = document.elementFromPoint(upEvent.clientX, upEvent.clientY);
@@ -131,9 +141,10 @@ const DraggableGridBlock = ({
         flexDirection: 'column',
         cursor: isDragging ? 'grabbing' : (selected ? 'grab' : 'pointer'),
         position: 'relative',
-        transition: isDragging ? 'none' : 'all 0.2s ease',
-        opacity: isDragging ? 0.3 : 1,
-        userSelect: 'none'
+        transition: 'none', // Let CSS Grid handle transitions
+        opacity: isDragging ? 0.8 : 1,
+        userSelect: 'none',
+        transform: isDragging ? 'scale(1.02)' : 'scale(1)', // Slight scale up when dragging
       }}
     >
       {/* Drag Handle */}
@@ -141,22 +152,22 @@ const DraggableGridBlock = ({
         className="drag-handle"
         style={{
           position: 'absolute',
-          top: '4px',
-          right: '4px',
-          width: '24px',
-          height: '24px',
-          background: isDragging ? 'rgba(0, 123, 193, 1)' : 'rgba(0, 123, 193, 0.9)',
-          borderRadius: '4px',
+          top: '8px',
+          right: '8px',
+          width: '20px',
+          height: '20px',
+          background: isDragging ? '#007bc1' : 'rgba(0, 123, 193, 0.8)',
+          borderRadius: '3px',
           cursor: isDragging ? 'grabbing' : 'grab',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '14px',
+          fontSize: '12px',
           color: 'white',
-          opacity: selected ? 1 : 0.7,
-          transition: 'all 0.2s ease',
+          opacity: selected ? 1 : 0.8,
+          transition: isDragging ? 'none' : 'all 0.2s ease',
           zIndex: 10,
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+          boxShadow: isDragging ? '0 4px 8px rgba(0, 0, 0, 0.2)' : '0 2px 4px rgba(0, 0, 0, 0.1)'
         }}
         title="Drag to move"
         onMouseDown={(e) => {
@@ -215,6 +226,12 @@ DraggableGridBlock.propTypes = {
   onSelect: PropTypes.func,
   onStartDrag: PropTypes.func,
   onEndDrag: PropTypes.func,
+  gridConfig: PropTypes.shape({
+    columns: PropTypes.number,
+    rowHeight: PropTypes.number,
+  }),
+  onTempPositionUpdate: PropTypes.func,
+  onClearTempPosition: PropTypes.func,
 };
 
 DraggableGridBlock.defaultProps = {
@@ -222,6 +239,9 @@ DraggableGridBlock.defaultProps = {
   onSelect: () => {},
   onStartDrag: () => {},
   onEndDrag: () => {},
+  gridConfig: { columns: 12, rowHeight: 60 },
+  onTempPositionUpdate: () => {},
+  onClearTempPosition: () => {},
 };
 
 export default DraggableGridBlock;
