@@ -1,6 +1,35 @@
 import { v4 as uuid } from 'uuid';
 
 export const sectionTemplates = {
+  blankSection: {
+    id: 'blankSection',
+    title: 'Blank Section',
+    category: 'all',
+    description: 'Empty section where you can add any blocks you want',
+    thumbnail: '/static/section-thumbnails/blank.png',
+    template: () => {
+      const groupId = uuid();
+
+      return {
+        blocks: {
+          [groupId]: {
+            '@type': 'group',
+            data: {
+              blocks: {},
+              blocks_layout: {
+                items: [],
+              },
+            },
+            styles: {},
+            theme: 'default',
+          },
+        },
+        blocks_layout: {
+          items: [groupId],
+        },
+      };
+    },
+  },
   intro: {
     id: 'intro',
     title: 'Intro Section',

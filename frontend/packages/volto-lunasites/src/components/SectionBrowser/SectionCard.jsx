@@ -30,10 +30,12 @@ const SectionCard = React.memo(({ section, onInsert }) => {
     [section, onInsert],
   );
 
+  const isBlankSection = section.id === 'blankSection';
+
   return (
     // Replaced <Card> with a styled <div>. The entire card is now clickable.
     <div
-      className="section-card"
+      className={`section-card ${isBlankSection ? 'blank-section' : ''}`}
       onClick={handleCardClick}
       onKeyDown={handleKeyDown}
       role="button"

@@ -14,6 +14,7 @@ import config from '@plone/volto/registry';
 
 // Local component imports
 import SectionBrowserAsBlockChooser from '../../../../../components/SectionBrowser/SectionBrowserAsBlockChooser';
+import CompactBlockChooser from '../../../../../components/CompactBlockChooser';
 
 // Icons
 import addSVG from '@plone/volto/icons/circle-plus.svg';
@@ -73,21 +74,52 @@ const BlockChooserButton = (props) => {
 
   const blockChooserRef = React.useRef();
 
-  const handleClickOutside = React.useCallback((e) => {
-    if (
-      blockChooserRef.current &&
-      doesNodeContainClick(blockChooserRef.current, e)
-    )
-      return;
+  // Check if we're inside a group block by looking at properties structure
+  // Group blocks have nested block structures
+  const isInsideGroupBlock = React.useMemo(() => {
+    // Check if this is a nested block structure (inside a group block)
+    const hasNestedStructure =
+      properties?.blocks && properties?.blocks_layout?.items;
+    const isNotAtPageLevel =
+      hasNestedStructure && !properties?.title && !properties?.description;
 
-    // Also check if the click is inside the modal (which is portaled to document.body)
-    const modalElement = document.querySelector('.section-browser-modal');
-    if (modalElement && modalElement.contains(e.target)) {
-      return;
-    }
+    // Additional check: if the properties object is small and focused, it's likely inside a group
+    const isNested = hasNestedStructure && Object.keys(properties).length <= 3;
 
-    setAddNewBlockOpened(false);
-  }, []);
+    // eslint-disable-next-line no-console
+    console.log('BlockChooser Context Detection:', {
+      block,
+      hasNestedStructure,
+      isNotAtPageLevel,
+      isNested,
+      propertiesKeys: Object.keys(properties || {}),
+      properties: properties,
+    });
+
+    return isNested || isNotAtPageLevel;
+  }, [properties, block]);
+
+  const handleClickOutside = React.useCallback(
+    (e) => {
+      if (
+        blockChooserRef.current &&
+        doesNodeContainClick(blockChooserRef.current, e)
+      )
+        return;
+
+      // Check for different modal classes based on chooser type
+      const modalSelector = isInsideGroupBlock
+        ? '.compact-block-chooser-modal'
+        : '.section-browser-modal';
+      const modalElement = document.querySelector(modalSelector);
+      if (modalElement && modalElement.contains(e.target)) {
+        return;
+      }
+
+      setAddNewBlockOpened(false);
+    },
+    [isInsideGroupBlock],
+  );
 
   const Component = buttonComponent || ButtonComponent;
 
@@ -101,26 +133,36 @@ const BlockChooserButton = (props) => {
   const [referenceElement, setReferenceElement] = React.useState(null);
   const [popperElement, setPopperElement] = React.useState(null);
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: config.experimental.addBlockButton.enabled
-      ? 'bottom'
-      : 'right-start',
+    placement: isInsideGroupBlock ? 'bottom-start' : 'bottom-end',
     modifiers: [
       {
         name: 'offset',
         options: {
-          offset: [-10, 5],
+          offset: isInsideGroupBlock ? [0, 8] : [0, 12],
         },
       },
       {
         name: 'flip',
         options: {
-          fallbackPlacements: config.experimental.addBlockButton.enabled
-            ? ['bottom-start', 'bottom-end']
-            : ['right-end', 'top-start'],
+          fallbackPlacements: isInsideGroupBlock 
+            ? ['bottom-end', 'top-start', 'top-end']
+            : ['bottom-start', 'top-end', 'top-start'],
+        },
+      },
+      {
+        name: 'preventOverflow',
+        options: {
+          boundary: 'viewport',
+          padding: 8,
         },
       },
     ],
   });
+
+  // Choose the appropriate chooser based on context
+  const ChooserComponent = isInsideGroupBlock
+    ? CompactBlockChooser
+    : SectionBrowserAsBlockChooser;
 
   return (
     <>
@@ -135,41 +177,78 @@ const BlockChooserButton = (props) => {
           </Ref>
         )}
       {addNewBlockOpened &&
-        createPortal(
-          <div
-            ref={setPopperElement}
-            style={styles.popper}
-            {...attributes.popper}
-          >
-            <SectionBrowserAsBlockChooser
-              onMutateBlock={
-                onMutateBlock
-                  ? (id, value) => {
-                      setAddNewBlockOpened(false);
-                      onMutateBlock(id, value);
-                    }
-                  : null
-              }
-              onInsertBlock={
-                onInsertBlock
-                  ? (id, value) => {
-                      setAddNewBlockOpened(false);
-                      onInsertBlock(id, value);
-                    }
-                  : null
-              }
-              currentBlock={block}
-              allowedBlocks={allowedBlocks}
-              blocksConfig={blocksConfig}
-              properties={properties}
-              showRestricted={showRestricted}
-              ref={blockChooserRef}
-              navRoot={navRoot}
-              contentType={contentType}
-            />
-          </div>,
-          document.body,
-        )}
+        (isInsideGroupBlock ? (
+          // Render CompactBlockChooser as full-screen modal
+          <ChooserComponent
+            open={addNewBlockOpened}
+            onClose={() => setAddNewBlockOpened(false)}
+            onMutateBlock={
+              onMutateBlock
+                ? (id, value) => {
+                    setAddNewBlockOpened(false);
+                    onMutateBlock(id, value);
+                  }
+                : null
+            }
+            onInsertBlock={
+              onInsertBlock
+                ? (id, value) => {
+                    setAddNewBlockOpened(false);
+                    onInsertBlock(id, value);
+                  }
+                : null
+            }
+            currentBlock={block}
+            allowedBlocks={allowedBlocks}
+            blocksConfig={blocksConfig}
+            properties={properties}
+            showRestricted={showRestricted}
+            ref={blockChooserRef}
+            navRoot={navRoot}
+            contentType={contentType}
+            isInsideGroupBlock={isInsideGroupBlock}
+          />
+        ) : (
+          // Use Popper positioning for section browser
+          createPortal(
+            <div
+              ref={setPopperElement}
+              style={styles.popper}
+              {...attributes.popper}
+            >
+              <ChooserComponent
+                open={addNewBlockOpened}
+                onClose={() => setAddNewBlockOpened(false)}
+                onMutateBlock={
+                  onMutateBlock
+                    ? (id, value) => {
+                        setAddNewBlockOpened(false);
+                        onMutateBlock(id, value);
+                      }
+                    : null
+                }
+                onInsertBlock={
+                  onInsertBlock
+                    ? (id, value) => {
+                        setAddNewBlockOpened(false);
+                        onInsertBlock(id, value);
+                      }
+                    : null
+                }
+                currentBlock={block}
+                allowedBlocks={allowedBlocks}
+                blocksConfig={blocksConfig}
+                properties={properties}
+                showRestricted={showRestricted}
+                ref={blockChooserRef}
+                navRoot={navRoot}
+                contentType={contentType}
+                isInsideGroupBlock={isInsideGroupBlock}
+              />
+            </div>,
+            document.body,
+          )
+        ))}
     </>
   );
 };

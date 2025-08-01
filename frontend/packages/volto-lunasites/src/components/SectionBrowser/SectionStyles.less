@@ -353,3 +353,59 @@
     line-height: 1.4;
   }
 }
+
+// Special styling for blank section card
+.section-card.blank-section {
+  border: 2px solid var(--volto-lunasites-primary);
+  background: linear-gradient(135deg, var(--volto-lunasites-primary-light) 0%, rgba(255, 255, 255, 0.8) 100%);
+  position: relative;
+  
+  &::before {
+    content: 'RECOMMENDED';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--volto-lunasites-primary);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 1;
+  }
+
+  &:hover {
+    border-color: var(--volto-lunasites-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--volto-lunasites-shadow-lg);
+  }
+
+  .section-card-header {
+    color: var(--volto-lunasites-primary);
+    font-weight: 700;
+  }
+
+  .section-thumbnail {
+    background: linear-gradient(135deg, var(--volto-lunasites-primary-light) 0%, rgba(255, 255, 255, 0.9) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+    
+    &::before {
+      content: '+ Add Any Blocks';
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--volto-lunasites-primary);
+      text-align: center;
+    }
+
+    img {
+      display: none;
+    }
+
+    .section-overlay {
+      background: rgba(0, 126, 177, 0.1);
+    }
+  }
+}

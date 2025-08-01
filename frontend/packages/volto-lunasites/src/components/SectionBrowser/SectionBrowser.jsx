@@ -15,7 +15,6 @@ import Icon from '@plone/volto/components/theme/Icon/Icon';
 
 // Local component imports
 import SectionCard from './SectionCard';
-import EnhancedBlockChooser from './EnhancedBlockChooser/EnhancedBlockChooser';
 import { sectionCategories, getSectionsByCategory } from './sectionTemplates';
 
 // Volto helpers and config
@@ -189,7 +188,7 @@ const SectionBrowser = React.memo(
           <div className="modal-header">
             <h2 className="modal-title">
               <Icon name={plusSVG} size="24px" />
-              <span>Section Browser</span>
+              <span>Add Section</span>
             </h2>
             <Button
               className="close-button"
@@ -206,10 +205,6 @@ const SectionBrowser = React.memo(
           <Tabs className="modal-content">
             {/* The TabList from react-aria-components holds the individual tabs */}
             <TabList aria-label="Section Categories" className="category-tabs">
-              {/* Add Blocks tab as first tab */}
-              <Tab key="blocks" id="blocks" className="tab">
-                Blocks
-              </Tab>
               {sectionCategories.map((category) => (
                 // Each Tab is from react-aria-components
                 <Tab key={category.id} id={category.id} className="tab">
@@ -219,19 +214,6 @@ const SectionBrowser = React.memo(
             </TabList>
 
             <div className="panels-container">
-              {/* Add Blocks TabPanel as first panel */}
-              <TabPanel key="blocks" id="blocks" className="blocks-panel">
-                <EnhancedBlockChooser
-                  onInsertBlock={handleInsertBlock}
-                  currentBlock={blockId}
-                  showRestricted={showRestricted}
-                  properties={properties}
-                  allowedBlocks={allowedBlocks}
-                  blocksConfig={blocksConfig}
-                  navRoot={navRoot}
-                  contentType={contentType}
-                />
-              </TabPanel>
               {sectionCategories.map((category) => (
                 // Each TabPanel is from react-aria-components
                 <TabPanel key={category.id} id={category.id}>
