@@ -197,6 +197,24 @@ const CustomSectionBlockEdit = (props) => {
         <span className={`mode-label ${isGridMode ? 'active' : ''}`}>Grid</span>
       </div>
 
+      {/* Grid Configuration Panel - only show in grid mode */}
+      {isGridMode && (
+        <div className="grid-config-panel">
+          <div className="config-row">
+            <label>Resize Mode:</label>
+            <span style={{ fontSize: '11px', color: '#666' }}>
+              Content resize enabled - resize block content instead of grid containers
+            </span>
+          </div>
+          <div className="config-row">
+            <label>Supported Blocks:</label>
+            <span style={{ fontSize: '11px', color: '#666' }}>
+              Button blocks support font size, padding, and width resizing
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Content Area */}
       <div className="custom-section-content">
         {isGridMode ? (
@@ -292,7 +310,8 @@ const CustomSectionBlockEdit = (props) => {
                 maxWidth: '250px',
                 pointerEvents: 'none' // Allow clicks to pass through
               }}>
-                <div>💡 Click to select • Drag ⋮⋮ to move • Drag corners to resize</div>
+                <div>💡 Click to select • Drag ⋮⋮ to move blocks around
+                  <br/>📝 Drag colored handles to resize content (font size, padding, width)</div>
               </div>
               
               {/* Add Block Button for Grid Mode */}

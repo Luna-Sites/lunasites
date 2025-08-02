@@ -23,6 +23,7 @@ const GridLayout = ({
   // Merge temp positions with actual positions for visual updates during drag
   const currentPositions = { ...positions, ...tempPositions };
   
+  
   // Simple position update without automatic collision avoidance
   const handleTempPositionUpdate = React.useCallback((blockId, tempPosition, isResize = false) => {
     // Set immediate position update for the dragged block only
@@ -156,7 +157,6 @@ const GridLayout = ({
             gridConfig={gridConfig}
             onTempPositionUpdate={handleTempPositionUpdate}
             onClearTempPosition={clearTempPosition}
-            onUpdateSize={onUpdatePosition}
           >
             {content}
           </DraggableGridBlock>

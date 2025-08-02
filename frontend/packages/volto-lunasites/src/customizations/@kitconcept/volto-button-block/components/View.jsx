@@ -36,15 +36,25 @@ const View = (props) => {
   const buttonColor = data.styles?.buttonColor;
   const filled = data.styles?.filled !== false; // Default to true if not specified
   const width = data.styles?.width;
+  
+  // Apply size properties from data (new resize functionality)
+  const fontSize = data.fontSize || 16;
+  const padding = data.padding || 12;
+  const buttonWidth = data.buttonWidth || 'auto';
+  
   // Create button styles based on block-specific configuration
   const buttonStyles = {
     ...style,
     width: undefined,
+    fontSize: `${fontSize}px`,
+    padding: `${padding}px`,
+    ...(buttonWidth !== 'auto' && { width: buttonWidth }),
   };
 
   // Create container styles with CSS variables for width
   const containerStyles = {
     ...(width && { '--button-width': width }),
+    ...(buttonWidth !== 'auto' && { '--button-width': buttonWidth }),
   };
 
   if (buttonColor) {
