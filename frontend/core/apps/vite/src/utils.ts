@@ -10,7 +10,6 @@ import config from '@plone/registry';
  */
 export function flattenToAppURL(url: string | undefined) {
   const { settings } = config;
-  console.log('hi from vite/src/utils.ts');
   return (
     (url &&
       url.replace(settings.apiPath, '').replace('http://localhost:3000', '')) ||

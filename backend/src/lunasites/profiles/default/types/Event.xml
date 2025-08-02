@@ -4,9 +4,9 @@
         meta_type="Dexterity FTI"
         i18n:domain="plone">
 
-  <!-- Enable Color Schema Behavior -->
+  <!-- Enable Design Schema Behavior -->
   <property name="behaviors" purge="false">
-    <element value="lunasites.behaviors.color_schema.IColorSchemaBehavior"/>
+    <element value="lunasites.behaviors.design_schema.IDesignSchema"/>
   </property>
 
 </object>

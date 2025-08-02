@@ -1,0 +1,53 @@
+.block.__button {
+  margin-bottom: 0 !important;
+  .button.container {
+    display: grid;
+    justify-content: var(--block-alignment);
+    text-align: unset !important;
+
+    @include variable-container-width();
+    @include vertical-space-button();
+  }
+
+  p + & {
+    .button.container {
+      padding-top: 60px;
+      @container (max-width: #{$largest-mobile-screen}) {
+        padding-top: 40px;
+      }
+    }
+  }
+
+  .separator + & {
+    .button.container {
+      padding-top: 0;
+      @container (max-width: #{$largest-mobile-screen}) {
+        padding-top: 0;
+      }
+    }
+  }
+
+  & + .gridBlock {
+    margin-top: 0 !important;
+    .headline {
+      margin-top: 0 !important;
+    }
+  }
+
+  &:last-child {
+    .button.container {
+      padding-bottom: 0;
+    }
+  }
+
+  .ui.button {
+    padding: 8px 20px;
+    border: 1px solid $black;
+    border-radius: unset;
+    margin: 0;
+    background: none;
+    color: $black;
+
+    @include body-text-bold();
+  }
+}

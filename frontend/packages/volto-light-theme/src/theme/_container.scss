@@ -1,0 +1,16 @@
+.q.container,
+.a.container {
+  container-type: inline-size;
+
+  &.layout {
+    @include layout-container-width;
+  }
+
+  &.default {
+    @include default-container-width;
+  }
+
+  &.narrow {
+    @include narrow-container-width;
+  }
+}

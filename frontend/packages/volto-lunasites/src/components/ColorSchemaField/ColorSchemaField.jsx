@@ -3,11 +3,13 @@ import { FormFieldWrapper } from '@plone/volto/components';
 import { Button, Header, Dropdown } from 'semantic-ui-react';
 import { toast } from 'react-toastify';
 import { SimpleColorPickerCore } from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import config from '@plone/registry';
+import { getDesignSite } from '../../actions/colorSchema';
 
 const ColorSchemaField = (props) => {
   const { id, value, onChange } = props;
+  const dispatch = useDispatch();
 
   const [colorSchema, setColorSchema] = React.useState({
     background_color: '',
@@ -107,23 +109,14 @@ const ColorSchemaField = (props) => {
       }
       // Then check if we need to use ++api++
       if (isUrlExcluded(pathname) || pathname.includes('/controlpanel'))
-        cleanedUrl = window.location.origin + '/++api++' + cleanedUrl;
-      const response = await fetch(
-        `${cleanedUrl}/@inherit?expand.inherit.behaviors=lunasites.behaviors.color_schema.IColorSchemaBehavior`,
-        {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        },
-      );
+        cleanedUrl = flattenToAppURL(cleanedUrl);
+      const result = await dispatch(getDesignSite(pathname));
 
-      if (response.ok) {
-        const data = await response.json();
+      if (result?.response) {
+        const data = result.response;
 
         const inheritedData =
-          data['lunasites.behaviors.color_schema.IColorSchemaBehavior']?.data
+          data['lunasites.behaviors.design_schema.IDesignSchema']?.data
             ?.color_schema || {};
 
         setInheritedSchema(inheritedData);

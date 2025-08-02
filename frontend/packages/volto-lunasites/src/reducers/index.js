@@ -1,1 +1,1 @@
-export { default as colorSchemaInherit } from './colorSchemaInherit';
+export { default as designSchema } from './designSchema';

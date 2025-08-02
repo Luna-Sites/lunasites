@@ -59,9 +59,10 @@ import { sliderBlockSchemaEnhancer } from './components/Blocks/Slider/schema';
 
 import EventMetadataView from './components/Blocks/EventMetadata/View';
 
-// Color Schema System
-import { ColorSchemaProvider, ColorSchemaField } from './components';
-import { colorSchemaInherit } from './reducers';
+// Design Schema System
+import { DesignSchemaProvider, ColorSchemaField } from './components';
+import { designSchema } from './reducers';
+import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
 
 const isBlockClassActive = (editor, format) => {
   if (!editor.selection) return false;
@@ -125,14 +126,18 @@ defineMessages({
 });
 
 const applyConfig = (config) => {
-  // Add color schema reducers
+  // Add design schema reducers
   config.addonReducers = {
     ...config.addonReducers,
-    colorSchemaInherit,
+    designSchema,
   };
 
   // Register color schema widget
   config.widgets.widget.color_schema = ColorSchemaField;
+
+  // Register tools header widget
+  config.widgets.widget.tools_header = ToolsHeaderField;
+
 
   config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;
@@ -261,7 +266,7 @@ const applyConfig = (config) => {
     },
     {
       match: '',
-      component: ColorSchemaProvider,
+      component: DesignSchemaProvider,
     },
   ];
 

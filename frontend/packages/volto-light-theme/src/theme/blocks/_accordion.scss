@@ -1,0 +1,119 @@
+// Adjust in case the grid add-on is still in place.
+.block.accordion [data-rbd-draggable-context-id] {
+  margin-bottom: 2rem;
+}
+
+.accordion-block,
+.block-editor-accordion {
+  .ui.styled.accordion {
+    border-top: 1px solid $black;
+
+    &:last-child {
+      border-bottom: 1px solid $black;
+    }
+    .title.accordion-title {
+      padding: 20px 0 20px 0;
+
+      & > svg {
+        height: 50px !important;
+        fill: $grey;
+        transform: rotate(-90deg);
+      }
+
+      & > span,
+      .input-accordion-title {
+        @include introduction();
+        color: $darkGrey;
+      }
+
+      &.active > span {
+        color: $black;
+      }
+
+      &.active > svg {
+        fill: $black;
+        transform: rotate(180deg);
+      }
+    }
+
+    .content {
+      padding: 0;
+
+      h2,
+      h3 {
+        margin-right: auto !important;
+        margin-left: auto !important;
+      }
+      h2 {
+        margin-bottom: 40px !important;
+      }
+      h3 {
+        margin-bottom: 20px !important;
+      }
+      .block.listing {
+        & > h2.headline {
+          margin-bottom: 80px !important;
+        }
+        &:first-child {
+          margin-top: 0;
+        }
+        .listing-item:last-child {
+          border-bottom: none !important;
+        }
+      }
+
+      .block.image {
+        figure {
+          &.right {
+            margin-left: 20px;
+          }
+          &.left {
+            margin-right: 20px;
+          }
+        }
+        figcaption {
+          padding: 0;
+          margin-bottom: 0;
+
+          .description > div {
+            margin-bottom: 0;
+          }
+          .title {
+            padding: 0;
+            margin-bottom: 10px;
+            background-color: transparent;
+            text-transform: none;
+            @include marginal-title();
+          }
+        }
+      }
+
+      .block.teaser {
+        .teaser-item > .content {
+          h2 {
+            margin-bottom: 40px !important;
+          }
+        }
+      }
+
+      .block:last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+  }
+}
+#page-add .block-editor-accordion,
+#page-edit .block-editor-accordion {
+  clear: both;
+  .ui.drag.block.wrapper.inner.listing:nth-child(2) {
+    margin-top: 0;
+  }
+}
+
+.accordion-block.has--backgroundColor--grey,
+#page-add .block-editor-accordion.has--backgroundColor--grey,
+#page-edit .block-editor-accordion.has--backgroundColor--grey {
+  .accordion.ui.fluid.styled {
+    background-color: $lightgrey;
+  }
+}

@@ -1,1 +1,1 @@
-export { getColorSchemaInherit } from './colorSchema';
+export { getColorSchemaInherit, getDesignSite } from './colorSchema';

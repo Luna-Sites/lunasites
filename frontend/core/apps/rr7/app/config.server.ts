@@ -23,10 +23,5 @@ export default function install() {
     method: () => cli,
   });
 
-  console.log('API_PATH is:', config.settings.apiPath);
-  console.log(
-    'INTERNAL_API_PATH is:',
-    config.settings.internalApiPath || 'not set',
-  );
   return config;
 }

@@ -1,33 +1,72 @@
-import { GET_COLOR_SCHEMA_INHERIT } from '../constants';
-import config from '@plone/registry';
+import { flattenToAppURL } from '@plone/volto/helpers';
+import { GET_COLOR_SCHEMA_INHERIT, GET_INHERIT, GET_DESIGN_SITE } from '../constants';
 
-const isUrlExcluded = (url) => {
-  const { nonContentRoutes = [], addonRoutes = [] } = config.settings;
-  const matchesNonContent = nonContentRoutes.some((route) =>
-    route instanceof RegExp ? route.test(url) : false,
-  );
-  const matchesAddon = addonRoutes.some((route) =>
-    typeof route.path === 'string' ? url.startsWith(route.path) : false,
-  );
+export const getColorSchemaInherit = (url = '') => {
+  let cleanedUrl = typeof url === 'string' ? url : '';
 
-  return matchesNonContent || matchesAddon;
-};
-
-export const getColorSchemaInherit = (url) => {
-  let cleanedUrl = url;
-
-  if (isUrlExcluded(url) || url.includes('/controlpanel'))
-    cleanedUrl = window.location.origin + '/++api++';
-
-  if (url.endsWith('/edit')) {
-    cleanedUrl = url.slice(0, -'/edit'.length);
+  if (
+    cleanedUrl &&
+    typeof cleanedUrl === 'string' &&
+    cleanedUrl.endsWith('/edit')
+  ) {
+    cleanedUrl = cleanedUrl.slice(0, -'/edit'.length);
   }
+
+  const apiPath = flattenToAppURL(cleanedUrl);
 
   return {
     type: GET_COLOR_SCHEMA_INHERIT,
     request: {
       op: 'get',
-      path: `${cleanedUrl}/@inherit?expand.inherit.behaviors=lunasites.behaviors.color_schema.IColorSchemaBehavior`,
+      path: `${apiPath}/@inherit?expand.inherit.behaviors=lunasites.behaviors.design_schema.IDesignSchema`,
+    },
+  };
+};
+
+export const getInherit = (url = '', behaviors = []) => {
+  let cleanedUrl = typeof url === 'string' ? url : '';
+
+  if (
+    cleanedUrl &&
+    typeof cleanedUrl === 'string' &&
+    cleanedUrl.endsWith('/edit')
+  ) {
+    cleanedUrl = cleanedUrl.slice(0, -'/edit'.length);
+  }
+
+  const apiPath = flattenToAppURL(cleanedUrl);
+
+  const queryParams = behaviors.length > 0
+    ? `?${behaviors.map(behavior => `expand.inherit.behaviors=${behavior}`).join('&')}`
+    : '';
+
+  return {
+    type: GET_INHERIT,
+    request: {
+      op: 'get',
+      path: `${apiPath}/@inherit${queryParams}`,
+    },
+  };
+};
+
+export const getDesignSite = (url = '') => {
+  let cleanedUrl = typeof url === 'string' ? url : '';
+
+  if (
+    cleanedUrl &&
+    typeof cleanedUrl === 'string' &&
+    cleanedUrl.endsWith('/edit')
+  ) {
+    cleanedUrl = cleanedUrl.slice(0, -'/edit'.length);
+  }
+
+  const apiPath = flattenToAppURL(cleanedUrl);
+
+  return {
+    type: GET_DESIGN_SITE,
+    request: {
+      op: 'get',
+      path: `${apiPath}/@inherit?expand.inherit.behaviors=lunasites.behaviors.design_schema.IDesignSchema`,
     },
   };
 };

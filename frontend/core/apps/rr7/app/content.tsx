@@ -37,14 +37,12 @@ export async function loader({ params, request }: Route.LoaderArgs) {
       /\.(css|css\.map)$/.test(path)
     )
   ) {
-    console.log('prefetching', path);
     try {
       return await getContent({ path, expand });
     } catch (error) {
       throw data('Content Not Found', { status: 404 });
     }
   } else {
-    console.log('path not prefetched', path);
     throw data('Content Not Found', { status: 404 });
   }
 }

@@ -1,0 +1,250 @@
+#page-document,
+#page-add,
+#page-edit {
+  .block.search {
+    &.grid {
+      .card-container > img {
+        width: 100% !important;
+      }
+
+      .listing-item:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+    }
+    .items {
+      padding: 0 !important;
+    }
+    .ui.stackable.searchBlock-facets > .row,
+    .ui.stackable.searchBlock-facets > .row > .column {
+      padding: 0 !important;
+    }
+
+    .listing-item {
+      h2,
+      h3 {
+        @include text-heading-h2();
+      }
+    }
+
+    h2.headline {
+      @container (max-width: #{$default-container-width + 2 * 20px}) {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+    }
+
+    .facets,
+    .listing.message {
+      h2,
+      h3 {
+        color: $black;
+        @include text-heading-h2();
+      }
+      .column {
+        padding-left: 0;
+        margin-bottom: 40px;
+      }
+    }
+
+    .facets {
+      margin-top: -20px;
+    }
+
+    .search-wrapper {
+      margin-bottom: 0;
+      @container (max-width: #{$largest-mobile-screen}) {
+        margin-bottom: 20px;
+      }
+    }
+
+    .search-input-resultscount-sort {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 80px;
+
+      @container (max-width: #{$largest-mobile-screen}) {
+        display: block;
+        margin-bottom: 60px;
+      }
+    }
+
+    .search-input {
+      position: relative;
+      height: 75px;
+      background-color: $secondary-grey;
+
+      .ui.input {
+        height: 75px;
+        background-color: $veryLightGrey;
+
+        input {
+          padding: 19px 0 19px 24px;
+          border: none;
+          background-color: transparent;
+          font-size: 24px;
+
+          &::placeholder {
+            opacity: 1;
+          }
+        }
+      }
+
+      .search-input-live-icon-button {
+        position: absolute;
+        top: 19px;
+        right: 24px;
+        padding-left: 14px;
+
+        svg {
+          width: 36px !important;
+          height: 36px !important;
+          color: $black !important;
+        }
+      }
+    }
+
+    .search-details-sort {
+      display: flex;
+      align-items: center;
+
+      @container (max-width: #{$largest-mobile-screen}) {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: stretch;
+
+        .search-details {
+          padding: 0;
+        }
+
+        .sort-on-wrapper {
+          margin-bottom: 50px;
+          .search-sort-wrapper {
+            width: 100%;
+            margin: 0;
+
+            button {
+              width: 50px;
+            }
+
+            .search-sort-on {
+              flex-grow: 100;
+
+              #select-search-sort-on {
+                width: 100%;
+                .react-select__control,
+                .react-select__menu {
+                  width: 100%;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .search-details {
+      padding: 0 20px;
+      margin: 0;
+      color: $black;
+      font-size: 20px;
+
+      .number {
+        font-size: 30px;
+      }
+
+      .label {
+        font-size: 14px;
+      }
+    }
+
+    .search-wrapper {
+      width: 49%;
+      @media only screen and (max-width: $largest-mobile-screen) {
+        width: 100%;
+      }
+    }
+
+    .sort-on-wrapper {
+      display: flex;
+      align-items: center;
+      .search-sort-wrapper {
+        margin: 7px 0 0 0;
+      }
+
+      .search-sort-wrapper > * {
+        height: 50px;
+        border-width: 1px 1px 1px 0;
+        border-style: solid;
+        border-color: $black;
+        border-radius: 0;
+        margin: 0;
+      }
+
+      .search-sort-wrapper > .search-sort-on {
+        border-left-width: 1px;
+        font-size: 14px;
+
+        svg {
+          width: 12px !important;
+          margin-right: 7px;
+        }
+
+        div {
+          border: 0;
+        }
+
+        .react-select__menu {
+          border: solid 1px $black;
+          margin-top: 5px;
+        }
+
+        .react-select__option:not(.react-select__option--is-selected) {
+          svg {
+            visibility: hidden;
+          }
+        }
+
+        .react-select__option--is-selected {
+          svg {
+            fill: $black;
+          }
+        }
+      }
+
+      button {
+        width: 50px;
+        text-align: center;
+
+        svg {
+          height: 30px !important;
+        }
+      }
+
+      .sort-label {
+        display: none;
+      }
+    }
+  }
+}
+
+#page-edit {
+  .block-editor-search {
+    &:not(.has--headline) {
+      margin-top: 0;
+    }
+    .block.search {
+      margin-top: 0;
+    }
+  }
+}
+
+// Hidden fields
+.inline.field {
+  &.field-wrapper-showSearchInput,
+  &.field-wrapper-showSearchButton,
+  &.field-wrapper-showTotalResults,
+  &.field-wrapper-showSortOn {
+    display: none;
+  }
+}

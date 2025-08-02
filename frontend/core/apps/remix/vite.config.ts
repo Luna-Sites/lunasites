@@ -11,7 +11,6 @@ export default defineConfig({
         target:
           'http://localhost:8080/VirtualHostBase/http/localhost:3000/Plone/++api++/VirtualHostRoot',
         rewrite: (path) => {
-          console.log(path);
           return path.replace('/++api++', '');
         },
       },
