@@ -23,6 +23,13 @@
   <include package=".services" />
   <include package=".vocabularies" />
 
+  <!-- CORS Configuration -->
+  <adapter
+      factory="plone.restapi.cors.CORSPolicy"
+      provides="plone.restapi.interfaces.ICORSPolicy"
+      for="*"
+      />
+
   <!-- -*- extra stuff goes here -*- -->
 
 </configure>
