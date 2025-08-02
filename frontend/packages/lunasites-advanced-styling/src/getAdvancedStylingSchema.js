@@ -13,6 +13,7 @@ export const getAdvancedStylingSchema = (intl) => ({
         'fontSize',
         'fontWeight',
         'height',
+        'isScreenHeight',
         'width',
         'margin',
         'padding',

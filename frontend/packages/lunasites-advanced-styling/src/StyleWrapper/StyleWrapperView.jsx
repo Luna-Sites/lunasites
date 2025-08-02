@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import cx from 'classnames';
 import { BodyClass } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
@@ -88,15 +87,7 @@ export function getInlineStyles(data, props = {}, addBackgroundPadding = false) 
     ...(data.fontWeight ? { fontWeight: data.fontWeight } : {}),
     ...(data.height ? { height: data.height } : {}),
     ...(data.width ? { width: data.width } : {}),
-    ...(data.isScreenHeight && props.screen.height
-      ? {
-          minHeight: (
-            props.screen.height -
-            props.screen.browserToolbarHeight -
-            props.screen.content.offsetTop
-          ).toPixel(),
-        }
-      : {}),
+    ...(data.isScreenHeight ? { minHeight: '100vh' } : {}),
     ...(data.shadowDepth && {
       boxShadow: `0px 0px ${data.shadowDepth}px rgba(${h2rgb(
         data.shadowColor,
@@ -264,10 +255,6 @@ const StyleWrapperView = (props) => {
   );
 };
 
-export default connect((state, ownProps) =>
-  ownProps.styleData.isScreenHeight ? { screen: state.screen } : {},
-)(
-  withCachedImages(StyleWrapperView, {
-    getImage: (props) => props.styleData.backgroundImage || null,
-  }),
-);
+export default withCachedImages(StyleWrapperView, {
+  getImage: (props) => props.styleData.backgroundImage || null,
+});
