@@ -33,6 +33,7 @@ import alignCenterIcon from '@plone/volto/icons/align-center.svg';
 import alignJustifyIcon from '@plone/volto/icons/align-justify.svg';
 import FontSelector from './components/FontSelector';
 import FontSizeSelector from './components/FontSizeSelector';
+import LineSpacingSelector from './components/LineSpacingSelector';
 
 import {
   MarkElementButton,
@@ -580,6 +581,25 @@ const applyConfig = (config) => {
       ...config.settings.slate.expandedToolbarButtons,
       'separator',
       'font-size-selector',
+    ];
+  }
+
+  // Line spacing selector
+  if (!config.settings.slate.toolbarButtons.includes('line-spacing-selector')) {
+    config.settings.slate.buttons['line-spacing-selector'] = (props) => (
+      <LineSpacingSelector {...props} />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'separator',
+      'line-spacing-selector',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'separator',
+      'line-spacing-selector',
     ];
   }
 
