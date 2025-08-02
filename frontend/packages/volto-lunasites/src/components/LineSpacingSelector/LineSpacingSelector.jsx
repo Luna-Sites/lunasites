@@ -3,7 +3,10 @@ import React, { useCallback } from 'react';
 import { useSlate } from 'slate-react';
 import { Editor } from 'slate';
 import { Dropdown } from 'semantic-ui-react';
-import { LINE_SPACING_OPTIONS, LINE_SPACING_STYLE_PROPS } from './lineSpacingOptions';
+import {
+  LINE_SPACING_OPTIONS,
+  LINE_SPACING_STYLE_PROPS,
+} from './lineSpacingOptions';
 import './LineSpacingSelector.scss';
 
 const toggleInlineLineSpacingFormat = (editor, lineSpacingClass) => {

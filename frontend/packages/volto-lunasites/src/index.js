@@ -34,6 +34,7 @@ import alignJustifyIcon from '@plone/volto/icons/align-justify.svg';
 import FontSelector from './components/FontSelector';
 import FontSizeSelector from './components/FontSizeSelector';
 import LineSpacingSelector from './components/LineSpacingSelector';
+import TextColorSelector from './components/TextColorSelector';
 
 import {
   MarkElementButton,
@@ -138,7 +139,6 @@ const applyConfig = (config) => {
 
   // Register tools header widget
   config.widgets.widget.tools_header = ToolsHeaderField;
-
 
   config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;
@@ -603,14 +603,70 @@ const applyConfig = (config) => {
     ];
   }
 
-  // Clear formatting
-  if (!config.settings.slate.toolbarButtons.includes('clearformatting')) {
+  // Initialize marks object if it doesn't exist
+  if (!config.settings.slate.marks) {
+    config.settings.slate.marks = {};
+  }
+
+  // Register the text color mark - volto-slate will automatically convert style-* marks to CSS classes
+  config.settings.slate.marks['style-text-color-custom'] = true;
+
+  // Inject CSS for dynamic text colors
+  const injectTextColorCSS = () => {
+    const styleId = 'volto-lunasites-text-colors';
+    let styleElement = document.getElementById(styleId);
+
+    if (!styleElement) {
+      styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      document.head.appendChild(styleElement);
+    }
+
+    // This will be populated dynamically when colors are applied
+    styleElement.textContent = `
+      /* Dynamic text colors will be injected here */
+      .text-color-custom {
+        /* Placeholder for dynamic colors */
+      }
+    `;
+  };
+
+  // Inject CSS on page load
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectTextColorCSS);
+    } else {
+      injectTextColorCSS();
+    }
+  }
+
+  // Text color selector
+  if (!config.settings.slate.toolbarButtons.includes('text-color-selector')) {
+    config.settings.slate.buttons['text-color-selector'] = (props) => (
+      <TextColorSelector {...props} />
+    );
+
     config.settings.slate.toolbarButtons = [
       ...config.settings.slate.toolbarButtons,
       'separator',
-      'clearformatting',
+      'text-color-selector',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'separator',
+      'text-color-selector',
     ];
   }
+
+  // Clear formatting
+  // if (!config.settings.slate.toolbarButtons.includes('clearformatting')) {
+  //   config.settings.slate.toolbarButtons = [
+  //     ...config.settings.slate.toolbarButtons,
+  //     'separator',
+  //     'clearformatting',
+  //   ];
+  // }
 
   // TOC Block
   config.blocks.blocksConfig.toc = {

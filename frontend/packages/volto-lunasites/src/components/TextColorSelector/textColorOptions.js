@@ -1,0 +1,181 @@
+export const TEXT_COLOR_OPTIONS = [
+  {
+    key: 'default',
+    value: '',
+    text: 'Default',
+    style: { color: 'inherit' },
+    colorValue: 'inherit',
+  },
+  // Black and Grays
+  {
+    key: 'black',
+    value: 'text-color-black',
+    text: 'Black',
+    style: { color: '#000000' },
+    colorValue: '#000000',
+  },
+  {
+    key: 'dark-gray',
+    value: 'text-color-dark-gray',
+    text: 'Dark Gray',
+    style: { color: '#333333' },
+    colorValue: '#333333',
+  },
+  {
+    key: 'gray',
+    value: 'text-color-gray',
+    text: 'Gray',
+    style: { color: '#666666' },
+    colorValue: '#666666',
+  },
+  {
+    key: 'light-gray',
+    value: 'text-color-light-gray',
+    text: 'Light Gray',
+    style: { color: '#999999' },
+    colorValue: '#999999',
+  },
+  {
+    key: 'white',
+    value: 'text-color-white',
+    text: 'White',
+    style: { color: '#ffffff' },
+    colorValue: '#ffffff',
+  },
+  // Blues
+  {
+    key: 'navy',
+    value: 'text-color-navy',
+    text: 'Navy',
+    style: { color: '#001f3f' },
+    colorValue: '#001f3f',
+  },
+  {
+    key: 'blue',
+    value: 'text-color-blue',
+    text: 'Blue',
+    style: { color: '#0074d9' },
+    colorValue: '#0074d9',
+  },
+  {
+    key: 'light-blue',
+    value: 'text-color-light-blue',
+    text: 'Light Blue',
+    style: { color: '#7fdbff' },
+    colorValue: '#7fdbff',
+  },
+  // Reds
+  {
+    key: 'maroon',
+    value: 'text-color-maroon',
+    text: 'Maroon',
+    style: { color: '#85144b' },
+    colorValue: '#85144b',
+  },
+  {
+    key: 'red',
+    value: 'text-color-red',
+    text: 'Red',
+    style: { color: '#ff4136' },
+    colorValue: '#ff4136',
+  },
+  {
+    key: 'pink',
+    value: 'text-color-pink',
+    text: 'Pink',
+    style: { color: '#ff69b4' },
+    colorValue: '#ff69b4',
+  },
+  // Greens
+  {
+    key: 'dark-green',
+    value: 'text-color-dark-green',
+    text: 'Dark Green',
+    style: { color: '#2d5016' },
+    colorValue: '#2d5016',
+  },
+  {
+    key: 'green',
+    value: 'text-color-green',
+    text: 'Green',
+    style: { color: '#2ecc40' },
+    colorValue: '#2ecc40',
+  },
+  {
+    key: 'lime',
+    value: 'text-color-lime',
+    text: 'Lime',
+    style: { color: '#01ff70' },
+    colorValue: '#01ff70',
+  },
+  // Yellows and Oranges
+  {
+    key: 'orange',
+    value: 'text-color-orange',
+    text: 'Orange',
+    style: { color: '#ff851b' },
+    colorValue: '#ff851b',
+  },
+  {
+    key: 'yellow',
+    value: 'text-color-yellow',
+    text: 'Yellow',
+    style: { color: '#ffdc00' },
+    colorValue: '#ffdc00',
+  },
+  // Purples
+  {
+    key: 'purple',
+    value: 'text-color-purple',
+    text: 'Purple',
+    style: { color: '#b10dc9' },
+    colorValue: '#b10dc9',
+  },
+  {
+    key: 'fuchsia',
+    value: 'text-color-fuchsia',
+    text: 'Fuchsia',
+    style: { color: '#f012be' },
+    colorValue: '#f012be',
+  },
+  // Browns
+  {
+    key: 'brown',
+    value: 'text-color-brown',
+    text: 'Brown',
+    style: { color: '#8b4513' },
+    colorValue: '#8b4513',
+  },
+  // Teals
+  {
+    key: 'teal',
+    value: 'text-color-teal',
+    text: 'Teal',
+    style: { color: '#39cccc' },
+    colorValue: '#39cccc',
+  },
+];
+
+// List of all text color style properties for easy management
+export const TEXT_COLOR_STYLE_PROPS = [
+  'style-text-color-black',
+  'style-text-color-dark-gray',
+  'style-text-color-gray',
+  'style-text-color-light-gray',
+  'style-text-color-white',
+  'style-text-color-navy',
+  'style-text-color-blue',
+  'style-text-color-light-blue',
+  'style-text-color-maroon',
+  'style-text-color-red',
+  'style-text-color-pink',
+  'style-text-color-dark-green',
+  'style-text-color-green',
+  'style-text-color-lime',
+  'style-text-color-orange',
+  'style-text-color-yellow',
+  'style-text-color-purple',
+  'style-text-color-fuchsia',
+  'style-text-color-brown',
+  'style-text-color-teal',
+];
