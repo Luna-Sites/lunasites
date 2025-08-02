@@ -1,0 +1,15 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    >
+
+  <!-- CORS Options View -->
+  <browser:page
+      name="cors-options"
+      for="*"
+      class=".browser.CORSOptionsView"
+      permission="zope2.View"
+      allowed_methods="OPTIONS"
+      />
+
+</configure>

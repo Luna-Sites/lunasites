@@ -23,6 +23,7 @@
   <include package=".services" />
   <include package=".vocabularies" />
 
+  <include file="browser.zcml" />
 
   <!-- -*- extra stuff goes here -*- -->
 

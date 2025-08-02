@@ -1,46 +1,41 @@
-from plone import api
-from plone.restapi.interfaces import ICORSPolicy
 from zope.interface import implementer
 from zope.component import adapter
 from zope.interface import Interface
+from zope.publisher.interfaces.http import IHTTPRequest
+from plone.restapi.services import Service
 
 
-@implementer(ICORSPolicy)
-@adapter(Interface)
-class CustomCORSPolicy:
-    """Custom CORS policy that allows specific origins"""
+@adapter(Interface, IHTTPRequest)
+class CORSMixin:
+    """CORS mixin to add headers to responses"""
     
-    def __init__(self, context):
+    def __init__(self, context, request):
         self.context = context
+        self.request = request
     
-    @property
-    def allow_origin(self):
-        """Allow specific origins"""
-        return ["http://localhost:3000", "http://127.0.0.1:3000", "http://192.168.1.8:3000"]
-    
-    @property
-    def allow_credentials(self):
-        return True
-    
-    @property
-    def allow_headers(self):
-        return [
-            "Accept",
-            "Accept-Encoding", 
-            "Authorization",
-            "Content-Type",
-            "Origin",
-            "X-Requested-With"
+    def add_cors_headers(self):
+        """Add CORS headers to response"""
+        origin = self.request.getHeader('Origin', '')
+        allowed_origins = [
+            'http://localhost:3000',
+            'http://127.0.0.1:3000', 
+            'http://192.168.1.8:3000'
         ]
-    
-    @property
-    def allow_methods(self):
-        return ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
-    
-    @property
-    def expose_headers(self):
-        return ["Content-Length", "X-My-Header"]
-    
-    @property
-    def max_age(self):
-        return 3600
+        
+        if origin in allowed_origins:
+            self.request.response.setHeader('Access-Control-Allow-Origin', origin)
+        
+        self.request.response.setHeader('Access-Control-Allow-Credentials', 'true')
+        self.request.response.setHeader(
+            'Access-Control-Allow-Headers',
+            'Accept,Accept-Encoding,Authorization,Content-Type,Origin,X-Requested-With'
+        )
+        self.request.response.setHeader(
+            'Access-Control-Allow-Methods',
+            'DELETE,GET,OPTIONS,PATCH,POST,PUT'
+        )
+        self.request.response.setHeader(
+            'Access-Control-Expose-Headers',
+            'Content-Length,X-My-Header'
+        )
+        self.request.response.setHeader('Access-Control-Max-Age', '3600')
