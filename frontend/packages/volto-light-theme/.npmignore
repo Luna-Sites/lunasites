@@ -1,6 +1,0 @@
-node_modules
-build
-news
-.release-it.json
-babel.config.js
-towncrier.toml
