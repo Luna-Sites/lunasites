@@ -1,6 +1,12 @@
 .header-wrapper .header {
   display: flex;
   flex-direction: column;
+  
+  // Apply navbar width if configured
+  &.custom-width {
+    max-width: var(--lunasites-navbar-width, 1000px);
+    margin: 0 auto;
+  }
 
   .logo-nav-wrapper {
     display: flex;

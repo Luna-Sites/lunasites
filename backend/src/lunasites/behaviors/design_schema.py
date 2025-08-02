@@ -30,7 +30,7 @@ class IDesignSchema(model.Schema):
     model.fieldset(
         'design_schema',
         label=_('Design Schema'),
-        fields=['color_schema', 'tools_header'],
+        fields=['color_schema', 'view_type', 'navbar_width', 'container_width', 'tools_header'],
     )
     
 
@@ -72,6 +72,29 @@ class IDesignSchema(model.Schema):
         }
     )
     
+    view_type = schema.Choice(
+        title=_('View Type'),
+        description=_('Choose the view layout type for this page. Leave empty to inherit from parent.'),
+        vocabulary=schema.vocabulary.SimpleVocabulary([
+            schema.vocabulary.SimpleTerm('default', 'default', _('Default')),
+            schema.vocabulary.SimpleTerm('homepage', 'homepage', _('Homepage')),
+            schema.vocabulary.SimpleTerm('homepage-inverse', 'homepage-inverse', _('Homepage Inverse')),
+        ]),
+        required=False,
+    )
+    
+    navbar_width = schema.TextLine(
+        title=_('Navbar Width'),
+        description=_('Width value (e.g., 1200px, 100%, 90vw). Leave empty to inherit from parent.'),
+        required=False,
+    )
+    
+    container_width = schema.TextLine(
+        title=_('Container Width'),
+        description=_('Width value (e.g., 1000px, 90%, 80vw). Leave empty to inherit from parent.'),
+        required=False,
+    )
+    
     tools_header = JSONField(
         title=_('Tools Header Links'),
         description=_('Configure header tools links (Site Map, Contact, etc.). Leave empty to inherit from parent.'),
@@ -106,3 +129,57 @@ class DesignSchemaBehavior:
     @tools_header.setter
     def tools_header(self, value):
         self.context.tools_header = value or []
+    
+    @property
+    def navbar_width(self):
+        return getattr(self.context, 'navbar_width', None)
+
+    @navbar_width.setter
+    def navbar_width(self, value):
+        self.context.navbar_width = value
+
+    @property
+    def container_width(self):
+        return getattr(self.context, 'container_width', None)
+
+    @container_width.setter
+    def container_width(self, value):
+        self.context.container_width = value
+    
+    @property
+    def view_type(self):
+        return getattr(self.context, 'view_type', None)
+
+    @view_type.setter
+    def view_type(self, value):
+        self.context.view_type = value
+    
+    def get_width_type(self, width_value):
+        """Auto-detect width type based on value format"""
+        if not width_value:
+            return None
+        
+        width_str = str(width_value).strip().lower()
+        
+        # Check for relative units
+        if any(unit in width_str for unit in ['%', 'vw', 'vh', 'vmin', 'vmax', 'em', 'rem']):
+            return 'relative'
+        
+        # Check for fixed units (px, pt, cm, mm, in, etc.)
+        if any(unit in width_str for unit in ['px', 'pt', 'cm', 'mm', 'in', 'pc']):
+            return 'fixed'
+        
+        # If no unit specified, assume pixels (fixed)
+        if width_str.replace('.', '').isdigit():
+            return 'fixed'
+        
+        # Default to relative for unrecognized formats
+        return 'relative'
+    
+    def get_navbar_width_type(self):
+        """Get navbar width type based on value"""
+        return self.get_width_type(self.navbar_width)
+    
+    def get_container_width_type(self):
+        """Get container width type based on value"""
+        return self.get_width_type(self.container_width)

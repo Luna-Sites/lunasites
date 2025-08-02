@@ -5,12 +5,14 @@ import { getDesignSite } from '../../actions';
 const DesignSchemaProvider = ({ children }) => {
   const dispatch = useDispatch();
   const pathname = useSelector((state) => state.router.location?.pathname);
-  const designSchema = useSelector(
+  const designSchemaData = useSelector(
     (state) =>
       state?.designSchema?.data?.[
         'lunasites.behaviors.design_schema.IDesignSchema'
-      ]?.data?.color_schema,
+      ]?.data,
   );
+  
+  const designSchema = designSchemaData?.color_schema;
   const loading = useSelector((state) => state?.designSchema?.loading);
 
   // Load inherited design schema when pathname changes
@@ -25,7 +27,11 @@ const DesignSchemaProvider = ({ children }) => {
     if (designSchema && !loading) {
       applyCSSVariables(designSchema);
     }
-  }, [designSchema, loading]);
+    if (designSchemaData && !loading) {
+      applyLayoutVariables(designSchemaData);
+      applyViewType(designSchemaData);
+    }
+  }, [designSchema, designSchemaData, loading]);
 
   const applyCSSVariables = (schema) => {
     const root = document.documentElement;
@@ -89,6 +95,115 @@ const DesignSchemaProvider = ({ children }) => {
     window.dispatchEvent(
       new CustomEvent('designSchemaApplied', {
         detail: { schema: finalSchema },
+      }),
+    );
+  };
+
+  const detectWidthType = (widthValue) => {
+    if (!widthValue) return null;
+    
+    const widthStr = widthValue.toString().trim().toLowerCase();
+    
+    // Check for relative units
+    if (/(%|vw|vh|vmin|vmax|em|rem)/.test(widthStr)) {
+      return 'relative';
+    }
+    
+    // Check for fixed units
+    if (/(px|pt|cm|mm|in|pc)/.test(widthStr)) {
+      return 'fixed';
+    }
+    
+    // If no unit specified, assume pixels (fixed)
+    if (/^\d+(\.\d+)?$/.test(widthStr)) {
+      return 'fixed';
+    }
+    
+    // Default to relative for unrecognized formats
+    return 'relative';
+  };
+
+  const applyLayoutVariables = (data) => {
+    const root = document.documentElement;
+
+    // Handle navbar width
+    if (data.navbar_width) {
+      const navbarWidth = data.navbar_width;
+      const navbarWidthType = detectWidthType(navbarWidth);
+      
+      root.style.setProperty('--lunasites-navbar-width', navbarWidth);
+      root.style.setProperty('--lunasites-navbar-width-type', navbarWidthType);
+      
+      // Add custom-width class to header
+      const header = document.querySelector('.header-wrapper .header');
+      if (header) {
+        header.classList.add('custom-width');
+      }
+    } else {
+      // Remove custom-width class if no navbar width is set
+      const header = document.querySelector('.header-wrapper .header');
+      if (header) {
+        header.classList.remove('custom-width');
+      }
+    }
+
+    // Handle container width
+    if (data.container_width) {
+      const containerWidth = data.container_width;
+      const containerWidthType = detectWidthType(containerWidth);
+      
+      root.style.setProperty('--lunasites-container-width', containerWidth);
+      root.style.setProperty('--lunasites-container-width-type', containerWidthType);
+    }
+
+    // Trigger layout change event
+    window.dispatchEvent(
+      new CustomEvent('layoutVariablesApplied', {
+        detail: { 
+          navbarWidth: data.navbar_width,
+          navbarWidthType: detectWidthType(data.navbar_width),
+          containerWidth: data.container_width,
+          containerWidthType: detectWidthType(data.container_width)
+        },
+      }),
+    );
+  };
+
+  const applyViewType = (data) => {
+    const body = document.body;
+    
+    // Remove existing view classes
+    const viewClasses = ['view-homepage', 'view-homepage-inverse', 'view-default'];
+    viewClasses.forEach(className => {
+      body.classList.remove(className);
+    });
+    
+    // Get view type value - handle both string and object formats
+    let viewType = data.view_type;
+    
+    // Debug logging
+    console.log('View type received:', viewType, typeof viewType);
+    
+    if (viewType && typeof viewType === 'object') {
+      // If it's an object, try to get the value or token
+      viewType = viewType.value || viewType.token || viewType.title;
+      console.log('Extracted view type:', viewType);
+    }
+    
+    // Apply new view type if specified
+    if (viewType && typeof viewType === 'string') {
+      body.classList.add(`view-${viewType}`);
+    } else {
+      // Default view if no view_type specified
+      body.classList.add('view-default');
+    }
+
+    // Trigger view type change event
+    window.dispatchEvent(
+      new CustomEvent('viewTypeApplied', {
+        detail: { 
+          viewType: viewType || 'default'
+        },
       }),
     );
   };

@@ -40,9 +40,9 @@ $large-monitor-width: 1000px !default;
 $large-monitor-breakpoint: 1441px !default;
 
 // Container widths
-$layout-container-width: 1000px !default;
-$default-container-width: 1000px !default;
-$narrow-container-width: 1000px !default;
+$layout-container-width: var(--lunasites-container-width, 1000px) !default;
+$default-container-width: var(--lunasites-container-width, 1000px) !default;
+$narrow-container-width: var(--lunasites-container-width, 1000px) !default;
 
 // Rest of theme variables
 :root {
