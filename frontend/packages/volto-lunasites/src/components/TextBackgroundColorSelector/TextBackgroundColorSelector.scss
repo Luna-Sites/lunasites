@@ -1,0 +1,30 @@
+// TextBackgroundColorSelector styles
+.text-background-color-selector-wrapper {
+  display: inline-block;
+  position: relative;
+
+  .text-background-color-picker-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 32px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: #999;
+    }
+
+    &:focus-within {
+      border-color: #0074d9;
+      box-shadow: 0 0 0 2px rgba(0, 116, 217, 0.2);
+    }
+  }
+}
+
+// Custom Text Background Color CSS Class
+// Background color will be applied inline via Slate marks with dynamic values
