@@ -15,10 +15,31 @@ const injectColorCSS = (colorValue) => {
     document.head.appendChild(styleElement);
   }
 
-  // Inject CSS for the specific color
+  // Inject CSS for the specific color with selection support
   styleElement.textContent = `
     .text-color-custom {
       color: ${colorValue} !important;
+    }
+    
+    /* Ensure color shows even when text is selected */
+    .text-color-custom::selection {
+      color: ${colorValue} !important;
+      background-color: rgba(0, 123, 255, 0.3) !important;
+    }
+    
+    .text-color-custom::-moz-selection {
+      color: ${colorValue} !important;
+      background-color: rgba(0, 123, 255, 0.3) !important;
+    }
+    
+    /* For Slate editor specific selection states */
+    [data-slate-editor] .text-color-custom {
+      color: ${colorValue} !important;
+    }
+    
+    [data-slate-editor] .text-color-custom::selection {
+      color: ${colorValue} !important;
+      background-color: rgba(0, 123, 255, 0.3) !important;
     }
   `;
 };
@@ -40,6 +61,19 @@ const toggleInlineTextColorFormat = (editor, colorValue) => {
     // Apply the mark - volto-slate will convert style-text-color-custom to CSS class text-color-custom
     const colorMark = `style-text-color-custom`;
     Editor.addMark(editor, colorMark, true);
+
+    // Deselect the text after applying color so the color becomes visible immediately
+    setTimeout(() => {
+      if (editor.selection) {
+        // Move cursor to the end of the selection to deselect
+        const { anchor, focus } = editor.selection;
+        const end = anchor.offset > focus.offset ? anchor : focus;
+        editor.selection = {
+          anchor: end,
+          focus: end,
+        };
+      }
+    }, 10);
   }
 };
 
