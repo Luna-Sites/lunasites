@@ -32,7 +32,6 @@ export function formatUrl(path) {
   }
 
   const finalUrl = `${apiPath}${APISUFIX}${adjustedPath}`;
-  console.log('formatUrl:', { path, apiPath, APISUFIX, adjustedPath, finalUrl });
   return finalUrl;
 }
 

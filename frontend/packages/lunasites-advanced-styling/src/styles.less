@@ -8,6 +8,13 @@
 @addonelement: 'styles';
 @styledPadding: 1rem;
 
+/* Global scroll snap container */
+body.has-scroll-snap {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+}
+
 /* Helper to load variables */
 .loadAddonVariables() {
   @import (optional) '@{addonelement}.variables';
@@ -44,14 +51,14 @@
     align-items: center;
     gap: 10px;
   }
-  
+
   .ui.modal {
     &.large {
       width: 85%;
-      max-width: 1200px;
+      max-width: 1000px;
     }
   }
-  
+
   .color-preview-grid {
     display: flex;
     height: 40px;
@@ -59,13 +66,13 @@
     overflow: hidden;
     border: 1px solid #ddd;
     margin-top: 10px;
-    
+
     .color-swatch {
       flex: 1;
       min-width: 10px;
       cursor: pointer;
       transition: transform 0.2s ease;
-      
+
       &:hover {
         transform: scale(1.1);
         z-index: 1;
@@ -73,18 +80,18 @@
       }
     }
   }
-  
+
   .suggestions-panel {
     .suggestion-card {
       margin-bottom: 10px;
       cursor: pointer;
       transition: box-shadow 0.2s ease;
-      
+
       &:hover {
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
     }
-    
+
     .suggestion-color-dot {
       width: 20px;
       height: 20px;
@@ -94,17 +101,17 @@
       flex-shrink: 0;
     }
   }
-  
+
   .preset-preview-card {
     cursor: pointer;
     transition: all 0.2s ease;
-    
+
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
   }
-  
+
   .css-variables-preview {
     background-color: #f8f9fa;
     padding: 10px;
@@ -124,6 +131,25 @@
   &.screen-height {
     display: flex;
     flex-direction: column;
+  }
+
+  &.smooth-scroll {
+    scroll-behavior: smooth;
+  }
+
+  &.scroll-snap {
+    scroll-snap-align: start;
+  }
+  
+  &.no-gap {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    
+    // Remove spacing from previous element
+    &:not(:first-child) {
+      margin-top: 0 !important;
+    }
   }
 
   &.small {
@@ -255,19 +281,19 @@
     top: 0 !important;
     transform: translateY(45%);
   }
-  
+
   // Fixed height modal with scroll
   .ui.modal {
-    &[style*="height: calc"] {
+    &[style*='height: calc'] {
       display: flex !important;
       flex-direction: column !important;
-      
+
       .header {
         flex-shrink: 0 !important;
         border-bottom: 1px solid #eee;
         margin-bottom: 0 !important;
       }
-      
+
       .content {
         flex: 1 !important;
         overflow-y: auto !important;
@@ -276,7 +302,7 @@
       }
     }
   }
-  
+
   .color-picker-panel {
     position: fixed !important;
     z-index: 10000 !important;
@@ -290,56 +316,56 @@
     background: white !important;
     border: 2px solid #333 !important;
     border-radius: 12px !important;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.25) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25) !important;
     padding: 25px !important;
-    
+
     .quick-colors {
       margin-bottom: 20px;
-      
+
       button {
         min-width: 100px;
         height: 45px;
         font-size: 14px;
         font-weight: bold;
         color: white;
-        text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
-        border: 2px solid rgba(255,255,255,0.3) !important;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.3) !important;
         border-radius: 25px !important;
         margin: 5px;
-        
+
         &:hover {
-          border: 2px solid rgba(255,255,255,0.8) !important;
+          border: 2px solid rgba(255, 255, 255, 0.8) !important;
           transform: scale(1.05);
         }
       }
     }
-    
+
     .custom-colors {
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
       margin-bottom: 20px;
-      
+
       button {
         width: 35px;
         height: 35px;
-        border: 2px solid rgba(0,0,0,0.1) !important;
+        border: 2px solid rgba(0, 0, 0, 0.1) !important;
         border-radius: 50%;
-        
+
         &:hover {
-          border: 2px solid rgba(0,0,0,0.4) !important;
+          border: 2px solid rgba(0, 0, 0, 0.4) !important;
           transform: scale(1.1);
         }
       }
     }
-    
+
     h4 {
       font-size: 16px;
       margin-bottom: 10px;
       color: #333;
     }
   }
-  
+
   .wrapper {
     position: relative;
   }
@@ -347,8 +373,8 @@
 
 // Border effects for background colors and gradients
 .has--backgroundColor,
-[style*="background: linear-gradient"],
-[style*="background: radial-gradient"] {
+[style*='background: linear-gradient'],
+[style*='background: radial-gradient'] {
   &.circular-border {
     border-radius: 50%;
     padding: 20px;
@@ -360,16 +386,16 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   &.rounded-border {
     border-radius: 15px;
     padding: 15px;
-    border: 3px solid rgba(255,255,255,0.3);
+    border: 3px solid rgba(255, 255, 255, 0.3);
   }
-  
+
   &.gradient-border {
     position: relative;
-    
+
     &::before {
       content: '';
       position: absolute;
@@ -387,8 +413,8 @@
 // Ensure gradients work properly
 .styled {
   // Support for CSS gradients
-  &[style*="background: linear-gradient"],
-  &[style*="background: radial-gradient"] {
+  &[style*='background: linear-gradient'],
+  &[style*='background: radial-gradient'] {
     background-attachment: scroll;
     background-size: 100% 100%;
   }

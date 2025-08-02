@@ -14,6 +14,8 @@ export const getAdvancedStylingSchema = (intl) => ({
         'fontWeight',
         'height',
         'isScreenHeight',
+        'smoothScroll',
+        'noGap',
         'width',
         'margin',
         'padding',

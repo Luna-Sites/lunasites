@@ -113,19 +113,19 @@ body:not(.view-homepage):not(.view-homepage-inverse) {
 body:not(.view-homepage):not(.view-homepage-inverse) .header-wrapper {
   background-color: var(--lunasites-header-bg-color) !important;
 }
+header {
+  .ui.menu {
+    background-color: var(--lunasites-header-bg-color);
 
-.ui.menu {
-  background-color: var(--lunasites-header-bg-color);
+    .item {
+      color: var(--lunasites-header-text-color);
 
-  .item {
-    color: var(--lunasites-header-text-color);
-
-    &:hover {
-      background-color: var(--lunasites-primary-color);
+      &:hover {
+        background-color: var(--lunasites-primary-color);
+      }
     }
   }
 }
-
 // Apply header colors to all header elements
 .header-wrapper .header {
   // Navigation elements

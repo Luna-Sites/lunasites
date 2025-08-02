@@ -34,7 +34,7 @@
 
 /* Glow Gradient */
 @placeholderLoadingAnimationDuration: 2s;
-@placeholderLoadingGradientWidth: 1200px;
+@placeholderLoadingGradientWidth: 1000px;
 @placeholderLoadingGradient: linear-gradient(to right,
   rgba(0, 0, 0, 0.08) 0%,
   rgba(0, 0, 0, 0.15) 15%,

@@ -47,7 +47,7 @@ Since FZJ/DLR projects we've been trying a new concept in layout for Volto. This
 - Default (blocks)
 - Layout (main screen elements like Header, Footer)
 
-The Layout sized elements snap to 1440px. The breakpoints are also different than default Volto.
+The Layout sized elements snap to 1000px. The breakpoints are also different than default Volto.
 
 This new layout uses mixin's and CSS that can be found in `layout.less` in the theme folder.
 

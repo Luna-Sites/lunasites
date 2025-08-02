@@ -41,9 +41,9 @@
 
 // Breakpoints
 @tabletBreakpoint: 769px;
-@computerWidth: 940px;
+@computerWidth: 1000px;
 @computerBreakpoint: 941px;
-@largeMonitorWidth: 1440px;
+@largeMonitorWidth: 1000px;
 @largeMonitorBreakpoint: 1441px;
 
 // Rest of theme variables

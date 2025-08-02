@@ -186,6 +186,30 @@ const messages = defineMessages({
     id: 'properties-clear-description',
     defaultMessage: 'Pushes selected block under floated content',
   },
+  pSmoothScrollTitle: {
+    id: 'properties-smooth-scroll-title',
+    defaultMessage: 'Smooth scroll',
+  },
+  pSmoothScrollDescription: {
+    id: 'properties-smooth-scroll-description',
+    defaultMessage: 'Enable smooth scrolling behavior for this element',
+  },
+  pNoGapTitle: {
+    id: 'properties-no-gap-title',
+    defaultMessage: 'No gap',
+  },
+  pNoGapDescription: {
+    id: 'properties-no-gap-description',
+    defaultMessage: 'Remove spacing between this block and the previous one',
+  },
+  pScrollSnapTitle: {
+    id: 'properties-scroll-snap-title',
+    defaultMessage: 'Scroll snap',
+  },
+  pScrollSnapDescription: {
+    id: 'properties-scroll-snap-description',
+    defaultMessage: 'Enable scroll snap for full-screen sections',
+  },
   // Specific styles messages
   filled: {
     id: 'filled',
@@ -395,5 +419,15 @@ export const defaultStylingProperties = (intl) => ({
       ['right', 'Right'],
       ['both', 'Both'],
     ],
+  },
+  smoothScroll: {
+    title: intl.formatMessage(messages.pSmoothScrollTitle),
+    description: intl.formatMessage(messages.pSmoothScrollDescription),
+    type: 'boolean',
+  },
+  noGap: {
+    title: intl.formatMessage(messages.pNoGapTitle),
+    description: intl.formatMessage(messages.pNoGapDescription),
+    type: 'boolean',
   },
 });

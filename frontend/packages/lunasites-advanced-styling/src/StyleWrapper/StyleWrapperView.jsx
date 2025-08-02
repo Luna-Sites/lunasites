@@ -1,5 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
+import { connect } from 'react-redux';
 import { BodyClass } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
 import { withCachedImages } from '../hocs';
@@ -46,28 +47,35 @@ const h2rgb = (hex) => {
 // Parse custom CSS string into object
 function parseCustomCSS(cssString) {
   if (!cssString) return {};
-  
+
   const styles = {};
   try {
     // Split by semicolon and process each property
-    cssString.split(';').forEach(rule => {
-      const [property, value] = rule.split(':').map(s => s.trim());
+    cssString.split(';').forEach((rule) => {
+      const [property, value] = rule.split(':').map((s) => s.trim());
       if (property && value) {
         // Convert kebab-case to camelCase for React
-        const camelProperty = property.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+        const camelProperty = property.replace(/-([a-z])/g, (_, letter) =>
+          letter.toUpperCase(),
+        );
         styles[camelProperty] = value;
       }
     });
   } catch (e) {
     console.warn('Error parsing custom CSS:', e);
   }
-  
+
   return styles;
 }
 
-export function getInlineStyles(data, props = {}, addBackgroundPadding = false) {
+export function getInlineStyles(
+  data,
+  props = {},
+  addBackgroundPadding = false,
+  isFirstBlock = false,
+) {
   const customStyles = parseCustomCSS(data.customCSS);
-  
+
   return {
     ...(data.hidden && props.mode !== 'edit' ? { display: 'none' } : {}),
     ...(data.backgroundColor
@@ -87,7 +95,21 @@ export function getInlineStyles(data, props = {}, addBackgroundPadding = false) 
     ...(data.fontWeight ? { fontWeight: data.fontWeight } : {}),
     ...(data.height ? { height: data.height } : {}),
     ...(data.width ? { width: data.width } : {}),
-    ...(data.isScreenHeight ? { minHeight: '100vh' } : {}),
+    ...(data.isScreenHeight
+      ? {
+          minHeight: isFirstBlock ? 'calc(100vh - 100px)' : '100vh',
+        }
+      : {}),
+    ...(data.smoothScroll ? { 
+      scrollBehavior: 'smooth',
+      scrollMarginTop: '20px'
+    } : {}),
+    ...(data.noGap ? { 
+      marginTop: '0 !important',
+      marginBottom: '0 !important',
+      paddingTop: '0 !important',
+      paddingBottom: '0 !important'
+    } : {}),
     ...(data.shadowDepth && {
       boxShadow: `0px 0px ${data.shadowDepth}px rgba(${h2rgb(
         data.shadowColor,
@@ -112,7 +134,15 @@ export function getStyle(name) {
 }
 
 const StyleWrapperView = (props) => {
-  const { styleData = {}, data = {}, mode = 'view' } = props;
+  const { styleData = {}, data = {}, mode = 'view', block, content } = props;
+
+  // Check if this is the first block in blocks_layout
+  const isFirstBlock = React.useMemo(() => {
+    if (!content?.blocks_layout?.items || !block) {
+      return false;
+    }
+    return content.blocks_layout.items[0] === block;
+  }, [content?.blocks_layout?.items, block]);
 
   // Debug logging
 
@@ -134,7 +164,7 @@ const StyleWrapperView = (props) => {
   const backgroundImage = getFieldURL(styleData.backgroundImage);
 
   const style = getStyle(style_name);
-  const inlineStyles = getInlineStyles(styleData, props);
+  const inlineStyles = getInlineStyles(styleData, props, false, isFirstBlock);
   const styled =
     props.styled ||
     Object.keys(inlineStyles).length > 0 ||
@@ -160,13 +190,15 @@ const StyleWrapperView = (props) => {
       align,
       props.className,
       // Add custom classes
-      styleData.customClasses && styleData.customClasses.split(' ').filter(Boolean),
+      styleData.customClasses &&
+        styleData.customClasses.split(' ').filter(Boolean),
       {
         align,
         styled,
         'styled-with-bg': styleData.backgroundColor || backgroundImage,
         'styled-with-full-bg': styleData.backgroundFullColor,
         'screen-height': isScreenHeight,
+        'smooth-scroll': styleData.smoothScroll,
         'full-width': align === 'full',
         stretch: stretch === 'stretch',
         large: size === 'l',
@@ -255,6 +287,10 @@ const StyleWrapperView = (props) => {
   );
 };
 
-export default withCachedImages(StyleWrapperView, {
-  getImage: (props) => props.styleData.backgroundImage || null,
-});
+export default connect((state) => ({
+  content: state.content?.data || state.form?.data || {},
+}))(
+  withCachedImages(StyleWrapperView, {
+    getImage: (props) => props.styleData.backgroundImage || null,
+  }),
+);

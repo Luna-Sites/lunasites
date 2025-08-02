@@ -85,8 +85,8 @@
 
 /* Layout properties */
 :root {
-  --layout-container-width: 1440px;
-  --default-container-width: 940px;
+  --layout-container-width: 1000px;
+  --default-container-width: 1000px;
   --narrow-container-width: 620px;
 }
 
