@@ -43,6 +43,8 @@ const injectTextColorCSS = (colorValue) => {
 };
 
 const toggleInlineTextColorFormat = (editor, colorValue) => {
+  if (!editor.selection) return false;
+
   const marks = Editor.marks(editor) || {};
   Object.keys(marks).forEach((mark) => {
     if (mark.startsWith('style-text-color-')) {
@@ -54,18 +56,9 @@ const toggleInlineTextColorFormat = (editor, colorValue) => {
     injectTextColorCSS(colorValue);
     const textColorMark = `style-text-color-custom`;
     Editor.addMark(editor, textColorMark, true);
-    
-    setTimeout(() => {
-      if (editor.selection) {
-        const { anchor, focus } = editor.selection;
-        const end = anchor.offset > focus.offset ? anchor : focus;
-        editor.selection = {
-          anchor: end,
-          focus: end,
-        };
-      }
-    }, 10);
   }
+
+  return true;
 };
 
 const getCurrentTextColor = (editor) => {
@@ -123,6 +116,8 @@ const injectBackgroundColorCSS = (colorValue) => {
 };
 
 const toggleInlineTextBackgroundColorFormat = (editor, colorValue) => {
+  if (!editor.selection) return false;
+
   const marks = Editor.marks(editor) || {};
   Object.keys(marks).forEach((mark) => {
     if (mark.startsWith('style-text-background-color-')) {
@@ -134,18 +129,9 @@ const toggleInlineTextBackgroundColorFormat = (editor, colorValue) => {
     injectBackgroundColorCSS(colorValue);
     const backgroundColorMark = `style-text-background-color-custom`;
     Editor.addMark(editor, backgroundColorMark, true);
-    
-    setTimeout(() => {
-      if (editor.selection) {
-        const { anchor, focus } = editor.selection;
-        const end = anchor.offset > focus.offset ? anchor : focus;
-        editor.selection = {
-          anchor: end,
-          focus: end,
-        };
-      }
-    }, 10);
   }
+
+  return true;
 };
 
 const getCurrentTextBackgroundColor = (editor) => {
@@ -174,25 +160,43 @@ const ColorsSelector = ({ ...props }) => {
   const currentTextColor = getCurrentTextColor(editor);
   const currentTextBackgroundColor = getCurrentTextBackgroundColor(editor);
   const [showColorPopup, setShowColorPopup] = useState(false);
+  const [savedSelection, setSavedSelection] = useState(null);
 
   const handleTextColorChange = useCallback(
     (id, colorValue) => {
+      // Restore the saved selection before applying color
+      if (savedSelection) {
+        editor.selection = savedSelection;
+      }
       toggleInlineTextColorFormat(editor, colorValue);
     },
-    [editor],
+    [editor, savedSelection],
   );
 
   const handleBackgroundColorChange = useCallback(
     (id, colorValue) => {
+      // Restore the saved selection before applying color
+      if (savedSelection) {
+        editor.selection = savedSelection;
+      }
       toggleInlineTextBackgroundColorFormat(editor, colorValue);
     },
-    [editor],
+    [editor, savedSelection],
   );
 
-  const handleButtonClick = useCallback((event) => {
-    event.preventDefault();
-    setShowColorPopup(!showColorPopup);
-  }, [showColorPopup]);
+  const handleButtonClick = useCallback(
+    (event) => {
+      event.preventDefault();
+
+      if (!showColorPopup) {
+        // Save the current selection before opening the popup
+        setSavedSelection(editor.selection);
+      }
+
+      setShowColorPopup(!showColorPopup);
+    },
+    [showColorPopup, editor],
+  );
 
   const handleMouseDown = useCallback((event) => {
     event.preventDefault();
@@ -215,7 +219,8 @@ const ColorsSelector = ({ ...props }) => {
 
     if (showColorPopup) {
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      return () =>
+        document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [showColorPopup]);
 
@@ -241,21 +246,21 @@ const ColorsSelector = ({ ...props }) => {
             className="icon"
             style={{ height: '18px', width: '18px', fill: 'currentcolor' }}
           >
-            <path d="M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9S16.97,3,12,3z M12,8.5c1.38,0,2.5,1.12,2.5,2.5 c0,1.38-1.12,2.5-2.5,2.5S9.5,12.38,9.5,11C9.5,9.62,10.62,8.5,12,8.5z"/>
+            <path d="M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9S16.97,3,12,3z M12,8.5c1.38,0,2.5,1.12,2.5,2.5 c0,1.38-1.12,2.5-2.5,2.5S9.5,12.38,9.5,11C9.5,9.62,10.62,8.5,12,8.5z" />
           </svg>
           <div className="color-indicators">
-            <div 
+            <div
               className="text-color-indicator"
               style={{ backgroundColor: displayTextColor }}
             />
-            <div 
+            <div
               className="background-color-indicator"
               style={{ backgroundColor: displayBackgroundColor }}
             />
           </div>
         </div>
       </button>
-      
+
       {showColorPopup && (
         <div className="colors-popup">
           <div className="color-section">
@@ -270,7 +275,7 @@ const ColorsSelector = ({ ...props }) => {
               }}
             />
           </div>
-          
+
           <div className="color-section">
             <h4>Background Color</h4>
             <SimpleColorPicker
