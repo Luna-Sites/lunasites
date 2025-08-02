@@ -73,7 +73,9 @@ export function getInlineStyles(
   props = {},
   addBackgroundPadding = false,
   isFirstBlock = false,
+  isHomepageView = false,
 ) {
+  console.log('aaa', isFirstBlock);
   const customStyles = parseCustomCSS(data.customCSS);
 
   return {
@@ -97,19 +99,31 @@ export function getInlineStyles(
     ...(data.width ? { width: data.width } : {}),
     ...(data.isScreenHeight
       ? {
-          minHeight: isFirstBlock ? 'calc(100vh - 100px)' : '100vh',
+          minHeight: (() => {
+            // For homepage views with transparent header, don't subtract navbar height
+            if (isHomepageView) {
+              return 'calc(100vh + 130px)';
+            }
+
+            // For other views, subtract navbar height only for first block
+            return isFirstBlock ? '100vh' : '100vh';
+          })(),
         }
       : {}),
-    ...(data.smoothScroll ? { 
-      scrollBehavior: 'smooth',
-      scrollMarginTop: '20px'
-    } : {}),
-    ...(data.noGap ? { 
-      marginTop: '0 !important',
-      marginBottom: '0 !important',
-      paddingTop: '0 !important',
-      paddingBottom: '0 !important'
-    } : {}),
+    ...(data.smoothScroll
+      ? {
+          scrollBehavior: 'smooth',
+          scrollMarginTop: '20px',
+        }
+      : {}),
+    ...(data.noGap
+      ? {
+          marginTop: '0 !important',
+          marginBottom: '0 !important',
+          paddingTop: '0 !important',
+          paddingBottom: '0 !important',
+        }
+      : {}),
     ...(data.shadowDepth && {
       boxShadow: `0px 0px ${data.shadowDepth}px rgba(${h2rgb(
         data.shadowColor,
@@ -144,6 +158,24 @@ const StyleWrapperView = (props) => {
     return content.blocks_layout.items[0] === block;
   }, [content?.blocks_layout?.items, block]);
 
+  // Check if we're in homepage view from Redux
+  const isHomepageView = React.useMemo(() => {
+    // Wait for design schema to load before determining view type
+    if (props.designSchemaLoading) return false;
+
+    // This will be passed down from connect() mapStateToProps
+    const designSchemaData = props.designSchemaData;
+    if (!designSchemaData?.view_type) return false;
+
+    // Handle both string and object formats
+    let viewType = designSchemaData.view_type;
+    if (viewType && typeof viewType === 'object') {
+      viewType = viewType.value || viewType.token || viewType.title;
+    }
+
+    return viewType === 'homepage' || viewType === 'homepage-inverse';
+  }, [props.designSchemaData?.view_type, props.designSchemaLoading]);
+
   // Debug logging
 
   const {
@@ -164,7 +196,13 @@ const StyleWrapperView = (props) => {
   const backgroundImage = getFieldURL(styleData.backgroundImage);
 
   const style = getStyle(style_name);
-  const inlineStyles = getInlineStyles(styleData, props, false, isFirstBlock);
+  const inlineStyles = getInlineStyles(
+    styleData,
+    props,
+    false,
+    isFirstBlock,
+    isHomepageView,
+  );
   const styled =
     props.styled ||
     Object.keys(inlineStyles).length > 0 ||
@@ -289,6 +327,11 @@ const StyleWrapperView = (props) => {
 
 export default connect((state) => ({
   content: state.content?.data || state.form?.data || {},
+  designSchemaData:
+    state?.designSchema?.data?.[
+      'lunasites.behaviors.design_schema.IDesignSchema'
+    ]?.data,
+  designSchemaLoading: state?.designSchema?.loading,
 }))(
   withCachedImages(StyleWrapperView, {
     getImage: (props) => props.styleData.backgroundImage || null,

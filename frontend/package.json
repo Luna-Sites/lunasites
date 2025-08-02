@@ -60,7 +60,7 @@
     "@eeacms/volto-metadata-block": "*",
     "@eeacms/volto-quote-block": "*",
     "@eeacms/volto-tags-block": "*",
-    "luna-super-hero": "9.0.1",
+    "luna-super-hero": "9.0.2",
     "lunasites-advanced-styling": "workspace:*"
   },
   "devDependencies": {
