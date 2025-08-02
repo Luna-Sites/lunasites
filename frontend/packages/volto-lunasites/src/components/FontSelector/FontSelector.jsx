@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useCallback } from 'react';
 import { useSlate } from 'slate-react';
 import { Editor } from 'slate';
@@ -77,6 +78,7 @@ const FontSelector = ({ ...props }) => {
       <Dropdown
         className="font-selector"
         selection
+        search
         compact
         value={currentFont}
         options={FONT_OPTIONS}
@@ -85,6 +87,8 @@ const FontSelector = ({ ...props }) => {
         placeholder="Font"
         selectOnBlur={false}
         selectOnNavigation={false}
+        noResultsMessage="No fonts found"
+        searchInput={{ autoFocus: false }}
       />
     </div>
   );
