@@ -94,8 +94,8 @@ importers:
         specifier: workspace:*
         version: link:core/packages/volto
       luna-super-hero:
-        specifier: workspace:*
-        version: link:packages/luna-super-hero
+        specifier: 9.0.2
+        version: 9.0.2(embla-carousel@8.6.0)(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       luna-super-listing:
         specifier: 1.0.2
         version: 1.0.2(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1632,55 +1632,6 @@ importers:
         specifier: ^17.1.1
         version: 17.1.1(typescript@5.8.3)
 
-  packages/luna-super-hero:
-    dependencies:
-      '@eeacms/volto-object-widget':
-        specifier: '*'
-        version: 7.0.0
-      embla-carousel-autoplay:
-        specifier: ^8.6.0
-        version: 8.6.0(embla-carousel@8.6.0)
-      embla-carousel-react:
-        specifier: ^8.6.0
-        version: 8.6.0(react@18.2.0)
-      react-slick:
-        specifier: ^0.30.3
-        version: 0.30.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      remixicon:
-        specifier: 4.6.0
-        version: 4.6.0
-      slick-carousel:
-        specifier: ^1.8.1
-        version: 1.8.1(jquery@3.7.1)
-    devDependencies:
-      '@cypress/code-coverage':
-        specifier: ^3.10.0
-        version: 3.14.4(@babel/core@7.27.4)(@babel/preset-env@7.27.2(@babel/core@7.27.4))(babel-loader@9.2.1(@babel/core@7.27.4)(webpack@5.90.1))(cypress@13.1.0)(webpack@5.90.1)
-      '@plone/scripts':
-        specifier: '*'
-        version: 3.10.1
-      babel-plugin-transform-class-properties:
-        specifier: ^6.24.1
-        version: 6.24.1
-      cypress:
-        specifier: 13.1.0
-        version: 13.1.0
-      dotenv:
-        specifier: ^16.3.2
-        version: 16.5.0
-      husky:
-        specifier: ^8.0.3
-        version: 8.0.3
-      lint-staged:
-        specifier: ^14.0.1
-        version: 14.0.1(enquirer@2.4.1)
-      md5:
-        specifier: ^2.3.0
-        version: 2.3.0
-      ts-jest:
-        specifier: ^26.4.2
-        version: 26.5.6(jest@26.6.3)(typescript@5.8.3)
-
   packages/lunasites-advanced-styling:
     dependencies:
       '@eeacms/volto-resize-helper':
@@ -2650,9 +2601,6 @@ packages:
 
   '@eeacms/volto-metadata-block@8.0.4':
     resolution: {integrity: sha512-PijZrXvOQHhSqzivcgSPO3iFfp09hoEaP3IOA0MXWnuIL/e2xi4rgZE2ZKh2jVbR2u5a+zP4hO7OFbYqfSQi0Q==}
-
-  '@eeacms/volto-object-widget@7.0.0':
-    resolution: {integrity: sha512-H1GKQFlPzvH0S6P9GWA23te1mayJexvUXYsDxQd0+74dGsdeFrgePtE4BQV21ny50oAmacBGQpZ8RuzgN+PtTw==}
 
   '@eeacms/volto-object-widget@8.0.0':
     resolution: {integrity: sha512-2Z65RfH2JnJoA+znEzGnO4yo7WDxfYG7R+RoYNULNEmglZptBUuOSES9+FC4SU25XHGxqMVpiQKYRJFzqz5iYQ==}
@@ -10698,6 +10646,9 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
 
+  luna-super-hero@9.0.2:
+    resolution: {integrity: sha512-ztYky9t1Aj1KzeaivmTDhIXutZBTjVS0VOreNgOC4XG2k5s+nO3xIrfbuR38OhwmMLDkXrn0r5cqyABBdIsBOA==}
+
   luna-super-listing@1.0.2:
     resolution: {integrity: sha512-dorqqfw3dpewhIvfEBYrB6iJb4umI0xzitd9YDjYRZwkhZ1r331WBCNbuB/duZ8RaD/MQPWCZLJISSGiI/sFuw==}
 
@@ -16508,10 +16459,6 @@ snapshots:
       - razzle-dev-utils
       - ts-node
       - webpack
-
-  '@eeacms/volto-object-widget@7.0.0':
-    dependencies:
-      '@eeacms/volto-resize-helper': 2.0.0
 
   '@eeacms/volto-object-widget@8.0.0': {}
 
@@ -27187,6 +27134,20 @@ snapshots:
       yallist: 4.0.0
 
   lru-cache@7.18.3: {}
+
+  luna-super-hero@9.0.2(embla-carousel@8.6.0)(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@eeacms/volto-object-widget': 8.0.0
+      embla-carousel-autoplay: 8.6.0(embla-carousel@8.6.0)
+      embla-carousel-react: 8.6.0(react@18.2.0)
+      react-slick: 0.30.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      remixicon: 4.6.0
+      slick-carousel: 1.8.1(jquery@3.7.1)
+    transitivePeerDependencies:
+      - embla-carousel
+      - jquery
+      - react
+      - react-dom
 
   luna-super-listing@1.0.2(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
