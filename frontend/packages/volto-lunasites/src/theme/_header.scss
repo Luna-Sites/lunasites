@@ -295,6 +295,12 @@
       color: $black;
       font-size: 13px;
       text-align: center;
+      
+      @media only screen and (max-width: $largest-mobile-screen) {
+        white-space: nowrap;
+        font-size: 11px;
+        margin-right: 4px;
+      }
     }
 
     .tools a:not(:last-child):after {
@@ -302,6 +308,11 @@
       padding-left: 10px;
       content: '|';
       font-size: 14px;
+      
+      @media only screen and (max-width: $largest-mobile-screen) {
+        padding-left: 6px;
+        font-size: 11px;
+      }
     }
 
     .tools .anontools {
@@ -406,8 +417,10 @@
       }
 
       .tools {
-        @media only screen and (max-width: $narrow-container-width) {
-          display: none;
+        @media only screen and (max-width: $largest-mobile-screen) {
+          display: flex !important;
+          flex-wrap: wrap !important;
+          overflow: visible !important;
         }
       }
     }
