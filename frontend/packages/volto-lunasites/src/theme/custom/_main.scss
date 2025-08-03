@@ -194,11 +194,11 @@
   .breadcrumbs {
     display: none !important;
   }
-  
+
   // Transparent header for homepage integration with blocks
   .header-wrapper {
     background-color: transparent !important;
-    
+
     .header {
       background-color: transparent !important;
     }
@@ -358,13 +358,6 @@
 }
 
 // remove margin from block headings overriding blocks.less rule
-.block h1:last-child,
-.block h2:last-child,
-.block h3:last-child,
-.block h4:last-child,
-.block h5:last-child {
-  margin: 0;
-}
 
 // tweak padding of workflow progress titles now that
 // we have larger font size
@@ -641,4 +634,274 @@ footer .blocks-container a {
 .header-wrapper .blocks-group-wrapper {
   padding-top: 0px;
   padding-bottom: 0px;
+}
+
+.item .big {
+  width: 64px !important;
+  height: 64px !important;
+}
+.item i.icon.big:before {
+  width: 64px !important;
+  height: 64px !important;
+}
+.top.aligned.content {
+  .description {
+    margin-top: 0 !important;
+  }
+}
+footer .blocks-form {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/*-------------------
+    Modern Card Styling
+--------------------*/
+
+.ui.fluid.card.u-card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  background: #ffffff;
+  margin-bottom: 1.5rem;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  .image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0;
+
+    img {
+      transition: transform 0.3s ease;
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  }
+
+  &:hover .image {
+    img {
+      transform: scale(1.05);
+    }
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  .content {
+    padding: 1.5rem;
+    position: relative;
+
+    .header {
+      margin-bottom: 0.75rem;
+
+      .header-link {
+        color: #1a1a1a;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        line-height: 1.4;
+        display: block;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: #2185d0;
+        }
+      }
+    }
+
+    .description {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .meta {
+      color: #999;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+  }
+
+  // Card variants
+  &.compact {
+    .content {
+      padding: 1rem;
+    }
+
+    .image img {
+      height: 150px;
+    }
+  }
+
+  &.minimal {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f0f0f0;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &.bordered {
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
+
+    &:hover {
+      border-color: #2185d0;
+      transform: none;
+      box-shadow: 0 4px 16px rgba(33, 133, 208, 0.1);
+    }
+  }
+}
+
+// Grid layout improvements
+.ui.cards > .card,
+.grid-teaser-item .ui.card {
+  margin-bottom: 2rem;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .ui.fluid.card.u-card {
+    margin-bottom: 1rem;
+
+    .content {
+      padding: 1rem;
+    }
+
+    .image img {
+      height: 180px;
+    }
+
+    .content .header .header-link {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .ui.fluid.card.u-card {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+
+    .content .header .header-link {
+      color: #ffffff;
+
+      &:hover {
+        color: #64b5f6;
+      }
+    }
+
+    .content .description {
+      color: #b0b0b0;
+    }
+
+    .content .meta {
+      color: #888;
+    }
+
+    &.bordered {
+      border-color: #404040;
+
+      &:hover {
+        border-color: #64b5f6;
+      }
+    }
+  }
+}
+
+/*-------------------
+    Icon Item Alignment Fix
+--------------------*/
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  
+  .big.icon {
+    flex-shrink: 0;
+    margin: 0;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &.top.aligned {
+      align-self: flex-start;
+    }
+    
+    &::before {
+      font-size: 2.5rem;
+      line-height: 1;
+      width: auto;
+      height: auto;
+    }
+  }
+  
+  .top.aligned.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 0;
+    
+    .description {
+      margin: 0;
+      line-height: 1.5;
+      
+      p {
+        margin: 0;
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+// Alternative improved alignment for semantic UI items
+.ui.items > .item {
+  .icon.big {
+    margin-right: 0.5rem !important;
+    margin-top: 0;
+    vertical-align: top;
+    
+    &.top.aligned {
+      position: relative;
+      top: 0;
+    }
+  }
+  
+  .content {
+    &.top.aligned {
+      vertical-align: top;
+      padding-top: 0;
+    }
+  }
 }

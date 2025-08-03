@@ -38,38 +38,62 @@ const Logo = () => {
   const logoText = designSchemaData?.logo_text || null;
   const logoImage = designSchemaData?.logo_image || null;
 
-  // Render logo based on priority: text > image > default
+  // Render logo based on availability: both > image only > text only > default
   const renderLogo = () => {
-    // Priority 1: Text logo (highest priority)
-    if (logoText && logoText.length > 0) {
-      const serializedText = serializeNodesToText(logoText);
+    const hasText =
+      logoText &&
+      logoText.length > 0 &&
+      serializeNodesToText(logoText)?.trim() !== '';
+    const hasImage = logoImage;
 
-      // If serializeText returns empty string, skip to image
-      if (serializedText && serializedText.trim() !== '') {
-        const textContent = {
-          blocks: {
-            'logo-text': {
-              '@type': 'slate',
-              value: logoText,
-              plaintext: '',
-            },
-          },
-          blocks_layout: {
-            items: ['logo-text'],
-          },
-        };
+    // Case 1: Both image and text available - show both (image first, then text)
+    if (hasImage && hasText) {
+      const imageSrc =
+        typeof logoImage === 'string'
+          ? logoImage
+          : logoImage.download || logoImage['@id'] || logoImage;
 
-        return (
-          <div className="logo-text-content">
+      const textContent = {
+        blocks: {
+          'logo-text': {
+            '@type': 'slate',
+            value: logoText,
+            plaintext: '',
+          },
+        },
+        blocks_layout: {
+          items: ['logo-text'],
+        },
+      };
+
+      return (
+        <div
+          className="logo-combined"
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: '8px',
+            width: '100%',
+            maxWidth: 'fit-content',
+          }}
+        >
+          <img
+            src={flattenToAppURL(imageSrc)}
+            alt={intl.formatMessage(messages.homepage)}
+            title={intl.formatMessage(messages.homepage)}
+            className="logo-image"
+            style={{ flexShrink: 0 }}
+          />
+          <div className="logo-text-content" style={{ flexShrink: 0 }}>
             <RenderBlocks content={textContent} />
           </div>
-        );
-      }
+        </div>
+      );
     }
 
-    // Priority 2: Custom image logo
-    if (logoImage) {
-      // Handle NamedBlobImage object structure
+    // Case 2: Only custom image logo
+    if (hasImage) {
       const imageSrc =
         typeof logoImage === 'string'
           ? logoImage
@@ -84,7 +108,29 @@ const Logo = () => {
       );
     }
 
-    // Priority 3: Default logo (site logo or fallback)
+    // Case 3: Only text logo
+    if (hasText) {
+      const textContent = {
+        blocks: {
+          'logo-text': {
+            '@type': 'slate',
+            value: logoText,
+            plaintext: '',
+          },
+        },
+        blocks_layout: {
+          items: ['logo-text'],
+        },
+      };
+
+      return (
+        <div className="logo-text-content">
+          <RenderBlocks content={textContent} />
+        </div>
+      );
+    }
+
+    // Case 4: Default logo (site logo or fallback)
     return (
       <img
         src={
@@ -98,11 +144,28 @@ const Logo = () => {
     );
   };
 
+  // Determine the CSS class based on logo content
+  const getLogoLinkClass = () => {
+    const hasText =
+      logoText &&
+      logoText.length > 0 &&
+      serializeNodesToText(logoText)?.trim() !== '';
+    const hasImage = logoImage;
+
+    if (hasImage && hasText) {
+      return 'logo-link-combined';
+    }
+    if (hasText) {
+      return 'logo-link-text';
+    }
+    return 'logo-link-image';
+  };
+
   return (
     <UniversalLink
       href={settings.isMultilingual ? `/${toBackendLang(lang)}` : '/'}
       title={intl.formatMessage(messages.site)}
-      className={logoText ? 'logo-link-text' : 'logo-link-image'}
+      className={getLogoLinkClass()}
     >
       {renderLogo()}
     </UniversalLink>

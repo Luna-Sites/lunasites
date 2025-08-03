@@ -25,6 +25,36 @@
         width: auto;
         object-fit: contain;
       }
+
+      // Combined logo styles
+      .logo-combined {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        max-width: fit-content;
+
+        // When wrapping happens (on smaller screens), center the content
+        @media only screen and (max-width: 768px) {
+          flex-direction: column;
+          justify-content: center;
+          text-align: center;
+
+          .logo-image,
+          .logo-text-content {
+            width: 100%;
+            text-align: center;
+          }
+        }
+      }
+
+      // Special handling for combined logo link
+      .logo-link-combined {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: fit-content;
+      }
     }
 
     .navigation {

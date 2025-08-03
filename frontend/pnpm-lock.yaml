@@ -30,6 +30,9 @@ importers:
       '@eeacms/volto-metadata-block':
         specifier: '*'
         version: 8.0.4(mini-css-extract-plugin@2.7.2(webpack@5.90.1))(postcss@8.4.31)(razzle-dev-utils@4.2.18(typescript@5.8.3)(vue-template-compiler@2.7.16)(webpack-dev-server@4.11.1(webpack@5.90.1))(webpack@5.90.1))(razzle@4.2.18(@babel/core@7.27.4)(babel-preset-razzle@4.2.18)(html-webpack-plugin@5.5.0(webpack@5.90.1))(mini-css-extract-plugin@2.7.2(webpack@5.90.1))(razzle-dev-utils@4.2.18(typescript@5.8.3)(vue-template-compiler@2.7.16)(webpack-dev-server@4.11.1(webpack@5.90.1))(webpack@5.90.1))(sockjs-client@1.4.0)(type-fest@4.41.0)(typescript@5.8.3)(vue-template-compiler@2.7.16)(webpack-dev-server@4.11.1(webpack@5.90.1))(webpack-hot-middleware@2.26.1)(webpack@5.90.1))(webpack@5.90.1)
+      '@eeacms/volto-object-widget':
+        specifier: '*'
+        version: 8.0.0
       '@eeacms/volto-pdf-block':
         specifier: '*'
         version: 1.0.12(react@18.2.0)(webpack@5.90.1)
@@ -93,6 +96,9 @@ importers:
       luna-super-hero:
         specifier: workspace:*
         version: link:packages/luna-super-hero
+      luna-super-listing:
+        specifier: 1.0.2
+        version: 1.0.2(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       lunasites-advanced-styling:
         specifier: workspace:*
         version: link:packages/lunasites-advanced-styling
@@ -2647,6 +2653,13 @@ packages:
 
   '@eeacms/volto-object-widget@7.0.0':
     resolution: {integrity: sha512-H1GKQFlPzvH0S6P9GWA23te1mayJexvUXYsDxQd0+74dGsdeFrgePtE4BQV21ny50oAmacBGQpZ8RuzgN+PtTw==}
+
+  '@eeacms/volto-object-widget@8.0.0':
+    resolution: {integrity: sha512-2Z65RfH2JnJoA+znEzGnO4yo7WDxfYG7R+RoYNULNEmglZptBUuOSES9+FC4SU25XHGxqMVpiQKYRJFzqz5iYQ==}
+
+  '@eeacms/volto-object-widget@https://codeload.github.com/eea/volto-object-widget/tar.gz/d263cef130160ddae04145c8eed87f61a3b6c87d':
+    resolution: {tarball: https://codeload.github.com/eea/volto-object-widget/tar.gz/d263cef130160ddae04145c8eed87f61a3b6c87d}
+    version: 8.0.0
 
   '@eeacms/volto-pdf-block@1.0.12':
     resolution: {integrity: sha512-06laYl6WTQn7QBI/kaK/TXXQ6cayhgg8gBAYKtSeL0Ir4rus4kJucLqD+oZ9E+rYtnj1OjHzr8tH8lAEBukdHg==}
@@ -10685,6 +10698,9 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
 
+  luna-super-listing@1.0.2:
+    resolution: {integrity: sha512-dorqqfw3dpewhIvfEBYrB6iJb4umI0xzitd9YDjYRZwkhZ1r331WBCNbuB/duZ8RaD/MQPWCZLJISSGiI/sFuw==}
+
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
@@ -12694,6 +12710,12 @@ packages:
     peerDependencies:
       react: ^16.0.0 || ^17.0.0
       react-dom: ^16.0.0 || ^17.0.0
+
+  react-resize-detector@7.1.2:
+    resolution: {integrity: sha512-zXnPJ2m8+6oq9Nn8zsep/orts9vQv3elrpA+R8XTcW7DVVUJ9vwDwMXaBtykAYjMnkCIaOoK9vObyR7ZgFNlOw==}
+    peerDependencies:
+      react: ^16.0.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
 
   react-responsive-tabs@4.4.3:
     resolution: {integrity: sha512-AicjCIuIlB0isTnIiFplRzk4UVEohGYZjdXkWUXrI70aqX6Iw4UZxvgUnuYeT4b2k/1YVBxgndSwxBBCgYGcmg==}
@@ -16491,6 +16513,10 @@ snapshots:
     dependencies:
       '@eeacms/volto-resize-helper': 2.0.0
 
+  '@eeacms/volto-object-widget@8.0.0': {}
+
+  '@eeacms/volto-object-widget@https://codeload.github.com/eea/volto-object-widget/tar.gz/d263cef130160ddae04145c8eed87f61a3b6c87d': {}
+
   '@eeacms/volto-pdf-block@1.0.12(react@18.2.0)(webpack@5.90.1)':
     dependencies:
       '@mikecousins/react-pdf': 5.5.0(react@18.2.0)(webpack@5.90.1)
@@ -16500,7 +16526,7 @@ snapshots:
 
   '@eeacms/volto-quote-block@2.0.1':
     dependencies:
-      '@eeacms/volto-object-widget': 7.0.0
+      '@eeacms/volto-object-widget': 8.0.0
 
   '@eeacms/volto-resize-helper@2.0.0': {}
 
@@ -27162,6 +27188,19 @@ snapshots:
 
   lru-cache@7.18.3: {}
 
+  luna-super-listing@1.0.2(jquery@3.7.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@eeacms/volto-object-widget': https://codeload.github.com/eea/volto-object-widget/tar.gz/d263cef130160ddae04145c8eed87f61a3b6c87d
+      '@eeacms/volto-widget-theme-picker': 2.0.0
+      react-resize-detector: 7.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react-slick: 0.30.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      remixicon: 4.6.0
+      slick-carousel: 1.8.1(jquery@3.7.1)
+    transitivePeerDependencies:
+      - jquery
+      - react
+      - react-dom
+
   lz-string@1.5.0: {}
 
   macos-release@3.3.0: {}
@@ -30093,6 +30132,12 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       resize-observer-polyfill: 1.5.1
+
+  react-resize-detector@7.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      lodash: 4.17.21
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
 
   react-responsive-tabs@4.4.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
