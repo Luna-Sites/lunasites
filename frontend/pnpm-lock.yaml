@@ -31,7 +31,7 @@ importers:
         specifier: '*'
         version: 8.0.4(mini-css-extract-plugin@2.7.2(webpack@5.90.1))(postcss@8.4.31)(razzle-dev-utils@4.2.18(typescript@5.8.3)(vue-template-compiler@2.7.16)(webpack-dev-server@4.11.1(webpack@5.90.1))(webpack@5.90.1))(razzle@4.2.18(@babel/core@7.27.4)(babel-preset-razzle@4.2.18)(html-webpack-plugin@5.5.0(webpack@5.90.1))(mini-css-extract-plugin@2.7.2(webpack@5.90.1))(razzle-dev-utils@4.2.18(typescript@5.8.3)(vue-template-compiler@2.7.16)(webpack-dev-server@4.11.1(webpack@5.90.1))(webpack@5.90.1))(sockjs-client@1.4.0)(type-fest@4.41.0)(typescript@5.8.3)(vue-template-compiler@2.7.16)(webpack-dev-server@4.11.1(webpack@5.90.1))(webpack-hot-middleware@2.26.1)(webpack@5.90.1))(webpack@5.90.1)
       '@eeacms/volto-object-widget':
-        specifier: '*'
+        specifier: 8.0.0
         version: 8.0.0
       '@eeacms/volto-pdf-block':
         specifier: '*'
