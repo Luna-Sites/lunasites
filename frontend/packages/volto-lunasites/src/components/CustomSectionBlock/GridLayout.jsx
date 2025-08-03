@@ -125,58 +125,39 @@ const GridLayout = ({
     const position = currentPositions[blockId];
     if (!position) return null;
 
-    const itemStyle = {
-      gridColumn: `${position.x + 1} / span ${position.width}`,
-      gridRow: `${position.y + 1} / span ${position.height}`,
-      minHeight: `${position.height * rowHeight + (position.height - 1) * 8}px`,
-      border: '1px solid rgba(0, 0, 0, 0.08)',
-      borderRadius: '12px', // More modern rounded corners
-      backgroundColor: '#ffffff',
-      padding: '8px', // Better content spacing
-      position: 'relative',
-      overflow: 'hidden',
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08)', // Subtle layered shadow
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', // Smoother easing
-    };
-
     const content = children({ blockId, position });
 
-    return (
-      <div
+    return isDragEnabled ? (
+      <DraggableGridBlock
         key={blockId}
+        blockId={blockId}
+        position={position}
+        selected={selectedBlock === blockId}
+        onSelect={onSelectBlock}
+        gridConfig={gridConfig}
+        onTempPositionUpdate={handleTempPositionUpdate}
+        onClearTempPosition={clearTempPosition}
         className={`grid-item ${draggingBlocks.has(blockId) ? 'dragging' : ''} ${movedBlocks.has(blockId) ? 'moved' : ''} ${resizingBlocks.has(blockId) ? 'resizing' : ''}`}
-        style={itemStyle}
+      >
+        {content}
+      </DraggableGridBlock>
+    ) : (
+      <div 
+        key={blockId}
+        className={`grid-item non-draggable-block ${selectedBlock === blockId ? 'selected' : ''} ${draggingBlocks.has(blockId) ? 'dragging' : ''} ${movedBlocks.has(blockId) ? 'moved' : ''} ${resizingBlocks.has(blockId) ? 'resizing' : ''}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (onSelectBlock) onSelectBlock(blockId);
+        }}
+        style={{ 
+          gridColumn: `${position.x + 1} / span ${position.width}`,
+          gridRow: `${position.y + 1} / span ${position.height}`,
+          position: 'relative',
+          cursor: 'pointer'
+        }}
         data-block-id={blockId}
       >
-        {isDragEnabled ? (
-          <DraggableGridBlock
-            blockId={blockId}
-            position={position}
-            selected={selectedBlock === blockId}
-            onSelect={onSelectBlock}
-            gridConfig={gridConfig}
-            onTempPositionUpdate={handleTempPositionUpdate}
-            onClearTempPosition={clearTempPosition}
-          >
-            {content}
-          </DraggableGridBlock>
-        ) : (
-          <div 
-            className={`non-draggable-block ${selectedBlock === blockId ? 'selected' : ''}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (onSelectBlock) onSelectBlock(blockId);
-            }}
-            style={{ 
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              cursor: 'pointer'
-            }}
-          >
-            {content}
-          </div>
-        )}
+        {content}
       </div>
     );
   };

@@ -153,61 +153,17 @@
   position: relative;
   
   .grid-item {
-    display: flex;
-    flex-direction: column;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); // Smooth material design easing
+    // Minimal grid item - no container styling
+    position: relative;
     
-    // Subtle hover elevation
-    &:hover {
-      border-color: rgba(0, 123, 193, 0.25) !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.08) !important;
-      transform: translateY(-1px); // Subtle lift effect
-    }
-    
-    // Clear selection state with ring
-    &.selected {
-      border-color: #007bc1 !important;
-      box-shadow: 0 0 0 3px rgba(0, 123, 193, 0.15), 0 4px 12px rgba(0, 123, 193, 0.2) !important;
-      transform: translateY(-1px);
-    }
-    
-    // Dragging state with premium feel
+    // Only keep dragging state styling for visual feedback
     &.dragging {
       z-index: 1000;
-      box-shadow: 0 20px 40px rgba(0, 123, 193, 0.25), 0 8px 16px rgba(0, 123, 193, 0.15) !important;
-      border-color: #007bc1 !important;
-      background-color: rgba(0, 123, 193, 0.02) !important;
       transition: grid-column 0.15s cubic-bezier(0.4, 0, 0.2, 1), grid-row 0.15s cubic-bezier(0.4, 0, 0.2, 1);
       
       .draggable-grid-block {
-        transform: scale(1.03) rotateZ(1deg) !important; // Subtle rotation for dynamic feel
-        opacity: 0.95;
-      }
-    }
-    
-    // Moved blocks with warm feedback
-    &.moved {
-      border-color: rgba(255, 145, 77, 0.6) !important; // Warmer orange
-      background-color: rgba(255, 145, 77, 0.08) !important;
-      box-shadow: 0 4px 12px rgba(255, 145, 77, 0.2) !important;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); // Slower, smoother transitions
-      
-      .draggable-grid-block {
-        transform: scale(0.97) translateY(-2px); // Subtle lift with scale
-        opacity: 0.9;
-      }
-    }
-    
-    // Resizing state with success color
-    &.resizing {
-      border-color: rgba(16, 185, 129, 0.6) !important; // Modern green
-      background-color: rgba(16, 185, 129, 0.08) !important;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2) !important;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      
-      .draggable-grid-block {
-        transform: scale(1.02) translateY(-1px);
-        opacity: 0.95;
+        transform: scale(1.02) !important;
+        opacity: 0.8;
       }
     }
   }

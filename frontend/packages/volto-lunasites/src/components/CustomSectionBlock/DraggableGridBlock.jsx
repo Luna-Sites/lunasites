@@ -11,7 +11,8 @@ const DraggableGridBlock = ({
   onEndDrag,
   gridConfig,
   onTempPositionUpdate,
-  onClearTempPosition
+  onClearTempPosition,
+  className = ''
 }) => {
   const [isDragging, setIsDragging] = React.useState(false);
   const [snapPosition, setSnapPosition] = React.useState(null);
@@ -135,14 +136,12 @@ const DraggableGridBlock = ({
 
   return (
     <div 
-      className={`draggable-grid-block ${selected ? 'selected' : ''} ${isDragging ? 'being-dragged' : ''}`}
+      className={`draggable-grid-block ${selected ? 'selected' : ''} ${isDragging ? 'being-dragged' : ''} ${className}`}
       onClick={handleClick}
       data-block-id={blockId}
       style={{ 
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        cursor: isDragging ? 'grabbing' : (selected ? 'grab' : 'pointer'),
+        gridColumn: `${position.x + 1} / span ${position.width}`,
+        gridRow: `${position.y + 1} / span ${position.height}`,
         position: 'relative',
         transition: 'none', // Let CSS Grid handle transitions
         opacity: isDragging ? 0.8 : 1,
@@ -155,8 +154,8 @@ const DraggableGridBlock = ({
         className="drag-handle"
         style={{
           position: 'absolute',
-          top: '10px',
-          left: '10px',
+          top: '8px',
+          left: '8px',
           width: '24px',
           height: '18px',
           background: isDragging ? 
@@ -183,10 +182,8 @@ const DraggableGridBlock = ({
         ⋮⋮
       </div>
 
-      {/* Block Content */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {children}
-      </div>
+      {/* Block Content - render directly without wrapper */}
+      {children}
       
       {/* Position Info (Debug) - only show grid position, no resize info */}
       {selected && (
@@ -234,6 +231,7 @@ DraggableGridBlock.propTypes = {
   }),
   onTempPositionUpdate: PropTypes.func,
   onClearTempPosition: PropTypes.func,
+  className: PropTypes.string,
 };
 
 DraggableGridBlock.defaultProps = {
@@ -244,6 +242,7 @@ DraggableGridBlock.defaultProps = {
   gridConfig: { columns: 12, rowHeight: 60 },
   onTempPositionUpdate: () => {},
   onClearTempPosition: () => {},
+  className: '',
 };
 
 export default DraggableGridBlock;

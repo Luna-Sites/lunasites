@@ -12,25 +12,15 @@ export const DEFAULT_CONTENT_RESIZABLE_BLOCKS = ['button'];
 // Configuration for different content resize properties
 export const RESIZE_PROPERTY_CONFIGS = {
   button: {
-    fontSize: {
-      property: 'fontSize',
-      defaultValue: 16,
-      min: 10,
-      max: 72,
-      step: 4,
-      directions: ['se', 'ne', 'sw', 'nw'], // corners affect font size
-      color: '#e74c3c', // Red
-      title: 'Resize font size'
-    },
-    padding: {
+    height: {
       property: 'padding',
       defaultValue: 12,
       min: 4,
       max: 40,
       step: 8,
-      directions: ['se', 'ne', 'sw', 'nw', 's', 'n'], // corners and vertical edges
+      directions: ['s', 'n'], // vertical edges only
       color: '#f39c12', // Orange
-      title: 'Resize padding (height)'
+      title: 'Resize button height'
     },
     width: {
       property: 'buttonWidth',

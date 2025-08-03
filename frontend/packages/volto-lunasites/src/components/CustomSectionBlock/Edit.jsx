@@ -255,42 +255,31 @@ const CustomSectionBlockEdit = (props) => {
                   
                   const BlockComponent = blocksConfig?.[childBlock['@type']]?.edit;
                   
-                  return (
-                    <div 
-                      className="section-child-block"
-                      style={{ 
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column'
+                  return BlockComponent ? (
+                    <BlockComponent
+                      data={childBlock}
+                      properties={properties}
+                      block={blockId}
+                      pathname={pathname || properties?.['@id'] || ''}
+                      manage={manage !== false}
+                      onChangeBlock={(blockId, blockData) => {
+                        const newBlocks = {
+                          ...blocks,
+                          [blockId]: blockData,
+                        };
+                        const newData = {
+                          ...data,
+                          blocks: newBlocks,
+                        };
+                        onChangeBlock(block, newData);
                       }}
-                    >
-                      {BlockComponent ? (
-                        <BlockComponent
-                          data={childBlock}
-                          properties={properties}
-                          block={blockId}
-                          pathname={pathname || properties?.['@id'] || ''}
-                          manage={manage !== false}
-                          onChangeBlock={(blockId, blockData) => {
-                            const newBlocks = {
-                              ...blocks,
-                              [blockId]: blockData,
-                            };
-                            const newData = {
-                              ...data,
-                              blocks: newBlocks,
-                            };
-                            onChangeBlock(block, newData);
-                          }}
-                          selected={selectedChildBlock === blockId}
-                          index={blocks_layout.items.indexOf(blockId)}
-                          blocksConfig={blocksConfig}
-                        />
-                      ) : (
-                        <div className="unknown-block">
-                          Unknown block type: {childBlock['@type']}
-                        </div>
-                      )}
+                      selected={selectedChildBlock === blockId}
+                      index={blocks_layout.items.indexOf(blockId)}
+                      blocksConfig={blocksConfig}
+                    />
+                  ) : (
+                    <div className="unknown-block">
+                      Unknown block type: {childBlock['@type']}
                     </div>
                   );
                 }}
@@ -311,7 +300,7 @@ const CustomSectionBlockEdit = (props) => {
                 pointerEvents: 'none' // Allow clicks to pass through
               }}>
                 <div>💡 Click to select • Drag ⋮⋮ to move blocks around
-                  <br/>📝 Drag colored handles to resize content (font size, padding, width)</div>
+                  <br/>🎨 Drag colored handles to resize block content (font size, padding, width)</div>
               </div>
               
               {/* Add Block Button for Grid Mode */}
