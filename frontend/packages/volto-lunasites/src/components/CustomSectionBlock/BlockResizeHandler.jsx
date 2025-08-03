@@ -301,24 +301,26 @@ export const BlockResizeHandles = ({
 
   if (!selected || !isInGrid) return null;
 
-  // Group directions by their primary property for color coding
-  const directionColorMap = {
-    'nw': colors.fontSize, 'ne': colors.fontSize, 'sw': colors.fontSize, 'se': colors.fontSize,
-    'n': colors.padding, 's': colors.padding,
-    'e': colors.width, 'w': colors.width
-  };
-
-  const directionTitleMap = {
-    'nw': 'Resize content font size & padding', 'ne': 'Resize content font size & padding', 
-    'sw': 'Resize content font size & padding', 'se': 'Resize content font size & padding',
-    'n': 'Resize content padding', 's': 'Resize content padding',
-    'e': 'Resize content width', 'w': 'Resize content width'
-  };
+  // Get all valid directions from the configuration
+  const validDirections = new Set();
+  const directionColorMap = {};
+  const directionTitleMap = {};
+  
+  Object.entries(resizeConfig).forEach(([propertyName, propertyConfig]) => {
+    const color = colors[propertyName];
+    if (color && propertyConfig.directions) {
+      propertyConfig.directions.forEach(direction => {
+        validDirections.add(direction);
+        directionColorMap[direction] = color;
+        directionTitleMap[direction] = `Resize ${propertyConfig.title || propertyName}`;
+      });
+    }
+  });
 
   return (
     <>
-      {/* Render all resize handles */}
-      {['nw', 'ne', 'sw', 'se', 'n', 's', 'e', 'w'].map(direction => (
+      {/* Render only configured resize handles */}
+      {Array.from(validDirections).map(direction => (
         <ResizeHandle
           key={direction}
           direction={direction}
