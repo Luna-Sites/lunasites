@@ -1,35 +1,39 @@
-// Custom Section Block Styles
+// CSS Variables
+:root {
+  --section-background: transparent;
+  --section-title-color: inherit;
+  --selected-border-color: #007bc1;
+  --focus-border-color: #007bc1;
+  --placeholder-color: #999;
+}
+
+// Base Section Block Styles
 .custom-section-block {
-  // Base section styling
   min-height: 100px;
   position: relative;
   margin-bottom: 2rem;
-  
-  // Match group block enhanced styling
   border-radius: 8px;
   padding: 2rem;
-  background: var(--section-background, transparent);
-  
-  // Title styling
+  background: var(--section-background);
+
   .custom-section-title {
     margin-bottom: 1.5rem;
-    color: var(--section-title-color, inherit);
+    color: var(--section-title-color);
   }
 }
 
 .custom-section-block-edit {
-  // Edit mode styling
   border: 1px dashed transparent;
   transition: border-color 0.2s ease;
-  
+
   &.selected {
-    border-color: var(--selected-border-color, #007bc1);
+    border-color: var(--selected-border-color);
   }
-  
+
   // Title input field
   .custom-section-title-input {
     margin-bottom: 1rem;
-    
+
     .section-title-field {
       width: 100%;
       padding: 0.5rem;
@@ -38,26 +42,26 @@
       font-size: 1.2rem;
       font-weight: 600;
       background: transparent;
-      
+
       &:focus {
         outline: none;
         border-color: var(--focus-border-color, #007bc1);
         background: rgba(255, 255, 255, 0.8);
       }
-      
+
       &::placeholder {
         color: var(--placeholder-color, #999);
         font-weight: normal;
       }
     }
   }
-  
+
   // Content area
   .custom-section-content {
     min-height: 60px;
     position: relative;
   }
-  
+
   // Empty state styling
   .custom-section-empty {
     min-height: 120px;
@@ -65,17 +69,17 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   // Block rendering area
   .section-blocks {
     .section-child-block {
       margin-bottom: 1.5rem;
-      
+
       &:last-of-type {
         margin-bottom: 1rem; // Space before add button
       }
     }
-    
+
     .unknown-block {
       padding: 1rem;
       background: #fff3cd;
@@ -84,12 +88,12 @@
       color: #856404;
       font-style: italic;
     }
-    
+
     // Style the add more button - override FloatingAddButton positioning
     .custom-section-add-more {
       margin-top: 1rem;
       position: relative;
-      
+
       .floating-add-button-container {
         position: static !important; // Override absolute positioning
         transform: none !important; // Remove centering transform
@@ -97,18 +101,18 @@
         left: auto !important;
         width: auto;
         min-height: auto;
-        
+
         .floating-add-content {
           flex-direction: row !important; // Horizontal layout
           align-items: center;
           gap: 0.5rem;
-          
+
           .floating-add-button {
             padding: 0.5rem 1rem !important; // Smaller padding for inline button
             font-size: 0.9rem !important;
             box-shadow: 0 2px 4px rgba(0, 126, 177, 0.15) !important; // Subtler shadow
           }
-          
+
           .floating-helper-text {
             display: none !important; // Hide helper text for add-more button
           }
@@ -118,28 +122,23 @@
   }
 }
 
-// Enhanced group styling compatibility
-.section-block {
-  &.custom-section-block,
-  &.custom-section-block-edit {
-    // Apply same enhanced styling as groups
-    background: rgba(248, 249, 250, 0.5);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    padding: 2.5rem;
-    margin-bottom: 2rem;
-    
-    // Hover effect in edit mode
-    &:hover {
-      background: rgba(248, 249, 250, 0.8);
-      border-color: rgba(0, 123, 193, 0.3);
-    }
-    
-    // Selected state
-    &.selected {
-      border-color: #007bc1;
-      box-shadow: 0 0 0 2px rgba(0, 123, 193, 0.2);
-    }
+// Enhanced styling
+.section-block.custom-section-block,
+.section-block.custom-section-block-edit {
+  background: rgba(248, 249, 250, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+
+  &:hover {
+    background: rgba(248, 249, 250, 0.8);
+    border-color: rgba(0, 123, 193, 0.3);
+  }
+
+  &.selected {
+    border-color: var(--selected-border-color);
+    box-shadow: 0 0 0 2px rgba(0, 123, 193, 0.2);
   }
 }
 
@@ -151,39 +150,41 @@
 // Grid Layout Styles
 .grid-layout {
   position: relative;
-  
+
   .grid-item {
     // Minimal grid item - no container styling
     position: relative;
-    
+
     // Only keep dragging state styling for visual feedback
     &.dragging {
       z-index: 1000;
-      transition: grid-column 0.15s cubic-bezier(0.4, 0, 0.2, 1), grid-row 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-      
+      transition:
+        grid-column 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+        grid-row 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
       .draggable-grid-block {
         transform: scale(1.02) !important;
         opacity: 0.8;
       }
     }
   }
-  
+
   .grid-guide {
     transition: opacity 0.2s ease;
     opacity: 0;
   }
-  
+
   &:hover .grid-guide {
     opacity: 1;
   }
-  
+
   // Empty grid state
   &.empty {
     min-height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     .floating-add-button-container {
       position: static !important;
       transform: none !important;
@@ -192,118 +193,90 @@
 }
 
 // Drag & Drop Styles
-.draggable-block {
-  position: relative;
-  
-  &:hover .drag-handle {
-    opacity: 0.8 !important;
+%drag-handle-base {
+  transition: all 0.2s ease;
+  cursor: grab;
+
+  &:hover {
+    background: #005d99 !important;
+    transform: scale(1.05);
+    opacity: 1 !important;
   }
-  
+
+  &:active {
+    cursor: grabbing;
+    transform: scale(0.9);
+  }
+}
+
+.draggable-block,
+.draggable-grid-block {
+  position: relative;
+
+  &:hover .drag-handle {
+    opacity: 1 !important;
+  }
+
   &.selected .drag-handle {
     opacity: 1 !important;
   }
-  
+
+  &.dragging,
+  &.being-dragged {
+    z-index: 1000;
+
+    .drag-handle {
+      opacity: 1 !important;
+      background: var(--selected-border-color) !important;
+    }
+  }
+
   &.dragging {
     opacity: 0.7;
     transform: rotate(2deg);
-    z-index: 1000;
-    
-    .drag-handle {
-      opacity: 1 !important;
-      background: #007bc1 !important;
-    }
   }
-  
-  .drag-handle {
-    transition: opacity 0.2s ease;
-    
-    &:hover {
-      background: #005d99 !important;
-      cursor: grab;
-    }
-    
-    &:active {
-      cursor: grabbing;
-    }
-  }
-}
 
-.non-draggable-block {
-  &.selected {
-    outline: 2px solid #007bc1;
-    outline-offset: 2px;
-  }
-}
-
-// Drop Zone Styles
-.grid-drop-zone {
-  &.drop-over {
-    transition: all 0.2s ease;
-    
-    &.can-drop {
-      background-color: rgba(0, 123, 193, 0.05) !important;
-      border-color: rgba(0, 123, 193, 0.3) !important;
-    }
-    
-    &.cannot-drop {
-      background-color: rgba(255, 68, 68, 0.05) !important;
-      border-color: rgba(255, 68, 68, 0.3) !important;
-    }
-  }
-}
-
-// Native Drag & Drop Styles
-.draggable-grid-block {
-  position: relative;
-  
-  &:hover .drag-handle {
-    opacity: 1 !important;
-    transform: scale(1.05);
-  }
-  
-  &.selected .drag-handle {
-    opacity: 1 !important;
-  }
-  
   &.being-dragged {
     opacity: 0.3 !important;
-    
-    .drag-handle {
-      opacity: 1 !important;
-      background: #005d99 !important;
-    }
   }
-  
+
   .drag-handle {
-    transition: all 0.2s ease;
-    opacity: 0.8 !important; // Always show drag handle with some opacity
-    
-    &:hover {
-      background: #005d99 !important;
-      transform: scale(1.15);
-      opacity: 1 !important;
-    }
-    
-    &:active {
-      cursor: grabbing;
-      transform: scale(0.9);
-    }
+    @extend %drag-handle-base;
+    opacity: 0.8 !important;
   }
-  
-  // Modern resize handles styling
+
   .resize-handle {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
+
     &:hover {
       background: linear-gradient(135deg, #0056b3 0%, #004080 100%) !important;
       transform: scale(1.3);
       box-shadow: 0 4px 12px rgba(0, 123, 193, 0.4) !important;
     }
-    
+
     &:active {
       background: linear-gradient(135deg, #004080 0%, #003060 100%) !important;
       transform: scale(1.1);
     }
+  }
+}
+
+.non-draggable-block.selected {
+  outline: 2px solid var(--selected-border-color);
+  outline-offset: 2px;
+}
+
+.grid-drop-zone.drop-over {
+  transition: all 0.2s ease;
+
+  &.can-drop {
+    background-color: rgba(0, 123, 193, 0.05) !important;
+    border-color: rgba(0, 123, 193, 0.3) !important;
+  }
+
+  &.cannot-drop {
+    background-color: rgba(255, 68, 68, 0.05) !important;
+    border-color: rgba(255, 68, 68, 0.3) !important;
   }
 }
 
@@ -312,11 +285,11 @@
   transition: none !important;
   animation: none !important;
   pointer-events: none !important;
-  
+
   * {
     pointer-events: none !important;
   }
-  
+
   // Enhance the preview appearance
   &::after {
     content: '';
@@ -338,13 +311,13 @@
       opacity: 0.3;
     }
   }
-  
+
   // Show drop zones when dragging
   &.dragging {
     .grid-guide {
       opacity: 0.6 !important;
     }
-    
+
     &::after {
       content: 'Drop here to position block';
       position: absolute;
@@ -373,13 +346,13 @@
   background: rgba(248, 249, 250, 0.8);
   border: 1px solid rgba(0, 123, 193, 0.2);
   border-radius: 6px;
-  
+
   .toggle-label {
     font-size: 0.9rem;
     font-weight: 500;
     color: #555;
   }
-  
+
   .toggle-switch {
     position: relative;
     width: 48px;
@@ -388,11 +361,11 @@
     border-radius: 12px;
     cursor: pointer;
     transition: background 0.2s ease;
-    
+
     &.active {
       background: #007bc1;
     }
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -405,16 +378,16 @@
       transition: transform 0.2s ease;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
-    
+
     &.active::after {
       transform: translateX(24px);
     }
   }
-  
+
   .mode-label {
     font-size: 0.8rem;
     color: #666;
-    
+
     &.active {
       color: #007bc1;
       font-weight: 600;
@@ -427,16 +400,16 @@
   &.linear-layout {
     .section-child-block {
       margin-bottom: 1.5rem;
-      
+
       &:last-of-type {
         margin-bottom: 1rem;
       }
     }
   }
-  
+
   &.grid-layout {
     margin: 0;
-    
+
     .section-child-block {
       margin: 0;
     }
@@ -450,35 +423,270 @@
   border-radius: 6px;
   padding: 1rem;
   margin-bottom: 1rem;
-  
+
   .config-row {
     display: flex;
     align-items: center;
     gap: 1rem;
     margin-bottom: 0.5rem;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
-    
+
     label {
       font-size: 0.9rem;
       font-weight: 500;
       color: #555;
       min-width: 100px;
     }
-    
+
     input {
       padding: 0.25rem 0.5rem;
       border: 1px solid #ddd;
       border-radius: 4px;
       width: 80px;
-      
+
       &:focus {
         outline: none;
         border-color: #007bc1;
       }
     }
+
+    .config-description {
+      font-size: 11px;
+      color: #666;
+    }
+  }
+}
+
+// Draggable Grid Block Styles
+.draggable-grid-block {
+  position: relative;
+  transition: none;
+  user-select: none;
+  opacity: 1;
+  transform: scale(1);
+
+  &.being-dragged {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+
+  .drag-handle {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 24px;
+    height: 18px;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 123, 193, 0.9) 0%,
+      rgba(0, 86, 179, 0.9) 100%
+    );
+    border-radius: 6px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    opacity: 0.75;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 15;
+    box-shadow:
+      0 2px 8px rgba(0, 123, 193, 0.2),
+      0 1px 3px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  &.selected .drag-handle,
+  &:hover .drag-handle {
+    opacity: 1;
+  }
+
+  &.being-dragged .drag-handle {
+    background: linear-gradient(135deg, #007bc1 0%, #0056b3 100%);
+    box-shadow:
+      0 8px 16px rgba(0, 123, 193, 0.3),
+      0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: none;
+  }
+
+  .grid-position-info {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    font-size: 9px;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.9) 100%
+    );
+    color: white;
+    padding: 3px 6px;
+    border-radius: 6px;
+    pointer-events: none;
+    font-family: monospace;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Draggable Block Styles
+.draggable-block {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  cursor: grab;
+  transition: all 0.2s ease;
+
+  &.dragging {
+    cursor: grabbing;
+    opacity: 0.7;
+    transform: rotate(2deg);
+    transition: none;
+  }
+
+  &.non-draggable-block {
+    cursor: pointer;
+  }
+
+  .drag-handle {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 123, 193, 0.8);
+    border-radius: 4px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+  }
+
+  &.selected .drag-handle,
+  &:hover .drag-handle {
+    opacity: 1;
+  }
+
+  .block-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .position-info {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    font-size: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    pointer-events: none;
+  }
+}
+
+// Grid Info and Add Button Styles
+.grid-info {
+  position: absolute;
+  bottom: 60px;
+  left: 16px;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  max-width: 250px;
+  pointer-events: none;
+}
+
+.grid-add-button-container {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 10;
+}
+
+// Linear Layout Block Styles
+.section-child-block {
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
+
+  &.selected {
+    border: 2px solid var(--selected-border-color);
+  }
+
+  &:last-of-type {
+    margin-bottom: 1rem;
+  }
+}
+
+// Grid Drag Layer Styles
+.grid-drag-layer {
+  position: relative;
+  min-height: 400px;
+  cursor: default;
+  transition: all 0.2s ease;
+
+  &.drag-over {
+    .drop-indicator {
+      opacity: 1;
+    }
+  }
+
+  .snap-preview {
+    position: absolute;
+    background: rgba(0, 123, 193, 0.2);
+    border: 2px solid rgba(0, 123, 193, 0.6);
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 998;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #007bc1;
+
+    &.collision {
+      background: rgba(255, 68, 68, 0.2);
+      border-color: rgba(255, 68, 68, 0.6);
+      color: #ff4444;
+    }
+  }
+
+  .drop-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 123, 193, 0.02);
+    border: 2px dashed rgba(0, 123, 193, 0.2);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 997;
+    opacity: 0;
+    transition: opacity 0.2s ease;
   }
 }
 
@@ -489,11 +697,11 @@
     padding: 1.5rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .grid-layout {
     // Force linear layout on mobile
     display: block !important;
-    
+
     .grid-item {
       display: block !important;
       margin-bottom: 1rem !important;
@@ -502,7 +710,7 @@
       grid-row: unset !important;
     }
   }
-  
+
   .grid-mode-toggle {
     .toggle-label,
     .mode-label {

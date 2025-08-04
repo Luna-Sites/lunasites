@@ -53,7 +53,11 @@ const FloatingAddButton = ({
 
   return (
     <>
-      <div className={`floating-add-button-container ${inline ? 'inline-mode' : ''} ${className}`.trim()}>
+      <div
+        className={`floating-add-button-container ${
+          inline ? 'inline-mode' : ''
+        } ${className}`.trim()}
+      >
         <div className="floating-add-content">
           <Button
             type="button"

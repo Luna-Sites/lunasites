@@ -1,6 +1,6 @@
 /**
  * Content Resize Configuration
- * 
+ *
  * This file manages which block types support content resizing within the grid layout.
  * Content resize allows users to modify block content properties (font size, padding, dimensions)
  * instead of just changing the grid container size.
@@ -20,7 +20,7 @@ export const RESIZE_PROPERTY_CONFIGS = {
       step: 8,
       directions: ['s', 'n'], // vertical edges only
       color: '#f39c12', // Orange
-      title: 'Resize button height'
+      title: 'Resize button height',
     },
     width: {
       property: 'buttonWidth',
@@ -30,9 +30,9 @@ export const RESIZE_PROPERTY_CONFIGS = {
       step: 1,
       directions: ['e', 'w'], // horizontal edges only
       color: '#9b59b6', // Purple
-      title: 'Resize button width'
-    }
-  }
+      title: 'Resize button width',
+    },
+  },
 };
 
 /**
@@ -67,7 +67,7 @@ export const getResizeConfig = (blockType) => {
 
 /**
  * Example: Adding a new block type with content resize support
- * 
+ *
  * registerContentResizableBlock('text', {
  *   fontSize: {
  *     property: 'fontSize',

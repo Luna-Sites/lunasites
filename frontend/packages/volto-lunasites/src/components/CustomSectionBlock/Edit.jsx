@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuid } from 'uuid';
+import cx from 'classnames';
 import FloatingAddButton from '../FloatingAddButton';
 import GridLayout from './GridLayout';
-import PositionControls from './PositionControls';
 
 const CustomSectionBlockEdit = (props) => {
   const {
@@ -19,18 +19,17 @@ const CustomSectionBlockEdit = (props) => {
   } = props;
 
   const [selectedChildBlock, setSelectedChildBlock] = useState(null);
-  const [showPositionControls, setShowPositionControls] = useState(false);
 
   const {
     blocks = {},
-    blocks_layout = { 
+    blocks_layout = {
       items: [],
       mode: 'linear', // 'linear' or 'grid'
       grid: {
         columns: 12,
         rowHeight: 60,
-        positions: {}
-      }
+        positions: {},
+      },
     },
     title = '',
   } = data;
@@ -39,26 +38,55 @@ const CustomSectionBlockEdit = (props) => {
   const gridConfig = {
     columns: blocks_layout.grid?.columns || 12,
     rowHeight: blocks_layout.grid?.rowHeight || 60,
-    positions: blocks_layout.grid?.positions || {}
+    positions: blocks_layout.grid?.positions || {},
   };
 
   const isGridMode = blocks_layout.mode === 'grid';
 
   const isEmpty = !blocks_layout.items || blocks_layout.items.length === 0;
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange = useCallback((e) => {
     const newData = {
       ...data,
       title: e.target.value,
     };
     onChangeBlock(block, newData);
-  };
+  }, [data, block, onChangeBlock]);
 
-  // Grid helper functions
-  const findEmptyGridPosition = (width = 4, height = 3) => {
+  const handleChildBlockChange = useCallback((blockId, blockData) => {
+    const newBlocks = {
+      ...blocks,
+      [blockId]: blockData,
+    };
+    const newData = {
+      ...data,
+      blocks: newBlocks,
+    };
+    onChangeBlock(block, newData);
+  }, [blocks, data, block, onChangeBlock]);
+
+  const isPositionAvailable = useMemo(() => (x, y, width, height, positions) => {
+    for (let checkY = y; checkY < y + height; checkY++) {
+      for (let checkX = x; checkX < x + width; checkX++) {
+        for (const pos of Object.values(positions)) {
+          if (
+            checkX >= pos.x &&
+            checkX < pos.x + pos.width &&
+            checkY >= pos.y &&
+            checkY < pos.y + pos.height
+          ) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }, []);
+
+  const findEmptyGridPosition = useCallback((width = 4, height = 3) => {
     const positions = gridConfig.positions;
     const columns = gridConfig.columns;
-    
+
     // Simple algorithm: find first available position
     for (let y = 0; y < 20; y++) {
       for (let x = 0; x <= columns - width; x++) {
@@ -67,47 +95,36 @@ const CustomSectionBlockEdit = (props) => {
         }
       }
     }
-    
+
     // Fallback: stack at bottom
-    const maxY = Math.max(0, ...Object.values(positions).map(pos => pos.y + pos.height));
+    const maxY = Math.max(
+      0,
+      ...Object.values(positions).map((pos) => pos.y + pos.height),
+    );
     return { x: 0, y: maxY, width, height };
-  };
+  }, [gridConfig, isPositionAvailable]);
 
-  const isPositionAvailable = (x, y, width, height, positions) => {
-    for (let checkY = y; checkY < y + height; checkY++) {
-      for (let checkX = x; checkX < x + width; checkX++) {
-        for (const pos of Object.values(positions)) {
-          if (checkX >= pos.x && checkX < pos.x + pos.width &&
-              checkY >= pos.y && checkY < pos.y + pos.height) {
-            return false;
-          }
-        }
-      }
-    }
-    return true;
-  };
-
-  const updateBlockPosition = (blockId, position) => {
+  const updateBlockPosition = useCallback((blockId, position) => {
     const newBlocksLayout = {
       ...blocks_layout,
       grid: {
         ...blocks_layout.grid,
         positions: {
           ...gridConfig.positions,
-          [blockId]: position
-        }
-      }
+          [blockId]: position,
+        },
+      },
     };
-    
+
     const newData = {
       ...data,
       blocks_layout: newBlocksLayout,
     };
-    
-    onChangeBlock(block, newData);
-  };
 
-  const toggleGridMode = () => {
+    onChangeBlock(block, newData);
+  }, [blocks_layout, gridConfig, data, block, onChangeBlock]);
+
+  const toggleGridMode = useCallback(() => {
     const newMode = isGridMode ? 'linear' : 'grid';
     const newBlocksLayout = {
       ...blocks_layout,
@@ -118,14 +135,14 @@ const CustomSectionBlockEdit = (props) => {
     if (newMode === 'grid' && blocks_layout.items.length > 0) {
       const newPositions = {};
       blocks_layout.items.forEach((blockId, index) => {
-        const y = Math.floor(index / 2) * 4; // Rows of 2 blocks, 4 units tall each
-        const x = (index % 2) * 6; // 2 columns, 6 units wide each
+        const y = Math.floor(index / 2) * 4;
+        const x = (index % 2) * 6;
         newPositions[blockId] = { x, y, width: 6, height: 4 };
       });
-      
+
       newBlocksLayout.grid = {
         ...blocks_layout.grid,
-        positions: newPositions
+        positions: newPositions,
       };
     }
 
@@ -133,17 +150,17 @@ const CustomSectionBlockEdit = (props) => {
       ...data,
       blocks_layout: newBlocksLayout,
     };
-    
-    onChangeBlock(block, newData);
-  };
 
-  const handleAddBlock = (blockData) => {
+    onChangeBlock(block, newData);
+  }, [isGridMode, blocks_layout, data, block, onChangeBlock]);
+
+  const handleAddBlock = useCallback((blockData) => {
     const blockId = uuid();
     const newBlocks = {
       ...blocks,
       [blockId]: blockData,
     };
-    
+
     let newBlocksLayout = {
       ...blocks_layout,
       items: [...blocks_layout.items, blockId],
@@ -158,9 +175,9 @@ const CustomSectionBlockEdit = (props) => {
           ...blocks_layout.grid,
           positions: {
             ...gridConfig.positions,
-            [blockId]: position
-          }
-        }
+            [blockId]: position,
+          },
+        },
       };
     }
 
@@ -171,7 +188,32 @@ const CustomSectionBlockEdit = (props) => {
     };
 
     onChangeBlock(block, newData);
-  };
+  }, [blocks, blocks_layout, isGridMode, findEmptyGridPosition, gridConfig, data, block, onChangeBlock]);
+
+  const renderBlock = useCallback((blockId, index) => {
+    const childBlock = blocks[blockId];
+    if (!childBlock) return null;
+
+    const BlockComponent = blocksConfig?.[childBlock['@type']]?.edit;
+
+    return BlockComponent ? (
+      <BlockComponent
+        data={childBlock}
+        properties={properties}
+        block={blockId}
+        pathname={pathname || properties?.['@id'] || ''}
+        manage={manage !== false}
+        onChangeBlock={handleChildBlockChange}
+        selected={selectedChildBlock === blockId}
+        index={index}
+        blocksConfig={blocksConfig}
+      />
+    ) : (
+      <div className="unknown-block">
+        Unknown block type: {childBlock['@type']}
+      </div>
+    );
+  }, [blocks, blocksConfig, properties, pathname, manage, handleChildBlockChange, selectedChildBlock]);
 
   return (
     <div className="custom-section-block-edit">
@@ -189,7 +231,9 @@ const CustomSectionBlockEdit = (props) => {
       {/* Grid Mode Toggle */}
       <div className="grid-mode-toggle">
         <span className="toggle-label">Layout Mode:</span>
-        <span className={`mode-label ${!isGridMode ? 'active' : ''}`}>Linear</span>
+        <span className={`mode-label ${!isGridMode ? 'active' : ''}`}>
+          Linear
+        </span>
         <div
           className={`toggle-switch ${isGridMode ? 'active' : ''}`}
           onClick={toggleGridMode}
@@ -202,13 +246,14 @@ const CustomSectionBlockEdit = (props) => {
         <div className="grid-config-panel">
           <div className="config-row">
             <label>Resize Mode:</label>
-            <span style={{ fontSize: '11px', color: '#666' }}>
-              Content resize enabled - resize block content instead of grid containers
+            <span className="config-description">
+              Content resize enabled - resize block content instead of grid
+              containers
             </span>
           </div>
           <div className="config-row">
             <label>Supported Blocks:</label>
-            <span style={{ fontSize: '11px', color: '#666' }}>
+            <span className="config-description">
               Button blocks support font size, padding, and width resizing
             </span>
           </div>
@@ -249,67 +294,17 @@ const CustomSectionBlockEdit = (props) => {
                 onSelectBlock={setSelectedChildBlock}
                 isDragEnabled={true}
               >
-                {({ blockId, position }) => {
-                  const childBlock = blocks[blockId];
-                  if (!childBlock) return null;
-                  
-                  const BlockComponent = blocksConfig?.[childBlock['@type']]?.edit;
-                  
-                  return BlockComponent ? (
-                    <BlockComponent
-                      data={childBlock}
-                      properties={properties}
-                      block={blockId}
-                      pathname={pathname || properties?.['@id'] || ''}
-                      manage={manage !== false}
-                      onChangeBlock={(blockId, blockData) => {
-                        const newBlocks = {
-                          ...blocks,
-                          [blockId]: blockData,
-                        };
-                        const newData = {
-                          ...data,
-                          blocks: newBlocks,
-                        };
-                        onChangeBlock(block, newData);
-                      }}
-                      selected={selectedChildBlock === blockId}
-                      index={blocks_layout.items.indexOf(blockId)}
-                      blocksConfig={blocksConfig}
-                    />
-                  ) : (
-                    <div className="unknown-block">
-                      Unknown block type: {childBlock['@type']}
-                    </div>
-                  );
-                }}
+                {({ blockId }) => renderBlock(blockId, blocks_layout.items.indexOf(blockId))}
               </GridLayout>
-              
-              {/* Grid Info */}
-              <div style={{
-                position: 'absolute',
-                bottom: '60px', // Above the add button
-                left: '16px',
-                zIndex: 5, // Lower z-index so it doesn't block interactions
-                background: 'rgba(0, 0, 0, 0.7)',
-                color: 'white',
-                padding: '6px 8px',
-                borderRadius: '4px',
-                fontSize: '11px',
-                maxWidth: '250px',
-                pointerEvents: 'none' // Allow clicks to pass through
-              }}>
-                <div>💡 Click to select • Drag ⋮⋮ to move blocks around
-                  <br/>🎨 Drag colored handles to resize block content (font size, padding, width)</div>
+
+              <div className="grid-info">
+                💡 Click to select • Drag ⋮⋮ to move blocks around
+                <br />
+                🎨 Drag colored handles to resize block content (font size,
+                padding, width)
               </div>
-              
-              {/* Add Block Button for Grid Mode */}
-              <div style={{
-                position: 'absolute',
-                bottom: '16px',
-                right: '16px',
-                zIndex: 10
-              }}>
+
+              <div className="grid-add-button-container">
                 <FloatingAddButton
                   onAddBlock={handleAddBlock}
                   blockId={block}
@@ -321,92 +316,43 @@ const CustomSectionBlockEdit = (props) => {
               </div>
             </div>
           )
+        ) : // Linear Layout Mode (Original)
+        isEmpty ? (
+          <FloatingAddButton
+            onAddBlock={handleAddBlock}
+            blockId={block}
+            blocksConfig={blocksConfig}
+            properties={properties}
+            className="custom-section-empty"
+          />
         ) : (
-          // Linear Layout Mode (Original)
-          isEmpty ? (
+          <div className="section-blocks linear-layout">
+            {blocks_layout.items.map((childBlockId, index) => (
+              <div
+                key={childBlockId}
+                className={cx('section-child-block', {
+                  selected: selectedChildBlock === childBlockId,
+                })}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedChildBlock(childBlockId);
+                }}
+              >
+                {renderBlock(childBlockId, index)}
+              </div>
+            ))}
             <FloatingAddButton
               onAddBlock={handleAddBlock}
               blockId={block}
               blocksConfig={blocksConfig}
               properties={properties}
-              className="custom-section-empty"
+              className="custom-section-add-more"
+              inline={true}
             />
-          ) : (
-            <div className={`section-blocks linear-layout`}>
-              {blocks_layout.items.map((childBlockId) => {
-                const childBlock = blocks[childBlockId];
-                if (!childBlock) return null;
-                
-                const BlockComponent = blocksConfig?.[childBlock['@type']]?.edit;
-                
-                return (
-                  <div 
-                    key={childBlockId} 
-                    className={`section-child-block ${selectedChildBlock === childBlockId ? 'selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedChildBlock(childBlockId);
-                    }}
-                    style={{ 
-                      cursor: 'pointer',
-                      border: selectedChildBlock === childBlockId ? '2px solid #007bc1' : '1px solid transparent',
-                      borderRadius: '4px',
-                      padding: '0.5rem'
-                    }}
-                  >
-                    {BlockComponent ? (
-                      <BlockComponent
-                        data={childBlock}
-                        properties={properties}
-                        block={childBlockId}
-                        pathname={pathname || properties?.['@id'] || ''}
-                        manage={manage !== false}
-                        onChangeBlock={(blockId, blockData) => {
-                          const newBlocks = {
-                            ...blocks,
-                            [blockId]: blockData,
-                          };
-                          const newData = {
-                            ...data,
-                            blocks: newBlocks,
-                          };
-                          onChangeBlock(block, newData);
-                        }}
-                        selected={selectedChildBlock === childBlockId}
-                        index={blocks_layout.items.indexOf(childBlockId)}
-                        blocksConfig={blocksConfig}
-                      />
-                    ) : (
-                      <div className="unknown-block">
-                        Unknown block type: {childBlock['@type']}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-              <FloatingAddButton
-                onAddBlock={handleAddBlock}
-                blockId={block}
-                blocksConfig={blocksConfig}
-                properties={properties}
-                className="custom-section-add-more"
-                inline={true}
-              />
-            </div>
-          )
+          </div>
         )}
       </div>
-      
-      {/* Position Controls Modal */}
-      {showPositionControls && selectedChildBlock && (
-        <PositionControls
-          blockId={selectedChildBlock}
-          position={gridConfig.positions[selectedChildBlock] || { x: 0, y: 0, width: 6, height: 4 }}
-          onUpdatePosition={updateBlockPosition}
-          gridConfig={gridConfig}
-          onClose={() => setShowPositionControls(false)}
-        />
-      )}
+
     </div>
   );
 };
@@ -440,14 +386,14 @@ CustomSectionBlockEdit.propTypes = {
 CustomSectionBlockEdit.defaultProps = {
   data: {
     blocks: {},
-    blocks_layout: { 
+    blocks_layout: {
       items: [],
       mode: 'linear',
       grid: {
         columns: 12,
         rowHeight: 60,
-        positions: {}
-      }
+        positions: {},
+      },
     },
     title: '',
   },

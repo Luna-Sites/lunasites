@@ -1,210 +1,190 @@
-import React from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 
-const DraggableGridBlock = ({ 
-  blockId, 
-  position, 
-  children, 
+const GRID_CONSTANTS = {
+  PADDING: 8,
+  GAP: 8,
+  DEFAULT_COLUMNS: 12,
+  DEFAULT_ROW_HEIGHT: 60,
+  CELL_WIDTH_THRESHOLD: 0.3,
+  CELL_HEIGHT_THRESHOLD: 0.3,
+};
+
+const DraggableGridBlock = ({
+  blockId,
+  position,
+  children,
   selected,
   onSelect,
   onStartDrag,
   onEndDrag,
-  gridConfig,
+  gridConfig = {},
   onTempPositionUpdate,
   onClearTempPosition,
-  className = ''
+  onFinalizePosition,
+  className = '',
 }) => {
-  const [isDragging, setIsDragging] = React.useState(false);
-  const [snapPosition, setSnapPosition] = React.useState(null);
-  const originalPosition = React.useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [snapPosition, setSnapPosition] = useState(null);
+  const originalPosition = useRef(null);
 
-  const handleMouseDown = (e) => {
-    // Only allow dragging from drag handle to avoid blocking block editing
-    const isDragHandle = e.target.closest('.drag-handle');
-    
-    if (!isDragHandle) {
-      // If not drag handle, just select the block but allow event to propagate
-      if (onSelect && !selected) {
-        onSelect(blockId);
-      }
-      return;
-    }
-
-    // Only prevent default for drag handle
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const element = e.currentTarget;
-    
-    setIsDragging(true);
-    originalPosition.current = position;
-    element.setAttribute('data-block-id', blockId);
-    element.setAttribute('data-position', JSON.stringify(position));
-    
-    if (onStartDrag) {
-      onStartDrag(blockId);
-    }
-
-    // Cache grid calculations for better performance
+  const calculateGridMetrics = useCallback(() => {
     const gridLayer = document.querySelector('.grid-drag-layer');
     const rect = gridLayer?.getBoundingClientRect();
-    const padding = 8; // Match the reduced grid padding
-    const gap = 8;
-    const columns = gridConfig?.columns || 12;
-    const rowHeight = gridConfig?.rowHeight || 60;
-    const availableWidth = rect ? rect.width - (2 * padding) - ((columns - 1) * gap) : 0;
+    const columns = gridConfig.columns || GRID_CONSTANTS.DEFAULT_COLUMNS;
+    const rowHeight = gridConfig.rowHeight || GRID_CONSTANTS.DEFAULT_ROW_HEIGHT;
+
+    if (!rect) return null;
+
+    const availableWidth =
+      rect.width -
+      2 * GRID_CONSTANTS.PADDING -
+      (columns - 1) * GRID_CONSTANTS.GAP;
     const cellWidth = availableWidth / columns;
-    const cellHeight = rowHeight + gap;
+    const cellHeight = rowHeight + GRID_CONSTANTS.GAP;
     const maxX = Math.max(0, columns - position.width);
-    
-    let lastSnapX = position.x;
-    let lastSnapY = position.y;
-    
-    const handleMouseMove = (moveEvent) => {
-      if (!rect) return;
-      
-      const relativeX = moveEvent.clientX - rect.left;
-      const relativeY = moveEvent.clientY - rect.top;
-      
-      const adjustedX = Math.max(0, relativeX - padding);
-      const adjustedY = Math.max(0, relativeY - padding);
-      
-      // Use floor instead of round for more cursor-following behavior
-      // Add small threshold to prevent micro-movements
-      const gridX = Math.floor((adjustedX + cellWidth * 0.3) / cellWidth);
-      const gridY = Math.floor((adjustedY + cellHeight * 0.3) / cellHeight);
-      
-      const snapX = Math.min(Math.max(0, gridX), maxX);
-      const snapY = Math.max(0, gridY);
-      
-      // Only update if position actually changed to reduce redraws
-      if (snapX !== lastSnapX || snapY !== lastSnapY) {
-        lastSnapX = snapX;
-        lastSnapY = snapY;
-        setSnapPosition({ x: snapX, y: snapY });
-        
-        if (onTempPositionUpdate) {
-          onTempPositionUpdate(blockId, { ...position, x: snapX, y: snapY });
+
+    return { rect, cellWidth, cellHeight, maxX, columns };
+  }, [gridConfig, position.width]);
+
+  const calculateSnapPosition = useCallback((clientX, clientY, metrics) => {
+    const { rect, cellWidth, cellHeight, maxX } = metrics;
+
+    const relativeX = clientX - rect.left;
+    const relativeY = clientY - rect.top;
+    const adjustedX = Math.max(0, relativeX - GRID_CONSTANTS.PADDING);
+    const adjustedY = Math.max(0, relativeY - GRID_CONSTANTS.PADDING);
+
+    const gridX = Math.floor(
+      (adjustedX + cellWidth * GRID_CONSTANTS.CELL_WIDTH_THRESHOLD) / cellWidth,
+    );
+    const gridY = Math.floor(
+      (adjustedY + cellHeight * GRID_CONSTANTS.CELL_HEIGHT_THRESHOLD) /
+        cellHeight,
+    );
+
+    return {
+      x: Math.min(Math.max(0, gridX), maxX),
+      y: Math.max(0, gridY),
+    };
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    setIsDragging(false);
+    setSnapPosition(null);
+    onEndDrag?.(blockId);
+  }, [blockId, onEndDrag]);
+
+  const handleMouseDown = useCallback(
+    (e) => {
+      if (!e.target.closest('.drag-handle')) {
+        if (onSelect && !selected) {
+          onSelect(blockId);
         }
+        return;
       }
-    };
 
-    const handleMouseUp = (upEvent) => {
-      setIsDragging(false);
-      setSnapPosition(null);
-      
-      // Clear temp position to allow final drop calculation
-      if (onClearTempPosition) {
-        onClearTempPosition(blockId);
-      }
-      
-      // Find the drop target under the mouse
-      const dropTarget = document.elementFromPoint(upEvent.clientX, upEvent.clientY);
-      const gridLayer = dropTarget?.closest('.grid-drag-layer');
-      
-      if (gridLayer && gridLayer.onMouseUp) {
-        gridLayer.onMouseUp(upEvent);
-      } else {
-        // Manually trigger drop calculation
-        const event = new MouseEvent('mouseup', {
-          clientX: upEvent.clientX,
-          clientY: upEvent.clientY,
-          bubbles: true
-        });
-        gridLayer?.dispatchEvent(event);
-      }
-      
-      if (onEndDrag) {
-        onEndDrag(blockId);
-      }
-      
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
+      e.preventDefault();
+      e.stopPropagation();
 
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+      const metrics = calculateGridMetrics();
+      if (!metrics) return;
+
+      setIsDragging(true);
+      originalPosition.current = position;
+      onStartDrag?.(blockId);
+
+      let lastSnapPosition = { x: position.x, y: position.y };
+
+      const handleMouseMove = (moveEvent) => {
+        const snapPos = calculateSnapPosition(
+          moveEvent.clientX,
+          moveEvent.clientY,
+          metrics,
+        );
+
+        if (
+          snapPos.x !== lastSnapPosition.x ||
+          snapPos.y !== lastSnapPosition.y
+        ) {
+          lastSnapPosition = snapPos;
+          setSnapPosition(snapPos);
+          onTempPositionUpdate?.(blockId, { ...position, ...snapPos });
+        }
+      };
+
+      const handleMouseUp = (upEvent) => {
+        // Calculate final position and use direct callback
+        const finalSnapPos = calculateSnapPosition(
+          upEvent.clientX,
+          upEvent.clientY,
+          metrics,
+        );
+        const finalPosition = { ...position, ...finalSnapPos };
+
+        // Use the clean callback approach
+        onFinalizePosition?.(blockId, finalPosition);
+
+        handleDragEnd();
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    },
+    [
+      blockId,
+      position,
+      selected,
+      onSelect,
+      onStartDrag,
+      calculateGridMetrics,
+      calculateSnapPosition,
+      onTempPositionUpdate,
+      onFinalizePosition,
+      handleDragEnd,
+    ],
+  );
+
+  const handleClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      onSelect?.(blockId);
+    },
+    [blockId, onSelect],
+  );
+
+  const gridStyle = {
+    gridColumn: `${position.x + 1} / span ${position.width}`,
+    gridRow: `${position.y + 1} / span ${position.height}`,
   };
 
-  const handleClick = (e) => {
-    e.stopPropagation();
-    if (onSelect) {
-      onSelect(blockId);
-    }
-  };
-
+  const blockClassName = cx('draggable-grid-block', className, {
+    selected,
+    'being-dragged': isDragging,
+  });
 
   return (
-    <div 
-      className={`draggable-grid-block ${selected ? 'selected' : ''} ${isDragging ? 'being-dragged' : ''} ${className}`}
+    <div
+      className={blockClassName}
       onClick={handleClick}
       data-block-id={blockId}
-      style={{ 
-        gridColumn: `${position.x + 1} / span ${position.width}`,
-        gridRow: `${position.y + 1} / span ${position.height}`,
-        position: 'relative',
-        transition: 'none', // Let CSS Grid handle transitions
-        opacity: isDragging ? 0.8 : 1,
-        userSelect: 'none',
-        transform: isDragging ? 'scale(1.02)' : 'scale(1)', // Slight scale up when dragging
-      }}
+      style={gridStyle}
     >
-      {/* Drag Handle */}
-      <div 
+      <div
         className="drag-handle"
-        style={{
-          position: 'absolute',
-          top: '8px',
-          left: '8px',
-          width: '24px',
-          height: '18px',
-          background: isDragging ? 
-            'linear-gradient(135deg, #007bc1 0%, #0056b3 100%)' : 
-            'linear-gradient(135deg, rgba(0, 123, 193, 0.9) 0%, rgba(0, 86, 179, 0.9) 100%)',
-          borderRadius: '6px',
-          cursor: isDragging ? 'grabbing' : 'grab',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '12px',
-          color: 'white',
-          opacity: selected ? 1 : 0.75,
-          transition: isDragging ? 'none' : 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          zIndex: 15,
-          boxShadow: isDragging ? 
-            '0 8px 16px rgba(0, 123, 193, 0.3), 0 4px 8px rgba(0, 0, 0, 0.1)' : 
-            '0 2px 8px rgba(0, 123, 193, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1)',
-          backdropFilter: 'blur(8px)'
-        }}
         title="Drag to move"
         onMouseDown={handleMouseDown}
       >
         ⋮⋮
       </div>
 
-      {/* Block Content - render directly without wrapper */}
       {children}
-      
-      {/* Position Info (Debug) - only show grid position, no resize info */}
+
       {selected && (
-        <div 
-          style={{
-            position: 'absolute',
-            bottom: '8px',
-            right: '8px',
-            fontSize: '9px',
-            background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.9) 100%)',
-            color: 'white',
-            padding: '3px 6px',
-            borderRadius: '6px',
-            pointerEvents: 'none',
-            fontFamily: 'monospace',
-            fontWeight: '500',
-            backdropFilter: 'blur(4px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
-          }}
-        >
+        <div className="grid-position-info">
           Grid: {position.x},{position.y} • {position.width}×{position.height}
         </div>
       )}
@@ -231,18 +211,8 @@ DraggableGridBlock.propTypes = {
   }),
   onTempPositionUpdate: PropTypes.func,
   onClearTempPosition: PropTypes.func,
+  onFinalizePosition: PropTypes.func,
   className: PropTypes.string,
-};
-
-DraggableGridBlock.defaultProps = {
-  selected: false,
-  onSelect: () => {},
-  onStartDrag: () => {},
-  onEndDrag: () => {},
-  gridConfig: { columns: 12, rowHeight: 60 },
-  onTempPositionUpdate: () => {},
-  onClearTempPosition: () => {},
-  className: '',
 };
 
 export default DraggableGridBlock;

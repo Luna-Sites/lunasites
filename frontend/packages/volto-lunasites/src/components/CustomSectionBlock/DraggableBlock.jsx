@@ -1,142 +1,99 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable/Loadable';
+import cx from 'classnames';
 
 const BLOCK_TYPE = 'GRID_BLOCK';
 
 const dragSource = {
-  beginDrag(props) {
-    return {
-      blockId: props.blockId,
-      position: props.position,
-      type: BLOCK_TYPE
-    };
-  }
+  beginDrag: (props) => ({
+    blockId: props.blockId,
+    position: props.position,
+    type: BLOCK_TYPE,
+  }),
 };
 
 const dragCollect = (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
-  isDragging: monitor.isDragging()
+  isDragging: monitor.isDragging(),
 });
 
-const DraggableBlock = ({ 
-  blockId, 
-  position, 
-  children, 
-  onUpdatePosition,
+const DragHandle = ({ selected }) => (
+  <div className="drag-handle" title="Drag to move">
+    ⋮⋮
+  </div>
+);
+
+const PositionInfo = ({ position, selected }) =>
+  selected ? (
+    <div className="position-info">
+      {position.x},{position.y} ({position.width}×{position.height})
+    </div>
+  ) : null;
+
+const DraggableBlock = ({
+  blockId,
+  position,
+  children,
   selected,
   onSelect,
-  gridConfig,
   connectDragSource,
   isDragging,
-  reactDnd
+  reactDnd,
 }) => {
-  
-  if (!reactDnd) {
-    return (
-      <div 
-        className={`draggable-block ${selected ? 'selected' : ''}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (onSelect) onSelect(blockId);
-        }}
-        style={{ 
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          cursor: 'pointer'
-        }}
-      >
-        {children}
-      </div>
-    );
-  }
+  const handleClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      onSelect?.(blockId);
+    },
+    [blockId, onSelect],
+  );
 
-  const handleClick = (e) => {
-    e.stopPropagation();
-    if (onSelect) {
-      onSelect(blockId);
-    }
-  };
+  const className = cx('draggable-block', {
+    selected,
+    dragging: isDragging,
+    'non-draggable-block': !reactDnd,
+  });
 
-  const blockStyle = {
-    cursor: isDragging ? 'grabbing' : 'grab',
-    opacity: isDragging ? 0.7 : 1,
-    transform: isDragging ? 'rotate(2deg)' : 'none',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'relative',
-    transition: isDragging ? 'none' : 'all 0.2s ease',
-  };
-
-  return connectDragSource(
-    <div 
-      className={`draggable-block ${selected ? 'selected' : ''} ${isDragging ? 'dragging' : ''}`}
-      onClick={handleClick}
-      style={blockStyle}
-      data-block-id={blockId}
-    >
-      {/* Drag Handle */}
-      <div 
-        className="drag-handle"
-        style={{
-          position: 'absolute',
-          top: '4px',
-          right: '4px',
-          width: '20px',
-          height: '20px',
-          background: 'rgba(0, 123, 193, 0.8)',
-          borderRadius: '4px',
-          cursor: 'grab',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '12px',
-          color: 'white',
-          opacity: selected ? 1 : 0,
-          transition: 'opacity 0.2s ease',
-          zIndex: 10
-        }}
-        title="Drag to move"
-      >
-        ⋮⋮
-      </div>
-
-      {/* Block Content */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {children}
-      </div>
-
-      {/* Position Info (Debug - can be removed later) */}
-      {selected && (
-        <div 
-          style={{
-            position: 'absolute',
-            bottom: '4px',
-            left: '4px',
-            fontSize: '10px',
-            background: 'rgba(0, 0, 0, 0.7)',
-            color: 'white',
-            padding: '2px 6px',
-            borderRadius: '3px',
-            pointerEvents: 'none'
-          }}
-        >
-          {position.x},{position.y} ({position.width}×{position.height})
-        </div>
-      )}
+  const blockContent = (
+    <div className={className} onClick={handleClick} data-block-id={blockId}>
+      <DragHandle selected={selected} />
+      <div className="block-content">{children}</div>
+      <PositionInfo position={position} selected={selected} />
     </div>
   );
+
+  return reactDnd && connectDragSource
+    ? connectDragSource(blockContent)
+    : blockContent;
 };
 
 const createDraggableBlock = (reactDnd) => {
-  if (!reactDnd) {
+  if (!reactDnd?.DragSource) {
     return DraggableBlock;
   }
-  
+
   const { DragSource } = reactDnd;
   return DragSource(BLOCK_TYPE, dragSource, dragCollect)(DraggableBlock);
+};
+
+const DraggableBlockWithLoadables = ({ reactDnd, ...props }) => {
+  const DraggableComponent = createDraggableBlock(reactDnd);
+  return <DraggableComponent {...props} reactDnd={reactDnd} />;
+};
+
+DragHandle.propTypes = {
+  selected: PropTypes.bool,
+};
+
+PositionInfo.propTypes = {
+  position: PropTypes.shape({
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+  }).isRequired,
+  selected: PropTypes.bool,
 };
 
 DraggableBlock.propTypes = {
@@ -148,30 +105,11 @@ DraggableBlock.propTypes = {
     height: PropTypes.number.isRequired,
   }).isRequired,
   children: PropTypes.node.isRequired,
-  onUpdatePosition: PropTypes.func,
   selected: PropTypes.bool,
   onSelect: PropTypes.func,
-  gridConfig: PropTypes.shape({
-    columns: PropTypes.number.isRequired,
-    rowHeight: PropTypes.number.isRequired,
-  }).isRequired,
-  // react-dnd props (optional when not draggable)
   connectDragSource: PropTypes.func,
   isDragging: PropTypes.bool,
   reactDnd: PropTypes.object,
-};
-
-DraggableBlock.defaultProps = {
-  onUpdatePosition: () => {},
-  selected: false,
-  onSelect: () => {},
-  connectDragSource: (el) => el,
-  isDragging: false,
-};
-
-const DraggableBlockWithLoadables = ({ reactDnd, ...props }) => {
-  const DraggableComponent = createDraggableBlock(reactDnd);
-  return <DraggableComponent {...props} reactDnd={reactDnd} />;
 };
 
 DraggableBlockWithLoadables.propTypes = {
