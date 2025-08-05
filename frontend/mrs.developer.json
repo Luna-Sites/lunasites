@@ -177,12 +177,5 @@
     "url": "git@github.com:Luna-Sites/luna-super-listing.git",
     "https": "https://github.com/Luna-Sites/luna-super-listing.git",
     "branch": "master"
-  },
-  "@eeacms/volto-object-widget": {
-    "develop": false,
-    "output": "packages",
-    "package": "@eeacms/volto-object-widget",
-    "url": "git@github.com:eea/volto-object-widget.git",
-    "https": "https://github.com/eea/volto-object-widget.git"
   }
 }

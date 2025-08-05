@@ -210,6 +210,14 @@ const messages = defineMessages({
     id: 'properties-scroll-snap-description',
     defaultMessage: 'Enable scroll snap for full-screen sections',
   },
+  pImagePositionTitle: {
+    id: 'properties-image-position-title',
+    defaultMessage: 'Image position',
+  },
+  pImagePositionDescription: {
+    id: 'properties-image-position-description',
+    defaultMessage: 'Position of background image',
+  },
   // Specific styles messages
   filled: {
     id: 'filled',
@@ -429,5 +437,15 @@ export const defaultStylingProperties = (intl) => ({
     title: intl.formatMessage(messages.pNoGapTitle),
     description: intl.formatMessage(messages.pNoGapDescription),
     type: 'boolean',
+  },
+  backgroundPosition: {
+    title: intl.formatMessage(messages.pImagePositionTitle),
+    description: intl.formatMessage(messages.pImagePositionDescription),
+    choices: [
+      ['top', 'Top'],
+      ['center', 'Center'],
+      ['bottom', 'Bottom'],
+    ],
+    default: 'center',
   },
 });

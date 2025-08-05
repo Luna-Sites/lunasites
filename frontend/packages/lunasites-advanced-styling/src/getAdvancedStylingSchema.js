@@ -7,6 +7,7 @@ export const getAdvancedStylingSchema = (intl) => ({
       id: 'default',
       title: 'Default',
       fields: [
+        'backgroundPosition',
         'backgroundColor',
         'textColor',
         'textAlign',

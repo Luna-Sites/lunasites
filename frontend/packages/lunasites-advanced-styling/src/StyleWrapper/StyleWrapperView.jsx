@@ -137,6 +137,9 @@ export function getInlineStyles(
     ...(data.clear && {
       clear: data.clear,
     }),
+    ...(data.backgroundPosition && {
+      backgroundPosition: data.backgroundPosition,
+    }),
     // Apply custom CSS styles (these can override defaults)
     ...customStyles,
   };
