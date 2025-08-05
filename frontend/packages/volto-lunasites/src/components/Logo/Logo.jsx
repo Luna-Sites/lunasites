@@ -6,7 +6,6 @@ import config from '@plone/volto/registry';
 import { UniversalLink } from '@plone/volto/components';
 import { toBackendLang } from '@plone/volto/helpers';
 import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
-import LogoImage from '@plone/volto/components/theme/Logo/Logo.svg';
 import { serializeNodesToText } from '@plone/volto-slate/editor/render';
 import RenderBlocks from '@plone/volto/components/theme/View/RenderBlocks';
 
@@ -25,7 +24,6 @@ const Logo = () => {
   const { settings } = config;
   const lang = useSelector((state) => state.intl.locale);
   const intl = useIntl();
-  const site = useSelector((state) => state.site.data);
   // Get logo data from Redux store (DesignSchemaProvider handles the loading)
   const designSchemaData = useSelector(
     (state) =>
@@ -130,18 +128,8 @@ const Logo = () => {
       );
     }
 
-    // Case 4: Default logo (site logo or fallback)
-    return (
-      <img
-        src={
-          site['plone.site_logo']
-            ? flattenToAppURL(site['plone.site_logo'])
-            : LogoImage
-        }
-        alt={intl.formatMessage(messages.homepage)}
-        title={intl.formatMessage(messages.homepage)}
-      />
-    );
+    // Case 4: No logo - return null (don't render anything)
+    return null;
   };
 
   // Determine the CSS class based on logo content

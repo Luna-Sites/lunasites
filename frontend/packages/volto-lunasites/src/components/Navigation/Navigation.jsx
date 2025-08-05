@@ -76,7 +76,7 @@ const Navigation = ({ pathname }) => {
     const timeout = setTimeout(() => {
       setDesktopMenuOpen(null);
       setCurrentOpenIndex(null);
-    }, 2000); // 2 seconds delay to navigate to submenu
+    }, 0); // Instant close
     setHoverTimeout(timeout);
   };
 
