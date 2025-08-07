@@ -17,6 +17,14 @@ const messages = defineMessages({
     id: 'Description',
     defaultMessage: 'Description',
   },
+  animationSpeed: {
+    id: 'Animation Speed',
+    defaultMessage: 'Animation Speed',
+  },
+  settings: {
+    id: 'Settings',
+    defaultMessage: 'Settings',
+  },
 });
 
 export const ScrollingBannerSchema = ({ intl }) => ({
@@ -26,6 +34,11 @@ export const ScrollingBannerSchema = ({ intl }) => ({
       id: 'default',
       title: 'Default',
       fields: ['items'],
+    },
+    {
+      id: 'settings',
+      title: intl.formatMessage(messages.settings),
+      fields: ['animationSpeed'],
     },
   ],
   properties: {
@@ -54,6 +67,14 @@ export const ScrollingBannerSchema = ({ intl }) => ({
         },
         required: ['title'],
       },
+    },
+    animationSpeed: {
+      title: intl.formatMessage(messages.animationSpeed),
+      type: 'number',
+      default: 3,
+      minimum: 1,
+      maximum: 10,
+      description: 'Animation speed (higher = faster)',
     },
   },
   required: ['items'],

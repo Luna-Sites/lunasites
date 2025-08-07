@@ -3,40 +3,49 @@
   overflow: hidden;
   position: relative;
 
+  // Full width styling
+  &.full-width {
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: 100vw;
+  }
+
   .scrolling-banner-container {
     width: 100%;
-    padding: 8px 0;
+    padding: 12px 0;
     overflow: hidden;
     position: relative;
     white-space: nowrap;
 
-    // Default styling similar to the warning banner
-    background-color: #dc3545;
+    // Default styling with bright red background
+    background-color: red;
     color: #ffffff;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 19px;
     line-height: 1.4;
-
-    // Add warning icon styling if needed
-    &::before {
-      content: '⚠️';
-      margin-right: 8px;
-      display: inline-block;
-    }
   }
 
   .scrolling-banner-content {
     display: inline-block;
     white-space: nowrap;
-    animation: scroll-left 30s linear infinite;
+    animation: scroll-left var(--animation-speed, 30s) linear infinite;
 
     // Ensure smooth continuous scrolling
     will-change: transform;
   }
 
   .scrolling-banner-item {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     white-space: nowrap;
+
+    .scrolling-banner-alert {
+      margin-right: 12px;
+      font-size: 18px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+    }
 
     .scrolling-banner-title {
       font-weight: 600;
