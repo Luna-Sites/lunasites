@@ -4,7 +4,7 @@ import cx from 'classnames';
 import './ScrollingBanner.scss';
 
 const ScrollingBannerView = ({ data, className }) => {
-  const { items = [], animationSpeed = 3 } = data;
+  const { items = [], animationSpeed = 3, stickyBottom = false } = data;
 
   if (!items || items.length === 0) {
     return null;
@@ -33,7 +33,12 @@ const ScrollingBannerView = ({ data, className }) => {
   };
 
   return (
-    <div className={cx('scrolling-banner-block', 'full-width', className)}>
+    <div className={cx(
+      'scrolling-banner-block', 
+      'full-width',
+      { 'sticky-bottom': stickyBottom },
+      className
+    )}>
       <div className="scrolling-banner-container" style={bannerStyle}>
         <div className="scrolling-banner-content">{scrollingContent}</div>
       </div>
@@ -50,6 +55,7 @@ ScrollingBannerView.propTypes = {
       })
     ),
     animationSpeed: PropTypes.number,
+    stickyBottom: PropTypes.bool,
   }),
   className: PropTypes.string,
 };

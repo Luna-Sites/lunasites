@@ -10,6 +10,17 @@
     width: 100vw;
   }
 
+  // Sticky bottom positioning
+  &.sticky-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 50;
+    right: 50;
+    z-index: 9999;
+    margin: 0;
+    width: 100vw;
+  }
+
   .scrolling-banner-container {
     width: 100%;
     padding: 12px 0;
@@ -98,7 +109,7 @@
 // Edit mode styling
 .block.selected .scrolling-banner-block {
   .scrolling-banner-container {
-    border: 2px dashed #007eb1;
+    border: 2px dashed #3d3d3d;
     position: relative;
 
     &::after {
@@ -106,7 +117,7 @@
       position: absolute;
       top: -25px;
       left: 0;
-      background: #007eb1;
+      background: #242424;
       color: white;
       padding: 2px 8px;
       font-size: 11px;

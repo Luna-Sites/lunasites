@@ -21,6 +21,10 @@ const messages = defineMessages({
     id: 'Animation Speed',
     defaultMessage: 'Animation Speed',
   },
+  stickyBottom: {
+    id: 'Sticky Bottom',
+    defaultMessage: 'Sticky Bottom',
+  },
   settings: {
     id: 'Settings',
     defaultMessage: 'Settings',
@@ -38,7 +42,7 @@ export const ScrollingBannerSchema = ({ intl }) => ({
     {
       id: 'settings',
       title: intl.formatMessage(messages.settings),
-      fields: ['animationSpeed'],
+      fields: ['animationSpeed', 'stickyBottom'],
     },
   ],
   properties: {
@@ -75,6 +79,12 @@ export const ScrollingBannerSchema = ({ intl }) => ({
       minimum: 1,
       maximum: 10,
       description: 'Animation speed (higher = faster)',
+    },
+    stickyBottom: {
+      title: intl.formatMessage(messages.stickyBottom),
+      type: 'boolean',
+      default: false,
+      description: 'Keep banner always visible at bottom of screen',
     },
   },
   required: ['items'],
