@@ -70,6 +70,7 @@ import {
 import { DesignSchemaProvider, ColorSchemaField } from './components';
 import { designSchema } from './reducers';
 import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
+import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
 
 const isBlockClassActive = (editor, format) => {
   if (!editor.selection) return false;
@@ -144,6 +145,9 @@ const applyConfig = (config) => {
 
   // Register tools header widget
   config.widgets.widget.tools_header = ToolsHeaderField;
+
+  // Register simple color picker widget
+  config.widgets.widget.simple_color_picker = SimpleColorPicker;
 
   config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;

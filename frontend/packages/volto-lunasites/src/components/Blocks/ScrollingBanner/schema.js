@@ -25,6 +25,14 @@ const messages = defineMessages({
     id: 'Sticky Bottom',
     defaultMessage: 'Sticky Bottom',
   },
+  backgroundColor: {
+    id: 'Background Color',
+    defaultMessage: 'Background Color',
+  },
+  textColor: {
+    id: 'Text Color',
+    defaultMessage: 'Text Color',
+  },
   settings: {
     id: 'Settings',
     defaultMessage: 'Settings',
@@ -42,7 +50,12 @@ export const ScrollingBannerSchema = ({ intl }) => ({
     {
       id: 'settings',
       title: intl.formatMessage(messages.settings),
-      fields: ['animationSpeed', 'stickyBottom'],
+      fields: [
+        'animationSpeed',
+        'stickyBottom',
+        'backgroundColor',
+        'textColor',
+      ],
     },
   ],
   properties: {
@@ -85,6 +98,56 @@ export const ScrollingBannerSchema = ({ intl }) => ({
       type: 'boolean',
       default: false,
       description: 'Keep banner always visible at bottom of screen',
+    },
+    backgroundColor: {
+      title: intl.formatMessage(messages.backgroundColor),
+      type: 'string',
+      widget: 'simple_color_picker',
+      default: '#ff0000',
+      description: 'Background color of the banner',
+      colors: [
+        '#ff0000', // Red
+        '#00ff00', // Green
+        '#0000ff', // Blue
+        '#ffff00', // Yellow
+        '#ff8800', // Orange
+        '#8800ff', // Purple
+        '#00ffff', // Cyan
+        '#ff00ff', // Magenta
+        '#000000', // Black
+        '#ffffff', // White
+        '#808080', // Gray
+        '#dc3545', // Bootstrap Danger
+        '#28a745', // Bootstrap Success
+        '#007bff', // Bootstrap Primary
+        '#ffc107', // Bootstrap Warning
+        '#17a2b8', // Bootstrap Info
+      ],
+    },
+    textColor: {
+      title: intl.formatMessage(messages.textColor),
+      type: 'string',
+      widget: 'simple_color_picker',
+      default: '#ffffff',
+      description: 'Text color of the banner',
+      colors: [
+        '#ffffff', // White
+        '#000000', // Black
+        '#ff0000', // Red
+        '#00ff00', // Green
+        '#0000ff', // Blue
+        '#ffff00', // Yellow
+        '#ff8800', // Orange
+        '#8800ff', // Purple
+        '#00ffff', // Cyan
+        '#ff00ff', // Magenta
+        '#808080', // Gray
+        '#f8f9fa', // Light Gray
+        '#343a40', // Dark Gray
+        '#6c757d', // Medium Gray
+        '#e9ecef', // Very Light Gray
+        '#495057', // Darker Gray
+      ],
     },
   },
   required: ['items'],

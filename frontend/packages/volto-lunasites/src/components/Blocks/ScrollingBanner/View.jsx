@@ -4,7 +4,13 @@ import cx from 'classnames';
 import './ScrollingBanner.scss';
 
 const ScrollingBannerView = ({ data, className }) => {
-  const { items = [], animationSpeed = 3, stickyBottom = false } = data;
+  const {
+    items = [],
+    animationSpeed = 3,
+    stickyBottom = false,
+    backgroundColor = '#ff0000',
+    textColor = '#ffffff',
+  } = data;
 
   if (!items || items.length === 0) {
     return null;
@@ -30,6 +36,8 @@ const ScrollingBannerView = ({ data, className }) => {
   const calculatedSpeed = 50 - (animationSpeed * 4);
   const bannerStyle = {
     '--animation-speed': `${calculatedSpeed}s`,
+    backgroundColor,
+    color: textColor,
   };
 
   return (
@@ -56,6 +64,8 @@ ScrollingBannerView.propTypes = {
     ),
     animationSpeed: PropTypes.number,
     stickyBottom: PropTypes.bool,
+    backgroundColor: PropTypes.string,
+    textColor: PropTypes.string,
   }),
   className: PropTypes.string,
 };
