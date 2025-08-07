@@ -10,8 +10,9 @@ const ScrollingBannerView = ({ data, className }) => {
     return null;
   }
 
-  // Create the scrolling content by repeating items to ensure continuous scroll
-  const scrollingContent = [...items, ...items, ...items].map((item, index) => (
+  // Create the scrolling content by repeating items multiple times to ensure continuous coverage
+  const repeatedItems = [...items, ...items, ...items, ...items, ...items];
+  const scrollingContent = repeatedItems.map((item, index) => (
     <span key={`${index}-${item.title}`} className="scrolling-banner-item">
       <span className="scrolling-banner-alert">⚠️</span>
       <span className="scrolling-banner-title">{item.title}</span>
