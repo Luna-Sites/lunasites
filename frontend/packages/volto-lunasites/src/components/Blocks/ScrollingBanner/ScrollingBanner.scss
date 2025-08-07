@@ -1,0 +1,126 @@
+.scrolling-banner-block {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+
+  // Full width styling
+  &.full-width {
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: 100vw;
+  }
+
+  // Sticky bottom positioning
+  &.sticky-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 50;
+    right: 50;
+    z-index: 9999;
+    margin: 0;
+    width: 100vw;
+  }
+
+  .scrolling-banner-container {
+    width: 100%;
+    padding: 12px 0;
+    overflow: hidden;
+    position: relative;
+    white-space: nowrap;
+
+    // Styling (colors now set via inline styles)
+    font-weight: 500;
+    font-size: 19px;
+    line-height: 1.4;
+  }
+
+  .scrolling-banner-content {
+    display: inline-block;
+    white-space: nowrap;
+    animation: scroll-left var(--animation-speed, 30s) linear infinite;
+
+    // Ensure smooth continuous scrolling
+    will-change: transform;
+  }
+
+  .scrolling-banner-item {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+
+    .scrolling-banner-alert {
+      margin-right: 12px;
+      font-size: 18px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .scrolling-banner-title {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .scrolling-banner-description {
+      font-weight: 400;
+      margin-left: 4px;
+    }
+
+    .scrolling-banner-separator {
+      margin: 0 12px;
+      opacity: 0.8;
+    }
+  }
+
+  // Pause animation on hover for better UX
+  &:hover .scrolling-banner-content {
+    animation-play-state: paused;
+  }
+}
+
+// Keyframe animation for continuous scrolling with no gaps
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .scrolling-banner-block {
+    .scrolling-banner-container {
+      font-size: 13px;
+      padding: 6px 0;
+    }
+
+    .scrolling-banner-item {
+      .scrolling-banner-separator {
+        margin: 0 8px;
+      }
+    }
+  }
+}
+
+// Edit mode styling
+.block.selected .scrolling-banner-block {
+  .scrolling-banner-container {
+    border: 2px dashed #3d3d3d;
+    position: relative;
+
+    &::after {
+      content: 'Scrolling Banner Block';
+      position: absolute;
+      top: -25px;
+      left: 0;
+      background: #242424;
+      color: white;
+      padding: 2px 8px;
+      font-size: 11px;
+      border-radius: 3px;
+      font-weight: normal;
+    }
+  }
+}
