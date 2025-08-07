@@ -1,0 +1,108 @@
+.scrolling-banner-block {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+
+  .scrolling-banner-container {
+    width: 100%;
+    padding: 8px 0;
+    overflow: hidden;
+    position: relative;
+    white-space: nowrap;
+
+    // Default styling similar to the warning banner
+    background-color: #dc3545;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.4;
+
+    // Add warning icon styling if needed
+    &::before {
+      content: '⚠️';
+      margin-right: 8px;
+      display: inline-block;
+    }
+  }
+
+  .scrolling-banner-content {
+    display: inline-block;
+    white-space: nowrap;
+    animation: scroll-left 30s linear infinite;
+
+    // Ensure smooth continuous scrolling
+    will-change: transform;
+  }
+
+  .scrolling-banner-item {
+    display: inline-block;
+    white-space: nowrap;
+
+    .scrolling-banner-title {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .scrolling-banner-description {
+      font-weight: 400;
+      margin-left: 4px;
+    }
+
+    .scrolling-banner-separator {
+      margin: 0 12px;
+      opacity: 0.8;
+    }
+  }
+
+  // Pause animation on hover for better UX
+  &:hover .scrolling-banner-content {
+    animation-play-state: paused;
+  }
+}
+
+// Keyframe animation for continuous scrolling
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .scrolling-banner-block {
+    .scrolling-banner-container {
+      font-size: 13px;
+      padding: 6px 0;
+    }
+
+    .scrolling-banner-item {
+      .scrolling-banner-separator {
+        margin: 0 8px;
+      }
+    }
+  }
+}
+
+// Edit mode styling
+.block.selected .scrolling-banner-block {
+  .scrolling-banner-container {
+    border: 2px dashed #007eb1;
+    position: relative;
+
+    &::after {
+      content: 'Scrolling Banner Block';
+      position: absolute;
+      top: -25px;
+      left: 0;
+      background: #007eb1;
+      color: white;
+      padding: 2px 8px;
+      font-size: 11px;
+      border-radius: 3px;
+      font-weight: normal;
+    }
+  }
+}

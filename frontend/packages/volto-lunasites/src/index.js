@@ -60,6 +60,11 @@ import { mapsBlockSchemaEnhancer } from './components/Blocks/Maps/schema';
 import { sliderBlockSchemaEnhancer } from './components/Blocks/Slider/schema';
 
 import EventMetadataView from './components/Blocks/EventMetadata/View';
+import {
+  ScrollingBannerView,
+  ScrollingBannerEdit,
+  scrollingBannerSchemaEnhancer,
+} from './components/Blocks/ScrollingBanner';
 
 // Design Schema System
 import { DesignSchemaProvider, ColorSchemaField } from './components';
@@ -436,6 +441,18 @@ const applyConfig = (config) => {
       properties['@type'] === 'Event' ? false : true,
     mostUsed: false,
     sidebarTab: 0,
+  };
+
+  config.blocks.blocksConfig.scrollingBanner = {
+    id: 'scrollingBanner',
+    title: 'Scrolling Banner',
+    icon: descriptionSVG,
+    group: 'common',
+    view: ScrollingBannerView,
+    edit: ScrollingBannerEdit,
+    schemaEnhancer: scrollingBannerSchemaEnhancer,
+    mostUsed: false,
+    sidebarTab: 1,
   };
 
   // Check if the separator is present before enhancing it
