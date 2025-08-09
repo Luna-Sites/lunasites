@@ -60,11 +60,17 @@ import { mapsBlockSchemaEnhancer } from './components/Blocks/Maps/schema';
 import { sliderBlockSchemaEnhancer } from './components/Blocks/Slider/schema';
 
 import EventMetadataView from './components/Blocks/EventMetadata/View';
+import {
+  ScrollingBannerView,
+  ScrollingBannerEdit,
+  scrollingBannerSchemaEnhancer,
+} from './components/Blocks/ScrollingBanner';
 
 // Design Schema System
 import { DesignSchemaProvider, ColorSchemaField } from './components';
 import { designSchema } from './reducers';
 import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
+import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
 
 const isBlockClassActive = (editor, format) => {
   if (!editor.selection) return false;
@@ -139,6 +145,9 @@ const applyConfig = (config) => {
 
   // Register tools header widget
   config.widgets.widget.tools_header = ToolsHeaderField;
+
+  // Register simple color picker widget
+  config.widgets.widget.simple_color_picker = SimpleColorPicker;
 
   config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;
@@ -436,6 +445,18 @@ const applyConfig = (config) => {
       properties['@type'] === 'Event' ? false : true,
     mostUsed: false,
     sidebarTab: 0,
+  };
+
+  config.blocks.blocksConfig.scrollingBanner = {
+    id: 'scrollingBanner',
+    title: 'Scrolling Banner',
+    icon: descriptionSVG,
+    group: 'common',
+    view: ScrollingBannerView,
+    edit: ScrollingBannerEdit,
+    schemaEnhancer: scrollingBannerSchemaEnhancer,
+    mostUsed: false,
+    sidebarTab: 1,
   };
 
   // Check if the separator is present before enhancing it
