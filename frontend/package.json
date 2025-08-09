@@ -61,8 +61,8 @@
     "@eeacms/volto-metadata-block": "*",
     "@eeacms/volto-quote-block": "2.0.1",
     "@eeacms/volto-tags-block": "*",
-    "luna-super-listing": "1.0.6",
-    "luna-super-hero": "9.0.3",
+    "luna-super-listing": "*",
+    "luna-super-hero": "*",
     "lunasites-advanced-styling": "workspace:*"
   },
   "devDependencies": {

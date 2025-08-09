@@ -1,5 +1,9 @@
 import { flattenToAppURL } from '@plone/volto/helpers';
-import { GET_COLOR_SCHEMA_INHERIT, GET_INHERIT, GET_DESIGN_SITE } from '../constants';
+import {
+  GET_COLOR_SCHEMA_INHERIT,
+  GET_INHERIT,
+  GET_DESIGN_SITE,
+} from '../constants';
 
 export const getColorSchemaInherit = (url = '') => {
   let cleanedUrl = typeof url === 'string' ? url : '';
@@ -18,7 +22,7 @@ export const getColorSchemaInherit = (url = '') => {
     type: GET_COLOR_SCHEMA_INHERIT,
     request: {
       op: 'get',
-      path: `${apiPath}/@inherit?expand.inherit.behaviors=lunasites.behaviors.design_schema.IDesignSchema`,
+      path: `${apiPath}/@design-schema-inherit?expand.inherit.behaviors=lunasites.behaviors.design_schema.IDesignSchema`,
     },
   };
 };
@@ -36,15 +40,16 @@ export const getInherit = (url = '', behaviors = []) => {
 
   const apiPath = flattenToAppURL(cleanedUrl);
 
-  const queryParams = behaviors.length > 0
-    ? `?${behaviors.map(behavior => `expand.inherit.behaviors=${behavior}`).join('&')}`
-    : '';
+  const queryParams =
+    behaviors.length > 0
+      ? `?${behaviors.map((behavior) => `expand.inherit.behaviors=${behavior}`).join('&')}`
+      : '';
 
   return {
     type: GET_INHERIT,
     request: {
       op: 'get',
-      path: `${apiPath}/@inherit${queryParams}`,
+      path: `${apiPath}/@design-schema-inherit${queryParams}`,
     },
   };
 };
@@ -66,7 +71,7 @@ export const getDesignSite = (url = '') => {
     type: GET_DESIGN_SITE,
     request: {
       op: 'get',
-      path: `${apiPath}/@inherit?expand.inherit.behaviors=lunasites.behaviors.design_schema.IDesignSchema`,
+      path: `${apiPath}/@design-schema-inherit?expand.inherit.behaviors=lunasites.behaviors.design_schema.IDesignSchema`,
     },
   };
 };

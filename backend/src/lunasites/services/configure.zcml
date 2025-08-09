@@ -12,4 +12,13 @@
       name="color-schema"
       />
 
+  <!-- Design Schema Smart Inherit Service -->
+  <plone:service
+      method="GET"
+      factory=".inherit.SmartInheritService"
+      for="zope.interface.Interface"
+      permission="zope2.View"
+      name="@design-schema-inherit"
+      />
+
 </configure>
