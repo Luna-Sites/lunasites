@@ -163,7 +163,7 @@
   },
 
   "luna-super-hero": {
-    "develop": false,
+    "develop": true,
     "output": "packages",
     "package": "luna-super-hero",
     "url": "git@github.com:Luna-Sites/luna-super-hero.git",
@@ -171,7 +171,7 @@
     "branch": "master"
   },
   "luna-super-listing": {
-    "develop": false,
+    "develop": true,
     "output": "packages",
     "package": "luna-super-listing",
     "url": "git@github.com:Luna-Sites/luna-super-listing.git",

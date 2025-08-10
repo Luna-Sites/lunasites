@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
 import { MaybeWrap } from '@plone/volto/components';
-import { isInternalURL } from '@plone/volto/helpers';
+import { isInternalURL, getFieldURL } from '@plone/volto/helpers';
 import cx from 'classnames';
 
 /**
@@ -27,8 +27,8 @@ const getContrastTextColor = (backgroundColor) => {
 const View = (props) => {
   const { data, isEditMode, className, style } = props;
 
-  const href = data.href?.[0];
-  const isInternal = isInternalURL(href?.['@id'] || href) || !href;
+  const href = getFieldURL(data.href?.[0]);
+  const isInternal = isInternalURL(href) || !href;
   const target = data.openLinkInNewTab ? '_blank' : null;
   const rel = data.openLinkInNewTab ? 'noopener noreferrer' : null;
 

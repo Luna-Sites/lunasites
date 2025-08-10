@@ -26,7 +26,7 @@ const messages = defineMessages({
 
 const InternetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader }) => {
   // Check if we should show tools wrapper - only show toolsHeader, not siteAction
-  const hasTools = (!token && true) || (toolsHeader && toolsHeader.length > 0) || siteLabel;
+  const hasTools = true;
   
   return (
     <>
@@ -70,7 +70,7 @@ const InternetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader })
 
 const IntranetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader }) => {
   // Check if we should show tools wrapper - only show toolsHeader, not siteAction
-  const hasTools = (!token && true) || (toolsHeader && toolsHeader.length > 0) || siteLabel;
+  const hasTools = true;
   
   return (
     <>

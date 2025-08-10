@@ -440,6 +440,18 @@
   padding: 1rem;
   margin-top: 1em;
 }
+
+// Fix for edit mode: ensure teaser cards have consistent styling regardless of background
+.block-editor-teaser .styled-teaser {
+  .ui.fluid.card.u-card {
+    margin: 0 !important;
+    
+    // Reset any extra styling from styled-with-full-bg in edit mode
+    &.contained {
+      padding: 0 !important;
+    }
+  }
+}
 footer {
   [data-rbd-draggable-context-id] {
     margin-bottom: 0px;
@@ -656,6 +668,11 @@ footer .blocks-form {
   margin-left: auto;
   margin-right: auto;
 }
+#page-controlpanel-layout .blocks-form {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 /*-------------------
     Modern Card Styling
@@ -667,7 +684,7 @@ footer .blocks-form {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  background: #ffffff;
+  background: transparent;
   margin-bottom: 1.5rem;
 
   &:hover {
@@ -843,6 +860,254 @@ footer .blocks-form {
 }
 
 /*-------------------
+    Cards Carousel Styling
+--------------------*/
+
+.block.listing.cardsCarousel {
+  .responsive-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .cards-carousel {
+    position: relative;
+    max-width: var(--carousel-max-width, 1000px);
+    margin: 0 auto;
+
+    .slick-slider {
+      .slick-list {
+        overflow: hidden;
+
+        .slick-track {
+          display: flex;
+          align-items: stretch;
+        }
+      }
+
+      .slick-slide {
+        visibility: hidden;
+
+        &.slick-active {
+          visibility: visible;
+        }
+
+        > div {
+          height: 100%;
+        }
+      }
+    }
+
+    // Left image card layout similar to news listing
+    .ui.fluid.card.u-card.left-image-card {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      background: transparent;
+      margin-bottom: 0;
+      height: auto;
+      min-height: 160px;
+      transition: none;
+
+      .image {
+        flex: 0 0 200px;
+        width: 200px;
+        height: 160px;
+        margin-right: 1.5rem;
+        overflow: hidden;
+
+        img.ui.image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          border-radius: 0;
+        }
+      }
+
+      .content {
+        flex: 1;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: auto;
+
+        .header {
+          margin-bottom: 0.5rem;
+
+          .header-link {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            display: block;
+
+            // Text truncation for long titles - max 2 lines
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 2.8em; // Approximately 2 lines
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+
+        .description {
+          color: inherit;
+          opacity: 0.8;
+          font-size: 0.95rem;
+          line-height: 1.5;
+          margin: 0;
+
+          // Hide description to match news layout
+          display: none;
+        }
+
+        .meta {
+          color: inherit;
+          opacity: 0.7;
+          font-size: 0.85rem;
+          margin-top: auto;
+          padding-top: 0.5rem;
+        }
+      }
+    }
+
+    // Responsive behavior
+    @media (max-width: 768px) {
+      .ui.fluid.card.u-card.left-image-card {
+        flex-direction: column;
+        min-height: auto;
+
+        .image {
+          flex: 0 0 auto;
+          width: 100%;
+          height: 200px;
+          margin-right: 0;
+          margin-bottom: 1rem;
+        }
+
+        .content {
+          padding: 0;
+
+          .header .header-link {
+            font-size: 1rem;
+            -webkit-line-clamp: 3;
+            max-height: 4.2em;
+          }
+
+          .description {
+            display: block;
+            -webkit-line-clamp: 2;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 3em;
+            margin-top: 0.5rem;
+          }
+        }
+      }
+    }
+
+    // Slick carousel navigation
+    .slick-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.7);
+      border: none;
+      border-radius: 50%;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 0;
+
+      &:before {
+        content: '';
+        width: 0;
+        height: 0;
+        border-style: solid;
+      }
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.9);
+      }
+
+      &.slick-prev {
+        left: -20px;
+
+        &:before {
+          border-width: 6px 8px 6px 0;
+          border-color: transparent white transparent transparent;
+          margin-right: 2px;
+        }
+      }
+
+      &.slick-next {
+        right: -20px;
+
+        &:before {
+          border-width: 6px 0 6px 8px;
+          border-color: transparent transparent transparent white;
+          margin-left: 2px;
+        }
+      }
+
+      &.slick-disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.7);
+        }
+      }
+    }
+
+    // Hide dots by default to match news layout
+    .slick-dots {
+      display: none !important;
+    }
+  }
+
+  // Print styles
+  @media print {
+    .cards-carousel {
+      .slick-track {
+        display: block !important;
+
+        .slick-slide {
+          display: block !important;
+          width: 100% !important;
+          margin-bottom: 2rem;
+
+          &.slick-cloned {
+            display: none !important;
+          }
+        }
+      }
+
+      .slick-arrow {
+        display: none !important;
+      }
+    }
+  }
+}
+
+/*-------------------
     Icon Item Alignment Fix
 --------------------*/
 
@@ -909,5 +1174,76 @@ footer .blocks-form {
       vertical-align: top;
       padding-top: 0;
     }
+  }
+}
+
+/*-------------------
+    Listing Block Content Border Fix
+--------------------*/
+
+// Remove top border from listing content
+.block.listing .content {
+  border-top: none !important;
+}
+
+/*-------------------
+    Navbar Dropdown Fix
+--------------------*/
+
+// Fix dropdown positioning to stick to desktop-menu container
+.navigation ul.desktop-menu {
+  position: relative;
+  
+  // Reset positioning context for menu items
+  li {
+    position: static !important;
+  }
+  
+  .submenu-wrapper {
+    position: static;
+    
+    .submenu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 0 !important;
+      z-index: 1000;
+    }
+  }
+}
+
+/*-------------------
+    Grid Block Padding Fix
+--------------------*/
+
+// Remove extra padding from grid blocks to match direct grids
+.block.gridBlock {
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+  
+  .ui.grid {
+    margin: 0 !important;
+  }
+}
+
+/*-------------------
+    Item Card Padding Fix
+--------------------*/
+
+// Remove padding from item cards to eliminate space around images
+.card.u-card.item-card {
+  padding: 0 !important;
+}
+
+/*-------------------
+    Mobile Listing Padding
+--------------------*/
+
+// Add padding to listings on mobile so they don't stretch full width
+@media (max-width: 768px) {
+  .block.listing {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }

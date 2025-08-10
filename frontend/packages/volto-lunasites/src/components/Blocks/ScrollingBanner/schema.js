@@ -17,6 +17,10 @@ const messages = defineMessages({
     id: 'Description',
     defaultMessage: 'Description',
   },
+  link: {
+    id: 'Link',
+    defaultMessage: 'Link',
+  },
   animationSpeed: {
     id: 'Animation Speed',
     defaultMessage: 'Animation Speed',
@@ -68,7 +72,7 @@ export const ScrollingBannerSchema = ({ intl }) => ({
           {
             id: 'default',
             title: 'Default',
-            fields: ['title', 'description'],
+            fields: ['title', 'description', 'link'],
           },
         ],
         properties: {
@@ -80,6 +84,13 @@ export const ScrollingBannerSchema = ({ intl }) => ({
             title: intl.formatMessage(messages.description),
             type: 'string',
             widget: 'textarea',
+          },
+          link: {
+            title: intl.formatMessage(messages.link),
+            widget: 'object_browser',
+            mode: 'link',
+            selectedItemAttrs: ['@id', 'title', 'description'],
+            allowExternals: true,
           },
         },
         required: ['title'],
