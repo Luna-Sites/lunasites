@@ -2,7 +2,7 @@ import React from 'react';
 import { BodyClass } from '@plone/volto/helpers';
 import { connect } from 'react-redux';
 import { Helmet } from '@plone/volto/helpers';
-import { settings } from '~/config';
+import config from '@plone/volto/registry';
 
 const AppExtras = (props) => {
   const { content, pathname } = props;
@@ -21,11 +21,12 @@ const AppExtras = (props) => {
     siteDescription = 'Professional websites made with Luna Sites';
   }
   
+  const baseUrl = config.settings?.publicURL || (typeof window !== 'undefined' ? window.location.origin : '');
   const siteImage = content?.image?.scales?.preview?.download || 
                    content?.image?.scales?.large?.download || 
                    content?.image?.download || 
-                   `${settings.publicURL}/icon.svg`;
-  const siteUrl = `${settings.publicURL}${pathname}`;
+                   `${baseUrl}/icon.svg`;
+  const siteUrl = `${baseUrl}${pathname || ''}`;
 
   return (
     <>
