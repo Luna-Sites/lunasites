@@ -32,6 +32,7 @@ const ContentMetadataTags = (props) => {
   const getContentImageInfo = () => {
     const { contentMetadataTagsImageField } = config.settings;
     const image = props.content[contentMetadataTagsImageField];
+
     const { opengraph_image } = props.content;
 
     const contentImageInfo = {
@@ -43,6 +44,7 @@ const ContentMetadataTags = (props) => {
     contentImageInfo.contentHasImage =
       opengraph_image?.scales?.large?.download ||
       image?.scales?.large?.download ||
+      image?.download ||
       false;
 
     if (contentImageInfo.contentHasImage && opengraph_image?.scales?.large) {
@@ -60,6 +62,7 @@ const ContentMetadataTags = (props) => {
 
   const contentImageInfo = getContentImageInfo();
 
+  console.log(toPublicURL(contentImageInfo.url));
   const getTitle = () => {
     const includeSiteTitle =
       config?.settings?.siteTitleFormat?.includeSiteTitle || false;
