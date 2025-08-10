@@ -62,7 +62,7 @@ const ContentMetadataTags = (props) => {
 
   const contentImageInfo = getContentImageInfo();
 
-  console.log(toPublicURL(contentImageInfo.url));
+  console.log('pl', toPublicURL(contentImageInfo.url));
   const getTitle = () => {
     const includeSiteTitle =
       config?.settings?.siteTitleFormat?.includeSiteTitle || false;
@@ -96,6 +96,7 @@ const ContentMetadataTags = (props) => {
           property="og:url"
           content={seo_canonical_url || toPublicURL(props.content['@id'])}
         />
+        <meta property="og:image" content={toPublicURL(contentImageInfo.url)} />
         {seo_noindex && <meta name="robots" content="noindex" />}
         {contentImageInfo.contentHasImage && (
           <meta
