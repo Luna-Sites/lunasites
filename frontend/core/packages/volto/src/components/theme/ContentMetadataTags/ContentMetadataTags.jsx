@@ -96,14 +96,12 @@ const ContentMetadataTags = (props) => {
           property="og:url"
           content={seo_canonical_url || toPublicURL(props.content['@id'])}
         />
-        <meta property="og:image" content={toPublicURL(contentImageInfo.url)} />
+        <meta
+          property="og:image"
+          content={toPublicURL(contentImageInfo?.url || '')}
+        />
         {seo_noindex && <meta name="robots" content="noindex" />}
-        {contentImageInfo.contentHasImage && (
-          <meta
-            property="og:image"
-            content={toPublicURL(contentImageInfo.url)}
-          />
-        )}
+
         {contentImageInfo.contentHasImage && (
           <meta property="og:image:width" content={contentImageInfo.width} />
         )}
