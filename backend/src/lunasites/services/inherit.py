@@ -51,7 +51,9 @@ class SmartInheritService(Service):
             'container_width',
             'tools_header',
             'logo_image',
-            'logo_text'
+            'logo_text',
+            'hide_login_button',
+            'hide_search_button'
         ]
         
         result_data = {}
@@ -205,7 +207,9 @@ class SmartInheritService(Service):
             'container_width': None,
             'tools_header': [],
             'logo_image': None,
-            'logo_text': None
+            'logo_text': None,
+            'hide_login_button': False,
+            'hide_search_button': False
         }
         
         return defaults.get(field_name)
