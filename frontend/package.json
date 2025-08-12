@@ -63,7 +63,8 @@
     "@eeacms/volto-tags-block": "*",
     "luna-super-listing": "*",
     "luna-super-hero": "*",
-    "lunasites-advanced-styling": "workspace:*"
+    "lunasites-advanced-styling": "workspace:*",
+    "remixicon": "^4.3.0"
   },
   "devDependencies": {
     "mrs-developer": "^2.2.0"

@@ -1,7 +1,12 @@
 .header-wrapper .header {
   display: flex;
   flex-direction: column;
-  
+
+  // Hidden elements for design schema
+  .hidden {
+    visibility: hidden !important;
+  }
+
   // Apply navbar width if configured
   &.custom-width {
     max-width: var(--lunasites-navbar-width, 1000px);
@@ -19,7 +24,7 @@
     .logo {
       flex: 1 1 0;
       align-self: center;
-      
+
       img {
         max-height: 50px;
         width: auto;
@@ -295,7 +300,7 @@
       color: $black;
       font-size: 13px;
       text-align: center;
-      
+
       @media only screen and (max-width: $largest-mobile-screen) {
         white-space: nowrap;
         font-size: 11px;
@@ -308,7 +313,7 @@
       padding-left: 10px;
       content: '|';
       font-size: 14px;
-      
+
       @media only screen and (max-width: $largest-mobile-screen) {
         padding-left: 6px;
         font-size: 11px;
@@ -555,7 +560,6 @@ body.has-toolbar.has-sidebar {
         padding: 40px 40px;
       }
 
-
       ul {
         display: flex;
         width: 100%;
@@ -774,6 +778,11 @@ body.has-toolbar.has-sidebar {
   .header,
   .header button {
     font-weight: 700;
+  }
+  
+  // Hidden elements for design schema in mobile nav
+  .hidden {
+    visibility: hidden !important;
   }
 
   li.header {

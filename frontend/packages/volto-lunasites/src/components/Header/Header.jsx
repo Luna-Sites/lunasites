@@ -56,14 +56,14 @@ const InternetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader, d
             <Logo />
           </div>
           <Navigation pathname={pathname} />
-          <MobileNavigation pathname={pathname} />
-          {!designSchemaData?.hide_search_button && (
-            <div className="search-wrapper navigation-desktop">
-              <div className="search">
-                <SearchWidget />
-              </div>
+          <MobileNavigation pathname={pathname} designSchemaData={designSchemaData} />
+          <div className={cx("search-wrapper navigation-desktop", {
+            "hidden": designSchemaData?.hide_search_button
+          })}>
+            <div className="search">
+              <SearchWidget />
             </div>
-          )}
+          </div>
         </div>
       </div>
     </>
@@ -101,15 +101,15 @@ const IntranetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader, d
           <div className="logo">
             <Logo />
           </div>
-          {!designSchemaData?.hide_search_button && (
-            <div className="search-wrapper">
-              <div className="search">
-                <IntranetSearchWidget />
-              </div>
+          <div className={cx("search-wrapper", {
+            "hidden": designSchemaData?.hide_search_button
+          })}>
+            <div className="search">
+              <IntranetSearchWidget />
             </div>
-          )}
+          </div>
           <Navigation pathname={pathname} />
-          <MobileNavigation pathname={pathname} />
+          <MobileNavigation pathname={pathname} designSchemaData={designSchemaData} />
         </div>
       </div>
     </>

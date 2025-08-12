@@ -43,6 +43,23 @@
   color: $black;
 
   @include body-text-bold();
+  
+  // Button content with icons
+  .button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    .button-text {
+      flex: 1;
+    }
+    
+    i[class^="ri-"] {
+      font-size: 1.1em;
+      line-height: 1;
+    }
+  }
 }
 
 .block.__button .ui.button:focus,

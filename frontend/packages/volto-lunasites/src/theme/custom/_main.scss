@@ -445,7 +445,7 @@
 .block-editor-teaser .styled-teaser {
   .ui.fluid.card.u-card {
     margin: 0 !important;
-    
+
     // Reset any extra styling from styled-with-full-bg in edit mode
     &.contained {
       padding: 0 !important;
@@ -1155,7 +1155,9 @@ footer .blocks-form {
     }
   }
 }
-
+#metadataform-fieldset-layout {
+  display: none;
+}
 // Alternative improved alignment for semantic UI items
 .ui.items > .item {
   .icon.big {
@@ -1193,15 +1195,15 @@ footer .blocks-form {
 // Fix dropdown positioning to stick to desktop-menu container
 .navigation ul.desktop-menu {
   position: relative;
-  
+
   // Reset positioning context for menu items
   li {
     position: static !important;
   }
-  
+
   .submenu-wrapper {
     position: static;
-    
+
     .submenu {
       position: absolute;
       top: 100%;
@@ -1221,7 +1223,7 @@ footer .blocks-form {
 .block.gridBlock {
   padding: 0 !important;
   margin-bottom: 0 !important;
-  
+
   .ui.grid {
     margin: 0 !important;
   }

@@ -20,7 +20,6 @@ import { Container } from '@plone/components';
 import TopSideFacets from './components/Blocks/Search/TopSideFacets';
 
 import GridListingBlockTemplate from './components/Blocks/Listing/GridTemplate';
-import { ButtonStylingSchema } from './components/Blocks/Button/schema';
 import {
   withBlockSpecificStyling,
   addAdvancedStyling,
@@ -71,6 +70,7 @@ import { DesignSchemaProvider, ColorSchemaField } from './components';
 import { designSchema } from './reducers';
 import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
 import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
+import SimpleIconPicker from './components/Widgets/SimpleIconPicker';
 
 const isBlockClassActive = (editor, format) => {
   if (!editor.selection) return false;
@@ -149,6 +149,9 @@ const applyConfig = (config) => {
   // Register simple color picker widget
   config.widgets.widget.simple_color_picker = SimpleColorPicker;
 
+  // Register simple icon picker widget
+  config.widgets.widget.simple_icon_picker = SimpleIconPicker;
+
   config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;
   config.settings.navDepth = 3;
@@ -169,10 +172,26 @@ const applyConfig = (config) => {
             type: 'color',
             widget: 'style_simple_color',
           },
+          textColor: {
+            title: 'Text Color',
+            type: 'color',
+            widget: 'style_simple_color',
+            description: 'Override automatic text color calculation',
+          },
           filled: {
             title: 'Filled',
             type: 'boolean',
             description: 'Filled button or outline only',
+          },
+          borderRadius: {
+            widget: 'slider',
+            title: 'Rounded Corner',
+            settings: {
+              min: 0,
+              max: 24,
+              step: 1,
+              start: 0,
+            },
           },
         },
       },

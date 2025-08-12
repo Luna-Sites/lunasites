@@ -24,6 +24,15 @@ const getContrastTextColor = (backgroundColor) => {
   return luminance > 0.5 ? '#000000' : '#ffffff';
 };
 
+/**
+ * Get the full Remix icon class name
+ */
+const getIconClass = (iconName) => {
+  if (!iconName) return '';
+  // Add 'ri-' prefix if not already present
+  return iconName.startsWith('ri-') ? iconName : `ri-${iconName}`;
+};
+
 const View = (props) => {
   const { data, isEditMode, className, style } = props;
 
@@ -34,8 +43,17 @@ const View = (props) => {
 
   // Apply block-specific styling from specificStyles (block-specific) not styles (general)
   const buttonColor = data.styles?.buttonColor;
+  const textColor = data.styles?.textColor;
   const filled = data.styles?.filled !== false; // Default to true if not specified
   const width = data.styles?.width;
+  const borderRadius = data.styles?.borderRadius;
+
+  // Icons from main schema (not styles)
+  const leftIcon = data.leftIcon;
+  const rightIcon = data.rightIcon;
+  
+  // Debug logging
+  console.log('Button data:', { leftIcon, rightIcon, data });
   // Create button styles based on block-specific configuration
   const buttonStyles = {
     ...style,
@@ -52,18 +70,26 @@ const View = (props) => {
       // Filled button with custom color
       buttonStyles.backgroundColor = buttonColor;
       buttonStyles.borderColor = buttonColor;
-      // Calculate contrast-based text color
-      buttonStyles.color = getContrastTextColor(buttonColor);
+      // Use custom text color if provided, otherwise calculate contrast-based text color
+      buttonStyles.color = textColor || getContrastTextColor(buttonColor);
     } else {
       // Outline button with custom color
       buttonStyles.backgroundColor = 'transparent';
       buttonStyles.borderColor = buttonColor;
-      buttonStyles.color = buttonColor;
+      buttonStyles.color = textColor || buttonColor;
       // Set CSS variables for hover effect
       buttonStyles['--button-hover-color'] = buttonColor;
       buttonStyles['--button-hover-text-color'] =
-        getContrastTextColor(buttonColor);
+        textColor || getContrastTextColor(buttonColor);
     }
+  } else if (textColor) {
+    // Apply text color even without button color
+    buttonStyles.color = textColor;
+  }
+
+  // Apply border radius if provided
+  if (borderRadius !== undefined) {
+    buttonStyles.borderRadius = `${borderRadius}px`;
   }
 
   // Handle click prevention in edit mode
@@ -96,6 +122,23 @@ const View = (props) => {
     }),
   };
 
+  // Render button content with icons
+  const renderButtonContent = () => {
+    console.log('Rendering button content:', { leftIcon, rightIcon });
+    console.log('Icon classes:', { 
+      leftIconClass: getIconClass(leftIcon),
+      rightIconClass: getIconClass(rightIcon)
+    });
+    
+    return (
+      <span className="button-content">
+        {leftIcon && <i className={getIconClass(leftIcon)} />}
+        <span className="button-text">{data.title || 'Button'}</span>
+        {rightIcon && <i className={getIconClass(rightIcon)} />}
+      </span>
+    );
+  };
+
   return (
     <MaybeWrap
       condition={!__SERVER__}
@@ -117,7 +160,7 @@ const View = (props) => {
               data-filled={filled}
               data-custom-color={buttonColor}
             >
-              {data.title || 'Button'}
+              {renderButtonContent()}
             </Button>
           ) : (
             <Button
@@ -130,7 +173,7 @@ const View = (props) => {
               data-filled={filled}
               data-custom-color={buttonColor}
             >
-              {data.title || 'Button'}
+              {renderButtonContent()}
             </Button>
           )
         ) : (
@@ -142,7 +185,7 @@ const View = (props) => {
             data-filled={filled}
             data-custom-color={buttonColor}
           >
-            {data.title || 'Button'}
+            {renderButtonContent()}
           </Button>
         )}
       </div>

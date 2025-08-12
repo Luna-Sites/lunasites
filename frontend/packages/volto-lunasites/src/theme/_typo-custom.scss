@@ -14,12 +14,12 @@ li {
 }
 
 @mixin word-break {
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
+  -ms-hyphens: none;
+  -moz-hyphens: none;
+  -webkit-hyphens: none;
+  hyphens: none;
   overflow-wrap: break-word;
-  word-break: break-word;
+  word-break: normal;
   word-wrap: break-word;
 }
 
