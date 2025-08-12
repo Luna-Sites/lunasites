@@ -24,7 +24,7 @@ const messages = defineMessages({
   },
 });
 
-const InternetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader }) => {
+const InternetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader, designSchemaData }) => {
   // Check if we should show tools wrapper - only show toolsHeader, not siteAction
   const hasTools = true;
   
@@ -36,7 +36,7 @@ const InternetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader })
             <LanguageSelector />
 
             <div className="tools">
-              {!token && <Anontools />}
+              {!token && !designSchemaData?.hide_login_button && <Anontools />}
               {toolsHeader &&
                 toolsHeader.map((item) => (
                   <UniversalLink key={item['@id'] || item.href} href={item.href}>
@@ -57,18 +57,20 @@ const InternetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader })
           </div>
           <Navigation pathname={pathname} />
           <MobileNavigation pathname={pathname} />
-          <div className="search-wrapper navigation-desktop">
-            <div className="search">
-              <SearchWidget />
+          {!designSchemaData?.hide_search_button && (
+            <div className="search-wrapper navigation-desktop">
+              <div className="search">
+                <SearchWidget />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>
   );
 };
 
-const IntranetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader }) => {
+const IntranetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader, designSchemaData }) => {
   // Check if we should show tools wrapper - only show toolsHeader, not siteAction
   const hasTools = true;
   
@@ -80,7 +82,7 @@ const IntranetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader })
             <LanguageSelector />
 
             <div className="tools">
-              {!token && <Anontools />}
+              {!token && !designSchemaData?.hide_login_button && <Anontools />}
               {toolsHeader &&
                 toolsHeader.map((item) => (
                   <UniversalLink key={item['@id'] || item.href} href={item.href}>
@@ -99,11 +101,13 @@ const IntranetHeader = ({ pathname, siteLabel, token, siteAction, toolsHeader })
           <div className="logo">
             <Logo />
           </div>
-          <div className="search-wrapper">
-            <div className="search">
-              <IntranetSearchWidget />
+          {!designSchemaData?.hide_search_button && (
+            <div className="search-wrapper">
+              <div className="search">
+                <IntranetSearchWidget />
+              </div>
             </div>
-          </div>
+          )}
           <Navigation pathname={pathname} />
           <MobileNavigation pathname={pathname} />
         </div>
@@ -122,6 +126,12 @@ const Header = (props) => {
   );
   const toolsHeader = useSelector(
     (state) => state.content.data?.tools_header,
+  );
+  const designSchemaData = useSelector(
+    (state) =>
+      state?.designSchema?.data?.[
+        'lunasites.behaviors.design_schema.IDesignSchema'
+      ]?.data,
   );
   const intl = useIntl();
   const translatedSiteLabel = intl.formatMessage(messages.siteLabel);
@@ -144,6 +154,7 @@ const Header = (props) => {
             token={token}
             siteAction={siteAction}
             toolsHeader={toolsHeader}
+            designSchemaData={designSchemaData}
           />
         ) : (
           <InternetHeader
@@ -152,6 +163,7 @@ const Header = (props) => {
             token={token}
             siteAction={siteAction}
             toolsHeader={toolsHeader}
+            designSchemaData={designSchemaData}
           />
         )}
       </Container>

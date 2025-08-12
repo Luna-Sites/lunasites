@@ -75,7 +75,6 @@ export function getInlineStyles(
   isFirstBlock = false,
   isHomepageView = false,
 ) {
-  console.log('aaa', isFirstBlock);
   const customStyles = parseCustomCSS(data.customCSS);
 
   return {

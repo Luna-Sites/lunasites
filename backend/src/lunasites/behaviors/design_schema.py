@@ -30,7 +30,7 @@ class IDesignSchema(model.Schema):
     model.fieldset(
         'design_schema',
         label=_('Design Schema'),
-        fields=['color_schema', 'view_type', 'navbar_width', 'container_width', 'tools_header'],
+        fields=['color_schema', 'view_type', 'navbar_width', 'container_width', 'tools_header', 'hide_login_button', 'hide_search_button'],
     )
     
 
@@ -104,6 +104,20 @@ class IDesignSchema(model.Schema):
         widget='',
     )
     
+    hide_login_button = schema.Bool(
+        title=_('Hide Login Button'),
+        description=_('Hide the login button from the header. Leave unchecked to inherit from parent.'),
+        required=False,
+        default=False,
+    )
+    
+    hide_search_button = schema.Bool(
+        title=_('Hide Search Button'),
+        description=_('Hide the search button from the header. Leave unchecked to inherit from parent.'),
+        required=False,
+        default=False,
+    )
+    
 
 
 @implementer(IDesignSchema)
@@ -153,6 +167,22 @@ class DesignSchemaBehavior:
     @view_type.setter
     def view_type(self, value):
         self.context.view_type = value
+    
+    @property
+    def hide_login_button(self):
+        return getattr(self.context, 'hide_login_button', False)
+
+    @hide_login_button.setter
+    def hide_login_button(self, value):
+        self.context.hide_login_button = value
+    
+    @property
+    def hide_search_button(self):
+        return getattr(self.context, 'hide_search_button', False)
+
+    @hide_search_button.setter
+    def hide_search_button(self, value):
+        self.context.hide_search_button = value
     
     def get_width_type(self, width_value):
         """Auto-detect width type based on value format"""
