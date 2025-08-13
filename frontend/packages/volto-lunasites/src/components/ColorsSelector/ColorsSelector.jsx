@@ -22,12 +22,12 @@ const injectTextColorCSS = (colorValue) => {
     }
     
     .text-color-custom::selection {
-      background-color: rgba(0, 123, 255, 0.3) !important;
+      background-color: #a8c4f7 !important;
       color: ${colorValue} !important;
     }
     
     .text-color-custom::-moz-selection {
-      background-color: rgba(0, 123, 255, 0.3) !important;
+      background-color: #a8c4f7 !important;
       color: ${colorValue} !important;
     }
     
@@ -36,7 +36,7 @@ const injectTextColorCSS = (colorValue) => {
     }
     
     [data-slate-editor] .text-color-custom::selection {
-      background-color: rgba(0, 123, 255, 0.3) !important;
+      background-color: #a8c4f7 !important;
       color: ${colorValue} !important;
     }
   `;

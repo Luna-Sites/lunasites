@@ -24,12 +24,12 @@ const injectColorCSS = (colorValue) => {
     /* Ensure color shows even when text is selected */
     .text-color-custom::selection {
       color: ${colorValue} !important;
-      background-color: rgba(0, 123, 255, 0.3) !important;
+      background-color: #a8c4f7 !important;
     }
     
     .text-color-custom::-moz-selection {
       color: ${colorValue} !important;
-      background-color: rgba(0, 123, 255, 0.3) !important;
+      background-color: #a8c4f7 !important;
     }
     
     /* For Slate editor specific selection states */
@@ -39,7 +39,7 @@ const injectColorCSS = (colorValue) => {
     
     [data-slate-editor] .text-color-custom::selection {
       color: ${colorValue} !important;
-      background-color: rgba(0, 123, 255, 0.3) !important;
+      background-color: #a8c4f7 !important;
     }
   `;
 };

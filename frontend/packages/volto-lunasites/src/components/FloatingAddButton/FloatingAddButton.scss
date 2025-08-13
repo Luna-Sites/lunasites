@@ -18,7 +18,7 @@
       align-items: center;
       gap: 0.5rem;
       padding: 1rem 1.5rem !important;
-      background-color: #007eb1 !important;
+      background-color: #094ce1 !important;
       color: white !important;
       border: none !important;
       border-radius: 8px !important;
@@ -26,17 +26,17 @@
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(0, 126, 177, 0.25);
+      box-shadow: 0 4px 12px rgba(9, 76, 225, 0.25);
       
       &:hover {
-        background-color: #006590 !important;
+        background-color: #073bb8 !important;
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0, 126, 177, 0.35);
+        box-shadow: 0 6px 16px rgba(9, 76, 225, 0.35);
       }
 
       &:active {
         transform: translateY(0);
-        box-shadow: 0 2px 8px rgba(0, 126, 177, 0.25);
+        box-shadow: 0 2px 8px rgba(9, 76, 225, 0.25);
       }
 
       .add-icon {
@@ -75,7 +75,7 @@
       .floating-add-button {
         padding: 0.5rem 1rem !important;
         font-size: 0.9rem !important;
-        box-shadow: 0 2px 4px rgba(0, 126, 177, 0.15) !important;
+        box-shadow: 0 2px 4px rgba(9, 76, 225, 0.15) !important;
       }
     }
   }

@@ -2,8 +2,8 @@
 :root {
   --section-background: transparent;
   --section-title-color: inherit;
-  --selected-border-color: #007bc1;
-  --focus-border-color: #007bc1;
+  --selected-border-color: #094ce1;
+  --focus-border-color: #094ce1;
   --placeholder-color: #999;
 }
 
@@ -45,7 +45,7 @@
 
       &:focus {
         outline: none;
-        border-color: var(--focus-border-color, #007bc1);
+        border-color: var(--focus-border-color, #094ce1);
         background: rgba(255, 255, 255, 0.8);
       }
 
@@ -133,12 +133,12 @@
 
   &:hover {
     background: rgba(248, 249, 250, 0.8);
-    border-color: rgba(0, 123, 193, 0.3);
+    border-color: rgba(9, 76, 225, 0.3);
   }
 
   &.selected {
     border-color: var(--selected-border-color);
-    box-shadow: 0 0 0 2px rgba(0, 123, 193, 0.2);
+    box-shadow: 0 0 0 2px rgba(9, 76, 225, 0.2);
   }
 }
 
@@ -198,7 +198,7 @@
   cursor: grab;
 
   &:hover {
-    background: #005d99 !important;
+    background: #073bb8 !important;
     transform: scale(1.05);
     opacity: 1 !important;
   }
@@ -249,9 +249,9 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      background: linear-gradient(135deg, #0056b3 0%, #004080 100%) !important;
+      background: linear-gradient(135deg, #073bb8 0%, #062f99 100%) !important;
       transform: scale(1.3);
-      box-shadow: 0 4px 12px rgba(0, 123, 193, 0.4) !important;
+      box-shadow: 0 4px 12px rgba(9, 76, 225, 0.4) !important;
     }
 
     &:active {
@@ -270,8 +270,8 @@
   transition: all 0.2s ease;
 
   &.can-drop {
-    background-color: rgba(0, 123, 193, 0.05) !important;
-    border-color: rgba(0, 123, 193, 0.3) !important;
+    background-color: rgba(9, 76, 225, 0.05) !important;
+    border-color: rgba(9, 76, 225, 0.3) !important;
   }
 
   &.cannot-drop {
@@ -298,8 +298,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 123, 193, 0.1);
-    border: 2px solid rgba(0, 123, 193, 0.5);
+    background: rgba(9, 76, 225, 0.1);
+    border: 2px solid rgba(9, 76, 225, 0.5);
     border-radius: 8px;
     pointer-events: none;
   }
@@ -324,7 +324,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(0, 123, 193, 0.9);
+      background: rgba(9, 76, 225, 0.9);
       color: white;
       padding: 8px 16px;
       border-radius: 6px;
@@ -344,7 +344,7 @@
   margin-bottom: 1rem;
   padding: 0.5rem;
   background: rgba(248, 249, 250, 0.8);
-  border: 1px solid rgba(0, 123, 193, 0.2);
+  border: 1px solid rgba(9, 76, 225, 0.2);
   border-radius: 6px;
 
   .toggle-label {
@@ -363,7 +363,7 @@
     transition: background 0.2s ease;
 
     &.active {
-      background: #007bc1;
+      background: #094ce1;
     }
 
     &::after {
@@ -389,7 +389,7 @@
     color: #666;
 
     &.active {
-      color: #007bc1;
+      color: #094ce1;
       font-weight: 600;
     }
   }
@@ -419,7 +419,7 @@
 // Grid configuration panel
 .grid-config-panel {
   background: rgba(248, 249, 250, 0.9);
-  border: 1px solid rgba(0, 123, 193, 0.2);
+  border: 1px solid rgba(9, 76, 225, 0.2);
   border-radius: 6px;
   padding: 1rem;
   margin-bottom: 1rem;
@@ -449,7 +449,7 @@
 
       &:focus {
         outline: none;
-        border-color: #007bc1;
+        border-color: #094ce1;
       }
     }
 
@@ -481,7 +481,7 @@
     height: 18px;
     background: linear-gradient(
       135deg,
-      rgba(0, 123, 193, 0.9) 0%,
+      rgba(9, 76, 225, 0.9) 0%,
       rgba(0, 86, 179, 0.9) 100%
     );
     border-radius: 6px;
@@ -495,7 +495,7 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 15;
     box-shadow:
-      0 2px 8px rgba(0, 123, 193, 0.2),
+      0 2px 8px rgba(9, 76, 225, 0.2),
       0 1px 3px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(8px);
 
@@ -510,9 +510,9 @@
   }
 
   &.being-dragged .drag-handle {
-    background: linear-gradient(135deg, #007bc1 0%, #0056b3 100%);
+    background: linear-gradient(135deg, #094ce1 0%, #073bb8 100%);
     box-shadow:
-      0 8px 16px rgba(0, 123, 193, 0.3),
+      0 8px 16px rgba(9, 76, 225, 0.3),
       0 4px 8px rgba(0, 0, 0, 0.1);
     transition: none;
   }
@@ -565,7 +565,7 @@
     right: 4px;
     width: 20px;
     height: 20px;
-    background: rgba(0, 123, 193, 0.8);
+    background: rgba(9, 76, 225, 0.8);
     border-radius: 4px;
     cursor: grab;
     display: flex;
@@ -656,8 +656,8 @@
 
   .snap-preview {
     position: absolute;
-    background: rgba(0, 123, 193, 0.2);
-    border: 2px solid rgba(0, 123, 193, 0.6);
+    background: rgba(9, 76, 225, 0.2);
+    border: 2px solid rgba(9, 76, 225, 0.6);
     border-radius: 6px;
     pointer-events: none;
     z-index: 998;
@@ -665,7 +665,7 @@
     place-items: center;
     font-size: 12px;
     font-weight: 600;
-    color: #007bc1;
+    color: #094ce1;
 
     &.collision {
       background: rgba(255, 68, 68, 0.2);
@@ -680,8 +680,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 123, 193, 0.02);
-    border: 2px dashed rgba(0, 123, 193, 0.2);
+    background: rgba(9, 76, 225, 0.02);
+    border: 2px dashed rgba(9, 76, 225, 0.2);
     border-radius: 8px;
     pointer-events: none;
     z-index: 997;

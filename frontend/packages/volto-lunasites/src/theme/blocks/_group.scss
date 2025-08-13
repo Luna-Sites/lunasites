@@ -15,16 +15,16 @@
     min-height: 120px;
 
     &:hover {
-      border-color: #007eb1;
+      border-color: #094ce1;
       background-color: #f8fafc;
-      box-shadow: 0 2px 8px rgba(0, 126, 177, 0.1);
+      box-shadow: 0 2px 8px rgba(9, 76, 225, 0.1);
     }
 
     legend {
       position: absolute;
       top: -12px;
       left: 20px;
-      background-color: #007eb1;
+      background-color: #094ce1;
       color: white;
       padding: 4px 12px;
       border-radius: 4px;
@@ -36,7 +36,7 @@
       z-index: 10;
 
       &:hover {
-        background-color: #006590;
+        background-color: #073bb8;
         transform: translateY(-1px);
       }
     }
@@ -67,18 +67,18 @@
     right: -2px;
     top: -2px;
     display: flex;
-    border: 2px solid #007eb1;
+    border: 2px solid #094ce1;
     background-color: white;
     border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0, 126, 177, 0.15);
+    box-shadow: 0 2px 8px rgba(9, 76, 225, 0.15);
 
     .ui.basic.button {
       padding: 8px 10px;
       border-radius: 4px;
       
       &:hover {
-        background-color: #f0f7ff !important;
-        color: #007eb1 !important;
+        background-color: #f0f2ff !important;
+        color: #094ce1 !important;
       }
     }
   }
@@ -86,13 +86,13 @@
   // Selected state styling
   &.selected {
     fieldset {
-      border-color: #007eb1;
-      background-color: #f0f7ff;
-      box-shadow: 0 4px 12px rgba(0, 126, 177, 0.15);
+      border-color: #094ce1;
+      background-color: #f0f2ff;
+      box-shadow: 0 4px 12px rgba(9, 76, 225, 0.15);
     }
 
     legend {
-      background-color: #005a82;
+      background-color: #062f99;
     }
   }
 
@@ -109,8 +109,8 @@
       position: relative;
 
       &:hover {
-        border-color: #007eb1;
-        background-color: #f0f7ff;
+        border-color: #094ce1;
+        background-color: #f0f2ff;
       }
     }
 

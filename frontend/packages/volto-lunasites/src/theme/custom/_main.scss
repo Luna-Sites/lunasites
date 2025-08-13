@@ -208,11 +208,11 @@
 
   // use homepage text color for color of cards that are within a content-box that has a variant class
   .content-box[class*='ary'] [class='ui fluid card'] {
-    color: blue;
+    color: #094ce1;
   }
   // set carousel arrow to homepage color
   .cards-carousel .ui.button.icon.slider-arrow .icon {
-    color: blue;
+    color: #094ce1;
   }
 
   // show staging banner on homepage
@@ -749,7 +749,7 @@ footer .blocks-form {
         transition: color 0.2s ease;
 
         &:hover {
-          color: #2185d0;
+          color: #094ce1;
         }
       }
     }
@@ -794,9 +794,9 @@ footer .blocks-form {
     box-shadow: none;
 
     &:hover {
-      border-color: #2185d0;
+      border-color: #094ce1;
       transform: none;
-      box-shadow: 0 4px 16px rgba(33, 133, 208, 0.1);
+      box-shadow: 0 4px 16px rgba(9, 76, 225, 0.1);
     }
   }
 }
@@ -837,7 +837,7 @@ footer .blocks-form {
       color: #ffffff;
 
       &:hover {
-        color: #64b5f6;
+        color: #5c8ff5;
       }
     }
 
@@ -853,7 +853,7 @@ footer .blocks-form {
       border-color: #404040;
 
       &:hover {
-        border-color: #64b5f6;
+        border-color: #5c8ff5;
       }
     }
   }
@@ -1248,4 +1248,14 @@ footer .blocks-form {
     padding-left: 1rem;
     padding-right: 1rem;
   }
+}
+
+/*-------------------
+    Secondary Segment Color Override
+--------------------*/
+
+// Override secondary segment colors to use our primary color scheme
+.ui.secondary.segment {
+  background: #f0f2ff !important;
+  color: #094ce1 !important;
 }

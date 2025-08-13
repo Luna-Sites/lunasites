@@ -152,7 +152,7 @@ const GridLayout = ({
     minHeight: `${totalRows * rowHeight + (totalRows - 1) * 8}px`,
     position: 'relative',
     backgroundColor: 'rgba(248, 249, 250, 0.3)',
-    border: '1px dashed rgba(0, 123, 193, 0.3)',
+    border: '1px dashed #094ce1',
     borderRadius: '8px',
     padding: '8px', // Reduced padding to fix spacing
   };
@@ -222,7 +222,7 @@ const GridLayout = ({
             top: 0,
             bottom: 0,
             width: '1px',
-            backgroundColor: 'rgba(0, 123, 193, 0.1)',
+            backgroundColor: '#f0f2ff',
             pointerEvents: 'none',
             zIndex: 1,
           }}
@@ -242,7 +242,7 @@ const GridLayout = ({
             left: 0,
             right: 0,
             height: '1px',
-            backgroundColor: 'rgba(0, 123, 193, 0.1)',
+            backgroundColor: '#f0f2ff',
             pointerEvents: 'none',
             zIndex: 1,
           }}

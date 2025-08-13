@@ -129,7 +129,7 @@ export const ContentsItemComponent = ({
             >
               <Icon
                 name={checkboxCheckedSVG}
-                color="#007eb1"
+                color="#094ce1"
                 size="24px"
                 className="checked"
               />
@@ -238,7 +238,7 @@ export const ContentsItemComponent = ({
                 name={moreSVG}
                 className="dropdown-popup-trigger"
                 size="24px"
-                color="#007eb1"
+                color="#094ce1"
               />
             }
           >

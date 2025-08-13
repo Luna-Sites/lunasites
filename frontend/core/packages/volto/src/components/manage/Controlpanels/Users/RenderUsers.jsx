@@ -140,7 +140,7 @@ class RenderUsers extends Component {
               <Icon
                 name={ploneSVG}
                 size="20px"
-                color="#007EB1"
+                color="#094ce1"
                 title={'plone-svg'}
               />
             ) : (
