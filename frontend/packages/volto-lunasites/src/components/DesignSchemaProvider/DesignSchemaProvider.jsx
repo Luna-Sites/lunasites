@@ -18,20 +18,39 @@ const DesignSchemaProvider = ({ children }) => {
   // Load inherited design schema when pathname changes
   useEffect(() => {
     if (pathname) {
+      // Try to apply cached data immediately before making request
+      const cachedData = getCachedDesignSchema(pathname);
+      if (cachedData) {
+        if (cachedData.designSchema) {
+          applyCSSVariables(cachedData.designSchema);
+        }
+        if (cachedData.designSchemaData) {
+          applyLayoutVariables(cachedData.designSchemaData);
+          applyViewType(cachedData.designSchemaData);
+        }
+      }
+      
       dispatch(getDesignSite(pathname));
     }
   }, [dispatch, pathname]);
 
-  // Apply CSS variables when design schema is loaded
+  // Apply CSS variables as soon as data is available, even during loading
   useEffect(() => {
-    if (designSchema && !loading) {
+    if (designSchema) {
       applyCSSVariables(designSchema);
     }
-    if (designSchemaData && !loading) {
+    if (designSchemaData) {
       applyLayoutVariables(designSchemaData);
       applyViewType(designSchemaData);
+      
+      // Cache the data for immediate use on next visit
+      setCachedDesignSchema(pathname, {
+        designSchema,
+        designSchemaData,
+        timestamp: Date.now()
+      });
     }
-  }, [designSchema, designSchemaData, loading]);
+  }, [designSchema, designSchemaData, pathname]);
 
   const applyCSSVariables = (schema) => {
     const root = document.documentElement;
@@ -206,6 +225,34 @@ const DesignSchemaProvider = ({ children }) => {
         },
       }),
     );
+  };
+
+  const getCachedDesignSchema = (pathname) => {
+    try {
+      const cacheKey = `designSchema_${pathname}`;
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        const data = JSON.parse(cached);
+        // Check if cache is less than 5 minutes old
+        if (Date.now() - data.timestamp < 5 * 60 * 1000) {
+          return data;
+        }
+        // Remove expired cache
+        localStorage.removeItem(cacheKey);
+      }
+    } catch (error) {
+      console.warn('Error reading design schema cache:', error);
+    }
+    return null;
+  };
+
+  const setCachedDesignSchema = (pathname, data) => {
+    try {
+      const cacheKey = `designSchema_${pathname}`;
+      localStorage.setItem(cacheKey, JSON.stringify(data));
+    } catch (error) {
+      console.warn('Error caching design schema:', error);
+    }
   };
 
   return <>{children}</>;
