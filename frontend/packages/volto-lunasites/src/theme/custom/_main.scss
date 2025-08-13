@@ -1259,3 +1259,14 @@ footer .blocks-form {
   background: #f0f2ff !important;
   color: #094ce1 !important;
 }
+
+// Text selection color
+::selection {
+  background-color: #0d4be2 !important;
+  color: white !important;
+}
+
+::-moz-selection {
+  background-color: #0d4be2 !important;
+  color: white !important;
+}
