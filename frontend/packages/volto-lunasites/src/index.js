@@ -124,6 +124,9 @@ import {
   CustomSectionBlockSchema 
 } from './components';
 
+// Custom keyboard handler
+import { customEnterHandler } from './keyboard/customEnterHandler';
+
 const BG_COLORS = [
   { name: 'transparent', label: 'Transparent' },
   { name: 'grey', label: 'Grey' },
@@ -405,6 +408,14 @@ const applyConfig = (config) => {
     'video',
   ];
   config.blocks.requiredBlocks = [];
+
+  // Override Enter key handler for slate blocks
+  config.settings.slate.textblockKeyboardHandlers.Enter = [
+    customEnterHandler, // Our custom handler first
+    ...config.settings.slate.textblockKeyboardHandlers.Enter.filter(
+      handler => handler.name !== 'softBreak'
+    ), // Remove softBreak handler and add remaining handlers
+  ];
 
   config.blocks.blocksConfig.slate = {
     ...config.blocks.blocksConfig.slate,

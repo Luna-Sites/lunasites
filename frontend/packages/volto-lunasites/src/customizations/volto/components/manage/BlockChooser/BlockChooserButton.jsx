@@ -87,14 +87,14 @@ const BlockChooserButton = (props) => {
     const isNested = hasNestedStructure && Object.keys(properties).length <= 3;
 
     // eslint-disable-next-line no-console
-    console.log('BlockChooser Context Detection:', {
-      block,
-      hasNestedStructure,
-      isNotAtPageLevel,
-      isNested,
-      propertiesKeys: Object.keys(properties || {}),
-      properties: properties,
-    });
+    // console.log('BlockChooser Context Detection:', {
+    //   block,
+    //   hasNestedStructure,
+    //   isNotAtPageLevel,
+    //   isNested,
+    //   propertiesKeys: Object.keys(properties || {}),
+    //   properties: properties,
+    // });
 
     return isNested || isNotAtPageLevel;
   }, [properties, block]);
@@ -144,7 +144,7 @@ const BlockChooserButton = (props) => {
       {
         name: 'flip',
         options: {
-          fallbackPlacements: isInsideGroupBlock 
+          fallbackPlacements: isInsideGroupBlock
             ? ['bottom-end', 'top-start', 'top-end']
             : ['bottom-start', 'top-end', 'top-start'],
         },
