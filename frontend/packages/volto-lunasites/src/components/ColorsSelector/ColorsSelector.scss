@@ -1,0 +1,105 @@
+// ColorsSelector styles
+.colors-selector-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.colors-button {
+  position: relative;
+  
+  .colors-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .icon {
+      display: block;
+    }
+    
+    .color-indicators {
+      position: absolute;
+      bottom: 1px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1px;
+      
+      .text-color-indicator,
+      .background-color-indicator {
+        width: 6px;
+        height: 3px;
+        border-radius: 1px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+  
+  &:hover .color-indicators {
+    .text-color-indicator,
+    .background-color-indicator {
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+.colors-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  margin-top: 4px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  min-width: 240px;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 12px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #ddd;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 12px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid white;
+  }
+  
+  .color-section {
+    margin-bottom: 16px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    h4 {
+      margin: 0 0 8px 0;
+      font-size: 12px;
+      font-weight: 600;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+/* Ensure popup appears above other elements */
+.slate-toolbar .colors-selector-wrapper {
+  z-index: 1001;
+}

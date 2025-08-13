@@ -23,6 +23,7 @@ const addons = [
   '@plone-collective/volto-footer',
   'lunasites-advanced-styling',
   'volto-lunasites',
+  'luna-super-listing',
   'luna-super-hero',
 ];
 

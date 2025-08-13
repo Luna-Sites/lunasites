@@ -154,7 +154,7 @@ const style = `
   overflow       : hidden;
 }
 
-@media(max-width: 1200px) {
+@media(max-width: 1000px) {
   .context-navigation {
     /* margin-right: 0; */
     margin-top: 2rem;
@@ -174,7 +174,7 @@ const style = `
   font-weight: 400;
 }
 
-@media (min-width: 1200px) and (max-width: 1500px) {
+@media (min-width: 1000px) and (max-width: 1500px) {
   .context-navigation .item a {
     font-size: .9rem;
   }

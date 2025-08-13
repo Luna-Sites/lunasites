@@ -34,15 +34,15 @@ $header-font: var(--custom-headers-font, $page-font) !default;
 // Mobile / Tablet portrait < 769 | Tablet landscape / Small desktop < 941 | Computer desktop < 1440 | Large Monitor > 1440
 $largest-mobile-screen: 768px !default; // not finished in `-width` for historical reasons (SemanticUI naming)
 $tablet-breakpoint: 769px !default;
-$computer-width: 940px !default;
+$computer-width: 1000px !default;
 $computer-breakpoint: 941px !default;
-$large-monitor-width: 1440px !default;
+$large-monitor-width: 1000px !default;
 $large-monitor-breakpoint: 1441px !default;
 
 // Container widths
-$layout-container-width: 1440px !default;
-$default-container-width: 940px !default;
-$narrow-container-width: 940px !default;
+$layout-container-width: var(--lunasites-container-width, 1000px) !default;
+$default-container-width: var(--lunasites-container-width, 1000px) !default;
+$narrow-container-width: var(--lunasites-container-width, 1000px) !default;
 
 // Rest of theme variables
 :root {

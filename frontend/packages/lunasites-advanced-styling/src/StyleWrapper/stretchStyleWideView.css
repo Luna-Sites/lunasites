@@ -92,7 +92,7 @@ body:not(.is-authenticated).document_wide_view .stretch {
   }
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1000px) {
   body:not(.is-authenticated).document_wide_view .stretch {
     margin: 0 -0.6rem;
   }

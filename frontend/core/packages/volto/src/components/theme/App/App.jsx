@@ -120,7 +120,6 @@ export class App extends Component {
 
     const language =
       this.props.content?.language?.token ?? this.props.intl?.locale;
-    console.log("nici aici?");
     return (
       <PluggablesProvider>
         {language && (

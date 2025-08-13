@@ -48,8 +48,10 @@ const Navigation = ({ pathname }) => {
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside, false);
+      // Cleanup timeouts on unmount
+      if (hoverTimeout) clearTimeout(hoverTimeout);
     };
-  }, []);
+  }, [hoverTimeout]);
 
   useEffect(() => {
     if (!hasApiExpander('navigation', getBaseUrl(pathname))) {
@@ -74,7 +76,7 @@ const Navigation = ({ pathname }) => {
     const timeout = setTimeout(() => {
       setDesktopMenuOpen(null);
       setCurrentOpenIndex(null);
-    }, 200);
+    }, 0); // Instant close
     setHoverTimeout(timeout);
   };
 
@@ -113,7 +115,6 @@ const Navigation = ({ pathname }) => {
                 <>
                   <button
                     onMouseEnter={() => openMenu(index)}
-                    onMouseLeave={closeMenu}
                     className={cx('item', {
                       active:
                         desktopMenuOpen === index ||

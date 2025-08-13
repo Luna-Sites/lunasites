@@ -32,6 +32,7 @@ const ContentMetadataTags = (props) => {
   const getContentImageInfo = () => {
     const { contentMetadataTagsImageField } = config.settings;
     const image = props.content[contentMetadataTagsImageField];
+
     const { opengraph_image } = props.content;
 
     const contentImageInfo = {
@@ -43,6 +44,7 @@ const ContentMetadataTags = (props) => {
     contentImageInfo.contentHasImage =
       opengraph_image?.scales?.large?.download ||
       image?.scales?.large?.download ||
+      image?.download ||
       false;
 
     if (contentImageInfo.contentHasImage && opengraph_image?.scales?.large) {
@@ -60,6 +62,7 @@ const ContentMetadataTags = (props) => {
 
   const contentImageInfo = getContentImageInfo();
 
+  console.log('pl', toPublicURL(contentImageInfo.url));
   const getTitle = () => {
     const includeSiteTitle =
       config?.settings?.siteTitleFormat?.includeSiteTitle || false;
@@ -93,13 +96,12 @@ const ContentMetadataTags = (props) => {
           property="og:url"
           content={seo_canonical_url || toPublicURL(props.content['@id'])}
         />
+        <meta
+          property="og:image"
+          content={toPublicURL(contentImageInfo?.url || '')}
+        />
         {seo_noindex && <meta name="robots" content="noindex" />}
-        {contentImageInfo.contentHasImage && (
-          <meta
-            property="og:image"
-            content={toPublicURL(contentImageInfo.url)}
-          />
-        )}
+
         {contentImageInfo.contentHasImage && (
           <meta property="og:image:width" content={contentImageInfo.width} />
         )}

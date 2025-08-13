@@ -34,6 +34,31 @@ const SimpleColorPicker = (props) => {
     }
   };
 
+  // Get last 5 used colors from localStorage
+  const getLastUsedColors = () => {
+    try {
+      const saved = localStorage.getItem('volto-color-picker-last-used');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      console.warn('Could not load last used colors from localStorage:', e);
+      return [];
+    }
+  };
+
+  // Save color to last used colors
+  const saveToLastUsed = (color) => {
+    try {
+      const lastUsed = getLastUsedColors();
+      const filtered = lastUsed.filter(c => c !== color);
+      const newLastUsed = [color, ...filtered].slice(0, 5);
+      localStorage.setItem('volto-color-picker-last-used', JSON.stringify(newLastUsed));
+      return newLastUsed;
+    } catch (e) {
+      console.warn('Could not save to last used colors:', e);
+      return [];
+    }
+  };
+
   // Get saved gradients from localStorage
   const getSavedGradients = () => {
     try {
@@ -52,6 +77,15 @@ const SimpleColorPicker = (props) => {
     React.useState(getSavedGradients);
   const [originalCustomGradients, setOriginalCustomGradients] =
     React.useState(getSavedGradients);
+  const [lastUsedColors, setLastUsedColors] = React.useState(getLastUsedColors);
+
+  // Standard colors palette
+  const standardColors = [
+    '#FF0000', '#FF4500', '#FFA500', '#FFFF00', '#9AFF9A', '#00FF00',
+    '#00FFFF', '#0000FF', '#8A2BE2', '#FF1493', '#000000', '#808080',
+    '#800000', '#FF6347', '#FFD700', '#ADFF2F', '#00FA9A', '#008000',
+    '#40E0D0', '#1E90FF', '#9370DB', '#FF69B4', '#FFFFFF', '#D3D3D3'
+  ];
 
   // Extract gradient info from current value
   const extractGradientInfo = React.useCallback(() => {
@@ -96,10 +130,12 @@ const SimpleColorPicker = (props) => {
   React.useEffect(() => {
     const savedColors = getSavedColors();
     const savedGradients = getSavedGradients();
+    const lastUsed = getLastUsedColors();
     setCustomColors(savedColors);
     setOriginalCustomColors(savedColors);
     setCustomGradients(savedGradients);
     setOriginalCustomGradients(savedGradients);
+    setLastUsedColors(lastUsed);
   }, []);
 
   // Get current color schema from CSS variables
@@ -271,6 +307,31 @@ const SimpleColorPickerCore = ({ id, value, onChange, showGradientOption }) => {
     }
   };
 
+  // Get last 5 used colors from localStorage
+  const getLastUsedColors = () => {
+    try {
+      const saved = localStorage.getItem('volto-color-picker-last-used');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      console.warn('Could not load last used colors from localStorage:', e);
+      return [];
+    }
+  };
+
+  // Save color to last used colors
+  const saveToLastUsed = (color) => {
+    try {
+      const lastUsed = getLastUsedColors();
+      const filtered = lastUsed.filter(c => c !== color);
+      const newLastUsed = [color, ...filtered].slice(0, 5);
+      localStorage.setItem('volto-color-picker-last-used', JSON.stringify(newLastUsed));
+      return newLastUsed;
+    } catch (e) {
+      console.warn('Could not save to last used colors:', e);
+      return [];
+    }
+  };
+
   // Get saved gradients from localStorage
   const getSavedGradients = () => {
     try {
@@ -289,6 +350,15 @@ const SimpleColorPickerCore = ({ id, value, onChange, showGradientOption }) => {
     React.useState(getSavedGradients);
   const [originalCustomGradients, setOriginalCustomGradients] =
     React.useState(getSavedGradients);
+  const [lastUsedColors, setLastUsedColors] = React.useState(getLastUsedColors);
+
+  // Standard colors palette
+  const standardColors = [
+    '#FF0000', '#FF4500', '#FFA500', '#FFFF00', '#9AFF9A', '#00FF00',
+    '#00FFFF', '#0000FF', '#8A2BE2', '#FF1493', '#000000', '#808080',
+    '#800000', '#FF6347', '#FFD700', '#ADFF2F', '#00FA9A', '#008000',
+    '#40E0D0', '#1E90FF', '#9370DB', '#FF69B4', '#FFFFFF', '#D3D3D3'
+  ];
 
   // Extract gradient info from current value
   const extractGradientInfo = React.useCallback(() => {
@@ -333,10 +403,12 @@ const SimpleColorPickerCore = ({ id, value, onChange, showGradientOption }) => {
   React.useEffect(() => {
     const savedColors = getSavedColors();
     const savedGradients = getSavedGradients();
+    const lastUsed = getLastUsedColors();
     setCustomColors(savedColors);
     setOriginalCustomColors(savedColors);
     setCustomGradients(savedGradients);
     setOriginalCustomGradients(savedGradients);
+    setLastUsedColors(lastUsed);
   }, []);
 
   // Get current color schema from CSS variables
@@ -517,30 +589,113 @@ const SimpleColorPickerCore = ({ id, value, onChange, showGradientOption }) => {
           }}
         >
           <div>
-            <Header as="h4">Color Schema Colors</Header>
-            <div className="quick-colors" style={{ marginBottom: '20px' }}>
+            <Header as="h4">Site Colors</Header>
+            <div className="site-colors" style={{ marginBottom: '20px' }}>
               {Object.entries(quickColors).map(([name, color]) => (
-                <Button
+                <div
                   key={name}
-                  size="small"
                   style={{
-                    backgroundColor: color,
-                    margin: '2px',
-                    color: name === 'Background' ? '#333' : 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '8px',
+                    padding: '6px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
                   }}
                   onClick={() => {
                     if (isGradient) {
                       updateGradientColor(0, color);
                     } else {
                       onChange(id, color);
+                      const newLastUsed = saveToLastUsed(color);
+                      setLastUsedColors(newLastUsed);
                       setShowPicker(false);
                     }
                   }}
-                  title={`${name}: ${color}`}
+                  title={`Click to use ${name}: ${color}`}
                 >
-                  {name}
-                </Button>
+                  <div
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      backgroundColor: color,
+                      border: '1px solid #ccc',
+                      borderRadius: '3px',
+                      marginRight: '10px',
+                    }}
+                  />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 'bold', fontSize: '12px' }}>{name}</div>
+                    <div style={{ fontSize: '11px', color: '#666' }}>{color}</div>
+                  </div>
+                </div>
               ))}
+            </div>
+
+            {lastUsedColors.length > 0 && (
+              <>
+                <Header as="h4">Last 5 Used Colors</Header>
+                <div className="last-used-colors" style={{ marginBottom: '20px' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                    {lastUsedColors.map((color, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          backgroundColor: color,
+                          border: '2px solid #ddd',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          position: 'relative',
+                        }}
+                        onClick={() => {
+                          if (isGradient) {
+                            updateGradientColor(0, color);
+                          } else {
+                            onChange(id, color);
+                            const newLastUsed = saveToLastUsed(color);
+                            setLastUsedColors(newLastUsed);
+                            setShowPicker(false);
+                          }
+                        }}
+                        title={color}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+
+            <Header as="h4">Solid Colors</Header>
+            <div className="standard-colors" style={{ marginBottom: '20px' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                {standardColors.map((color, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      width: '28px',
+                      height: '28px',
+                      backgroundColor: color,
+                      border: '1px solid #ccc',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                      if (isGradient) {
+                        updateGradientColor(0, color);
+                      } else {
+                        onChange(id, color);
+                        const newLastUsed = saveToLastUsed(color);
+                        setLastUsedColors(newLastUsed);
+                        setShowPicker(false);
+                      }
+                    }}
+                    title={color}
+                  />
+                ))}
+              </div>
             </div>
 
             {showGradientOption && (
@@ -565,72 +720,34 @@ const SimpleColorPickerCore = ({ id, value, onChange, showGradientOption }) => {
                 </div>
               </>
             )}
-            {showGradientOption && isGradient ? (
-              // Show saved gradients when in gradient mode
-              customGradients.length > 0 && (
-                <>
-                  <Header as="h4">Saved Gradients</Header>
-                  <div className="custom-gradients">
-                    {customGradients.map((gradient, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          width: '60px',
-                          height: '30px',
-                          background: gradient,
-                          border: '2px solid #ccc',
-                          borderRadius: '4px',
-                          margin: '2px',
-                          cursor: 'pointer',
-                          display: 'inline-block',
-                        }}
-                        onClick={() => {
-                          onChange(id, gradient);
-                          setShowPicker(false);
-                        }}
-                        title={gradient}
-                      />
-                    ))}
-                  </div>
-                </>
-              )
-            ) : (
-              // Show saved colors when in color mode
+            {showGradientOption && isGradient && customGradients.length > 0 && (
               <>
-                <Header as="h4">Saved Colors</Header>
-                <div className="custom-colors">
-                  {customColors.map((color, index) => (
-                    <Button
+                <Header as="h4">Saved Gradients</Header>
+                <div className="custom-gradients">
+                  {customGradients.map((gradient, index) => (
+                    <div
                       key={index}
-                      size="mini"
-                      circular
-                      style={{ backgroundColor: color, margin: '2px' }}
+                      style={{
+                        width: '60px',
+                        height: '30px',
+                        background: gradient,
+                        border: '2px solid #ccc',
+                        borderRadius: '4px',
+                        margin: '2px',
+                        cursor: 'pointer',
+                        display: 'inline-block',
+                      }}
                       onClick={() => {
-                        onChange(id, color);
+                        onChange(id, gradient);
                         setShowPicker(false);
                       }}
+                      title={gradient}
                     />
                   ))}
                 </div>
               </>
             )}
-            {!isGradient || !showGradientOption ? (
-              <div>
-                <Header as="h4" style={{ paddingTop: '10px' }}>
-                  Color Picker
-                </Header>
-                <ChromePicker
-                  color={value || '#000'}
-                  onChange={(color) => {
-                    onChange(id, color.hex);
-                  }}
-                  onChangeComplete={(color) => {
-                    addToSavedColorsTemporary(color.hex);
-                  }}
-                  width="100%"
-                />
-              </div>
-            ) : showGradientOption && isGradient ? (
+            {showGradientOption && isGradient ? (
               <div>
                 <Header as="h4">Gradient Colors</Header>
                 {gradientColors.map((color, index) => (
@@ -702,6 +819,27 @@ const SimpleColorPickerCore = ({ id, value, onChange, showGradientOption }) => {
                 />
               </div>
             ) : null}
+
+            {!isGradient || !showGradientOption ? (
+              <div>
+                <Header as="h4" style={{ paddingTop: '20px' }}>
+                  Color Picker
+                </Header>
+                <ChromePicker
+                  color={value || '#000'}
+                  onChange={(color) => {
+                    onChange(id, color.hex);
+                  }}
+                  onChangeComplete={(color) => {
+                    addToSavedColorsTemporary(color.hex);
+                    const newLastUsed = saveToLastUsed(color.hex);
+                    setLastUsedColors(newLastUsed);
+                  }}
+                  width="100%"
+                />
+              </div>
+            ) : null}
+
             <br />
             <div style={{ marginBottom: '15px', display: 'flex', gap: '10px' }}>
               <Button onClick={applyColor} color="blue" style={{ flex: 1 }}>

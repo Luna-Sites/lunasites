@@ -10,7 +10,10 @@
   background: $lightgrey;
 }
 
-#page-document .blocks-group-wrapper {
+#page-document
+  .blocks-group-wrapper:not(.block .blocks-group-wrapper):has(
+    .block.hero-block:first-child
+  ) {
   &.transparent:first-child {
     padding-top: 0;
   }

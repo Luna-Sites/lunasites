@@ -56,13 +56,16 @@
     "@eeacms/volto-statistic-block": "*",
     "@eeacms/volto-pdf-block": "*",
     "@eeacms/volto-slate-footnote": "*",
+    "@eeacms/volto-object-widget": "7.0.0",
     "@eeacms/volto-block-toc": "*",
     "@eeacms/volto-metadata-block": "*",
-    "@eeacms/volto-quote-block": "*",
+    "@eeacms/volto-quote-block": "2.0.1",
     "@eeacms/volto-tags-block": "*",
     "react-aria-components": "^1.7.0",
-    "luna-super-hero": "9.0.0",
-    "lunasites-advanced-styling": "workspace:*"
+    "luna-super-listing": "*",
+    "luna-super-hero": "*",
+    "lunasites-advanced-styling": "workspace:*",
+    "remixicon": "^4.3.0"
   },
   "devDependencies": {
     "mrs-developer": "^2.2.0",

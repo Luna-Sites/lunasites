@@ -20,12 +20,29 @@ import { Container } from '@plone/components';
 import TopSideFacets from './components/Blocks/Search/TopSideFacets';
 
 import GridListingBlockTemplate from './components/Blocks/Listing/GridTemplate';
-import { ButtonStylingSchema } from './components/Blocks/Button/schema';
 import {
   withBlockSpecificStyling,
   addAdvancedStyling,
 } from 'lunasites-advanced-styling';
 
+import { Editor, Transforms, Text } from 'slate';
+import alignLeftIcon from '@plone/volto/icons/align-left.svg';
+import alignRightIcon from '@plone/volto/icons/align-right.svg';
+import alignCenterIcon from '@plone/volto/icons/align-center.svg';
+import alignJustifyIcon from '@plone/volto/icons/align-justify.svg';
+import FontSelector from './components/FontSelector';
+import FontSizeSelector from './components/FontSizeSelector';
+import LineSpacingSelector from './components/LineSpacingSelector';
+import ColorsSelector from './components/ColorsSelector';
+
+import {
+  MarkElementButton,
+  ToolbarButton,
+  BlockButton,
+} from '@plone/volto-slate/editor/ui';
+
+import { useSlate } from 'slate-react';
+import { useCallback } from 'react';
 import { imageBlockSchemaEnhancer } from './components/Blocks/Image/schema';
 import { ImageBlockDataAdapter } from './components/Blocks/Image/adapter';
 
@@ -42,10 +59,63 @@ import { mapsBlockSchemaEnhancer } from './components/Blocks/Maps/schema';
 import { sliderBlockSchemaEnhancer } from './components/Blocks/Slider/schema';
 
 import EventMetadataView from './components/Blocks/EventMetadata/View';
+import {
+  ScrollingBannerView,
+  ScrollingBannerEdit,
+  scrollingBannerSchemaEnhancer,
+} from './components/Blocks/ScrollingBanner';
 
-// Color Schema System
-import { ColorSchemaProvider, ColorSchemaField } from './components';
-import { colorSchemaInherit } from './reducers';
+// Design Schema System
+import { DesignSchemaProvider, ColorSchemaField } from './components';
+import { designSchema } from './reducers';
+import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
+import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
+import SimpleIconPicker from './components/Widgets/SimpleIconPicker';
+
+const isBlockClassActive = (editor, format) => {
+  if (!editor.selection) return false;
+  // TODO: someone fix this
+  const levels = Array.from(Editor.levels(editor, editor.selection));
+  if (levels.length < 2) return false;
+  const [, [node]] = levels;
+  return node.styleName === format;
+};
+const toggleBlockClassFormat = (editor, format) => {
+  const levels = Array.from(Editor.levels(editor, editor.selection));
+  // TODO: someone fix this
+  if (levels.length < 2) return false;
+  const [, [, path]] = levels;
+  Transforms.setNodes(
+    editor,
+    { styleName: format },
+    {
+      at: path,
+    },
+  );
+  return;
+};
+function BlockClassButton({ format, icon, ...props }) {
+  const editor = useSlate();
+
+  const isActive = isBlockClassActive(editor, format);
+
+  const handleMouseDown = useCallback(
+    (event) => {
+      event.preventDefault();
+      toggleBlockClassFormat(editor, format);
+    },
+    [editor, format], // , isActive
+  );
+
+  return (
+    <ToolbarButton
+      {...props}
+      active={isActive}
+      onMouseDown={handleMouseDown}
+      icon={icon}
+    />
+  );
+}
 
 // Custom Section Block
 import { 
@@ -71,14 +141,23 @@ defineMessages({
 });
 
 const applyConfig = (config) => {
-  // Add color schema reducers
+  // Add design schema reducers
   config.addonReducers = {
     ...config.addonReducers,
-    colorSchemaInherit,
+    designSchema,
   };
 
   // Register color schema widget
   config.widgets.widget.color_schema = ColorSchemaField;
+
+  // Register tools header widget
+  config.widgets.widget.tools_header = ToolsHeaderField;
+
+  // Register simple color picker widget
+  config.widgets.widget.simple_color_picker = SimpleColorPicker;
+
+  // Register simple icon picker widget
+  config.widgets.widget.simple_icon_picker = SimpleIconPicker;
 
   config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;
@@ -100,10 +179,26 @@ const applyConfig = (config) => {
             type: 'color',
             widget: 'style_simple_color',
           },
+          textColor: {
+            title: 'Text Color',
+            type: 'color',
+            widget: 'style_simple_color',
+            description: 'Override automatic text color calculation',
+          },
           filled: {
             title: 'Filled',
             type: 'boolean',
             description: 'Filled button or outline only',
+          },
+          borderRadius: {
+            widget: 'slider',
+            title: 'Rounded Corner',
+            settings: {
+              min: 0,
+              max: 24,
+              step: 1,
+              start: 0,
+            },
           },
         },
       },
@@ -207,7 +302,7 @@ const applyConfig = (config) => {
     },
     {
       match: '',
-      component: ColorSchemaProvider,
+      component: DesignSchemaProvider,
     },
   ];
 
@@ -378,6 +473,18 @@ const applyConfig = (config) => {
     sidebarTab: 0,
   };
 
+  config.blocks.blocksConfig.scrollingBanner = {
+    id: 'scrollingBanner',
+    title: 'Scrolling Banner',
+    icon: descriptionSVG,
+    group: 'common',
+    view: ScrollingBannerView,
+    edit: ScrollingBannerEdit,
+    schemaEnhancer: scrollingBannerSchemaEnhancer,
+    mostUsed: false,
+    sidebarTab: 1,
+  };
+
   // Check if the separator is present before enhancing it
   if (config.blocks.blocksConfig?.separator?.id) {
     config.blocks.blocksConfig.separator = {
@@ -391,6 +498,223 @@ const applyConfig = (config) => {
   }
 
   config.views.contentTypesViews.Event = EventView;
+
+  // Text Align buttons
+
+  // Align left
+  if (!config.settings.slate.toolbarButtons.includes('text-left')) {
+    config.settings.slate.buttons['text-left'] = (props) => (
+      <BlockClassButton
+        format="text-left"
+        icon={alignLeftIcon}
+        title="Align left"
+        {...props}
+      />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'separator',
+      'text-left',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'separator',
+      'text-left',
+    ];
+  }
+
+  // Align center
+  if (!config.settings.slate.toolbarButtons.includes('text-center')) {
+    config.settings.slate.buttons['text-center'] = (props) => (
+      <BlockClassButton
+        format="text-center"
+        icon={alignCenterIcon}
+        title="Align center"
+        {...props}
+      />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'text-center',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'text-center',
+    ];
+  }
+
+  // Align right
+  if (!config.settings.slate.toolbarButtons.includes('text-right')) {
+    config.settings.slate.buttons['text-right'] = (props) => (
+      <BlockClassButton
+        format="text-right"
+        icon={alignRightIcon}
+        title="Align right"
+        {...props}
+      />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'text-right',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'text-right',
+    ];
+  }
+
+  // Align justify
+  if (!config.settings.slate.toolbarButtons.includes('text-justify')) {
+    config.settings.slate.buttons['text-justify'] = (props) => (
+      <BlockClassButton
+        format="text-justify"
+        icon={alignJustifyIcon}
+        title="Align justify"
+        {...props}
+      />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'text-justify',
+      'separator',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'text-justify',
+      'separator',
+    ];
+  }
+
+  // Font selector
+  if (!config.settings.slate.toolbarButtons.includes('font-selector')) {
+    config.settings.slate.buttons['font-selector'] = (props) => (
+      <FontSelector {...props} />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'separator',
+      'font-selector',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'separator',
+      'font-selector',
+    ];
+  }
+
+  // Font size selector
+  if (!config.settings.slate.toolbarButtons.includes('font-size-selector')) {
+    config.settings.slate.buttons['font-size-selector'] = (props) => (
+      <FontSizeSelector {...props} />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'separator',
+      'font-size-selector',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'separator',
+      'font-size-selector',
+    ];
+  }
+
+  // Line spacing selector
+  if (!config.settings.slate.toolbarButtons.includes('line-spacing-selector')) {
+    config.settings.slate.buttons['line-spacing-selector'] = (props) => (
+      <LineSpacingSelector {...props} />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'separator',
+      'line-spacing-selector',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'separator',
+      'line-spacing-selector',
+    ];
+  }
+
+  // Initialize marks object if it doesn't exist
+  if (!config.settings.slate.marks) {
+    config.settings.slate.marks = {};
+  }
+
+  // Register the text color mark - volto-slate will automatically convert style-* marks to CSS classes
+  config.settings.slate.marks['style-text-color-custom'] = true;
+  config.settings.slate.marks['style-text-background-color-custom'] = true;
+
+  // Inject CSS for dynamic text colors
+  const injectTextColorCSS = () => {
+    const styleId = 'volto-lunasites-text-colors';
+    let styleElement = document.getElementById(styleId);
+
+    if (!styleElement) {
+      styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      document.head.appendChild(styleElement);
+    }
+
+    // This will be populated dynamically when colors are applied
+    styleElement.textContent = `
+      /* Dynamic text colors will be injected here */
+      .text-color-custom {
+        /* Placeholder for dynamic colors */
+      }
+    `;
+  };
+
+  // Inject CSS on page load
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectTextColorCSS);
+    } else {
+      injectTextColorCSS();
+    }
+  }
+
+  // Colors selector (text color and background color)
+  if (!config.settings.slate.toolbarButtons.includes('colors-selector')) {
+    config.settings.slate.buttons['colors-selector'] = (props) => (
+      <ColorsSelector {...props} />
+    );
+
+    config.settings.slate.toolbarButtons = [
+      ...config.settings.slate.toolbarButtons,
+      'separator',
+      'colors-selector',
+    ];
+
+    config.settings.slate.expandedToolbarButtons = [
+      ...config.settings.slate.expandedToolbarButtons,
+      'separator',
+      'colors-selector',
+    ];
+  }
+
+  // Clear formatting
+  // if (!config.settings.slate.toolbarButtons.includes('clearformatting')) {
+  //   config.settings.slate.toolbarButtons = [
+  //     ...config.settings.slate.toolbarButtons,
+  //     'separator',
+  //     'clearformatting',
+  //   ];
+  // }
 
   // TOC Block
   config.blocks.blocksConfig.toc = {

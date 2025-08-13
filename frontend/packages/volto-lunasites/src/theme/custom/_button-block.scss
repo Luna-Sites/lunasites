@@ -4,7 +4,6 @@
  */
 
 .block.__button {
-
   .ui.button {
     &.button-custom-color {
       // Base styles for custom colored buttons
@@ -71,18 +70,22 @@
 .block.__button {
   .align {
     &.left {
-      text-align: left;
+      text-align: left !important;
+      display: block;
     }
 
     &.right {
-      text-align: right;
+      text-align: right !important;
+      display: block;
     }
 
     &.center {
-      text-align: center;
+      text-align: center !important;
+      display: block;
     }
 
     &.full {
+      text-align: left;
       .ui.button {
         width: 100% !important;
         display: block;

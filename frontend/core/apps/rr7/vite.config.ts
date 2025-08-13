@@ -22,7 +22,6 @@ export default defineConfig({
           secure: false,
         }),
         rewrite: (path) => {
-          console.log('rewritten path', path);
           return path.replace('/++api++', '');
         },
       },

@@ -28,7 +28,7 @@ const SimpleColorSchemaField = (props) => {
 
   React.useEffect(() => {
     if (value) {
-      setColorSchema(prev => ({ ...prev, ...value }));
+      setColorSchema((prev) => ({ ...prev, ...value }));
     }
   }, [value]);
 
@@ -45,7 +45,7 @@ const SimpleColorSchemaField = (props) => {
       text_color: '#333333',
       accent_color: '#6bb535',
     };
-    
+
     const current = {};
     Object.entries(colorSchema).forEach(([key, value]) => {
       if (value && value.trim()) {
@@ -85,12 +85,14 @@ const SimpleColorSchemaField = (props) => {
 
         {colorFields.map((field) => (
           <div key={field.key} style={{ marginBottom: '12px', width: '100%' }}>
-            <div style={{
-              fontSize: '11px',
-              fontWeight: '500',
-              color: '#333',
-              marginBottom: '4px',
-            }}>
+            <div
+              style={{
+                fontSize: '11px',
+                fontWeight: '500',
+                color: '#333',
+                marginBottom: '4px',
+              }}
+            >
               {field.label}
             </div>
             <div style={{ width: '100%' }}>

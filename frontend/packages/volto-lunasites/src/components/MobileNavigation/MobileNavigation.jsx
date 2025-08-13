@@ -40,6 +40,7 @@ const MenuItem = ({
   handleLinkClicked,
   resetToRoot,
   pathname,
+  designSchemaData,
 }) => {
   const [isSubMenuOpen, setSubMenuOpen] = useState(false);
 
@@ -79,11 +80,13 @@ const MenuItem = ({
       >
         <div className="menu-drawer subsection">
           <div className="search-header">
-            <div className="search-wrapper">
-              <div className="search">
-                <SearchWidget />
+            {!designSchemaData?.hide_search_button && (
+              <div className="search-wrapper">
+                <div className="search">
+                  <SearchWidget />
+                </div>
               </div>
-            </div>
+            )}
             <button onClick={closeSubMenu}>
               <Icon name={arrowLeftSVG} size="60px" />
               <span>
@@ -122,6 +125,7 @@ const MenuItem = ({
 };
 
 const MobileNavigation = (props) => {
+  const { designSchemaData } = props;
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [resetToRoot, setResetToRoot] = useState(false);
   const { settings } = config;
@@ -218,11 +222,13 @@ const MobileNavigation = (props) => {
       >
         <div className="menu-drawer">
           <div className="search-header">
-            <div className="search-wrapper">
-              <div className="search">
-                <SearchWidget />
+            {!designSchemaData?.hide_search_button && (
+              <div className="search-wrapper">
+                <div className="search">
+                  <SearchWidget />
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <ul className="sections">
             {items &&
@@ -235,6 +241,7 @@ const MobileNavigation = (props) => {
                   handleLinkClicked={handleLinkClicked}
                   resetToRoot={resetToRoot}
                   pathname={props.pathname}
+                  designSchemaData={designSchemaData}
                 />
               ))}
           </ul>

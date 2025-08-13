@@ -16,7 +16,6 @@ export default async function Main() {
   const queryClient = getQueryClient();
   const headersList = headers();
   const path = headersList.get('x-pathname') || '/';
-  console.log(`Visiting: ${path}`);
   await queryClient.prefetchQuery(getContentQuery({ path, expand }));
   const dehydratedState = dehydrate(queryClient);
 

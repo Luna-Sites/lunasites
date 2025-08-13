@@ -42,6 +42,14 @@ const messages = defineMessages({
     id: 'Button Width',
     defaultMessage: 'Button Width',
   },
+  LeftIcon: {
+    id: 'Left Icon',
+    defaultMessage: 'Left Icon',
+  },
+  RightIcon: {
+    id: 'Right Icon',
+    defaultMessage: 'Right Icon',
+  },
 });
 
 export const ButtonSchema = (props) => {
@@ -53,7 +61,7 @@ export const ButtonSchema = (props) => {
       {
         id: 'default',
         title: 'Default',
-        fields: ['title', 'href', 'openLinkInNewTab', 'inneralign'],
+        fields: ['title', 'href', 'openLinkInNewTab', 'leftIcon', 'rightIcon', 'inneralign'],
       },
       {
         id: 'appearance',
@@ -72,6 +80,16 @@ export const ButtonSchema = (props) => {
         mode: 'link',
         selectedItemAttrs: ['Title', 'Description', 'hasPreviewImage'],
         allowExternals: true,
+      },
+      leftIcon: {
+        title: intl.formatMessage(messages.LeftIcon),
+        description: 'Choose an icon from Remix Icons library',
+        widget: 'simple_icon_picker',
+      },
+      rightIcon: {
+        title: intl.formatMessage(messages.RightIcon),
+        description: 'Choose an icon from Remix Icons library',
+        widget: 'simple_icon_picker',
       },
       inneralign: {
         title: props.intl.formatMessage(messages.innerAlign),

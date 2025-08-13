@@ -14,12 +14,12 @@ li {
 }
 
 @mixin word-break {
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
+  -ms-hyphens: none;
+  -moz-hyphens: none;
+  -webkit-hyphens: none;
+  hyphens: none;
   overflow-wrap: break-word;
-  word-break: break-word;
+  word-break: normal;
   word-wrap: break-word;
 }
 
@@ -45,6 +45,27 @@ ol {
 
   &:last-child {
     margin-bottom: 0;
+  }
+}
+
+ul,
+ol {
+  @media only screen and (max-width: $largest-mobile-screen) {
+    @include add(size, 2xs);
+    @include add(height, xs);
+    padding-left: $horizontal-space-small-screens;
+    padding-right: $horizontal-space-small-screens;
+  }
+}
+
+// Exclude hero blocks from mobile padding for lists
+.hero-block ul,
+.hero-block ol,
+.styled-hero ul,
+.styled-hero ol {
+  @media only screen and (max-width: $largest-mobile-screen) {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
@@ -115,16 +136,41 @@ h2 {
   @include text-heading-h2();
   @include vertical-space-h2();
   @include word-break();
+  
+  @media only screen and (max-width: $largest-mobile-screen) {
+    @include add(size, m);
+    @include add(height, l);
+    padding-left: $horizontal-space-small-screens;
+    padding-right: $horizontal-space-small-screens;
+  }
+  
   span {
     font-size: inherit;
     font-weight: inherit;
     line-height: inherit;
   }
 }
+
+// Exclude hero blocks from mobile padding
+.hero-block h2,
+.styled-hero h2,
+.hero-block h3,
+.styled-hero h3 {
+  @media only screen and (max-width: $largest-mobile-screen) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 h3 {
   @include text-heading-h3();
   @include vertical-space-h3();
   @include word-break();
+  
+  @media only screen and (max-width: $largest-mobile-screen) {
+    padding-left: $horizontal-space-small-screens;
+    padding-right: $horizontal-space-small-screens;
+  }
+  
   span {
     font-size: inherit;
     font-weight: inherit;

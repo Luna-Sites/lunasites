@@ -3,12 +3,22 @@
     xmlns:plone="http://namespaces.plone.org/plone"
     i18n_domain="lunasites">
 
+
   <!-- Color Schema REST API Service -->
   <adapter
       factory=".color_schema.ColorSchemaService"
       for="* zope.publisher.interfaces.http.IHTTPRequest"
       provides="zope.publisher.interfaces.IPublishTraverse"
       name="color-schema"
+      />
+
+  <!-- Design Schema Smart Inherit Service -->
+  <plone:service
+      method="GET"
+      factory=".inherit.SmartInheritService"
+      for="zope.interface.Interface"
+      permission="zope2.View"
+      name="@design-schema-inherit"
       />
 
 </configure>

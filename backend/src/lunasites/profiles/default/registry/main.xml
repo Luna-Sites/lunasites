@@ -12,7 +12,7 @@
       <value_type type="plone.registry.field.TextLine" />
     </field>
     <value>
-      <element key="allow_origin">*</element>
+      <element key="allow_origin">http://localhost:3000,http://127.0.0.1</element>
       <element key="allow_credentials">true</element>
       <element key="allow_headers">Accept,Accept-Encoding,Authorization,Content-Type,Origin,X-Requested-With</element>
       <element key="allow_methods">DELETE,GET,OPTIONS,PATCH,POST,PUT</element>
