@@ -38,6 +38,10 @@ const SlashMenu = ({
   selected,
   availableBlocks,
   menuPosition,
+  editor,
+  properties,
+  onChangeFormData,
+  onSelectBlock,
 }) => {
   const intl = useIntl();
 
@@ -59,7 +63,33 @@ const SlashMenu = ({
             className={block.id}
             active={index === selected}
             onClick={(e) => {
-              onMutateBlock(currentBlock, { '@type': block.id });
+              const newBlockData = { '@type': block.id };
+              
+              // Use smart mutation if we have access to form data
+              if (properties && onChangeFormData && editor) {
+                console.log('Using smart mutation for click...');
+                try {
+                  const result = smartMutateBlock(
+                    editor,
+                    currentBlock,
+                    newBlockData,
+                    properties,
+                  );
+                  onChangeFormData(result.formData);
+                  
+                  // Focus on the new block if one was created
+                  if (result.newBlockId && onSelectBlock) {
+                    onSelectBlock(result.newBlockId);
+                  }
+                } catch (error) {
+                  console.error('Smart mutation failed, falling back to standard:', error);
+                  onMutateBlock(currentBlock, newBlockData);
+                }
+              } else {
+                // Fallback to standard mutation
+                onMutateBlock(currentBlock, newBlockData);
+              }
+              
               e.stopPropagation();
             }}
           >
@@ -174,6 +204,7 @@ const PersistentSlashMenu = ({ editor }) => {
     navRoot,
     contentType,
     onChangeFormData,
+    onSelectBlock,
   } = props;
   const disableNewBlocks = data?.disableNewBlocks || detached;
 
@@ -270,17 +301,27 @@ const PersistentSlashMenu = ({ editor }) => {
     if (properties && onChangeFormData) {
       console.log('Using smart mutation...');
       try {
-        const updatedFormData = smartMutateBlock(
+        const result = smartMutateBlock(
           editor,
           block,
           newBlockData,
           properties,
         );
         console.log(
-          'Calling onChangeFormData with:',
-          updatedFormData === properties ? 'same object' : 'different object',
+          'Smart mutation result:',
+          {
+            hasFormData: !!result.formData,
+            newBlockId: result.newBlockId,
+            formDataChanged: result.formData !== properties
+          }
         );
-        onChangeFormData(updatedFormData);
+        onChangeFormData(result.formData);
+        
+        // Focus on the new block if one was created
+        if (result.newBlockId && onSelectBlock) {
+          console.log('Selecting new block:', result.newBlockId);
+          onSelectBlock(result.newBlockId);
+        }
       } catch (error) {
         console.error('Smart mutation failed, falling back to standard:', error);
         onMutateBlock(block, newBlockData, emptySlateBlock());
@@ -309,6 +350,10 @@ const PersistentSlashMenu = ({ editor }) => {
       availableBlocks={availableBlocks}
       selected={slashMenuSelected}
       menuPosition={menuPosition}
+      editor={editor}
+      properties={properties}
+      onChangeFormData={onChangeFormData}
+      onSelectBlock={onSelectBlock}
     />
   ) : (
     ''
