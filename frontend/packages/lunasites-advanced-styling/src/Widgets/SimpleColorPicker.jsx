@@ -545,11 +545,17 @@ const SimpleColorPickerCore = ({ id, value, onChange, showGradientOption }) => {
     <div className="wrapper">
       <Button
         style={{
-          ...(value &&
-          (value.startsWith('linear-gradient') ||
-            value.startsWith('radial-gradient'))
-            ? { background: value }
-            : { backgroundColor: value }),
+          ...(value
+            ? (value.startsWith('linear-gradient') ||
+              value.startsWith('radial-gradient'))
+              ? { background: value }
+              : { backgroundColor: value }
+            : { backgroundColor: 'white' }),
+          border: '2px solid #094ce1',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
         onClick={(e) => {
           setShowPicker(!showPicker);
@@ -559,7 +565,17 @@ const SimpleColorPickerCore = ({ id, value, onChange, showGradientOption }) => {
         title="Pick color"
         width={'100%'}
       >
-        {''}
+        {!value && (
+          <Icon
+            name={clearSVG}
+            size="18px"
+            style={{
+              color: 'red',
+              fontWeight: 'bold',
+            }}
+          />
+        )}
+        {value && ''}
       </Button>
 
       <Modal

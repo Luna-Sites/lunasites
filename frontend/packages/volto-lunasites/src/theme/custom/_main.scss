@@ -308,7 +308,7 @@
   --text-color: black;
 }
 
-/* Removed z-index .block.align .right & .left from pastanaga blocks.less */
+// /* Removed z-index .block.align .right & .left from pastanaga blocks.less */
 .block.align.left,
 .block.align.right {
   z-index: initial;
@@ -1270,3 +1270,78 @@ footer .blocks-form {
   background-color: #0d4be2 !important;
   color: white !important;
 }
+
+/*-------------------
+    Sidebar Menu and Accordion Color Overrides
+--------------------*/
+
+// Override the Semantic UI menu item colors with our primary color (sidebar only)
+.sidebar-container .ui.secondary.attached.pointing.menu .item {
+  color: #094ce1 !important;
+}
+
+// Only active items get the border
+.sidebar-container .ui.secondary.attached.pointing.menu .active.item {
+  border-color: #094ce1 !important;
+  border-top-color: #094ce1 !important;
+  border-right-color: #094ce1 !important;
+  border-bottom-color: #094ce1 !important;
+  border-left-color: #094ce1 !important;
+  color: #094ce1 !important;
+}
+
+// Override the Semantic UI accordion title background with our blue (sidebar only)
+.sidebar-container .ui.styled.accordion .title {
+  background: #f0f2ff !important;
+  color: #094ce1 !important;
+}
+
+.sidebar-container .ui.styled.accordion .active.title {
+  background: #f0f2ff !important;
+  color: #094ce1 !important;
+}
+
+/*-------------------
+    Primary Color Variable
+--------------------*/
+
+// Primary color variable
+:root {
+  --lunasites-cms-primary-color: #094ce1;
+}
+
+/*-------------------
+    Slash Menu Color Styling
+--------------------*/
+
+// Style slash menu with our primary color scheme
+.power-user-menu {
+  .ui.menu {
+    .item {
+      color: #333 !important;
+      
+      &:hover {
+        background: rgba(9, 76, 225, 0.1) !important;
+        color: var(--lunasites-cms-primary-color) !important;
+        
+        .icon {
+          color: var(--lunasites-cms-primary-color) !important;
+        }
+      }
+      
+      &.active {
+        background: var(--lunasites-cms-primary-color) !important;
+        color: white !important;
+        
+        .icon {
+          color: white !important;
+        }
+      }
+      
+      .icon {
+        color: var(--lunasites-cms-primary-color) !important;
+      }
+    }
+  }
+}
+
