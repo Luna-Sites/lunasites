@@ -2,6 +2,9 @@ import React, { useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuid } from 'uuid';
 import cx from 'classnames';
+import { isEmpty } from 'lodash';
+import { BlocksForm } from '@plone/volto/components';
+import { emptyBlocksForm, getBlocksLayoutFieldname } from '@plone/volto/helpers';
 import FloatingAddButton from '../FloatingAddButton';
 import GridLayout from './GridLayout';
 
@@ -19,6 +22,25 @@ const CustomSectionBlockEdit = (props) => {
   } = props;
 
   const [selectedChildBlock, setSelectedChildBlock] = useState(null);
+  const [multiSelected, setMultiSelected] = useState([]);
+
+  // Convert our data structure to match what BlocksForm expects
+  const data_blocks = data?.data?.blocks;
+  const childBlocksForm = isEmpty(data_blocks) ? emptyBlocksForm() : data.data;
+
+  // Initialize selectedBlock if needed
+  React.useEffect(() => {
+    if (
+      isEmpty(data_blocks) &&
+      childBlocksForm.blocks_layout.items[0] !== selectedChildBlock
+    ) {
+      setSelectedChildBlock(childBlocksForm.blocks_layout.items[0]);
+      onChangeBlock(block, {
+        ...data,
+        data: childBlocksForm,
+      });
+    }
+  }, [onChangeBlock, childBlocksForm, selectedChildBlock, block, data, data_blocks]);
 
   const {
     blocks = {},
@@ -52,6 +74,45 @@ const CustomSectionBlockEdit = (props) => {
     };
     onChangeBlock(block, newData);
   }, [data, block, onChangeBlock]);
+
+  const onSelectChildBlock = useCallback(
+    (id, isMultipleSelection, event, activeBlock) => {
+      let newMultiSelected = [];
+      let selected = id;
+
+      if (isMultipleSelection) {
+        selected = null;
+        const blocksLayoutFieldname = getBlocksLayoutFieldname(data?.data);
+        const blocks_layout = data?.data[blocksLayoutFieldname].items;
+        if (event.shiftKey) {
+          const anchor =
+            multiSelected.length > 0
+              ? blocks_layout.indexOf(multiSelected[0])
+              : blocks_layout.indexOf(activeBlock);
+          const focus = blocks_layout.indexOf(id);
+          if (anchor === focus) {
+            newMultiSelected = [id];
+          } else if (focus > anchor) {
+            newMultiSelected = [...blocks_layout.slice(anchor, focus + 1)];
+          } else {
+            newMultiSelected = [...blocks_layout.slice(focus, anchor + 1)];
+          }
+        }
+        if ((event.ctrlKey || event.metaKey) && !event.shiftKey) {
+          if (multiSelected.includes(id)) {
+            selected = null;
+            newMultiSelected = multiSelected.filter(x => x !== id);
+          } else {
+            newMultiSelected = [...(multiSelected || []), id];
+          }
+        }
+      }
+
+      setSelectedChildBlock(selected);
+      setMultiSelected(newMultiSelected);
+    },
+    [data.data, multiSelected],
+  );
 
   const handleChildBlockChange = useCallback((blockId, blockData) => {
     const newBlocks = {
@@ -156,39 +217,34 @@ const CustomSectionBlockEdit = (props) => {
 
   const handleAddBlock = useCallback((blockData) => {
     const blockId = uuid();
-    const newBlocks = {
-      ...blocks,
-      [blockId]: blockData,
+    
+    // Create new child blocks form data
+    const newChildBlocksForm = {
+      ...childBlocksForm,
+      blocks: {
+        ...childBlocksForm.blocks,
+        [blockId]: blockData,
+      },
+      blocks_layout: {
+        ...childBlocksForm.blocks_layout,
+        items: [...childBlocksForm.blocks_layout.items, blockId],
+      },
     };
 
-    let newBlocksLayout = {
-      ...blocks_layout,
-      items: [...blocks_layout.items, blockId],
-    };
-
-    // If in grid mode, assign position to new block
-    if (isGridMode) {
-      const position = findEmptyGridPosition();
-      newBlocksLayout = {
-        ...newBlocksLayout,
-        grid: {
-          ...blocks_layout.grid,
-          positions: {
-            ...gridConfig.positions,
-            [blockId]: position,
-          },
-        },
-      };
-    }
-
+    // Update the main data structure
     const newData = {
       ...data,
-      blocks: newBlocks,
-      blocks_layout: newBlocksLayout,
+      data: newChildBlocksForm,
+      // Keep the old structure for backward compatibility
+      blocks: newChildBlocksForm.blocks,
+      blocks_layout: {
+        ...blocks_layout,
+        items: newChildBlocksForm.blocks_layout.items,
+      },
     };
 
     onChangeBlock(block, newData);
-  }, [blocks, blocks_layout, isGridMode, findEmptyGridPosition, gridConfig, data, block, onChangeBlock]);
+  }, [childBlocksForm, blocks_layout, data, block, onChangeBlock]);
 
   const renderBlock = useCallback((blockId, index) => {
     const childBlock = blocks[blockId];
@@ -327,27 +383,25 @@ const CustomSectionBlockEdit = (props) => {
           />
         ) : (
           <div className="section-blocks linear-layout">
-            {blocks_layout.items.map((childBlockId, index) => (
-              <div
-                key={childBlockId}
-                className={cx('section-child-block', {
-                  selected: selectedChildBlock === childBlockId,
-                })}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedChildBlock(childBlockId);
-                }}
-              >
-                {renderBlock(childBlockId, index)}
-              </div>
-            ))}
-            <FloatingAddButton
-              onAddBlock={handleAddBlock}
-              blockId={block}
-              blocksConfig={blocksConfig}
-              properties={properties}
-              className="custom-section-add-more"
-              inline={true}
+            <BlocksForm
+              {...props}
+              metadata={properties}
+              properties={childBlocksForm}
+              manage={manage}
+              selectedBlock={selected ? selectedChildBlock : null}
+              onSelectBlock={(id, l, e) => {
+                const isMultipleSelection = e
+                  ? e.shiftKey || e.ctrlKey || e.metaKey
+                  : false;
+                onSelectChildBlock(id, isMultipleSelection, e, selectedChildBlock);
+              }}
+              onChangeFormData={(newFormData) => {
+                onChangeBlock(block, {
+                  ...data,
+                  data: newFormData,
+                });
+              }}
+              pathname={pathname}
             />
           </div>
         )}

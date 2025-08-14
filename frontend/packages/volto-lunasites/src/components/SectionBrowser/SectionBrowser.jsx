@@ -33,6 +33,7 @@ const SectionBrowser = React.memo(
     onClose,
     blockId,
     onChangeFormData,
+    onInsertSection,
     properties,
     // Additional props for BlockChooser compatibility
     allowedBlocks,
@@ -56,6 +57,13 @@ const SectionBrowser = React.memo(
 
     const handleInsertSection = useCallback(
       (section) => {
+        // If onInsertSection is provided, use it directly with the section object
+        if (onInsertSection) {
+          onInsertSection(section);
+          onClose();
+          return;
+        }
+
         const template = section.template();
         const insertIndex = blockId ? currentLayout.indexOf(blockId) : -1;
 
@@ -104,6 +112,7 @@ const SectionBrowser = React.memo(
         currentBlocks,
         currentLayout,
         onChangeFormData,
+        onInsertSection,
         onClose,
         externalOnInsertBlock,
       ],

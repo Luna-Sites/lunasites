@@ -1,0 +1,217 @@
+@type: 'extra';
+@element: 'custom';
+
+@import (multiple, reference, optional) '../../theme.config';
+
+@borderColor: rgba(120, 192, 215, 0.75);
+
+.custom-section-block-edit {
+  position: relative;
+  .custom-section-title-input {
+    margin-bottom: 1rem;
+
+    .section-title-field {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1.1rem;
+      font-weight: 500;
+
+      &:focus {
+        outline: none;
+        border-color: @borderColor;
+        box-shadow: 0 0 0 2px rgba(120, 192, 215, 0.2);
+      }
+
+      &::placeholder {
+        color: #999;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .section-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+
+    .choose-section-button {
+      margin-bottom: 1rem !important;
+
+      .icon {
+        margin-right: 0.5rem;
+      }
+    }
+
+    .empty-section-help {
+      color: #666;
+      font-size: 0.9rem;
+      margin: 0;
+      max-width: 300px;
+    }
+  }
+
+  .section-with-content {
+    position: relative;
+
+    .section-controls {
+      position: absolute;
+      top: -10px;
+      right: 10px;
+      z-index: 2;
+
+      .change-section-button {
+        font-size: 0.85rem !important;
+        padding: 0.4rem 0.8rem !important;
+        background: white !important;
+        border: 1px solid #ccc !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+
+        &:hover {
+          background: #f5f5f5 !important;
+          border-color: #999 !important;
+        }
+
+        .icon {
+          margin-right: 0.3rem;
+        }
+      }
+    }
+  }
+
+  .new-section-button-container {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+
+    .ui.basic.button.new-add-section {
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.5rem !important;
+      padding: 0.6rem 1.2rem !important;
+      background: #f0f4ff !important;
+      border: 2px solid #094ce1 !important;
+      border-radius: 4px !important;
+      color: #094ce1 !important;
+      font-size: 0.9rem !important;
+      font-weight: 600 !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(9, 76, 225, 0.3) !important;
+      transition: all 0.2s ease !important;
+      white-space: nowrap !important;
+
+      &:hover {
+        background: #e6efff !important;
+        border-color: #094ce1 !important;
+        color: #094ce1 !important;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(9, 76, 225, 0.4) !important;
+      }
+
+      .icon {
+        color: #094ce1 !important;
+        margin: 0 !important;
+      }
+    }
+  }
+}
+
+.block-editor-group {
+  [data-rbd-draggable-context-id] {
+    margin-bottom: 1rem;
+  }
+
+  .block-add-button {
+    display: none !important;
+  }
+
+  .block.group.selected::before,
+  .block.group:hover::before {
+    border-style: dashed;
+  }
+
+  fieldset {
+    border: none;
+
+    legend {
+      position: absolute;
+      z-index: 3;
+      top: -1.3em;
+      left: 0;
+      width: fit-content;
+      padding: 0 1rem;
+      margin-right: auto;
+      margin-left: auto;
+      background-color: @pageBackground;
+      color: @borderColor;
+      cursor: pointer;
+      text-align: center;
+    }
+  }
+
+  .section-block {
+    padding-top: 1rem;
+    padding-bottom: 0.1rem;
+    margin: 0;
+    outline: none;
+  }
+
+  .counter {
+    display: grid;
+    align-items: center;
+    font-size: 85%;
+    grid-gap: 0.5em;
+    grid-template-columns: 98% auto;
+    text-align: end;
+
+    &.info {
+      color: #ccc;
+    }
+
+    &.danger {
+      color: crimson;
+    }
+
+    &.warning {
+      color: darkorange;
+    }
+  }
+
+  .blocks-form {
+    margin-top: 0.5rem;
+  }
+
+  .blocks-chooser {
+    right: 0;
+    left: auto;
+    margin-top: 3rem;
+  }
+
+  .block-toolbar {
+    position: absolute;
+    z-index: 3;
+    right: -9px;
+    display: flex;
+    border: none;
+    border: 1px solid @borderColor;
+    border-bottom: 1px solid @pageBackground;
+    margin-top: -45px;
+    background-color: @pageBackground;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+
+    .ui.basic.button {
+      padding: 8px 5px;
+    }
+
+    .ui.basic.button:hover {
+      background: transparent !important;
+    }
+  }
+}
