@@ -136,6 +136,11 @@
     border-style: dashed;
   }
 
+  .block.multiSelected::before {
+    z-index: 1;
+    background-color: white !important;
+  }
+
   fieldset {
     border: none;
 
@@ -212,6 +217,82 @@
 
     .ui.basic.button:hover {
       background: transparent !important;
+    }
+  }
+}
+
+// Compact modal customizations
+.compact-modal-content {
+  .compact-search-icon {
+    fill: #094ce1 !important;
+  }
+
+  .compact-search-input {
+    border-color: #ccc;
+    
+    &:focus {
+      border-color: #094ce1 !important;
+      box-shadow: 0 0 0 2px rgba(9, 76, 225, 0.2) !important;
+    }
+  }
+
+  .compact-quick-access-header {
+    .icon {
+      fill: #094ce1 !important;
+    }
+  }
+
+  .compact-quick-block {
+    border: 1px solid #e1e5ea;
+    
+    &:hover {
+      background-color: #094ce1 !important;
+      border-color: #094ce1 !important;
+      color: white !important;
+      
+      .compact-quick-block-icon .icon {
+        fill: white !important;
+      }
+      
+      .compact-quick-block-title {
+        color: white !important;
+      }
+    }
+
+    .compact-quick-block-icon .icon {
+      fill: #094ce1 !important;
+    }
+  }
+
+  .compact-category-header {
+    .icon {
+      fill: #094ce1 !important;
+    }
+
+    &[aria-expanded="true"] {
+      color: #094ce1 !important;
+    }
+  }
+
+  .compact-block-card {
+    border: 1px solid #e1e5ea;
+    
+    &:hover {
+      background-color: #094ce1 !important;
+      border-color: #094ce1 !important;
+      color: white !important;
+      
+      .compact-block-icon .icon {
+        fill: white !important;
+      }
+      
+      .compact-block-title {
+        color: white !important;
+      }
+    }
+
+    .compact-block-icon .icon {
+      fill: #094ce1 !important;
     }
   }
 }

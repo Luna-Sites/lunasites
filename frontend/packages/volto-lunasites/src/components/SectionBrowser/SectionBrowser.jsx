@@ -190,7 +190,13 @@ const SectionBrowser = React.memo(
     return (
       <ModalOverlay
         isOpen={open}
-        onOpenChange={onClose}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            onClose();
+          }
+        }}
+        isDismissable={true}
+        isKeyboardDismissDisabled={false}
         className="modal-overlay"
       >
         <Modal className="section-browser-modal">

@@ -53,12 +53,14 @@ const Edit = (props) => {
     : data.data;
 
   const [selectedBlock, setSelectedBlock] = useState(
-    childBlocksForm.blocks_layout.items[0],
+    childBlocksForm.blocks_layout?.items?.[0] || null,
   );
 
   // Check if section is empty (no blocks or only empty blocks)
   const isSectionEmpty =
-    isEmpty(data_blocks) || childBlocksForm.blocks_layout.items.length === 0;
+    isEmpty(data_blocks) || 
+    !childBlocksForm.blocks_layout || 
+    childBlocksForm.blocks_layout.items.length === 0;
 
   const handleKeyDown = (
     e,
@@ -72,12 +74,15 @@ const Edit = (props) => {
     } = {},
   ) => {
     const hasblockActive = !!selectedBlock;
-    if (e.key === 'ArrowUp' && !disableArrowUp && !hasblockActive) {
-      props.onFocusPreviousBlock(block, node);
+    const isMultipleSelection = e.shiftKey;
+    
+    // Allow arrow key navigation for multi-selection even when blocks are active
+    if (e.key === 'ArrowUp' && !disableArrowUp && (!hasblockActive || isMultipleSelection)) {
+      props.onFocusPreviousBlock(block, node, isMultipleSelection);
       e.preventDefault();
     }
-    if (e.key === 'ArrowDown' && !disableArrowDown && !hasblockActive) {
-      props.onFocusNextBlock(block, node);
+    if (e.key === 'ArrowDown' && !disableArrowDown && (!hasblockActive || isMultipleSelection)) {
+      props.onFocusNextBlock(block, node, isMultipleSelection);
       e.preventDefault();
     }
     if (e.key === 'Enter' && !disableEnter && !hasblockActive) {
@@ -95,11 +100,13 @@ const Edit = (props) => {
         selected = null;
         const blocksLayoutFieldname = getBlocksLayoutFieldname(data?.data);
         const blocks_layout = data?.data[blocksLayoutFieldname].items;
-        if (event.shiftKey) {
+        
+        if (event?.shiftKey || (typeof isMultipleSelection === 'boolean' && isMultipleSelection && !event?.ctrlKey && !event?.metaKey)) {
+          // Shift key or boolean isMultipleSelection creates a range selection
           const anchor =
             multiSelected.length > 0
               ? blocks_layout.indexOf(multiSelected[0])
-              : blocks_layout.indexOf(activeBlock);
+              : blocks_layout.indexOf(selectedBlock || activeBlock);
           const focus = blocks_layout.indexOf(id);
           if (anchor === focus) {
             newMultiSelected = [id];
@@ -108,8 +115,13 @@ const Edit = (props) => {
           } else {
             newMultiSelected = [...blocks_layout.slice(focus, anchor + 1)];
           }
+          // Clear text selection when doing range selection
+          if (window.getSelection) {
+            window.getSelection().empty();
+          }
         }
-        if ((event.ctrlKey || event.metaKey) && !event.shiftKey) {
+        if ((event?.ctrlKey || event?.metaKey) && !event?.shiftKey) {
+          // Ctrl/Cmd key adds/removes individual blocks
           if (multiSelected.includes(id)) {
             selected = null;
             newMultiSelected = without(multiSelected, id);
@@ -122,7 +134,7 @@ const Edit = (props) => {
       setSelectedBlock(selected);
       setMultiSelected(newMultiSelected);
     },
-    [data.data, multiSelected],
+    [data.data, multiSelected, selectedBlock],
   );
 
   const changeBlockData = (newBlockData) => {
@@ -208,17 +220,21 @@ const Edit = (props) => {
   }, [props]);
 
   React.useEffect(() => {
+    // If section becomes empty, clear selected block
+    if (isSectionEmpty && selectedBlock) {
+      setSelectedBlock(null);
+      return;
+    }
+
+    // If section has content but no block is selected, select the first one
     if (
-      isEmpty(data_blocks) &&
-      childBlocksForm.blocks_layout.items[0] !== selectedBlock
+      !isSectionEmpty &&
+      childBlocksForm.blocks_layout?.items?.length > 0 &&
+      !selectedBlock
     ) {
       setSelectedBlock(childBlocksForm.blocks_layout.items[0]);
-      onChangeBlock(block, {
-        ...data,
-        data: childBlocksForm,
-      });
     }
-  }, [onChangeBlock, childBlocksForm, selectedBlock, block, data, data_blocks]);
+  }, [isSectionEmpty, selectedBlock, childBlocksForm.blocks_layout?.items]);
 
   // Get editing instructions from block settings or props
   let instructions = data?.instructions?.data || data?.instructions;
@@ -313,7 +329,7 @@ const Edit = (props) => {
               setMultiSelected(blockIds);
             }}
             formData={data.data}
-            onSelectBlock={(id, l, e) => {
+            onSelectBlock={(id, _, e) => {
               const isMultipleSelection = e
                 ? e.shiftKey || e.ctrlKey || e.metaKey
                 : false;
@@ -376,7 +392,10 @@ const Edit = (props) => {
           onClose={() => setShowSectionBrowser(false)}
           blockId={block}
           onInsertSection={handleApplySectionTemplate}
-          properties={{ blocks: { [block]: {} }, blocks_layout: { items: [block] } }}
+          properties={{
+            blocks: { [block]: {} },
+            blocks_layout: { items: [block] },
+          }}
         />
       )}
 

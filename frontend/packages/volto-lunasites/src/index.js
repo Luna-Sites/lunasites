@@ -757,7 +757,7 @@ const applyConfig = (config) => {
     view: CustomSectionBlockView,
     edit: CustomSectionBlockEdit,
     schema: CustomSectionBlockSchema,
-    restricted: false,
+    restricted: true,
     mostUsed: false,
     sidebarTab: 1,
     colors: BG_COLORS,
