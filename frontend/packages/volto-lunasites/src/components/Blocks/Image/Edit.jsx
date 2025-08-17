@@ -67,11 +67,11 @@ function Edit(props) {
         )}
         style={{
           position: 'relative', // Needed for resize handles positioning
+          ...((imageWidth || imageHeight) && { display: 'inline-block' }), // Make container fit content when resized
         }}
       >
         {data.url ? (
-          <div style={imageWidth ? { width: imageWidth, display: 'inline-block' } : {}}>
-            <figure
+          <figure
             className={cx(
               'figure',
               {
@@ -88,12 +88,15 @@ function Edit(props) {
               },
             )}
             style={{
-              ...(imageWidth && { width: '100%' }),
+              display: 'inline-block', // Make figure fit image content
             }}
           >
             <Image
+              className={cx({
+                'image-custom-resize': imageWidth || imageHeight, // Custom class for resize override
+              })}
               style={{
-                ...(imageWidth && { width: '100%' }),
+                ...(imageWidth && { width: imageWidth }),
                 ...(imageHeight && { height: imageHeight }),
                 ...(imageWidth || imageHeight ? { objectFit: 'cover' } : {}),
               }}
@@ -143,7 +146,6 @@ function Edit(props) {
               credit={data?.copyright_and_sources ?? data.credit?.data}
             />
           </figure>
-          </div>
         ) : (
           <ImageInput
             onChange={handleChange}
@@ -159,6 +161,13 @@ function Edit(props) {
         </SidebarPortal>
         
         {/* Content resize handles - only when selected and in grid */}
+        {/* Dynamic CSS override for image width when resizing */}
+        {imageWidth && (
+          <style>
+            {`.block.image.edit-mode .figure img.image-custom-resize { width: ${imageWidth} !important; }`}
+          </style>
+        )}
+        
         {resizeConfig && selected && onChangeBlock && (
           <BlockResizeHandles
             data={data}

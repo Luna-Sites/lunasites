@@ -44,6 +44,11 @@ figure {
       width: 100% !important;
       height: auto;
       
+      // Override for custom resizing - allow direct image sizing
+      &.image-custom-resize {
+        width: inherit !important;
+        max-width: none !important;
+      }
     }
 
     &.right {
@@ -154,6 +159,11 @@ figure {
     max-width: 100% !important;
     height: auto;
     
+    // Override for custom resizing - allow direct image sizing
+    &.image-custom-resize {
+      width: inherit !important;
+      max-width: none !important;
+    }
   }
 }
 
