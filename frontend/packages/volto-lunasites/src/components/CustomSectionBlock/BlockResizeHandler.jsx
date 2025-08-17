@@ -41,6 +41,12 @@ export const useBlockContentResize = (
   const [isResizing, setIsResizing] = useState(false);
   const [resizeDirection, setResizeDirection] = useState(null);
   const resizeStartData = useRef(null);
+  const currentDataRef = useRef(data);
+  
+  // Update current data ref whenever data changes
+  React.useEffect(() => {
+    currentDataRef.current = data;
+  }, [data]);
 
   const config = useMemo(
     () => ({ ...RESIZE_CONFIGS, ...customConfig }),
@@ -55,8 +61,8 @@ export const useBlockContentResize = (
   }, []);
 
   const calculateNewValues = useCallback(
-    (startValues, deltaX, deltaY, direction) => {
-      const newData = { ...data };
+    (startValues, deltaX, deltaY, direction, currentData) => {
+      const newData = { ...currentData }; // Use passed current data instead
 
       Object.entries(stableConfig).forEach(([key, propConfig]) => {
         if (!propConfig.directions.includes(direction)) return;
@@ -72,7 +78,7 @@ export const useBlockContentResize = (
 
       return newData;
     },
-    [stableConfig], // Remove data dependency to prevent render loops
+    [stableConfig], // Keep without data dependency but pass current data as parameter
   );
 
   const handleResizeStart = useCallback(
@@ -102,7 +108,7 @@ export const useBlockContentResize = (
         
         // Throttle updates to prevent render loops
         const now = Date.now();
-        if (now - lastUpdate < 16) return; // ~60fps
+        if (now - lastUpdate < 8) return; // ~120fps for smoother resize
         lastUpdate = now;
 
         const { startX, startY, startValues } = resizeStartData.current;
@@ -114,9 +120,11 @@ export const useBlockContentResize = (
           deltaX,
           deltaY,
           direction,
+          currentDataRef.current, // Pass current data
         );
         
         onChangeBlock(block, newData);
+        currentDataRef.current = newData; // Update ref with new data immediately
       };
 
       const handleMouseUp = () => {
