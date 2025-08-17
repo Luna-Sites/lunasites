@@ -47,9 +47,9 @@ export const RESIZE_PROPERTY_CONFIGS = {
     height: {
       property: 'imageHeight',
       defaultValue: 'auto',
-      min: 80,
+      min: 120, // Higher minimum to avoid tiny images
       max: 600,
-      step: 2, // Smaller step for smoother resizing
+      step: 3, // Slightly larger step for height
       directions: ['s', 'n'], // vertical edges only
       color: '#27ae60', // Green
       title: 'Resize image height',

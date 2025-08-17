@@ -40,6 +40,14 @@ figure {
   }
 
   figure {
+    // Override all width constraints for resized figures
+    &.figure-custom-resize {
+      width: auto !important;
+      max-width: none !important;
+      display: inline-block !important;
+      float: none !important; // Remove floating for resized images
+    }
+    
     img {
       width: 100% !important;
       height: auto;
@@ -131,7 +139,13 @@ figure {
         margin-right: initial;
         margin-left: initial;
       }
-
+      
+      // Override for resized images - allow figure to fit content
+      &.figure-custom-resize {
+        width: auto !important;
+        display: inline-block !important;
+      }
+      
       &.large,
       &.medium,
       &.small {

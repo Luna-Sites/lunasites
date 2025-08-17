@@ -13,8 +13,13 @@ const DIRECTION_DELTAS = {
 const parseValue = (value, config) => {
   if (config.property.includes('Width') || config.property.includes('Height')) {
     if (value === 'auto' || !value) {
-      // Start from a reasonable default size instead of minimum
-      return config.property.includes('Width') ? 300 : 200;
+      // Start from a more reasonable default, closer to typical image dimensions
+      if (config.property.includes('Width')) {
+        return 300; // Reasonable default width
+      } else {
+        // For height, use a ratio-based approach or smaller default
+        return 250; // More reasonable default height
+      }
     }
     // Extract numeric value from pixel strings like "200px"
     const numericValue = typeof value === 'string' ? parseInt(value.replace('px', '')) : parseInt(value);
@@ -91,9 +96,27 @@ export const useBlockContentResize = (
       setIsResizing(true);
       setResizeDirection(direction);
 
+      // Find the image element to get its current dimensions
+      const imageElement = e.target.closest('.block.image')?.querySelector('img');
+
       const startValues = {};
       Object.entries(stableConfig).forEach(([key, propConfig]) => {
-        startValues[key] = parseValue(data[propConfig.property], propConfig);
+        const currentValue = data[propConfig.property];
+        
+        // Special handling for auto dimensions - use actual element size
+        if ((currentValue === 'auto' || !currentValue) && imageElement) {
+          if (propConfig.property.includes('Width')) {
+            startValues[key] = imageElement.offsetWidth;
+          } else if (propConfig.property.includes('Height')) {
+            startValues[key] = imageElement.offsetHeight;
+          } else {
+            startValues[key] = parseValue(currentValue, propConfig);
+          }
+        } else {
+          startValues[key] = parseValue(currentValue, propConfig);
+        }
+        
+        console.log(`Resize start - ${key}: current="${currentValue}", start="${startValues[key]}"`);
       });
 
       resizeStartData.current = {

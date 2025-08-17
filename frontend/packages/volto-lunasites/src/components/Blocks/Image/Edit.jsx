@@ -76,6 +76,7 @@ function Edit(props) {
               'figure',
               {
                 center: !Boolean(data.align),
+                'figure-custom-resize': imageWidth || imageHeight, // Mark figure as having resized content
               },
               data.align,
               {
@@ -89,6 +90,9 @@ function Edit(props) {
             )}
             style={{
               display: 'inline-block', // Make figure fit image content
+              width: 'auto', // Allow figure to expand to image width
+              height: 'auto', // Allow figure to expand to image height
+              overflow: 'visible', // Don't crop resized content
             }}
           >
             <Image
@@ -161,10 +165,13 @@ function Edit(props) {
         </SidebarPortal>
         
         {/* Content resize handles - only when selected and in grid */}
-        {/* Dynamic CSS override for image width when resizing */}
-        {imageWidth && (
+        {/* Dynamic CSS override for image dimensions when resizing */}
+        {(imageWidth || imageHeight) && (
           <style>
-            {`.block.image.edit-mode .figure img.image-custom-resize { width: ${imageWidth} !important; }`}
+            {`.block.image.edit-mode .figure img.image-custom-resize { 
+              ${imageWidth ? `width: ${imageWidth} !important;` : ''}
+              ${imageHeight ? `height: ${imageHeight} !important;` : ''}
+            }`}
           </style>
         )}
         
