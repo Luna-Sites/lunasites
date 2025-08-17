@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import config from '@plone/volto/registry';
-
+import './CustomSectionBlock.scss';
 const CustomSectionBlockView = ({ data, properties }) => {
   const {
     blocks = {},
@@ -24,29 +24,36 @@ const CustomSectionBlockView = ({ data, properties }) => {
 
   const isGridMode = blocks_layout.mode === 'grid';
 
-  const renderBlock = useCallback((blockId) => {
-    const childBlock = blocks[blockId];
-    if (!childBlock) return null;
+  const renderBlock = useCallback(
+    (blockId) => {
+      const childBlock = blocks[blockId];
+      if (!childBlock) return null;
 
-    const BlockComponent = config.blocks.blocksConfig?.[childBlock['@type']]?.view;
+      const BlockComponent =
+        config.blocks.blocksConfig?.[childBlock['@type']]?.view;
 
-    return BlockComponent ? (
-      <BlockComponent
-        data={childBlock}
-        properties={properties}
-        block={blockId}
-      />
-    ) : (
-      <div className="unknown-block">
-        Unknown block type: {childBlock['@type']}
-      </div>
-    );
-  }, [blocks, properties]);
+      return BlockComponent ? (
+        <BlockComponent
+          data={childBlock}
+          properties={properties}
+          block={blockId}
+        />
+      ) : (
+        <div className="unknown-block">
+          Unknown block type: {childBlock['@type']}
+        </div>
+      );
+    },
+    [blocks, properties],
+  );
 
   const renderGridView = () => {
     const { columns, rowHeight } = gridConfig;
-    const totalRows = Math.max(1, ...Object.values(gridConfig.positions).map(pos => pos.y + pos.height));
-    
+    const totalRows = Math.max(
+      1,
+      ...Object.values(gridConfig.positions).map((pos) => pos.y + pos.height),
+    );
+
     const gridStyle = {
       display: 'grid',
       gridTemplateColumns: `repeat(${columns}, 1fr)`,

@@ -1,0 +1,41 @@
+// View mode styles for volto-group-block customization
+
+// Custom Section Block View (frontend display) - Override the global container rule
+// #page-document
+//   .blocks-group-wrapper
+//   .custom-section-block-view
+//   .blocks-group-wrapper
+//   * {
+//   // Reset the global container rule completely for nested group blocks
+
+//   margin-right: auto !important;
+//   margin-left: auto !important;
+//   width: 100% !important;
+// }
+
+// Basic section styling
+.custom-section-block-view {
+  position: relative;
+
+  .custom-section-title {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  // Minimal visual separation between sections
+  + .custom-section-block-view {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  // Minimal styling for backgrounds
+  &[style*='background'] {
+    border-radius: 4px;
+  }
+}

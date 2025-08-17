@@ -1,6 +1,7 @@
 import React from 'react';
 import { withBlockExtensions } from '@plone/volto/helpers';
 import BodyComponent from './Body';
+import './view.less';
 
 const View = (props) => {
   const { data } = props;

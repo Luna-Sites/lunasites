@@ -4,7 +4,7 @@
 .block-editor-group {
   // Make sections more prominent with better spacing
   margin: 2rem 0;
-  
+
   fieldset {
     border: 2px solid #e0e6ed;
     border-radius: 8px;
@@ -54,7 +54,7 @@
   // Better block spacing within sections
   .blocks-form {
     margin-top: 1rem;
-    
+
     [data-rbd-draggable-context-id] {
       margin-bottom: 1.5rem;
     }
@@ -75,7 +75,7 @@
     .ui.basic.button {
       padding: 8px 10px;
       border-radius: 4px;
-      
+
       &:hover {
         background-color: #f0f2ff !important;
         color: #094ce1 !important;
@@ -129,12 +129,12 @@
 @media (max-width: 768px) {
   .block-editor-group {
     margin: 1rem 0;
-    
+
     fieldset {
       padding: 1.5rem 1rem;
       min-height: 100px;
     }
-    
+
     .section-block {
       padding-top: 1.5rem;
     }

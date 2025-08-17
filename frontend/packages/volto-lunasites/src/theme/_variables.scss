@@ -23,7 +23,7 @@ $heading-text-top-spacing: 50px !default;
 $heading-text-bottom-spacing: 25px !default;
 
 // Fonts
-$custom-fontname: 'Inter' !default;
+$custom-fontname: 'Arial' !default;
 $cmsui-fontname: 'Metropolis' !default;
 $page-font-template: $custom-fontname, sans-serif !default;
 $page-font: var(--custom-main-font, $page-font-template) !default;
@@ -48,6 +48,7 @@ $narrow-container-width: var(--lunasites-container-width, 1000px) !default;
 :root {
   --text-color: #666;
   --text-size: 18px;
+  --custom-main-font: Arial, sans-serif;
 }
 
 // Colors
@@ -238,6 +239,11 @@ $line-heights: (
   } @else if $property == weight {
     #{"font-" + $property}: map.get($font-weights, $value);
   }
+}
+
+// Global font family override
+body, h1, h2, h3, h4, h5, h6, li, p {
+  font-family: var(--custom-main-font, "Arial", sans-serif) !important;
 }
 
 // Patterns

@@ -690,6 +690,55 @@
   }
 }
 
+// Custom Section Block View (frontend display) - Override the global container rule
+#page-document
+  .blocks-group-wrapper
+  > .custom-section-block-view
+  > .blocks-group-wrapper
+  > * {
+  // Reset the global container rule completely
+  max-width: none !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+
+  position: relative;
+  background: var(--section-background);
+  width: 100% !important;
+  .section-title {
+    color: var(--section-title-color);
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .blocks-form {
+    position: relative;
+  }
+
+  // Container for the inner content - let it inherit the custom width setting
+  .blocks-group-wrapper {
+    // Don't interfere with the width setting from the UI
+    max-width: none;
+    margin: 0;
+  }
+
+  // Minimal visual separation
+  + .custom-section-block-view {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  // Minimal styling for backgrounds
+  &[style*='background'] {
+    border-radius: 4px;
+  }
+}
+
 // Responsive adjustments
 @media (max-width: 768px) {
   .custom-section-block,
