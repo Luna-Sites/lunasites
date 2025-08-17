@@ -108,8 +108,28 @@ const GridLayout = ({
       return { x: startX, y: startY, width, height };
     }
 
-    // Search for nearby available positions in a spiral pattern
-    for (let radius = 1; radius <= Math.max(columns, 20); radius++) {
+    // Search for nearby available positions in a more efficient pattern
+    // First try positions in the same row, then expand outwards
+    for (let radius = 1; radius <= Math.min(columns, 10); radius++) {
+      // Try horizontal positions first (same row)
+      for (let dx = -radius; dx <= radius; dx++) {
+        const testX = startX + dx;
+        if (isPositionAvailable(testX, startY, width, height)) {
+          return { x: testX, y: startY, width, height };
+        }
+      }
+      
+      // Then try vertical positions (same column and nearby)
+      for (let dy = -radius; dy <= radius; dy++) {
+        if (dy !== 0) { // Skip startY as we already checked it above
+          const testY = startY + dy;
+          if (isPositionAvailable(startX, testY, width, height)) {
+            return { x: startX, y: testY, width, height };
+          }
+        }
+      }
+      
+      // Finally try diagonal positions
       for (let dx = -radius; dx <= radius; dx++) {
         for (let dy = -radius; dy <= radius; dy++) {
           if (Math.abs(dx) === radius || Math.abs(dy) === radius) {

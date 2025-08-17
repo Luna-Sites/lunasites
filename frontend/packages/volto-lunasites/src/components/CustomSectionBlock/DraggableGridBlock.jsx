@@ -7,8 +7,8 @@ const GRID_CONSTANTS = {
   GAP: 8,
   DEFAULT_COLUMNS: 12,
   DEFAULT_ROW_HEIGHT: 60,
-  CELL_WIDTH_THRESHOLD: 0.3,
-  CELL_HEIGHT_THRESHOLD: 0.3,
+  CELL_WIDTH_THRESHOLD: 0.2, // Reduced for more responsive snapping
+  CELL_HEIGHT_THRESHOLD: 0.2, // Reduced for more responsive snapping
 };
 
 const DraggableGridBlock = ({
@@ -30,18 +30,30 @@ const DraggableGridBlock = ({
   const originalPosition = useRef(null);
 
   const calculateGridMetrics = useCallback(() => {
-    const gridLayer = document.querySelector('.grid-drag-layer');
-    const rect = gridLayer?.getBoundingClientRect();
+    // Try multiple selectors to find the grid container
+    const gridLayer = document.querySelector('.grid-drag-layer') || 
+                     document.querySelector('.grid-layout') ||
+                     document.querySelector('[class*="grid"]');
+    
+    if (!gridLayer) {
+      console.warn('Grid container not found, falling back to defaults');
+      return null;
+    }
+
+    const rect = gridLayer.getBoundingClientRect();
     const columns = gridConfig.columns || GRID_CONSTANTS.DEFAULT_COLUMNS;
     const rowHeight = gridConfig.rowHeight || GRID_CONSTANTS.DEFAULT_ROW_HEIGHT;
 
-    if (!rect) return null;
+    if (!rect || rect.width === 0 || rect.height === 0) {
+      console.warn('Grid container has zero dimensions');
+      return null;
+    }
 
     const availableWidth =
       rect.width -
       2 * GRID_CONSTANTS.PADDING -
       (columns - 1) * GRID_CONSTANTS.GAP;
-    const cellWidth = availableWidth / columns;
+    const cellWidth = Math.max(1, availableWidth / columns); // Ensure positive width
     const cellHeight = rowHeight + GRID_CONSTANTS.GAP;
     const maxX = Math.max(0, columns - position.width);
 
@@ -49,24 +61,32 @@ const DraggableGridBlock = ({
   }, [gridConfig, position.width]);
 
   const calculateSnapPosition = useCallback((clientX, clientY, metrics) => {
-    const { rect, cellWidth, cellHeight, maxX } = metrics;
+    const { rect, cellWidth, cellHeight, maxX, columns } = metrics;
 
+    // Calculate position relative to the grid container
     const relativeX = clientX - rect.left;
     const relativeY = clientY - rect.top;
-    const adjustedX = Math.max(0, relativeX - GRID_CONSTANTS.PADDING);
+    
+    // Account for grid padding and ensure we're within bounds
+    const adjustedX = Math.max(0, Math.min(rect.width - GRID_CONSTANTS.PADDING, relativeX - GRID_CONSTANTS.PADDING));
     const adjustedY = Math.max(0, relativeY - GRID_CONSTANTS.PADDING);
 
-    const gridX = Math.floor(
-      (adjustedX + cellWidth * GRID_CONSTANTS.CELL_WIDTH_THRESHOLD) / cellWidth,
-    );
-    const gridY = Math.floor(
-      (adjustedY + cellHeight * GRID_CONSTANTS.CELL_HEIGHT_THRESHOLD) /
-        cellHeight,
-    );
+    // Calculate grid position with improved snapping
+    // Use rounding instead of floor for more natural snapping behavior
+    const exactGridX = adjustedX / cellWidth;
+    const exactGridY = adjustedY / cellHeight;
+    
+    // Apply threshold-based snapping for more intuitive behavior
+    const gridX = Math.round(exactGridX - GRID_CONSTANTS.CELL_WIDTH_THRESHOLD + 0.5);
+    const gridY = Math.round(exactGridY - GRID_CONSTANTS.CELL_HEIGHT_THRESHOLD + 0.5);
+
+    // Ensure the block stays within grid bounds
+    const clampedX = Math.min(Math.max(0, gridX), maxX);
+    const clampedY = Math.max(0, gridY);
 
     return {
-      x: Math.min(Math.max(0, gridX), maxX),
-      y: Math.max(0, gridY),
+      x: clampedX,
+      y: clampedY,
     };
   }, []);
 
@@ -78,6 +98,11 @@ const DraggableGridBlock = ({
 
   const handleMouseDown = useCallback(
     (e) => {
+      // Don't interfere with resize handles
+      if (e.target.closest('.content-resize-handle')) {
+        return;
+      }
+      
       if (!e.target.closest('.drag-handle')) {
         if (onSelect && !selected) {
           onSelect(blockId);
@@ -89,7 +114,10 @@ const DraggableGridBlock = ({
       e.stopPropagation();
 
       const metrics = calculateGridMetrics();
-      if (!metrics) return;
+      if (!metrics) {
+        console.warn('Cannot start drag: grid metrics unavailable');
+        return;
+      }
 
       setIsDragging(true);
       originalPosition.current = position;
@@ -98,37 +126,52 @@ const DraggableGridBlock = ({
       let lastSnapPosition = { x: position.x, y: position.y };
 
       const handleMouseMove = (moveEvent) => {
-        const snapPos = calculateSnapPosition(
-          moveEvent.clientX,
-          moveEvent.clientY,
-          metrics,
-        );
+        try {
+          const snapPos = calculateSnapPosition(
+            moveEvent.clientX,
+            moveEvent.clientY,
+            metrics,
+          );
 
-        if (
-          snapPos.x !== lastSnapPosition.x ||
-          snapPos.y !== lastSnapPosition.y
-        ) {
-          lastSnapPosition = snapPos;
-          setSnapPosition(snapPos);
-          onTempPositionUpdate?.(blockId, { ...position, ...snapPos });
+          if (
+            snapPos &&
+            (snapPos.x !== lastSnapPosition.x ||
+             snapPos.y !== lastSnapPosition.y)
+          ) {
+            lastSnapPosition = snapPos;
+            setSnapPosition(snapPos);
+            onTempPositionUpdate?.(blockId, { ...position, ...snapPos });
+          }
+        } catch (error) {
+          console.warn('Error during drag move:', error);
         }
       };
 
       const handleMouseUp = (upEvent) => {
-        // Calculate final position and use direct callback
-        const finalSnapPos = calculateSnapPosition(
-          upEvent.clientX,
-          upEvent.clientY,
-          metrics,
-        );
-        const finalPosition = { ...position, ...finalSnapPos };
-
-        // Use the clean callback approach
-        onFinalizePosition?.(blockId, finalPosition);
-
-        handleDragEnd();
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
+        try {
+          // Calculate final position and use direct callback
+          const finalSnapPos = calculateSnapPosition(
+            upEvent.clientX,
+            upEvent.clientY,
+            metrics,
+          );
+          
+          if (finalSnapPos) {
+            const finalPosition = { ...position, ...finalSnapPos };
+            onFinalizePosition?.(blockId, finalPosition);
+          } else {
+            // Fallback to original position if snap calculation fails
+            onFinalizePosition?.(blockId, originalPosition.current || position);
+          }
+        } catch (error) {
+          console.warn('Error during drag end:', error);
+          // Fallback to original position
+          onFinalizePosition?.(blockId, originalPosition.current || position);
+        } finally {
+          handleDragEnd();
+          document.removeEventListener('mousemove', handleMouseMove);
+          document.removeEventListener('mouseup', handleMouseUp);
+        }
       };
 
       document.addEventListener('mousemove', handleMouseMove);
@@ -150,6 +193,11 @@ const DraggableGridBlock = ({
 
   const handleClick = useCallback(
     (e) => {
+      // Don't interfere with resize handles
+      if (e.target.closest('.content-resize-handle')) {
+        return;
+      }
+      
       e.stopPropagation();
       onSelect?.(blockId);
     },

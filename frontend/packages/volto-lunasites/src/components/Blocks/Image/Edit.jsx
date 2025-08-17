@@ -11,10 +11,19 @@ import config from '@plone/volto/registry';
 
 import { ImageInput } from '@plone/volto/components/manage/Widgets/ImageWidget';
 import Caption from '../../Caption/Caption';
+import { BlockResizeHandles } from '../../CustomSectionBlock/BlockResizeHandler';
+import { getResizeConfig } from '../../CustomSectionBlock/contentResizeConfig';
 
 function Edit(props) {
-  const { data } = props;
+  const { data, selected, block, onChangeBlock } = props;
   const Image = config.getComponent({ name: 'Image' }).component;
+  
+  // Apply image-specific resize properties
+  const imageWidth = data.imageWidth && data.imageWidth !== 'auto' ? data.imageWidth : null;
+  const imageHeight = data.imageHeight && data.imageHeight !== 'auto' ? data.imageHeight : null;
+  
+  // Get the resize configuration for image blocks (only in edit mode)
+  const resizeConfig = getResizeConfig('image');
   const onSelectItem = React.useCallback(
     (url, item) => {
       const dataAdapter = props.blocksConfig[props.data['@type']].dataAdapter;
@@ -52,12 +61,17 @@ function Edit(props) {
           'block image align',
           {
             center: !Boolean(data.align),
+            'edit-mode': true,
           },
           data.align,
         )}
+        style={{
+          position: 'relative', // Needed for resize handles positioning
+        }}
       >
         {data.url ? (
-          <figure
+          <div style={imageWidth ? { width: imageWidth, display: 'inline-block' } : {}}>
+            <figure
             className={cx(
               'figure',
               {
@@ -73,8 +87,16 @@ function Edit(props) {
                 small: data.size === 's',
               },
             )}
+            style={{
+              ...(imageWidth && { width: '100%' }),
+            }}
           >
             <Image
+              style={{
+                ...(imageWidth && { width: '100%' }),
+                ...(imageHeight && { height: imageHeight }),
+                ...(imageWidth || imageHeight ? { objectFit: 'cover' } : {}),
+              }}
               // START CUSTOMIZATION - Moved to the figure
               // className={cx({
               //   'full-width': data.align === 'full',
@@ -121,6 +143,7 @@ function Edit(props) {
               credit={data?.copyright_and_sources ?? data.credit?.data}
             />
           </figure>
+          </div>
         ) : (
           <ImageInput
             onChange={handleChange}
@@ -134,6 +157,21 @@ function Edit(props) {
         <SidebarPortal selected={props.selected}>
           <ImageSidebar {...props} />
         </SidebarPortal>
+        
+        {/* Content resize handles - only when selected and in grid */}
+        {resizeConfig && selected && onChangeBlock && (
+          <BlockResizeHandles
+            data={data}
+            onChangeBlock={onChangeBlock}
+            block={block}
+            selected={selected}
+            config={resizeConfig}
+            colors={{
+              width: resizeConfig.width?.color || '#3498db',
+              height: resizeConfig.height?.color || '#27ae60'
+            }}
+          />
+        )}
       </div>
     </>
   );

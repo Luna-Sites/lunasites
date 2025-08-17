@@ -14,13 +14,15 @@ import {
   withBlockExtensions,
 } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
+import { BlockResizeHandles } from '../../CustomSectionBlock/BlockResizeHandler';
+import { getResizeConfig } from '../../CustomSectionBlock/contentResizeConfig';
 
 /**
  * View image block class.
  * @class View
  * @extends Component
  */
-export const ImageView = ({ className, data, detached, properties, style }) => {
+export const ImageView = ({ className, data, detached, properties, style, isEditMode, selected, block, onChangeBlock }) => {
   let href;
   if (data.href?.length > 0) {
     if (typeof data.href === 'object') {
@@ -37,6 +39,13 @@ export const ImageView = ({ className, data, detached, properties, style }) => {
     data.description ||
     (data?.copyright_and_sources ?? data.credit?.data);
 
+  // Apply image-specific resize properties
+  const imageWidth = data.imageWidth && data.imageWidth !== 'auto' ? data.imageWidth : null;
+  const imageHeight = data.imageHeight && data.imageHeight !== 'auto' ? data.imageHeight : null;
+  
+  // Get the resize configuration for image blocks (only in edit mode)
+  const resizeConfig = isEditMode ? getResizeConfig('image') : null;
+
   return (
     <div
       className={cx(
@@ -44,11 +53,15 @@ export const ImageView = ({ className, data, detached, properties, style }) => {
         {
           center: !Boolean(data.align),
           detached,
+          'edit-mode': isEditMode,
         },
         data.align,
         className,
       )}
-      style={style}
+      style={{
+        ...style,
+        position: 'relative', // Needed for resize handles positioning
+      }}
     >
       {data.url && (
         <>
@@ -71,6 +84,9 @@ export const ImageView = ({ className, data, detached, properties, style }) => {
                     small: data.size === 's',
                   },
                 )}
+                style={{
+                  display: 'inline-block', // Make figure fit content
+                }}
               >
                 <Image
                   // Removed for now
@@ -80,6 +96,11 @@ export const ImageView = ({ className, data, detached, properties, style }) => {
                   //   medium: data.size === 'm',
                   //   small: data.size === 's',
                   // })}
+                  style={{
+                    ...(imageWidth && { width: imageWidth }),
+                    ...(imageHeight && { height: imageHeight }),
+                    ...(imageWidth || imageHeight ? { objectFit: 'cover' } : {}), // Only apply objectFit when resizing
+                  }}
                   item={
                     data.image_scales
                       ? {
@@ -140,6 +161,21 @@ export const ImageView = ({ className, data, detached, properties, style }) => {
           })()}
         </>
       )}
+      
+      {/* Content resize handles - only in edit mode and when selected */}
+      {isEditMode && resizeConfig && selected && onChangeBlock && (
+        <BlockResizeHandles
+          data={data}
+          onChangeBlock={onChangeBlock}
+          block={block}
+          selected={selected}
+          config={resizeConfig}
+          colors={{
+            width: resizeConfig.width?.color || '#3498db',
+            height: resizeConfig.height?.color || '#27ae60'
+          }}
+        />
+      )}
     </div>
   );
 };
@@ -151,6 +187,14 @@ export const ImageView = ({ className, data, detached, properties, style }) => {
  */
 ImageView.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
+  className: PropTypes.string,
+  detached: PropTypes.bool,
+  properties: PropTypes.object,
+  style: PropTypes.object,
+  isEditMode: PropTypes.bool,
+  selected: PropTypes.bool,
+  block: PropTypes.string,
+  onChangeBlock: PropTypes.func,
 };
 
 export default withBlockExtensions(ImageView);

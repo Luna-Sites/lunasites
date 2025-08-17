@@ -7,7 +7,7 @@
  */
 
 // Default block types that support content resizing
-export const DEFAULT_CONTENT_RESIZABLE_BLOCKS = ['button'];
+export const DEFAULT_CONTENT_RESIZABLE_BLOCKS = ['button', 'image'];
 
 // Configuration for different content resize properties
 export const RESIZE_PROPERTY_CONFIGS = {
@@ -31,6 +31,28 @@ export const RESIZE_PROPERTY_CONFIGS = {
       directions: ['e', 'w'], // horizontal edges only
       color: '#9b59b6', // Purple
       title: 'Resize button width',
+    },
+  },
+  image: {
+    width: {
+      property: 'imageWidth',
+      defaultValue: 'auto',
+      min: 100,
+      max: 800,
+      step: 2, // Smaller step for smoother resizing
+      directions: ['e', 'w'], // horizontal edges only
+      color: '#3498db', // Blue
+      title: 'Resize image width',
+    },
+    height: {
+      property: 'imageHeight',
+      defaultValue: 'auto',
+      min: 80,
+      max: 600,
+      step: 2, // Smaller step for smoother resizing
+      directions: ['s', 'n'], // vertical edges only
+      color: '#27ae60', // Green
+      title: 'Resize image height',
     },
   },
 };

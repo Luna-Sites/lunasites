@@ -1,42 +1,24 @@
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 
-const RESIZE_CONFIGS = {
-  padding: {
-    property: 'padding',
-    defaultValue: 12,
-    min: 4,
-    max: 40,
-    step: 8,
-    directions: ['s', 'n'],
-  },
-  width: {
-    property: 'buttonWidth',
-    defaultValue: 'auto',
-    min: 80,
-    max: 400,
-    step: 1,
-    directions: ['e', 'w'],
-  },
-  height: {
-    property: 'buttonHeight',
-    defaultValue: 'auto',
-    min: 30,
-    max: 200,
-    step: 1,
-    directions: ['s', 'n'],
-  },
-};
+// Default resize configurations - now empty, all configs come from contentResizeConfig.js
+const RESIZE_CONFIGS = {};
 
 const DIRECTION_DELTAS = {
-  e: (deltaX) => deltaX,
-  w: (deltaX) => -deltaX,
+  e: (deltaX, deltaY) => deltaX,
+  w: (deltaX, deltaY) => -deltaX,
   s: (deltaX, deltaY) => deltaY,
   n: (deltaX, deltaY) => -deltaY,
 };
 
 const parseValue = (value, config) => {
   if (config.property.includes('Width') || config.property.includes('Height')) {
-    return value === 'auto' ? config.min : parseInt(value) || config.min;
+    if (value === 'auto' || !value) {
+      // Start from a reasonable default size instead of minimum
+      return config.property.includes('Width') ? 300 : 200;
+    }
+    // Extract numeric value from pixel strings like "200px"
+    const numericValue = typeof value === 'string' ? parseInt(value.replace('px', '')) : parseInt(value);
+    return numericValue || config.min;
   }
   return value || config.defaultValue;
 };
@@ -64,6 +46,9 @@ export const useBlockContentResize = (
     () => ({ ...RESIZE_CONFIGS, ...customConfig }),
     [customConfig],
   );
+  
+  // Add stable reference to prevent render loops
+  const stableConfig = useMemo(() => config, [JSON.stringify(config)]);
 
   const isInGrid = useMemo(() => {
     return document.querySelector('.grid-layout') !== null;
@@ -73,12 +58,12 @@ export const useBlockContentResize = (
     (startValues, deltaX, deltaY, direction) => {
       const newData = { ...data };
 
-      Object.entries(config).forEach(([key, propConfig]) => {
+      Object.entries(stableConfig).forEach(([key, propConfig]) => {
         if (!propConfig.directions.includes(direction)) return;
 
         const { property, min, max, step } = propConfig;
         const deltaFn = DIRECTION_DELTAS[direction];
-        const delta = deltaFn(deltaX, deltaY, key);
+        const delta = deltaFn(deltaX, deltaY);
         const newValue = startValues[key] + Math.round(delta / step);
         const clampedValue = Math.max(min, Math.min(max, newValue));
 
@@ -87,7 +72,7 @@ export const useBlockContentResize = (
 
       return newData;
     },
-    [config, data],
+    [stableConfig], // Remove data dependency to prevent render loops
   );
 
   const handleResizeStart = useCallback(
@@ -101,7 +86,7 @@ export const useBlockContentResize = (
       setResizeDirection(direction);
 
       const startValues = {};
-      Object.entries(config).forEach(([key, propConfig]) => {
+      Object.entries(stableConfig).forEach(([key, propConfig]) => {
         startValues[key] = parseValue(data[propConfig.property], propConfig);
       });
 
@@ -111,8 +96,14 @@ export const useBlockContentResize = (
         startValues,
       };
 
+      let lastUpdate = 0;
       const handleMouseMove = (moveEvent) => {
         if (!resizeStartData.current) return;
+        
+        // Throttle updates to prevent render loops
+        const now = Date.now();
+        if (now - lastUpdate < 16) return; // ~60fps
+        lastUpdate = now;
 
         const { startX, startY, startValues } = resizeStartData.current;
         const deltaX = moveEvent.clientX - startX;
@@ -124,6 +115,7 @@ export const useBlockContentResize = (
           deltaY,
           direction,
         );
+        
         onChangeBlock(block, newData);
       };
 
@@ -138,7 +130,7 @@ export const useBlockContentResize = (
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [isInGrid, config, data, block, onChangeBlock, calculateNewValues],
+    [isInGrid, stableConfig, block, onChangeBlock, calculateNewValues],
   );
 
   return {
@@ -146,7 +138,7 @@ export const useBlockContentResize = (
     resizeDirection,
     handleResizeStart,
     isInGrid,
-    config,
+    config: stableConfig,
   };
 };
 
@@ -192,7 +184,7 @@ export const ResizeHandle = ({
     background: `linear-gradient(135deg, ${color} 0%, ${color}dd 100%)`,
     cursor: HANDLE_CURSORS[direction],
     borderRadius: '4px',
-    zIndex: 20,
+    zIndex: 999, // Much higher z-index
     border: '2px solid white',
     boxShadow: `0 2px 8px ${color}66`,
     transition: 'all 0.2s ease',
@@ -201,10 +193,14 @@ export const ResizeHandle = ({
     ...HANDLE_POSITIONS[direction],
   };
 
+  const handleMouseDown = (e) => {
+    onMouseDown(e);
+  };
+
   return (
     <div
       className={`content-resize-handle ${direction}`}
-      onMouseDown={onMouseDown}
+      onMouseDown={handleMouseDown}
       style={style}
       title={title}
     />
@@ -283,6 +279,7 @@ export const BlockResizeHandles = ({
     isInGrid,
     config: resizeConfig,
   } = useBlockContentResize(data, onChangeBlock, block, config);
+
 
   if (!selected || !isInGrid) return null;
 
