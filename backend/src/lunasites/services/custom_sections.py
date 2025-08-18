@@ -81,7 +81,9 @@ class CustomSectionsService(Service):
         """Create a new custom section."""
         try:
             data = json_body(self.request)
-        except:
+            print(f"Received data: {data}")  # Debug
+        except Exception as e:
+            print(f"JSON parsing error: {e}")  # Debug
             self.request.response.setStatus(400)
             return {"error": "Invalid JSON data"}
         
@@ -107,6 +109,8 @@ class CustomSectionsService(Service):
             "created": datetime.now().isoformat(),
             "created_by": api.user.get_current().getId() if api.user.get_current() else "anonymous",
         }
+        
+        print(f"Created section: {section}")  # Debug
 
         # Save to registry
         sections = self.get_custom_sections()

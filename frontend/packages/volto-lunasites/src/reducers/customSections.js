@@ -43,12 +43,14 @@ export default function customSections(state = initialState, action = {}) {
         loading: true,
       };
     case `${GET_CUSTOM_SECTIONS}_SUCCESS`:
+      console.log('GET_CUSTOM_SECTIONS_SUCCESS:', action.result); // Debug
       return {
         ...state,
         error: null,
         loaded: true,
         loading: false,
         items: action.result.sections || [],
+        categories: action.result.categories || [],
       };
     case `${GET_CUSTOM_SECTIONS}_FAIL`:
       return {

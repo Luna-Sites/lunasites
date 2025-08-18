@@ -22,7 +22,7 @@ import BlockChooserButton from '@plone/volto/components/manage/BlockChooser/Bloc
 import trashSVG from '@plone/volto/icons/delete.svg';
 import saveSVG from '@plone/volto/icons/save.svg';
 import { SaveSectionModal } from '../../../../../../components/SaveSectionModal';
-import { saveCustomSection } from '../../../../../../actions/customSections';
+import { saveCustomSection, getCustomSections } from '../../../../../../actions/customSections';
 
 const messages = defineMessages({
   delete: {
@@ -44,9 +44,13 @@ const EditBlockWrapper = (props) => {
   // Close modal when save is successful
   React.useEffect(() => {
     if (saveState?.loaded && showSaveModal) {
+      console.log('Save successful, closing modal'); // Debug
       setShowSaveModal(false);
+      
+      // Force refresh of custom sections data
+      dispatch(getCustomSections());
     }
-  }, [saveState?.loaded, showSaveModal]);
+  }, [saveState?.loaded, showSaveModal, dispatch]);
   
   const hideHandler = (data) => {
     return (
@@ -60,14 +64,17 @@ const EditBlockWrapper = (props) => {
     setShowSaveModal(true);
   };
 
-  const handleModalSave = ({ name, description }) => {
+  const handleModalSave = ({ name, description, category }) => {
     const { blockProps } = props;
     const { data } = blockProps;
+    
+    console.log('handleModalSave received:', { name, description, category }); // Debug
     
     // Get section data to save
     const sectionData = {
       name,
       description,
+      category,
       data: {
         title: data.title || 'Untitled Section',
         data: data.data, // The blocks data
@@ -247,6 +254,7 @@ const EditBlockWrapper = (props) => {
         onSave={handleModalSave}
         loading={saveState?.loading || false}
         existingCategories={customSectionsState?.categories || []}
+        key={customSectionsState?.loaded ? 'loaded' : 'loading'}
       />
     </div>
   );

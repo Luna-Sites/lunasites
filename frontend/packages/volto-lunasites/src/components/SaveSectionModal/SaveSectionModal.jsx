@@ -63,12 +63,16 @@ const SaveSectionModal = ({ open, onClose, onSave, intl, loading = false, existi
       return;
     }
 
+    const sectionData = { 
+      name: name.trim(), 
+      description: description.trim(),
+      category: category.trim() || 'General'
+    };
+    
+    console.log('Modal sending data:', sectionData); // Debug
+    
     try {
-      await onSave({ 
-        name: name.trim(), 
-        description: description.trim(),
-        category: category.trim() || 'General'
-      });
+      await onSave(sectionData);
       // Reset form
       setName('');
       setDescription('');
