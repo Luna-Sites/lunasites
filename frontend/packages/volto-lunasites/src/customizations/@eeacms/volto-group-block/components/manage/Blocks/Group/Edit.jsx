@@ -46,6 +46,7 @@ const Edit = (props) => {
   const [showSectionBrowser, setShowSectionBrowser] = useState(false);
   const [showChangeWarning, setShowChangeWarning] = useState(false);
   const [pendingSection, setPendingSection] = useState(null);
+  const [groupBlockSelected, setGroupBlockSelected] = useState(false);
   const data_blocks = data?.data?.blocks;
   // Don't create empty blocks form automatically - keep it truly empty
   const childBlocksForm = isEmpty(data_blocks)
@@ -93,6 +94,9 @@ const Edit = (props) => {
 
   const onSelectBlock = useCallback(
     (id, isMultipleSelection, event, activeBlock) => {
+      // Reset group block selection flag when user selects inner block
+      setGroupBlockSelected(false);
+      
       let newMultiSelected = [];
       let selected = id;
 
@@ -226,15 +230,18 @@ const Edit = (props) => {
       return;
     }
 
-    // If section has content but no block is selected, select the first one
+    // Only auto-select first block if user hasn't manually selected the group block
+    // and the section is not empty and no block is selected
     if (
       !isSectionEmpty &&
       childBlocksForm.blocks_layout?.items?.length > 0 &&
-      !selectedBlock
+      !selectedBlock &&
+      selected &&
+      !groupBlockSelected // Don't auto-select if user clicked on group block
     ) {
       setSelectedBlock(childBlocksForm.blocks_layout.items[0]);
     }
-  }, [isSectionEmpty, selectedBlock, childBlocksForm.blocks_layout?.items]);
+  }, [isSectionEmpty, selectedBlock, childBlocksForm.blocks_layout?.items, selected, groupBlockSelected]);
 
   // Get editing instructions from block settings or props
   let instructions = data?.instructions?.data || data?.instructions;
@@ -244,22 +251,6 @@ const Edit = (props) => {
 
   return (
     <div className="custom-section-block-edit">
-      {/* Title Input */}
-      <div className="custom-section-title-input">
-        <input
-          type="text"
-          placeholder="Section title (optional)"
-          value={data.title || ''}
-          onChange={(e) => {
-            onChangeBlock(block, {
-              ...data,
-              title: e.target.value,
-            });
-          }}
-          className="section-title-field"
-        />
-      </div>
-
       <fieldset
         role="presentation"
         id={props.data.id}
@@ -271,9 +262,18 @@ const Edit = (props) => {
       >
         <div className="section-header">
           <legend
-            onClick={() => {
-              setSelectedBlock();
-              props.setSidebarTab(1);
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedBlock(null);
+              setMultiSelected([]);
+              setGroupBlockSelected(true); // Mark that user selected group block
+              // Force focus on group block without triggering auto-selection
+              if (props.onSelectBlock) {
+                props.onSelectBlock(props.block);
+              }
+              if (props.setSidebarTab) {
+                props.setSidebarTab(1);
+              }
             }}
             aria-hidden="true"
           >

@@ -21,4 +21,29 @@
       name="@design-schema-inherit"
       />
 
+  <!-- Custom Sections Service -->
+  <plone:service
+      method="GET"
+      factory=".custom_sections.CustomSectionsService"
+      for="zope.interface.Interface"
+      permission="zope2.View"
+      name="@custom-sections"
+      />
+  
+  <plone:service
+      method="POST"
+      factory=".custom_sections.CustomSectionsService"
+      for="zope.interface.Interface"
+      permission="zope2.View"
+      name="@custom-sections"
+      />
+  
+  <plone:service
+      method="DELETE"
+      factory=".custom_sections.CustomSectionsService"
+      for="zope.interface.Interface"
+      permission="zope2.View"
+      name="@custom-sections"
+      />
+
 </configure>

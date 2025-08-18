@@ -61,6 +61,15 @@
     </value>
   </record>
 
+  <!-- Custom Sections Storage -->
+  <record name="lunasites.custom_sections">
+    <field type="plone.registry.field.Text">
+      <title>Custom Section Templates</title>
+      <description>JSON storage for user-saved custom section templates</description>
+    </field>
+    <value>{}</value>
+  </record>
+
   <!-- -*- extra stuff goes here -*- -->
 
 </registry>

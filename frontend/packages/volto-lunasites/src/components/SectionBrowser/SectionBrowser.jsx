@@ -1,6 +1,8 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCustomSections } from '../../actions/customSections';
 
 // Component imports
 import { Button, Tabs, CloseIcon } from '@plone/components';
@@ -15,7 +17,7 @@ import Icon from '@plone/volto/components/theme/Icon/Icon';
 
 // Local component imports
 import SectionCard from './SectionCard';
-import { sectionCategories, getSectionsByCategory } from './sectionTemplates';
+import { getSectionCategories, getSectionsByCategory } from './sectionTemplates';
 
 // Volto helpers and config
 import { addBlock } from '@plone/volto/helpers/Blocks/Blocks';
@@ -44,6 +46,49 @@ const SectionBrowser = React.memo(
     onInsertBlock: externalOnInsertBlock,
   }) => {
     const intl = useIntl();
+    const dispatch = useDispatch();
+    const customSectionsState = useSelector(state => state.customSections);
+    const [customSections, setCustomSections] = useState([]);
+    const [sectionCategories, setSectionCategories] = useState([]);
+
+    // Fetch custom sections when modal opens
+    useEffect(() => {
+      if (open && !customSectionsState?.loaded && !customSectionsState?.loading) {
+        dispatch(getCustomSections());
+      }
+    }, [open, customSectionsState?.loaded, customSectionsState?.loading, dispatch]);
+
+    // Transform sections when state changes OR when modal opens (fallback)
+    useEffect(() => {
+      if (customSectionsState?.items && customSectionsState.items.length > 0) {
+        const transformedSections = customSectionsState.items.map(section => ({
+          id: section.id,
+          title: section.name,
+          category: section.category || 'General',
+          description: section.description || 'Custom saved section',
+          thumbnail: '/static/section-thumbnails/custom.png',
+          created: section.created,
+          created_by: section.created_by,
+          template: () => {
+            // Return the saved section data directly
+            return section.data.data || {
+              blocks: {},
+              blocks_layout: { items: [] }
+            };
+          }
+        }));
+        setCustomSections(transformedSections);
+        
+        // Update categories based on response
+        const categories = getSectionCategories(customSectionsState);
+        setSectionCategories(categories);
+      } else if (customSectionsState?.loaded && (!customSectionsState.items || customSectionsState.items.length === 0)) {
+        // Explicitly set empty if loaded but no items
+        setCustomSections([]);
+        // Show only Templates category when no saved sections
+        setSectionCategories([{ id: 'Templates', label: 'Templates' }]);
+      }
+    }, [customSectionsState?.items, customSectionsState?.loaded, customSectionsState]);
 
     // Memoize current blocks and layout for performance
     const currentBlocks = useMemo(
@@ -233,13 +278,19 @@ const SectionBrowser = React.memo(
                 // Each TabPanel is from react-aria-components
                 <TabPanel key={category.id} id={category.id}>
                   <div className="sections-grid">
-                    {getSectionsByCategory(category.id).map((section) => (
+                    {getSectionsByCategory(category.id, customSections).map((section) => (
                       <SectionCard
                         key={section.id}
                         section={section}
                         onInsert={handleInsertSection}
                       />
                     ))}
+                    {customSectionsState?.loading && (
+                      <div className="loading-sections">Loading sections...</div>
+                    )}
+                    {!customSectionsState?.loading && getSectionsByCategory(category.id, customSections).length === 0 && category.id !== 'Templates' && (
+                      <div className="empty-sections">No sections in this category yet. Save a section to see it here!</div>
+                    )}
                   </div>
                 </TabPanel>
               ))}

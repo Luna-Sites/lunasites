@@ -1319,25 +1319,25 @@ footer .blocks-form {
   .ui.menu {
     .item {
       color: #333 !important;
-      
+
       &:hover {
         background: rgba(9, 76, 225, 0.1) !important;
         color: var(--lunasites-cms-primary-color) !important;
-        
+
         .icon {
           color: var(--lunasites-cms-primary-color) !important;
         }
       }
-      
+
       &.active {
         background: var(--lunasites-cms-primary-color) !important;
         color: white !important;
-        
+
         .icon {
           color: white !important;
         }
       }
-      
+
       .icon {
         color: var(--lunasites-cms-primary-color) !important;
       }
@@ -1345,3 +1345,6 @@ footer .blocks-form {
   }
 }
 
+.toolbar-bottom {
+  color: red;
+}

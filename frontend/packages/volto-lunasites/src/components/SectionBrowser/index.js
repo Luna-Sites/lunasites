@@ -4,6 +4,6 @@ export { default as SectionBrowserButton } from './SectionBrowserButton';
 export { default as SectionBrowserBlock } from './SectionBrowserBlock';
 export {
   sectionTemplates,
-  sectionCategories,
+  getSectionCategories,
   getSectionsByCategory,
 } from './sectionTemplates';

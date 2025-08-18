@@ -142,7 +142,12 @@
   }
 
   fieldset {
-    border: none;
+    border: none !important;
+    box-shadow: none !important;
+
+    &:hover {
+      box-shadow: none !important;
+    }
 
     legend {
       position: absolute;
@@ -157,6 +162,25 @@
       color: @borderColor;
       cursor: pointer;
       text-align: center;
+    }
+  }
+
+  // Also remove borders and shadows from inner fieldsets
+  .blocks-form fieldset {
+    border: none !important;
+    box-shadow: none !important;
+
+    &:hover {
+      box-shadow: none !important;
+    }
+  }
+  
+  fieldset.invisible {
+    border: none !important;
+    box-shadow: none !important;
+
+    &:hover {
+      box-shadow: none !important;
     }
   }
 
@@ -192,6 +216,22 @@
     margin-top: 0.5rem;
   }
 
+  // Remove scrollbars by fixing dimensions
+  .ui.drag.block.inner.group {
+    max-width: 100%;
+    width: auto;
+  }
+
+  .styled-group {
+    max-width: 100%;
+    width: auto;
+  }
+
+  .custom-section-block-edit {
+    max-width: 100%;
+    width: auto;
+  }
+
   .blocks-chooser {
     right: 0;
     left: auto;
@@ -217,6 +257,131 @@
 
     .ui.basic.button:hover {
       background: transparent !important;
+    }
+
+    // Delete button styling - move to front and style
+    .delete-button-group-block {
+      order: -1;
+      background-color: rgba(220, 53, 69, 0.1) !important;
+      color: #dc3545 !important;
+      border-radius: 4px !important;
+
+      &:hover {
+        background-color: rgba(220, 53, 69, 0.2) !important;
+        color: #dc3545 !important;
+      }
+
+      svg {
+        fill: #dc3545 !important;
+      }
+    }
+  }
+}
+
+// Apply same styling to ALL block toolbars, including group blocks themselves
+.block-toolbar {
+  position: absolute;
+  z-index: 12;
+  right: -2px;
+  top: -2px;
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  border: 2px solid #094ce1;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(9, 76, 225, 0.15);
+  padding: 2px;
+
+  .ui.basic.button {
+    padding: 6px 8px !important;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    transition: all 0.2s ease;
+    margin: 0 !important;
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: #f0f2ff !important;
+      color: #094ce1 !important;
+    }
+
+    svg {
+      width: 19px;
+      height: 19px;
+      fill: currentColor;
+    }
+  }
+
+  // Delete button special styling for all blocks - first in order
+  .delete-button-group-block {
+    order: 1;
+    background-color: rgba(220, 53, 69, 0.1) !important;
+    color: #dc3545 !important;
+
+    &:hover {
+      background-color: rgba(220, 53, 69, 0.2) !important;
+      color: #dc3545 !important;
+    }
+
+    svg {
+      fill: #dc3545 !important;
+    }
+  }
+
+  // Drag handle styling - second in order
+  .drag.handle.wrapper {
+    order: 2;
+    background-color: rgba(102, 102, 102, 0.1) !important;
+    color: #666 !important;
+
+    &:hover {
+      background-color: #e8f4f8 !important;
+      color: #094ce1 !important;
+    }
+
+    svg {
+      fill: #666 !important;
+    }
+
+    &:hover svg {
+      fill: #094ce1 !important;
+    }
+  }
+
+  // Save section button styling - third in order
+  .save-section-button {
+    order: 3;
+    background-color: rgba(34, 139, 34, 0.1) !important;
+    color: #228b22 !important;
+
+    &:hover {
+      background-color: rgba(34, 139, 34, 0.2) !important;
+      color: #228b22 !important;
+    }
+
+    svg {
+      fill: #228b22 !important;
+    }
+  }
+
+  // Fix toolbar positioning to prevent overlap
+  .delete-button-group-block + .drag.handle.wrapper {
+    margin-left: 4px !important;
+  }
+
+  // Add block button styling - third in order
+  .block-add-button {
+    order: 2;
+
+    &:hover {
+      background-color: #f0f2ff !important;
+      color: #094ce1 !important;
     }
   }
 }

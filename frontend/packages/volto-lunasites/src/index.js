@@ -67,7 +67,7 @@ import {
 
 // Design Schema System
 import { DesignSchemaProvider, ColorSchemaField } from './components';
-import { designSchema } from './reducers';
+import * as reducers from './reducers';
 import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
 import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
 import SimpleIconPicker from './components/Widgets/SimpleIconPicker';
@@ -147,7 +147,7 @@ const applyConfig = (config) => {
   // Add design schema reducers
   config.addonReducers = {
     ...config.addonReducers,
-    designSchema,
+    ...reducers,
   };
 
   // Register color schema widget

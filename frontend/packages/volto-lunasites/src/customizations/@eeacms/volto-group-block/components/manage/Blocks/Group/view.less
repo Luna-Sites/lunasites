@@ -4,30 +4,30 @@
 .block-editor-group {
   // Override the default container width from _layout.scss line 96
   max-width: none !important;
-  margin-right: 0 !important;
-  margin-left: 0 !important;
-  width: 100% !important;
-  
+  margin-right: auto !important;
+  margin-left: auto !important;
+  width: 95% !important;
+
   // Ensure inner content respects container dimensions
   .ui.drag.block.inner.group {
     width: 100%;
-    
+
     .block.group {
       width: 100%;
-      
+
       .styled-group {
         width: 100%;
-        
+
         .custom-section-block-edit {
           width: 100%;
-          
+
           // Section block should be full width
           .section-block {
             width: 100%;
             max-width: none;
             margin-right: 0;
             margin-left: 0;
-            
+
             // Only the content inside should respect container width
             .section-header,
             .section-empty-state {
@@ -48,7 +48,7 @@
   margin-right: 0 !important;
   margin-left: 0 !important;
   width: 100% !important;
-  
+
   // Content inside respects container dimensions
   > * {
     max-width: var(--layout-container-width);
