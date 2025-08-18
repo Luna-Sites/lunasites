@@ -39,7 +39,7 @@ const SimpleColorSchemaField = (props) => {
   const getEffectiveSchema = () => {
     const defaults = {
       background_color: '#ffffff',
-      primary_color: '#0070ae',
+      primary_color: '#094ce1',
       secondary_color: '#e73d5c',
       header_color: '#2c3e50',
       text_color: '#333333',

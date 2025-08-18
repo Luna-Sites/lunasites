@@ -139,7 +139,7 @@
 @yellow           : #F6A808; // Palette: goldenRod
 @green            : #51AA55; // Palette: darkPastelGreen
 @teal             : #517776; // Palette: slate
-@blue             : #007EB1; // Palette: Plone (tealBlue/cerulean)
+@blue             : #094ce1; // Palette: Plone (updated primary blue)
 @pink             : #E40166; // Palette: darkHotPink
 @red              : @pink;
 @brown            : #826A6A; // Palette: reddishGrey
@@ -159,8 +159,8 @@
 
 /*--- Colored Backgrounds ---*/
 @redBackground    : #F5C1C1; // Palette: alertError
-@tealBackground   : #EDF1F2; // Palette: Breadcrumbs
-@blueBackground   : #F2F6F8;
+@tealBackground   : #f0f2ff; // Palette: Updated to match primary blue theme
+@blueBackground   : #f0f2ff;
 @purpleBackground : #B8C6C8; // Dublin Core Summary
 
 /*--- Colored Headers ---*/

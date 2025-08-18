@@ -61,13 +61,18 @@
     "@eeacms/volto-metadata-block": "*",
     "@eeacms/volto-quote-block": "2.0.1",
     "@eeacms/volto-tags-block": "*",
+    "react-aria-components": "^1.7.0",
     "luna-super-listing": "*",
     "luna-super-hero": "*",
     "lunasites-advanced-styling": "workspace:*",
     "remixicon": "^4.3.0"
   },
   "devDependencies": {
-    "mrs-developer": "^2.2.0"
+    "mrs-developer": "^2.2.0",
+    "prettier": "3.0.3",
+    "stylelint": "15.10.3",
+    "stylelint-config-idiomatic-order": "9.0.0",
+    "stylelint-prettier": "4.0.2"
   },
   "pnpm": {
     "overrides": {

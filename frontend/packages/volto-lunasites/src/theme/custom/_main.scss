@@ -208,11 +208,11 @@
 
   // use homepage text color for color of cards that are within a content-box that has a variant class
   .content-box[class*='ary'] [class='ui fluid card'] {
-    color: blue;
+    color: #094ce1;
   }
   // set carousel arrow to homepage color
   .cards-carousel .ui.button.icon.slider-arrow .icon {
-    color: blue;
+    color: #094ce1;
   }
 
   // show staging banner on homepage
@@ -308,7 +308,7 @@
   --text-color: black;
 }
 
-/* Removed z-index .block.align .right & .left from pastanaga blocks.less */
+// /* Removed z-index .block.align .right & .left from pastanaga blocks.less */
 .block.align.left,
 .block.align.right {
   z-index: initial;
@@ -749,7 +749,7 @@ footer .blocks-form {
         transition: color 0.2s ease;
 
         &:hover {
-          color: #2185d0;
+          color: #094ce1;
         }
       }
     }
@@ -794,9 +794,9 @@ footer .blocks-form {
     box-shadow: none;
 
     &:hover {
-      border-color: #2185d0;
+      border-color: #094ce1;
       transform: none;
-      box-shadow: 0 4px 16px rgba(33, 133, 208, 0.1);
+      box-shadow: 0 4px 16px rgba(9, 76, 225, 0.1);
     }
   }
 }
@@ -837,7 +837,7 @@ footer .blocks-form {
       color: #ffffff;
 
       &:hover {
-        color: #64b5f6;
+        color: #5c8ff5;
       }
     }
 
@@ -853,7 +853,7 @@ footer .blocks-form {
       border-color: #404040;
 
       &:hover {
-        border-color: #64b5f6;
+        border-color: #5c8ff5;
       }
     }
   }
@@ -1248,4 +1248,103 @@ footer .blocks-form {
     padding-left: 1rem;
     padding-right: 1rem;
   }
+}
+
+/*-------------------
+    Secondary Segment Color Override
+--------------------*/
+
+// Override secondary segment colors to use our primary color scheme
+.ui.secondary.segment {
+  background: #f0f2ff !important;
+  color: #094ce1 !important;
+}
+
+// Text selection color
+::selection {
+  background-color: #0d4be2 !important;
+  color: white !important;
+}
+
+::-moz-selection {
+  background-color: #0d4be2 !important;
+  color: white !important;
+}
+
+/*-------------------
+    Sidebar Menu and Accordion Color Overrides
+--------------------*/
+
+// Override the Semantic UI menu item colors with our primary color (sidebar only)
+.sidebar-container .ui.secondary.attached.pointing.menu .item {
+  color: #094ce1 !important;
+}
+
+// Only active items get the border
+.sidebar-container .ui.secondary.attached.pointing.menu .active.item {
+  border-color: #094ce1 !important;
+  border-top-color: #094ce1 !important;
+  border-right-color: #094ce1 !important;
+  border-bottom-color: #094ce1 !important;
+  border-left-color: #094ce1 !important;
+  color: #094ce1 !important;
+}
+
+// Override the Semantic UI accordion title background with our blue (sidebar only)
+.sidebar-container .ui.styled.accordion .title {
+  background: #f0f2ff !important;
+  color: #094ce1 !important;
+}
+
+.sidebar-container .ui.styled.accordion .active.title {
+  background: #f0f2ff !important;
+  color: #094ce1 !important;
+}
+
+/*-------------------
+    Primary Color Variable
+--------------------*/
+
+// Primary color variable
+:root {
+  --lunasites-cms-primary-color: #094ce1;
+}
+
+/*-------------------
+    Slash Menu Color Styling
+--------------------*/
+
+// Style slash menu with our primary color scheme
+.power-user-menu {
+  .ui.menu {
+    .item {
+      color: #333 !important;
+
+      &:hover {
+        background: rgba(9, 76, 225, 0.1) !important;
+        color: var(--lunasites-cms-primary-color) !important;
+
+        .icon {
+          color: var(--lunasites-cms-primary-color) !important;
+        }
+      }
+
+      &.active {
+        background: var(--lunasites-cms-primary-color) !important;
+        color: white !important;
+
+        .icon {
+          color: white !important;
+        }
+      }
+
+      .icon {
+        color: var(--lunasites-cms-primary-color) !important;
+      }
+    }
+  }
+}
+
+.toolbar-bottom {
+  color: red;
 }

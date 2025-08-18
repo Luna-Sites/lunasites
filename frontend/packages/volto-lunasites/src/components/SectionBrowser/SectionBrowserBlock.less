@@ -1,0 +1,41 @@
+.section-browser-block {
+  &.edit-mode {
+    min-height: 200px;
+    cursor: pointer;
+    border: 2px dashed #ccc;
+    background: #f8f9fa;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: #007bff;
+      background: #e9ecef;
+    }
+
+    .browser-trigger {
+      text-align: center;
+      padding: 2rem;
+      
+      .icon {
+        color: #6c757d;
+        margin-bottom: 1rem;
+      }
+      
+      h3 {
+        color: #495057;
+        margin-bottom: 0.5rem;
+      }
+      
+      p {
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .ui.button {
+        margin-top: 0.5rem;
+      }
+    }
+  }
+}

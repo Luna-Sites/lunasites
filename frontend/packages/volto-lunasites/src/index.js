@@ -67,7 +67,7 @@ import {
 
 // Design Schema System
 import { DesignSchemaProvider, ColorSchemaField } from './components';
-import { designSchema } from './reducers';
+import * as reducers from './reducers';
 import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
 import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
 import SimpleIconPicker from './components/Widgets/SimpleIconPicker';
@@ -117,6 +117,16 @@ function BlockClassButton({ format, icon, ...props }) {
   );
 }
 
+// Custom Section Block
+import { 
+  CustomSectionBlockEdit, 
+  CustomSectionBlockView, 
+  CustomSectionBlockSchema 
+} from './components';
+
+// Custom keyboard handler
+import { customEnterHandler } from './keyboard/customEnterHandler';
+
 const BG_COLORS = [
   { name: 'transparent', label: 'Transparent' },
   { name: 'grey', label: 'Grey' },
@@ -137,7 +147,7 @@ const applyConfig = (config) => {
   // Add design schema reducers
   config.addonReducers = {
     ...config.addonReducers,
-    designSchema,
+    ...reducers,
   };
 
   // Register color schema widget
@@ -398,6 +408,14 @@ const applyConfig = (config) => {
     'video',
   ];
   config.blocks.requiredBlocks = [];
+
+  // Override Enter key handler for slate blocks
+  config.settings.slate.textblockKeyboardHandlers.Enter = [
+    customEnterHandler, // Our custom handler first
+    ...config.settings.slate.textblockKeyboardHandlers.Enter.filter(
+      handler => handler.name !== 'softBreak'
+    ), // Remove softBreak handler and add remaining handlers
+  ];
 
   config.blocks.blocksConfig.slate = {
     ...config.blocks.blocksConfig.slate,
@@ -728,6 +746,22 @@ const applyConfig = (config) => {
     ...config.blocks.blocksConfig.columnsBlock,
     schemaEnhancer: addAdvancedStyling,
     colors: BG_COLORS,
+  };
+
+  // Custom Section Block
+  config.blocks.blocksConfig.customSection = {
+    id: 'customSection',
+    title: 'Custom Section',
+    icon: descriptionSVG,
+    group: 'common',
+    view: CustomSectionBlockView,
+    edit: CustomSectionBlockEdit,
+    schema: CustomSectionBlockSchema,
+    restricted: true,
+    mostUsed: false,
+    sidebarTab: 1,
+    colors: BG_COLORS,
+    schemaEnhancer: addAdvancedStyling,
   };
 
   return config;

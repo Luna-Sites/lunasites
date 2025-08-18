@@ -1,0 +1,411 @@
+/* ==========================================================================
+   SectionStyles.less
+   This file styles all components for the Section Browser addon.
+   It uses modern CSS features and avoids Semantic UI dependencies.
+   ========================================================================== */
+
+// --- Design System Variables ---
+:root {
+  // Colors - unified color palette
+  --volto-lunasites-primary: #094ce1;
+  --volto-lunasites-primary-hover: #073bb8;
+  --volto-lunasites-primary-light: #e6f3f8;
+  --volto-lunasites-text-primary: #333;
+  --volto-lunasites-text-secondary: #666;
+  --volto-lunasites-text-muted: #888;
+  --volto-lunasites-surface: #ffffff;
+  --volto-lunasites-surface-elevated: #f8f9fa;
+  --volto-lunasites-surface-hover: #1c252f;
+  --volto-lunasites-border: #e0e0e0;
+  --volto-lunasites-border-light: #f1f5f9;
+
+  // Spacing
+  --volto-lunasites-spacing-xs: 4px;
+  --volto-lunasites-spacing-sm: 8px;
+  --volto-lunasites-spacing-md: 16px;
+  --volto-lunasites-spacing-lg: 24px;
+  --volto-lunasites-spacing-xl: 32px;
+
+  // Border radius
+  --volto-lunasites-radius: 8px;
+  --volto-lunasites-radius-lg: 12px;
+
+  // Shadows
+  --volto-lunasites-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --volto-lunasites-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --volto-lunasites-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  // Typography
+  --volto-lunasites-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol';
+}
+
+// Legacy LESS variables for backward compatibility
+@primary-color: var(--volto-lunasites-primary);
+@text-color: var(--volto-lunasites-text-primary);
+@light-gray: #f4f4f4;
+@medium-gray: var(--volto-lunasites-border);
+@dark-gray: var(--volto-lunasites-text-muted);
+@white: var(--volto-lunasites-surface);
+@font-family: var(--volto-lunasites-font-family);
+
+/* ==========================================================================
+   1. Trigger Block Styles
+   ========================================================================== */
+.section-browser-trigger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.5rem;
+  border: 2px dashed var(--volto-lunasites-border);
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: var(--volto-lunasites-text-primary);
+
+  &:hover {
+    border-color: var(--volto-lunasites-primary);
+    background-color: var(--volto-lunasites-primary-light);
+  }
+
+  .trigger-icon {
+    color: var(--volto-lunasites-primary);
+    margin-bottom: 1rem;
+  }
+
+  .trigger-title {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .trigger-description {
+    font-size: 1rem;
+    color: var(--volto-lunasites-text-muted);
+    max-width: 450px;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* ==========================================================================
+   2. Main Browser Modal Styles (using react-aria-components classes)
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000; // Ensure it's on top
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Animation for entering
+  &[data-entering] {
+    animation: fadeIn 200ms ease-out;
+  }
+
+  // Animation for exiting
+  &[data-exiting] {
+    animation: fadeOut 200ms ease-in;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.section-browser-modal {
+  width: 90vw;
+  max-width: 1600px;
+  height: 90vh;
+  background: @light-gray;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  // Animation for entering
+  &[data-entering] {
+    animation: slideIn 200ms ease-out;
+  }
+
+  // Animation for exiting
+  &[data-exiting] {
+    animation: slideOut 200ms ease-in;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid @medium-gray;
+  flex-shrink: 0;
+  background: @white;
+
+  .modal-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .close-button {
+    // Styling for the react-aria isQuiet button
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: @light-gray;
+    }
+
+    .icon {
+      color: var(--volto-lunasites-text-muted);
+    }
+  }
+}
+
+.modal-content {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden; // Important for nested scrolling
+}
+
+/* ==========================================================================
+   3. Tabs and Grid Styles
+   ========================================================================== */
+.category-tabs {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background: @white;
+  border-right: 1px solid @medium-gray;
+  flex-shrink: 0;
+  min-width: 200px;
+
+  // This targets each tab button
+  .tab {
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    border: 2px solid transparent;
+    text-align: left;
+    background: none;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s;
+
+    // Style for the selected tab
+    &[aria-selected='true'] {
+      background-color: var(--volto-lunasites-primary-light);
+      color: var(--volto-lunasites-primary);
+    }
+
+    &:hover:not([aria-selected='true']) {
+      background-color: @light-gray;
+    }
+  }
+}
+
+.panels-container {
+  flex-grow: 1;
+  overflow-y: auto; // This panel scrolls, not the whole modal
+  padding: 2rem;
+
+  // Special styling for blocks TabPanel
+  .blocks-panel {
+    padding: 0;
+    margin: -2rem; // Compensate for parent padding
+    height: calc(100% + 4rem); // Compensate for removed padding
+    overflow: hidden;
+
+    .enhanced-block-chooser {
+      height: 100%;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+}
+
+.sections-grid {
+  display: grid;
+  // Responsive grid layout
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ==========================================================================
+   4. Section Card Styles
+   ========================================================================== */
+.section-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background: @white;
+  border: 1px solid @medium-gray;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  height: 100%; // Make cards in a row have the same height
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: @primary-color;
+
+    .section-overlay {
+      opacity: 1;
+    }
+  }
+
+  .section-thumbnail {
+    position: relative;
+    background-color: @light-gray;
+
+    img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3; // Maintain consistent image proportions
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  .section-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .section-card-content {
+    padding: 1rem;
+    flex-grow: 1; // Allows content to fill space
+  }
+
+  .section-card-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: @text-color;
+  }
+
+  .section-card-description {
+    font-size: 0.9rem;
+    color: var(--volto-lunasites-text-muted);
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+// Special styling for blank section card
+.section-card.blank-section {
+  border: 2px solid var(--volto-lunasites-primary);
+  background: linear-gradient(135deg, var(--volto-lunasites-primary-light) 0%, rgba(255, 255, 255, 0.8) 100%);
+  position: relative;
+  
+  &::before {
+    content: 'RECOMMENDED';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--volto-lunasites-primary);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 1;
+  }
+
+  &:hover {
+    border-color: var(--volto-lunasites-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--volto-lunasites-shadow-lg);
+  }
+
+  .section-card-header {
+    color: var(--volto-lunasites-primary);
+    font-weight: 700;
+  }
+
+  .section-thumbnail {
+    background: linear-gradient(135deg, var(--volto-lunasites-primary-light) 0%, rgba(255, 255, 255, 0.9) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+    
+    &::before {
+      content: '+ Add Any Blocks';
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--volto-lunasites-primary);
+      text-align: center;
+    }
+
+    img {
+      display: none;
+    }
+
+    .section-overlay {
+      background: rgba(9, 76, 225, 0.1);
+    }
+  }
+}

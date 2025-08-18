@@ -1,0 +1,463 @@
+@type: 'extra';
+@element: 'custom';
+
+@import (multiple, reference, optional) '../../theme.config';
+
+@borderColor: rgba(120, 192, 215, 0.75);
+
+.custom-section-block-edit {
+  position: relative;
+  .custom-section-title-input {
+    margin-bottom: 1rem;
+
+    .section-title-field {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1.1rem;
+      font-weight: 500;
+
+      &:focus {
+        outline: none;
+        border-color: @borderColor;
+        box-shadow: 0 0 0 2px rgba(120, 192, 215, 0.2);
+      }
+
+      &::placeholder {
+        color: #999;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .section-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+
+    .choose-section-button {
+      margin-bottom: 1rem !important;
+
+      .icon {
+        margin-right: 0.5rem;
+      }
+    }
+
+    .empty-section-help {
+      color: #666;
+      font-size: 0.9rem;
+      margin: 0;
+      max-width: 300px;
+    }
+  }
+
+  .section-with-content {
+    position: relative;
+
+    .section-controls {
+      position: absolute;
+      top: -10px;
+      right: 10px;
+      z-index: 2;
+
+      .change-section-button {
+        font-size: 0.85rem !important;
+        padding: 0.4rem 0.8rem !important;
+        background: white !important;
+        border: 1px solid #ccc !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+
+        &:hover {
+          background: #f5f5f5 !important;
+          border-color: #999 !important;
+        }
+
+        .icon {
+          margin-right: 0.3rem;
+        }
+      }
+    }
+  }
+
+  .new-section-button-container {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+
+    .ui.basic.button.new-add-section {
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.5rem !important;
+      padding: 0.6rem 1.2rem !important;
+      background: #f0f4ff !important;
+      border: 2px solid #094ce1 !important;
+      border-radius: 4px !important;
+      color: #094ce1 !important;
+      font-size: 0.9rem !important;
+      font-weight: 600 !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(9, 76, 225, 0.3) !important;
+      transition: all 0.2s ease !important;
+      white-space: nowrap !important;
+
+      &:hover {
+        background: #e6efff !important;
+        border-color: #094ce1 !important;
+        color: #094ce1 !important;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(9, 76, 225, 0.4) !important;
+      }
+
+      .icon {
+        color: #094ce1 !important;
+        margin: 0 !important;
+      }
+    }
+  }
+}
+
+.block-editor-group {
+  [data-rbd-draggable-context-id] {
+    margin-bottom: 1rem;
+  }
+
+  .block-add-button {
+    display: none !important;
+  }
+
+  .block.group.selected::before,
+  .block.group:hover::before {
+    border-style: dashed;
+  }
+
+  .block.multiSelected::before {
+    z-index: 1;
+    background-color: white !important;
+  }
+
+  fieldset {
+    border: none !important;
+    box-shadow: none !important;
+
+    &:hover {
+      box-shadow: none !important;
+    }
+
+    legend {
+      position: absolute;
+      z-index: 3;
+      top: -1.3em;
+      left: 0;
+      width: fit-content;
+      padding: 0 1rem;
+      margin-right: auto;
+      margin-left: auto;
+      background-color: @pageBackground;
+      color: @borderColor;
+      cursor: pointer;
+      text-align: center;
+    }
+  }
+
+  // Also remove borders and shadows from inner fieldsets
+  .blocks-form fieldset {
+    border: none !important;
+    box-shadow: none !important;
+
+    &:hover {
+      box-shadow: none !important;
+    }
+  }
+  
+  fieldset.invisible {
+    border: none !important;
+    box-shadow: none !important;
+
+    &:hover {
+      box-shadow: none !important;
+    }
+  }
+
+  .section-block {
+    padding-top: 1rem;
+    padding-bottom: 0.1rem;
+    margin: 0;
+    outline: none;
+  }
+
+  .counter {
+    display: grid;
+    align-items: center;
+    font-size: 85%;
+    grid-gap: 0.5em;
+    grid-template-columns: 98% auto;
+    text-align: end;
+
+    &.info {
+      color: #ccc;
+    }
+
+    &.danger {
+      color: crimson;
+    }
+
+    &.warning {
+      color: darkorange;
+    }
+  }
+
+  .blocks-form {
+    margin-top: 0.5rem;
+  }
+
+  // Remove scrollbars by fixing dimensions
+  .ui.drag.block.inner.group {
+    max-width: 100%;
+    width: auto;
+  }
+
+  .styled-group {
+    max-width: 100%;
+    width: auto;
+  }
+
+  .custom-section-block-edit {
+    max-width: 100%;
+    width: auto;
+  }
+
+  .blocks-chooser {
+    right: 0;
+    left: auto;
+    margin-top: 3rem;
+  }
+
+  .block-toolbar {
+    position: absolute;
+    z-index: 3;
+    right: -9px;
+    display: flex;
+    border: none;
+    border: 1px solid @borderColor;
+    border-bottom: 1px solid @pageBackground;
+    margin-top: -45px;
+    background-color: @pageBackground;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+
+    .ui.basic.button {
+      padding: 8px 5px;
+    }
+
+    .ui.basic.button:hover {
+      background: transparent !important;
+    }
+
+    // Delete button styling - move to front and style
+    .delete-button-group-block {
+      order: -1;
+      background-color: rgba(220, 53, 69, 0.1) !important;
+      color: #dc3545 !important;
+      border-radius: 4px !important;
+
+      &:hover {
+        background-color: rgba(220, 53, 69, 0.2) !important;
+        color: #dc3545 !important;
+      }
+
+      svg {
+        fill: #dc3545 !important;
+      }
+    }
+  }
+}
+
+// Apply same styling to ALL block toolbars, including group blocks themselves
+.block-toolbar {
+  position: absolute;
+  z-index: 12;
+  right: -2px;
+  top: -2px;
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  border: 2px solid #094ce1;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(9, 76, 225, 0.15);
+  padding: 2px;
+
+  .ui.basic.button {
+    padding: 6px 8px !important;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    transition: all 0.2s ease;
+    margin: 0 !important;
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: #f0f2ff !important;
+      color: #094ce1 !important;
+    }
+
+    svg {
+      width: 19px;
+      height: 19px;
+      fill: currentColor;
+    }
+  }
+
+  // Delete button special styling for all blocks - first in order
+  .delete-button-group-block {
+    order: 1;
+    background-color: rgba(220, 53, 69, 0.1) !important;
+    color: #dc3545 !important;
+
+    &:hover {
+      background-color: rgba(220, 53, 69, 0.2) !important;
+      color: #dc3545 !important;
+    }
+
+    svg {
+      fill: #dc3545 !important;
+    }
+  }
+
+  // Drag handle styling - second in order
+  .drag.handle.wrapper {
+    order: 2;
+    background-color: rgba(102, 102, 102, 0.1) !important;
+    color: #666 !important;
+
+    &:hover {
+      background-color: #e8f4f8 !important;
+      color: #094ce1 !important;
+    }
+
+    svg {
+      fill: #666 !important;
+    }
+
+    &:hover svg {
+      fill: #094ce1 !important;
+    }
+  }
+
+  // Save section button styling - third in order
+  .save-section-button {
+    order: 3;
+    background-color: rgba(34, 139, 34, 0.1) !important;
+    color: #228b22 !important;
+
+    &:hover {
+      background-color: rgba(34, 139, 34, 0.2) !important;
+      color: #228b22 !important;
+    }
+
+    svg {
+      fill: #228b22 !important;
+    }
+  }
+
+  // Fix toolbar positioning to prevent overlap
+  .delete-button-group-block + .drag.handle.wrapper {
+    margin-left: 4px !important;
+  }
+
+  // Add block button styling - third in order
+  .block-add-button {
+    order: 2;
+
+    &:hover {
+      background-color: #f0f2ff !important;
+      color: #094ce1 !important;
+    }
+  }
+}
+
+// Compact modal customizations
+.compact-modal-content {
+  .compact-search-icon {
+    fill: #094ce1 !important;
+  }
+
+  .compact-search-input {
+    border-color: #ccc;
+
+    &:focus {
+      border-color: #094ce1 !important;
+      box-shadow: 0 0 0 2px rgba(9, 76, 225, 0.2) !important;
+    }
+  }
+
+  .compact-quick-access-header {
+    .icon {
+      fill: #094ce1 !important;
+    }
+  }
+
+  .compact-quick-block {
+    border: 1px solid #e1e5ea;
+
+    &:hover {
+      background-color: #094ce1 !important;
+      border-color: #094ce1 !important;
+      color: white !important;
+
+      .compact-quick-block-icon .icon {
+        fill: white !important;
+      }
+
+      .compact-quick-block-title {
+        color: white !important;
+      }
+    }
+
+    .compact-quick-block-icon .icon {
+      fill: #094ce1 !important;
+    }
+  }
+
+  .compact-category-header {
+    .icon {
+      fill: #094ce1 !important;
+    }
+
+    &[aria-expanded='true'] {
+      color: #094ce1 !important;
+    }
+  }
+
+  .compact-block-card {
+    border: 1px solid #e1e5ea;
+
+    &:hover {
+      background-color: #094ce1 !important;
+      border-color: #094ce1 !important;
+      color: white !important;
+
+      .compact-block-icon .icon {
+        fill: white !important;
+      }
+
+      .compact-block-title {
+        color: white !important;
+      }
+    }
+
+    .compact-block-icon .icon {
+      fill: #094ce1 !important;
+    }
+  }
+}

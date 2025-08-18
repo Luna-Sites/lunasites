@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getDesignSite } from '../../actions';
 
@@ -11,9 +11,12 @@ const DesignSchemaProvider = ({ children }) => {
         'lunasites.behaviors.design_schema.IDesignSchema'
       ]?.data,
   );
-  
+
   const designSchema = designSchemaData?.color_schema;
   const loading = useSelector((state) => state?.designSchema?.loading);
+  
+  // Keep track of current view type
+  const [currentViewType, setCurrentViewType] = useState(null);
 
   // Load inherited design schema when pathname changes
   useEffect(() => {
@@ -29,7 +32,7 @@ const DesignSchemaProvider = ({ children }) => {
           applyViewType(cachedData.designSchemaData);
         }
       }
-      
+
       dispatch(getDesignSite(pathname));
     }
   }, [dispatch, pathname]);
@@ -42,15 +45,43 @@ const DesignSchemaProvider = ({ children }) => {
     if (designSchemaData) {
       applyLayoutVariables(designSchemaData);
       applyViewType(designSchemaData);
-      
+
       // Cache the data for immediate use on next visit
       setCachedDesignSchema(pathname, {
         designSchema,
         designSchemaData,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
     }
   }, [designSchema, designSchemaData, pathname]);
+
+  // Monitor body class changes and re-apply view type if removed
+  useEffect(() => {
+    if (!currentViewType) return;
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          const body = document.body;
+          const hasViewClass = ['view-homepage', 'view-homepage-inverse', 'view-default']
+            .some(className => body.classList.contains(className));
+          
+          // If no view class is present but we should have one, re-apply it
+          if (!hasViewClass && currentViewType) {
+            console.log('View class was removed, re-applying:', currentViewType);
+            body.classList.add(currentViewType);
+          }
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, [currentViewType]);
 
   const applyCSSVariables = (schema) => {
     const root = document.documentElement;
@@ -58,7 +89,7 @@ const DesignSchemaProvider = ({ children }) => {
     // Default fallbacks
     const defaultSchema = {
       background_color: '#ffffff',
-      primary_color: '#0070ae',
+      primary_color: '#094ce1',
       secondary_color: '#e73d5c',
       header_bg_color: '#ffffff',
       header_text_color: '#2c3e50',
@@ -120,24 +151,24 @@ const DesignSchemaProvider = ({ children }) => {
 
   const detectWidthType = (widthValue) => {
     if (!widthValue) return null;
-    
+
     const widthStr = widthValue.toString().trim().toLowerCase();
-    
+
     // Check for relative units
     if (/(%|vw|vh|vmin|vmax|em|rem)/.test(widthStr)) {
       return 'relative';
     }
-    
+
     // Check for fixed units
     if (/(px|pt|cm|mm|in|pc)/.test(widthStr)) {
       return 'fixed';
     }
-    
+
     // If no unit specified, assume pixels (fixed)
     if (/^\d+(\.\d+)?$/.test(widthStr)) {
       return 'fixed';
     }
-    
+
     // Default to relative for unrecognized formats
     return 'relative';
   };
@@ -149,10 +180,10 @@ const DesignSchemaProvider = ({ children }) => {
     if (data.navbar_width) {
       const navbarWidth = data.navbar_width;
       const navbarWidthType = detectWidthType(navbarWidth);
-      
+
       root.style.setProperty('--lunasites-navbar-width', navbarWidth);
       root.style.setProperty('--lunasites-navbar-width-type', navbarWidthType);
-      
+
       // Add custom-width class to header
       const header = document.querySelector('.header-wrapper .header');
       if (header) {
@@ -170,19 +201,22 @@ const DesignSchemaProvider = ({ children }) => {
     if (data.container_width) {
       const containerWidth = data.container_width;
       const containerWidthType = detectWidthType(containerWidth);
-      
+
       root.style.setProperty('--lunasites-container-width', containerWidth);
-      root.style.setProperty('--lunasites-container-width-type', containerWidthType);
+      root.style.setProperty(
+        '--lunasites-container-width-type',
+        containerWidthType,
+      );
     }
 
     // Trigger layout change event
     window.dispatchEvent(
       new CustomEvent('layoutVariablesApplied', {
-        detail: { 
+        detail: {
           navbarWidth: data.navbar_width,
           navbarWidthType: detectWidthType(data.navbar_width),
           containerWidth: data.container_width,
-          containerWidthType: detectWidthType(data.container_width)
+          containerWidthType: detectWidthType(data.container_width),
         },
       }),
     );
@@ -199,10 +233,10 @@ const DesignSchemaProvider = ({ children }) => {
     
     // Get view type value - handle both string and object formats
     let viewType = data.view_type;
-    
+
     // Debug logging
     console.log('View type received:', viewType, typeof viewType);
-    
+
     if (viewType && typeof viewType === 'object') {
       // If it's an object, try to get the value or token
       viewType = viewType.value || viewType.token || viewType.title;
@@ -212,16 +246,18 @@ const DesignSchemaProvider = ({ children }) => {
     // Apply new view type if specified
     if (viewType && typeof viewType === 'string') {
       body.classList.add(`view-${viewType}`);
+      setCurrentViewType(`view-${viewType}`);
     } else {
       // Default view if no view_type specified
       body.classList.add('view-default');
+      setCurrentViewType('view-default');
     }
 
     // Trigger view type change event
     window.dispatchEvent(
       new CustomEvent('viewTypeApplied', {
-        detail: { 
-          viewType: viewType || 'default'
+        detail: {
+          viewType: viewType || 'default',
         },
       }),
     );

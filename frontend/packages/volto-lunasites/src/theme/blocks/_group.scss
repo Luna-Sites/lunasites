@@ -1,0 +1,142 @@
+// Enhanced Group Block Styling
+// Make sections look better, bigger, and more visually distinct
+
+.block-editor-group {
+  // Make sections more prominent with better spacing
+  margin: 2rem 0;
+
+  fieldset {
+    border: 2px solid #e0e6ed;
+    border-radius: 8px;
+    padding: 2rem;
+    background-color: #fafbfc;
+    transition: all 0.2s ease;
+    position: relative;
+    min-height: 120px;
+
+    &:hover {
+      border-color: #094ce1;
+      background-color: #f8fafc;
+      box-shadow: 0 2px 8px rgba(9, 76, 225, 0.1);
+    }
+
+    legend {
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      background-color: #094ce1;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      z-index: 10;
+
+      &:hover {
+        background-color: #073bb8;
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  // Enhanced section block styling
+  .section-block {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    margin: 0;
+    outline: none;
+    min-height: 80px;
+  }
+
+  // Better block spacing within sections
+  .blocks-form {
+    margin-top: 1rem;
+
+    [data-rbd-draggable-context-id] {
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  // Enhanced toolbar positioning
+  .block-toolbar {
+    position: absolute;
+    z-index: 12;
+    right: -2px;
+    top: -2px;
+    display: flex;
+    border: 2px solid #094ce1;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(9, 76, 225, 0.15);
+
+    .ui.basic.button {
+      padding: 8px 10px;
+      border-radius: 4px;
+
+      &:hover {
+        background-color: #f0f2ff !important;
+        color: #094ce1 !important;
+      }
+    }
+  }
+
+  // Selected state styling
+  &.selected {
+    fieldset {
+      border-color: #094ce1;
+      background-color: #f0f2ff;
+      box-shadow: 0 4px 12px rgba(9, 76, 225, 0.15);
+    }
+
+    legend {
+      background-color: #062f99;
+    }
+  }
+
+  // Empty section styling
+  &.empty-section {
+    fieldset {
+      border-style: dashed;
+      border-color: #ccd5db;
+      background-color: #f8f9fa;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+
+      &:hover {
+        border-color: #094ce1;
+        background-color: #f0f2ff;
+      }
+    }
+
+    // Hide the blocks form when empty to make room for floating button
+    .blocks-form {
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .block-editor-group {
+    margin: 1rem 0;
+
+    fieldset {
+      padding: 1.5rem 1rem;
+      min-height: 100px;
+    }
+
+    .section-block {
+      padding-top: 1.5rem;
+    }
+  }
+}

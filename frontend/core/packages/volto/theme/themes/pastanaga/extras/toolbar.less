@@ -1,4 +1,4 @@
-@teal-blue: #007eb1;
+@teal-blue: #094ce1;
 @background-content: #f2f5f6;
 @silver-blue: #b8c6c8;
 @silver: #c7d5d8;
@@ -375,6 +375,10 @@ body:not(.has-sidebar):not(.has-sidebar-collapsed) {
           .user {
             opacity: 1;
             transition: @opacity-transition;
+
+            svg {
+              fill: #826A6A;
+            }
           }
 
           .divider {
@@ -425,6 +429,10 @@ body:not(.has-sidebar):not(.has-sidebar-collapsed) {
         .user {
           display: block;
           opacity: 0;
+
+          svg {
+            fill: #826A6A;
+          }
         }
 
         .divider {
@@ -607,7 +615,9 @@ body:not(.has-sidebar):not(.has-sidebar-collapsed) {
         color: @darkHotPink;
       }
     }
+  }
 
+  .personal-tools {
     .avatar {
       height: 220px;
       background-color: #f2f5f6;

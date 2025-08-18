@@ -168,7 +168,7 @@ const ColorSchemaField = (props) => {
     // Fallback to defaults only if no CSS variable is set
     const defaults = {
       background_color: '#ffffff',
-      primary_color: '#0070ae',
+      primary_color: '#094ce1',
       secondary_color: '#e73d5c',
       header_bg_color: '#ffffff',
       header_text_color: '#2c3e50',

@@ -1221,7 +1221,7 @@ class Contents extends Component {
                               >
                                 <Icon
                                   name={uploadSVG}
-                                  color="#007eb1"
+                                  color="#094ce1"
                                   size="24px"
                                   className="upload"
                                 />
@@ -1473,7 +1473,7 @@ class Contents extends Component {
                             <Icon
                               name={zoomSVG}
                               size="30px"
-                              color="#007eb1"
+                              color="#094ce1"
                               className="zoom"
                               style={{ flexShrink: '0' }}
                             />
@@ -1518,7 +1518,7 @@ class Contents extends Component {
                                       <Icon
                                         name={checkboxCheckedSVG}
                                         size="24px"
-                                        color="#007eb1"
+                                        color="#094ce1"
                                         className={
                                           this.state.index.values[index].label
                                         }
@@ -1661,7 +1661,7 @@ class Contents extends Component {
                                       }
                                       color={
                                         this.state.selected.length > 0
-                                          ? '#007eb1'
+                                          ? '#094ce1'
                                           : '#826a6a'
                                       }
                                       className="dropdown-popup-trigger"
@@ -1678,7 +1678,7 @@ class Contents extends Component {
                                     <Menu.Item onClick={this.onSelectAll}>
                                       <Icon
                                         name={checkboxCheckedSVG}
-                                        color="#007eb1"
+                                        color="#094ce1"
                                         size="24px"
                                       />{' '}
                                       <FormattedMessage

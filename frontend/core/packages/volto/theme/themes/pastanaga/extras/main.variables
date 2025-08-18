@@ -14,5 +14,5 @@
 
 /* Checkbox */
 @checkboxBorderUnchecked: 1px solid #826a6a;
-@checkboxBorderChecked: 1px solid #007eb1;
-@checkboxColor: #007eb1;
+@checkboxBorderChecked: 1px solid #094ce1;
+@checkboxColor: #094ce1;

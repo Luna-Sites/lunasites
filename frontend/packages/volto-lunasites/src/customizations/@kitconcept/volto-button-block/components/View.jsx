@@ -3,6 +3,8 @@ import { Button } from 'semantic-ui-react';
 import { MaybeWrap } from '@plone/volto/components';
 import { isInternalURL, getFieldURL } from '@plone/volto/helpers';
 import cx from 'classnames';
+import { BlockResizeHandles } from '../../../../components/CustomSectionBlock/BlockResizeHandler';
+import { getResizeConfig } from '../../../../components/CustomSectionBlock/contentResizeConfig';
 
 /**
  * Calculate the contrast ratio and return the best text color (black or white)
@@ -34,7 +36,8 @@ const getIconClass = (iconName) => {
 };
 
 const View = (props) => {
-  const { data, isEditMode, className, style } = props;
+  const { data, isEditMode, className, style, selected, block, onChangeBlock } =
+    props;
 
   const href = getFieldURL(data.href?.[0]);
   const isInternal = isInternalURL(href) || !href;
@@ -48,21 +51,31 @@ const View = (props) => {
   const width = data.styles?.width;
   const borderRadius = data.styles?.borderRadius;
 
+  // Apply size properties from data (new resize functionality)
+  const fontSize = data.fontSize || 16;
+  const padding = data.padding || 12;
+  const buttonWidth = data.buttonWidth || 'auto';
+
   // Icons from main schema (not styles)
   const leftIcon = data.leftIcon;
   const rightIcon = data.rightIcon;
-  
-  // Debug logging
-  console.log('Button data:', { leftIcon, rightIcon, data });
+
+  // Debug inneralign
+  console.log('inneralign data:', data.inneralign, 'full data:', data);
   // Create button styles based on block-specific configuration
   const buttonStyles = {
     ...style,
     width: undefined,
+    fontSize: `${fontSize}px`,
+    padding: `${padding}px`,
+    ...(buttonWidth !== 'auto' && { width: buttonWidth }),
   };
 
-  // Create container styles with CSS variables for width
+  // Create container styles - make container fit content
   const containerStyles = {
+    display: 'block', // Make container fit content size
     ...(width && { '--button-width': width }),
+    ...(buttonWidth !== 'auto' && { '--button-width': buttonWidth }),
   };
 
   if (buttonColor) {
@@ -122,14 +135,10 @@ const View = (props) => {
     }),
   };
 
+  // Get the resize configuration for button blocks (only in edit mode)
+  const resizeConfig = isEditMode ? getResizeConfig('button') : null;
   // Render button content with icons
   const renderButtonContent = () => {
-    console.log('Rendering button content:', { leftIcon, rightIcon });
-    console.log('Icon classes:', { 
-      leftIconClass: getIconClass(leftIcon),
-      rightIconClass: getIconClass(rightIcon)
-    });
-    
     return (
       <span className="button-content">
         {leftIcon && <i className={getIconClass(leftIcon)} />}
@@ -147,9 +156,15 @@ const View = (props) => {
         [data.align]: data.align,
         'edit-mode': isEditMode,
       })}
-      style={containerStyles}
+      style={{
+        ...containerStyles,
+        position: 'relative', // Needed for resize handles positioning
+      }}
     >
-      <div className={cx('align', data.inneralign)}>
+      <div
+        className={cx('align', data.inneralign)}
+        data-inner-align={data.inneralign}
+      >
         {href && !isEditMode ? (
           isInternal ? (
             <Button
@@ -189,6 +204,21 @@ const View = (props) => {
           </Button>
         )}
       </div>
+
+      {/* Content resize handles - only in edit mode and when in grid */}
+      {isEditMode && resizeConfig && selected && onChangeBlock && (
+        <BlockResizeHandles
+          data={data}
+          onChangeBlock={onChangeBlock}
+          block={block}
+          selected={selected}
+          config={resizeConfig}
+          colors={{
+            height: resizeConfig.height?.color || '#f39c12',
+            width: resizeConfig.width?.color || '#9b59b6',
+          }}
+        />
+      )}
     </MaybeWrap>
   );
 };

@@ -1,0 +1,85 @@
+// View mode styles for volto-group-block customization
+
+// Make the group block container full width in edit mode
+.block-editor-group {
+  // Override the default container width from _layout.scss line 96
+  max-width: none !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  width: 95% !important;
+
+  // Ensure inner content respects container dimensions
+  .ui.drag.block.inner.group {
+    width: 100%;
+
+    .block.group {
+      width: 100%;
+
+      .styled-group {
+        width: 100%;
+
+        .custom-section-block-edit {
+          width: 100%;
+
+          // Section block should be full width
+          .section-block {
+            width: 100%;
+            max-width: none;
+            margin-right: 0;
+            margin-left: 0;
+
+            // Only the content inside should respect container width
+            .section-header,
+            .section-empty-state {
+              max-width: var(--default-container-width);
+              margin-right: auto;
+              margin-left: auto;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Make view mode full width too
+.blocks-group-wrapper {
+  max-width: none !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  width: 100% !important;
+
+  // Content inside respects container dimensions
+  > * {
+    max-width: var(--layout-container-width);
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+// Basic section styling
+.custom-section-block-view {
+  position: relative;
+
+  .custom-section-title {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  // Minimal visual separation between sections
+  + .custom-section-block-view {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  // Minimal styling for backgrounds
+  &[style*='background'] {
+    border-radius: 4px;
+  }
+}

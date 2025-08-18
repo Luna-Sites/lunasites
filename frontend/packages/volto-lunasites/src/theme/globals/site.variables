@@ -34,7 +34,7 @@
 @blockVerticalSpace: 25px;
 
 // Fonts
-@customFontName: 'Inter';
+@customFontName: 'Arial';
 @pageFontTemplate: @customFontName, sans-serif;
 @pageFont: var(--custom-main-font, @pageFontTemplate);
 @headerFont: var(--custom-headers-font, @pageFont);

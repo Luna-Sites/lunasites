@@ -25,6 +25,23 @@ const messages = defineMessages({
     id: 'Open in a new tab',
     defaultMessage: 'Open in a new tab',
   },
+  // New size-related messages
+  ButtonSize: {
+    id: 'Button Size',
+    defaultMessage: 'Button Size',
+  },
+  FontSize: {
+    id: 'Font Size (px)',
+    defaultMessage: 'Font Size (px)',
+  },
+  Padding: {
+    id: 'Padding (px)',
+    defaultMessage: 'Padding (px)',
+  },
+  ButtonWidth: {
+    id: 'Button Width',
+    defaultMessage: 'Button Width',
+  },
   LeftIcon: {
     id: 'Left Icon',
     defaultMessage: 'Left Icon',
@@ -44,14 +61,12 @@ export const ButtonSchema = (props) => {
       {
         id: 'default',
         title: 'Default',
-        fields: [
-          'title',
-          'href',
-          'openLinkInNewTab',
-          'leftIcon',
-          'rightIcon',
-          'inneralign',
-        ],
+        fields: ['title', 'href', 'openLinkInNewTab', 'leftIcon', 'rightIcon', 'inneralign'],
+      },
+      {
+        id: 'appearance',
+        title: intl.formatMessage(messages.ButtonSize),
+        fields: ['fontSize', 'padding', 'buttonWidth'],
       },
     ],
 
@@ -84,6 +99,29 @@ export const ButtonSchema = (props) => {
       openLinkInNewTab: {
         title: intl.formatMessage(messages.openLinkInNewTab),
         type: 'boolean',
+      },
+      // New size properties
+      fontSize: {
+        title: intl.formatMessage(messages.FontSize),
+        type: 'number',
+        minimum: 10,
+        maximum: 72,
+        default: 16,
+        description: 'Font size in pixels (10-72px)',
+      },
+      padding: {
+        title: intl.formatMessage(messages.Padding),
+        type: 'number',
+        minimum: 4,
+        maximum: 40,
+        default: 12,
+        description: 'Button padding in pixels (4-40px)',
+      },
+      buttonWidth: {
+        title: intl.formatMessage(messages.ButtonWidth),
+        type: 'string',
+        default: 'auto',
+        description: 'Button width (e.g., "auto", "120px", "50%")',
       },
     },
     required: [],
