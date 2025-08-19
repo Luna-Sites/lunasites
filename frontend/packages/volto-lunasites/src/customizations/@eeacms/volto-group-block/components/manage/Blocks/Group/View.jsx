@@ -14,7 +14,7 @@ const View = (props) => {
 
   return (
     <CustomTag id={customId} className="custom-section-block-view">
-      {data.title && <h2 className="custom-section-title">{data.title}</h2>}
+      {/* {data.title && <h2 className="custom-section-title">{data.title}</h2>} */}
       <BodyComponent {...props} />
     </CustomTag>
   );

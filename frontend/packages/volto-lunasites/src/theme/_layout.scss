@@ -223,6 +223,11 @@ External link removal for all the blocks.
     margin-bottom: $block-vertical-space;
   }
 
+  // Add spacing between all children of blocks-group-wrapper
+  & > *:not(:last-child) {
+    margin-bottom: 25px;
+  }
+
   &:last-child {
     margin-bottom: -1rem !important;
   }
