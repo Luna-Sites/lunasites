@@ -4,6 +4,7 @@
   margin-top: 0;
   margin-bottom: 0;
 
+
   &.is--first--of--block-type,
   &.previous--is--same--block-type.previous--has--different--backgroundColor {
     @media only screen and (min-width: $largest-mobile-screen) {
@@ -95,7 +96,7 @@
   .slate:not(.inner) {
     padding: 40px 20px 20px 20px;
     margin: 0;
-    background-color: $lightgrey;
+    background-color: transparent;
 
     p {
       padding: 0;
@@ -327,20 +328,20 @@
 .block.gridBlock.has--backgroundColor--grey,
 #page-add .block-editor-gridBlock.has--backgroundColor--grey,
 #page-edit .block-editor-gridBlock.has--backgroundColor--grey {
-  background-color: $lightgrey;
+  background-color: transparent;
   .teaser-item {
     background: white;
   }
   .slate {
-    background-color: $white;
+    background-color: transparent;
   }
 
   .slate-editor {
-    background-color: $white !important;
+    background-color: transparent !important;
   }
 
   .slate:not(.inner) {
-    background-color: $white !important;
+    background-color: transparent !important;
   }
 
   .grid-block-image {
