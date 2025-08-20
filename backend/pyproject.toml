@@ -28,8 +28,8 @@ dependencies = [
     "plone.restapi",
     "plone.volto",
     "collective.volto.footer",
+    "collective.volto.formsupport[honeypot]",
     "eea.schema.slate"
-
 ]
 
 [project.optional-dependencies]
