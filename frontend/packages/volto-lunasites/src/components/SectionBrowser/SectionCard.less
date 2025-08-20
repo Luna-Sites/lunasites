@@ -26,12 +26,30 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.7);
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       transition: opacity 0.2s ease;
+
+      button,
+      .react-aria-Button {
+        padding: 0.5rem 1.5rem !important;
+        background: var(--lunasites-primary-color, #094ce1) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 6px !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+        transform: translateY(10px) !important;
+
+        &:hover {
+          background: var(--lunasites-primary-dark, #073bb8) !important;
+          transform: translateY(0) scale(1.05) !important;
+        }
+      }
 
       .insert-button {
         transform: translateY(10px);
@@ -41,6 +59,11 @@
 
     &:hover .section-overlay {
       opacity: 1;
+
+      button,
+      .react-aria-Button {
+        transform: translateY(0) !important;
+      }
 
       .insert-button {
         transform: translateY(0);

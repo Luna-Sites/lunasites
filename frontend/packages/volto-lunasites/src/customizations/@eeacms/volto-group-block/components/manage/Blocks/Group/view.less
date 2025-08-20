@@ -48,13 +48,13 @@
   margin-right: 0 !important;
   margin-left: 0 !important;
   width: 100% !important;
+}
 
-  // Content inside respects container dimensions
-  > * {
-    max-width: var(--layout-container-width);
-    margin-right: auto;
-    margin-left: auto;
-  }
+// Content inside respects container dimensions - only apply to first level blocks-group-wrapper
+.blocks-group-wrapper:not(.blocks-group-wrapper .blocks-group-wrapper) > * {
+  max-width: var(--layout-container-width);
+  margin-right: auto;
+  margin-left: auto;
 }
 
 // Basic section styling

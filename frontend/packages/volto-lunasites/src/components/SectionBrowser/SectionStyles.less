@@ -302,11 +302,16 @@
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(9, 76, 225, 0.1);
     border-color: @primary-color;
 
     .section-overlay {
       opacity: 1;
+
+      button,
+      .react-aria-Button {
+        transform: translateY(0) !important;
+      }
     }
   }
 
@@ -326,12 +331,30 @@
   .section-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
+
+    button,
+    .react-aria-Button {
+      padding: 0.5rem 1.5rem !important;
+      background: var(--lunasites-primary-color, #094ce1) !important;
+      color: white !important;
+      border: none !important;
+      border-radius: 6px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+      transform: translateY(10px) !important;
+
+      &:hover {
+        background: var(--lunasites-primary-dark, #073bb8) !important;
+        transform: translateY(0) scale(1.05) !important;
+      }
+    }
   }
 
   .section-card-content {
@@ -343,7 +366,7 @@
     font-size: 1.1rem;
     font-weight: 600;
     margin: 0 0 0.5rem 0;
-    color: @text-color;
+    color: var(--lunasites-primary-color, #094ce1);
   }
 
   .section-card-description {

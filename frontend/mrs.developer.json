@@ -177,5 +177,13 @@
     "url": "git@github.com:Luna-Sites/luna-super-listing.git",
     "https": "https://github.com/Luna-Sites/luna-super-listing.git",
     "branch": "master"
+  },
+  "luna-super-tabs": {
+    "develop": false,
+    "output": "packages",
+    "package": "luna-super-tabs",
+    "url": "git@github.com:Luna-Sites/luna-super-tabs.git",
+    "https": "https://github.com/Luna-Sites/luna-super-tabs.git",
+    "branch": "master"
   }
 }

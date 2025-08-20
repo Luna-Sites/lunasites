@@ -25,6 +25,7 @@ const addons = [
   'volto-lunasites',
   'luna-super-listing',
   'luna-super-hero',
+  'luna-super-tabs',
 ];
 
 module.exports = {

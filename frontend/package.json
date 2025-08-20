@@ -64,8 +64,10 @@
     "react-aria-components": "^1.7.0",
     "luna-super-listing": "*",
     "luna-super-hero": "*",
+    "luna-super-tabs": "*",
     "lunasites-advanced-styling": "workspace:*",
-    "remixicon": "^4.3.0"
+    "remixicon": "^4.3.0",
+    "react-resize-detector": "12.1.0"
   },
   "devDependencies": {
     "mrs-developer": "^2.2.0",
