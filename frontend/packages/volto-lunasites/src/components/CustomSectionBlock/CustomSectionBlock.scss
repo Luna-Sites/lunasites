@@ -155,16 +155,17 @@
     // Minimal grid item - no container styling
     position: relative;
 
-    // Only keep dragging state styling for visual feedback
+    // Clean styling during drag
     &.dragging {
       z-index: 1000;
-      transition:
-        grid-column 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-        grid-row 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: none !important;
 
       .draggable-grid-block {
-        transform: scale(1.02) !important;
-        opacity: 0.8;
+        transform: none !important;
+        opacity: 0.6;
+        pointer-events: none;
+        border: 2px dashed rgba(0, 123, 193, 0.6) !important;
+        background: rgba(0, 123, 193, 0.05) !important;
       }
     }
   }
@@ -209,6 +210,43 @@
   }
 }
 
+// Simple drag cursor indicator
+.drag-cursor-indicator {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  user-select: none;
+  
+  &::before {
+    content: '🔄 ';
+    margin-right: 4px;
+  }
+}
+
+// Drop preview styles - shows actual block content
+.drop-preview {
+  transition: all 0.2s ease;
+  
+  &.valid {
+    box-shadow: 0 4px 12px rgba(0, 123, 193, 0.3);
+    transform: scale(1.02);
+  }
+  
+  &.invalid {
+    box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+    transform: scale(0.98);
+  }
+  
+  // Ensure preview content doesn't interfere with interactions
+  * {
+    pointer-events: none !important;
+    user-select: none !important;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
 .draggable-block,
 .draggable-grid-block {
   position: relative;
@@ -231,13 +269,16 @@
     }
   }
 
-  &.dragging {
-    opacity: 0.7;
-    transform: rotate(2deg);
-  }
-
+  // Original block stays in place with clear visual feedback
   &.being-dragged {
-    opacity: 0.3 !important;
+    opacity: 0.6 !important;
+    transform: none !important;
+    transition: opacity 0.15s ease !important;
+    border: 2px dashed rgba(0, 123, 193, 0.6) !important;
+    background: rgba(0, 123, 193, 0.05) !important;
+    
+    // Keep the block visible so user can see original position
+    pointer-events: none;
   }
 
   .drag-handle {
@@ -280,30 +321,6 @@
   }
 }
 
-// Drag Preview Styles
-.drag-preview {
-  transition: none !important;
-  animation: none !important;
-  pointer-events: none !important;
-
-  * {
-    pointer-events: none !important;
-  }
-
-  // Enhance the preview appearance
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 123, 193, 0.1);
-    border: 2px solid rgba(0, 123, 193, 0.5);
-    border-radius: 8px;
-    pointer-events: none;
-  }
-}
 
 .grid-drag-layer {
   &:hover {
@@ -312,27 +329,14 @@
     }
   }
 
-  // Show drop zones when dragging
-  &.dragging {
+  // Enhanced visual feedback during drag
+  &.drag-over {
     .grid-guide {
       opacity: 0.6 !important;
     }
-
-    &::after {
-      content: 'Drop here to position block';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 123, 193, 0.9);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 500;
-      pointer-events: none;
-      z-index: 999;
-    }
+    
+    background: rgba(0, 123, 193, 0.02);
+    border-color: rgba(0, 123, 193, 0.3);
   }
 }
 
@@ -463,58 +467,116 @@
 // Draggable Grid Block Styles
 .draggable-grid-block {
   position: relative;
-  transition: none;
+  transition: opacity 0.15s ease; // Only animate opacity changes
   user-select: none;
   opacity: 1;
   transform: scale(1);
-
+  
+  // Remove all transforms and complex transitions during drag
   &.being-dragged {
-    opacity: 0.8;
-    transform: scale(1.02);
+    opacity: 0.4;
+    transform: none;
+    transition: opacity 0.15s ease;
   }
 
   .drag-handle {
     position: absolute;
-    top: 8px;
-    left: 8px;
-    width: 24px;
-    height: 18px;
+    top: 4px;
+    left: 4px;
+    width: 28px;
+    height: 22px;
     background: linear-gradient(
       135deg,
-      rgba(0, 123, 193, 0.9) 0%,
-      rgba(0, 86, 179, 0.9) 100%
+      rgba(0, 123, 193, 0.95) 0%,
+      rgba(0, 86, 179, 0.95) 100%
     );
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: grab;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 14px;
     color: white;
-    opacity: 0.75;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 15;
+    opacity: 0.85; // More visible by default
+    transition: all 0.2s ease;
+    z-index: 20; // Higher z-index to ensure visibility
     box-shadow:
-      0 2px 8px rgba(0, 123, 193, 0.2),
-      0 1px 3px rgba(0, 0, 0, 0.1);
+      0 4px 12px rgba(0, 123, 193, 0.3),
+      0 2px 4px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2); // Subtle border for better definition
+
+    // Better hover state
+    &:hover {
+      opacity: 1;
+      transform: scale(1.1);
+      background: linear-gradient(
+        135deg,
+        rgba(0, 123, 193, 1) 0%,
+        rgba(0, 86, 179, 1) 100%
+      );
+      box-shadow:
+        0 6px 16px rgba(0, 123, 193, 0.4),
+        0 3px 6px rgba(0, 0, 0, 0.2);
+    }
 
     &:active {
       cursor: grabbing;
+      transform: scale(1.05);
+      transition: none;
+    }
+
+    // Ensure handle is visible even in complex layouts
+    &::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    &:hover::before {
+      opacity: 0.3; // Subtle backdrop on hover
     }
   }
 
   &.selected .drag-handle,
   &:hover .drag-handle {
     opacity: 1;
+    transform: scale(1.05); // Slight scale on selection/hover
+  }
+
+  // Always show handle when block is selected or being edited
+  &.selected .drag-handle {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 123, 193, 1) 0%,
+      rgba(0, 86, 179, 1) 100%
+    );
+    box-shadow:
+      0 6px 16px rgba(0, 123, 193, 0.4),
+      0 3px 6px rgba(0, 0, 0, 0.2);
   }
 
   &.being-dragged .drag-handle {
     background: linear-gradient(135deg, #007bc1 0%, #0056b3 100%);
     box-shadow:
-      0 8px 16px rgba(0, 123, 193, 0.3),
-      0 4px 8px rgba(0, 0, 0, 0.1);
+      0 8px 20px rgba(0, 123, 193, 0.5),
+      0 4px 10px rgba(0, 0, 0, 0.2);
     transition: none;
+    opacity: 1;
+    transform: scale(1.1);
+    
+    // Enhanced visibility during drag
+    &::before {
+      opacity: 0.5;
+    }
   }
 
   .grid-position-info {
@@ -656,21 +718,22 @@
 
   .snap-preview {
     position: absolute;
-    background: rgba(0, 123, 193, 0.2);
-    border: 2px solid rgba(0, 123, 193, 0.6);
+    background: rgba(0, 123, 193, 0.15);
+    border: 2px dashed rgba(0, 123, 193, 0.6);
     border-radius: 6px;
     pointer-events: none;
     z-index: 998;
-    display: grid;
-    place-items: center;
-    font-size: 12px;
-    font-weight: 600;
-    color: #007bc1;
+    transition: all 0.1s ease;
 
     &.collision {
-      background: rgba(255, 68, 68, 0.2);
+      background: rgba(255, 68, 68, 0.15);
       border-color: rgba(255, 68, 68, 0.6);
-      color: #ff4444;
+      
+      &::after {
+        content: 'Cannot drop here';
+        background: rgba(255, 68, 68, 0.9);
+        color: white;
+      }
     }
   }
 

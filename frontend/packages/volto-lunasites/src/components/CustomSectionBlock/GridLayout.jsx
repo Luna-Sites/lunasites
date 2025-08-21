@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DraggableGridBlock from './DraggableGridBlock';
+import DraggableGridBlock, { checkBlockCollision } from './DraggableGridBlock';
 import GridDragLayer from './GridDragLayer';
 
 const GridLayout = ({
@@ -23,145 +23,158 @@ const GridLayout = ({
   // Merge temp positions with actual positions for visual updates during drag
   const currentPositions = { ...positions, ...tempPositions };
 
-  // Simple position update without automatic collision avoidance
+  // Optimized temp position update with reduced state thrashing
   const handleTempPositionUpdate = React.useCallback(
     (blockId, tempPosition, isResize = false) => {
-      // Set immediate position update for the dragged block only
-      setTempPositions((prev) => ({ ...prev, [blockId]: tempPosition }));
-
-      if (isResize) {
-        setResizingBlocks((prev) => new Set([...prev, blockId]));
-      } else {
-        setDraggingBlocks((prev) => new Set([...prev, blockId]));
-      }
-
-      // Clear moved blocks - no automatic collision avoidance during drag
-      setMovedBlocks(new Set());
+      // Batch state updates to prevent race conditions
+      React.startTransition(() => {
+        setTempPositions((prev) => ({ ...prev, [blockId]: tempPosition }));
+        
+        if (isResize) {
+          setResizingBlocks((prev) => new Set([...prev, blockId]));
+          setDraggingBlocks((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(blockId); // Remove from dragging if resizing
+            return newSet;
+          });
+        } else {
+          setDraggingBlocks((prev) => new Set([...prev, blockId]));
+          setResizingBlocks((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(blockId); // Remove from resizing if dragging
+            return newSet;
+          });
+        }
+        
+        // Clear moved blocks to prevent conflicts
+        setMovedBlocks(new Set());
+      });
     },
     [],
   );
 
-  const clearTempPosition = (blockId) => {
-    // Clear all temporary states immediately to prevent flickering
-    setTempPositions({});
-    setDraggingBlocks(new Set());
-    setResizingBlocks(new Set());
-    setMovedBlocks(new Set());
-  };
+  // Fixed: clear only the specific block's temp state, not all blocks
+  const clearTempPosition = React.useCallback((blockId) => {
+    React.startTransition(() => {
+      // Only clear the specific block's temp position
+      setTempPositions((prev) => {
+        const newTemp = { ...prev };
+        delete newTemp[blockId];
+        return newTemp;
+      });
+      
+      // Remove block from all tracking sets
+      setDraggingBlocks((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(blockId);
+        return newSet;
+      });
+      
+      setResizingBlocks((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(blockId);
+        return newSet;
+      });
+      
+      setMovedBlocks((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(blockId);
+        return newSet;
+      });
+    });
+  }, []);
 
   const handleFinalizePosition = React.useCallback((blockId, finalPosition) => {
-    // Clear temp positions first
-    clearTempPosition(blockId);
-    
-    // Find available position if there's a collision
-    const availablePosition = findAvailablePositionForBlock(
-      finalPosition.x,
-      finalPosition.y,
-      finalPosition.width,
-      finalPosition.height,
-      blockId,
-      positions
-    );
-    
-    // Update the actual position through the parent
-    if (onUpdatePosition) {
-      onUpdatePosition(blockId, availablePosition);
-    }
-  }, [onUpdatePosition, positions]);
+    try {
+      // Validate inputs
+      if (!blockId || !finalPosition) {
+        console.error('Invalid parameters for handleFinalizePosition:', { blockId, finalPosition });
+        return;
+      }
 
-  // Helper function to find available position for a block
-  const findAvailablePositionForBlock = (
-    startX,
-    startY,
-    width,
-    height,
-    excludeBlockId,
-    allPositions,
-  ) => {
-    const columns = gridConfig.columns;
-
-    // Check if position is available
-    const isPositionAvailable = (x, y, w, h) => {
-      // Check bounds
-      if (x < 0 || y < 0 || x + w > columns) return false;
-
-      // Check collisions with other blocks
-      for (const [otherId, pos] of Object.entries(allPositions)) {
-        if (otherId !== excludeBlockId && pos) {
-          if (
-            !(
-              x >= pos.x + pos.width ||
-              x + w <= pos.x ||
-              y >= pos.y + pos.height ||
-              y + h <= pos.y
-            )
-          ) {
-            return false; // Collision detected
+      // Use transition to batch all final position updates
+      React.startTransition(() => {
+        try {
+          // Clear temp positions for this block first
+          clearTempPosition(blockId);
+          
+          // Validate position bounds
+          const columns = Math.max(1, gridConfig.columns || 12);
+          const safePosition = {
+            x: Math.max(0, Math.min(finalPosition.x, columns - finalPosition.width)),
+            y: Math.max(0, finalPosition.y),
+            width: Math.max(1, finalPosition.width),
+            height: Math.max(1, finalPosition.height)
+          };
+          
+          // Use the unified collision detection with error handling
+          let hasCollision = false;
+          try {
+            hasCollision = checkBlockCollision(
+              safePosition.x,
+              safePosition.y,
+              safePosition.width,
+              safePosition.height,
+              positions,
+              blockId,
+              columns
+            );
+          } catch (collisionError) {
+            console.warn('Error during collision check, assuming collision:', collisionError);
+            hasCollision = true;
           }
-        }
-      }
-      return true;
-    };
-
-    // Try the target position first
-    if (isPositionAvailable(startX, startY, width, height)) {
-      return { x: startX, y: startY, width, height };
-    }
-
-    // Search for nearby available positions in a more efficient pattern
-    // First try positions in the same row, then expand outwards
-    for (let radius = 1; radius <= Math.min(columns, 10); radius++) {
-      // Try horizontal positions first (same row)
-      for (let dx = -radius; dx <= radius; dx++) {
-        const testX = startX + dx;
-        if (isPositionAvailable(testX, startY, width, height)) {
-          return { x: testX, y: startY, width, height };
-        }
-      }
-      
-      // Then try vertical positions (same column and nearby)
-      for (let dy = -radius; dy <= radius; dy++) {
-        if (dy !== 0) { // Skip startY as we already checked it above
-          const testY = startY + dy;
-          if (isPositionAvailable(startX, testY, width, height)) {
-            return { x: startX, y: testY, width, height };
-          }
-        }
-      }
-      
-      // Finally try diagonal positions
-      for (let dx = -radius; dx <= radius; dx++) {
-        for (let dy = -radius; dy <= radius; dy++) {
-          if (Math.abs(dx) === radius || Math.abs(dy) === radius) {
-            const testX = startX + dx;
-            const testY = startY + dy;
-
-            if (isPositionAvailable(testX, testY, width, height)) {
-              return { x: testX, y: testY, width, height };
+          
+          let targetPosition = safePosition;
+          
+          // Only search for alternative position if there's a collision
+          if (hasCollision) {
+            console.warn('Collision detected, finding alternative position');
+            try {
+              targetPosition = findAvailablePositionForBlock(
+                safePosition.x,
+                safePosition.y,
+                safePosition.width,
+                safePosition.height,
+                blockId,
+                positions
+              );
+            } catch (fallbackError) {
+              console.error('Error finding fallback position:', fallbackError);
+              // Keep the safe position as fallback
             }
           }
+          
+          // Update the actual position through the parent with error handling
+          if (onUpdatePosition && typeof onUpdatePosition === 'function') {
+            try {
+              onUpdatePosition(blockId, targetPosition);
+            } catch (updateError) {
+              console.error('Error updating block position:', updateError);
+            }
+          } else {
+            console.warn('onUpdatePosition is not available or not a function');
+          }
+        } catch (transitionError) {
+          console.error('Error during position finalization:', transitionError);
         }
-      }
+      });
+    } catch (criticalError) {
+      console.error('Critical error in handleFinalizePosition:', criticalError);
     }
+  }, [onUpdatePosition, positions, gridConfig.columns, clearTempPosition]);
 
-    // Fallback: find any available position
-    for (let y = 0; y < 50; y++) {
-      for (let x = 0; x <= columns - width; x++) {
-        if (isPositionAvailable(x, y, width, height)) {
-          return { x, y, width, height };
-        }
-      }
+
+  // Calculate the total height needed for the grid with error handling
+  let maxY = 0;
+  try {
+    const validPositions = Object.values(currentPositions).filter(pos => pos && typeof pos.y === 'number' && typeof pos.height === 'number');
+    if (validPositions.length > 0) {
+      maxY = Math.max(0, ...validPositions.map((pos) => pos.y + pos.height));
     }
-
-    // Ultimate fallback: return original position (shouldn't happen)
-    return { x: startX, y: startY, width, height };
-  };
-
-  // Calculate the total height needed for the grid using current positions
-  const maxY = Math.max(
-    0,
-    ...Object.values(currentPositions).map((pos) => pos.y + pos.height),
-  );
+  } catch (error) {
+    console.warn('Error calculating grid height:', error);
+    maxY = 8; // Safe fallback
+  }
   const totalRows = Math.max(8, maxY); // Minimum 8 rows for empty sections
 
   const gridStyle = {
@@ -194,6 +207,7 @@ const GridLayout = ({
         onTempPositionUpdate={handleTempPositionUpdate}
         onClearTempPosition={clearTempPosition}
         onFinalizePosition={handleFinalizePosition}
+        allBlockPositions={positions} // Pass all block positions for collision detection
         className={`grid-item ${
           draggingBlocks.has(blockId) ? 'dragging' : ''
         } ${movedBlocks.has(blockId) ? 'moved' : ''} ${
