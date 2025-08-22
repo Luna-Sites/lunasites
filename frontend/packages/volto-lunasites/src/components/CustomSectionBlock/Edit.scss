@@ -75,19 +75,25 @@
 .freeform-layout-container {
   position: relative;
   
-  .freeform-add-button {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
+  // Override the floating button position for freeform mode
+  .floating-add-button-container.freeform-add-button {
+    position: absolute !important;
+    bottom: 1rem;
+    right: 1rem;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
     z-index: 500;
   }
 }
 
 // Linear layout
 .linear-layout {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding-bottom: 4rem; // Space for add button
   
   .linear-block {
     position: relative;
@@ -104,6 +110,16 @@
       border-color: #007bc1;
       background: #f0f8ff;
     }
+  }
+  
+  // Position add button at bottom
+  .floating-add-button-container {
+    position: absolute !important;
+    bottom: 1rem;
+    right: 1rem;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
   }
 }
 

@@ -348,8 +348,11 @@
     position: relative;
     
     // Float add button should be on top
-    & ~ .floating-add-button,
-    .grid-add-button {
+    & ~ .floating-add-button-container,
+    & ~ .freeform-add-button {
+      position: absolute !important;
+      bottom: 1rem;
+      right: 1rem;
       z-index: 500;
     }
   }
