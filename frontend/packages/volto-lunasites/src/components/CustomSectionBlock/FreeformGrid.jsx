@@ -33,7 +33,6 @@ const FreeformGrid = ({
   const POSITION_GRID_SIZE = 10; // Snap position to 10px grid (as percentage)
   const RESIZE_GRID_SIZE = 20; // Snap resize to 20px grid
   const MIN_BLOCK_SIZE = { width: 100, height: 60 }; // Minimum block dimensions in px
-  const MAX_BLOCK_SIZE = { width: 800, height: 600 }; // Maximum block dimensions in px
   const MIN_CONTAINER_HEIGHT = 400; // Minimum container height
   const CONTAINER_PADDING_BOTTOM = 100; // Padding below the lowest block
 
@@ -383,14 +382,8 @@ const FreeformGrid = ({
     }
     
     // Apply constraints including position-based limits
-    newWidth = Math.max(MIN_BLOCK_SIZE.width, Math.min(
-      Math.min(MAX_BLOCK_SIZE.width, maxWidthFromPosition),
-      newWidth
-    ));
-    newHeight = Math.max(MIN_BLOCK_SIZE.height, Math.min(
-      Math.min(MAX_BLOCK_SIZE.height, maxHeightFromPosition),
-      newHeight
-    ));
+    newWidth = Math.max(MIN_BLOCK_SIZE.width, Math.min(maxWidthFromPosition, newWidth));
+    newHeight = Math.max(MIN_BLOCK_SIZE.height, Math.min(maxHeightFromPosition, newHeight));
     
     // Snap to grid for cleaner layouts
     newWidth = Math.round(newWidth / RESIZE_GRID_SIZE) * RESIZE_GRID_SIZE;
