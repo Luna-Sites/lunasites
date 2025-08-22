@@ -1,0 +1,67 @@
+// Simplified CustomSectionBlock View Styles
+.custom-section-block-view {
+  margin: 2rem 0;
+  position: relative; // For freeform positioning
+  
+  .section-title {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+// Freeform View - Absolute positioned blocks
+.freeform-view {
+  position: relative;
+  min-height: 400px; // Maintain height for positioned content
+  width: 100%;
+  
+  .freeform-item {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    
+    // Ensure blocks don't expand
+    .block {
+      width: fit-content !important;
+      height: auto !important;
+      
+      // Images maintain their size
+      &.image img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      
+      // Text blocks have max width
+      &.text,
+      &.slate {
+        max-width: 600px;
+      }
+      
+      // Buttons stay compact
+      &.button,
+      &.__button {
+        width: auto !important;
+      }
+    }
+  }
+}
+
+// Linear View - Traditional vertical stack
+.linear-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  
+  .linear-item {
+    width: 100%;
+    
+    // Blocks use their default sizing in linear mode
+    .block {
+      width: 100%;
+    }
+  }
+}
+

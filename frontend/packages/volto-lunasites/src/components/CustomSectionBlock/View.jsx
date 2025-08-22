@@ -1,132 +1,104 @@
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import config from '@plone/volto/registry';
+import './View.scss';
+import './FreeformGrid.scss';
 
+/**
+ * Simplified CustomSectionBlock View Component
+ * 
+ * Renders blocks in either grid or linear layout without excessive wrappers
+ */
 const CustomSectionBlockView = ({ data, properties }) => {
   const {
+    title = '',
     blocks = {},
-    blocks_layout = {
-      items: [],
-      mode: 'linear',
-      grid: {
-        columns: 12,
-        rowHeight: 60,
-        positions: {},
-      },
-    },
+    blocks_layout = { items: [] },
+    layout_mode = 'freeform', // Default to freeform
   } = data;
+  
+  const isFreeformMode = layout_mode !== 'linear';
 
-  const gridConfig = {
-    columns: blocks_layout.grid?.columns || 12,
-    rowHeight: blocks_layout.grid?.rowHeight || 60,
-    positions: blocks_layout.grid?.positions || {},
-  };
-
-  const isGridMode = blocks_layout.mode === 'grid';
-
+  // Render a single block
   const renderBlock = useCallback((blockId) => {
     const childBlock = blocks[blockId];
     if (!childBlock) return null;
 
     const BlockComponent = config.blocks.blocksConfig?.[childBlock['@type']]?.view;
+    
+    if (!BlockComponent) {
+      return null; // Don't show error in view mode
+    }
 
-    return BlockComponent ? (
+    return (
       <BlockComponent
         data={childBlock}
         properties={properties}
         block={blockId}
       />
-    ) : (
-      <div className="unknown-block">
-        Unknown block type: {childBlock['@type']}
-      </div>
     );
   }, [blocks, properties]);
 
-  const renderGridView = () => {
-    const { columns, rowHeight } = gridConfig;
-    const totalRows = Math.max(1, ...Object.values(gridConfig.positions).map(pos => pos.y + pos.height));
-    
-    const gridStyle = {
-      display: 'grid',
-      gridTemplateColumns: `repeat(${columns}, 1fr)`,
-      gridTemplateRows: `repeat(${totalRows}, ${rowHeight}px)`,
-      gap: '8px',
-    };
-
-    return (
-      <div className="section-blocks grid-layout-view" style={gridStyle}>
-        {blocks_layout.items.map((blockId) => {
-          const position = gridConfig.positions[blockId];
-          if (!position) return null;
-
-          return (
-            <div
-              key={blockId}
-              className="section-child-block"
-              style={{
-                gridColumn: `${position.x + 1} / span ${position.width}`,
-                gridRow: `${position.y + 1} / span ${position.height}`,
-              }}
-            >
-              {renderBlock(blockId)}
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
+  // Don't render empty sections
+  if (blocks_layout.items.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="custom-section-block">
-      {data.title && <h2 className="custom-section-title">{data.title}</h2>}
-
-      {isGridMode ? (
-        renderGridView()
+    <section className={cx('custom-section-block-view', { 'freeform': isFreeformMode })}>
+      {title && <h2 className="section-title">{title}</h2>}
+      
+      {isFreeformMode ? (
+        // Freeform Layout - Absolute positioned blocks
+        <div className="freeform-view">
+          {blocks_layout.items.map((blockId) => {
+            const childBlock = blocks[blockId];
+            if (!childBlock) return null;
+            
+            const position = childBlock.position || { x: 0, y: 0 };
+            
+            return (
+              <div 
+                key={blockId} 
+                className="freeform-item"
+                style={{
+                  position: 'absolute',
+                  left: `${position.x}%`,
+                  top: `${position.y}%`,
+                  width: 'fit-content',
+                  height: 'fit-content',
+                }}
+              >
+                {renderBlock(blockId)}
+              </div>
+            );
+          })}
+        </div>
       ) : (
-        <div className="section-blocks linear-layout">
+        // Linear Layout - Vertical stack
+        <div className="linear-view">
           {blocks_layout.items.map((blockId) => (
-            <div key={blockId} className="section-child-block">
+            <div key={blockId} className="linear-item">
               {renderBlock(blockId)}
             </div>
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 };
 
 CustomSectionBlockView.propTypes = {
   data: PropTypes.shape({
+    title: PropTypes.string,
     blocks: PropTypes.object,
     blocks_layout: PropTypes.shape({
       items: PropTypes.array,
-      mode: PropTypes.oneOf(['linear', 'grid']),
-      grid: PropTypes.shape({
-        columns: PropTypes.number,
-        rowHeight: PropTypes.number,
-        positions: PropTypes.object,
-      }),
     }),
-    title: PropTypes.string,
-  }),
+    layout_mode: PropTypes.string,
+  }).isRequired,
   properties: PropTypes.object,
-};
-
-CustomSectionBlockView.defaultProps = {
-  data: {
-    blocks: {},
-    blocks_layout: {
-      items: [],
-      mode: 'linear',
-      grid: {
-        columns: 12,
-        rowHeight: 60,
-        positions: {},
-      },
-    },
-  },
-  properties: {},
 };
 
 export default CustomSectionBlockView;
