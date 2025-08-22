@@ -224,20 +224,27 @@
   // Size indicator during resize
   .size-indicator {
     position: absolute;
-    top: -32px;
+    top: -36px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.8) 100%);
     color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-family: monospace;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: 'SF Mono', Monaco, monospace;
     white-space: nowrap;
     pointer-events: none;
     z-index: 1001;
     opacity: 0;
     transition: opacity 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    
+    .grid-info {
+      color: #4caf50;
+      font-size: 11px;
+      margin-left: 4px;
+    }
   }
   
   // Show size indicator when resizing

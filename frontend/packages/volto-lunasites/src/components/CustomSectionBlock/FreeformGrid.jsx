@@ -28,7 +28,9 @@ const FreeformGrid = ({
   const [guides, setGuides] = useState({ vertical: [], horizontal: [] });
   const [activeGuides, setActiveGuides] = useState({ vertical: null, horizontal: null });
   const containerRef = useRef(null);
-  const SNAP_THRESHOLD = 10; // pixels
+  const SNAP_THRESHOLD = 10; // pixels for position snapping
+  const POSITION_GRID_SIZE = 10; // Snap position to 10px grid (as percentage)
+  const RESIZE_GRID_SIZE = 20; // Snap resize to 20px grid
   const MIN_BLOCK_SIZE = { width: 100, height: 60 }; // Minimum block dimensions in px
   const MAX_BLOCK_SIZE = { width: 800, height: 600 }; // Maximum block dimensions in px
 
@@ -196,6 +198,12 @@ const FreeformGrid = ({
     // Constrain to container bounds
     newX = Math.max(0, Math.min(100, newX));
     newY = Math.max(0, Math.min(100, newY));
+    
+    // Snap position to grid for cleaner layouts (unless actively snapping to guides)
+    if (!activeGuides.vertical && !activeGuides.horizontal) {
+      newX = Math.round(newX / POSITION_GRID_SIZE) * POSITION_GRID_SIZE;
+      newY = Math.round(newY / POSITION_GRID_SIZE) * POSITION_GRID_SIZE;
+    }
 
     // Update block position
     onUpdateBlockPosition(draggedBlock, { x: newX, y: newY });
@@ -266,6 +274,10 @@ const FreeformGrid = ({
     // Apply constraints
     newWidth = Math.max(MIN_BLOCK_SIZE.width, Math.min(MAX_BLOCK_SIZE.width, newWidth));
     newHeight = Math.max(MIN_BLOCK_SIZE.height, Math.min(MAX_BLOCK_SIZE.height, newHeight));
+    
+    // Snap to grid for cleaner layouts
+    newWidth = Math.round(newWidth / RESIZE_GRID_SIZE) * RESIZE_GRID_SIZE;
+    newHeight = Math.round(newHeight / RESIZE_GRID_SIZE) * RESIZE_GRID_SIZE;
     
     // Get current block data
     const currentBlock = blocks[resizedBlock];
@@ -434,6 +446,7 @@ const FreeformGrid = ({
             {isResizing && (
               <div className="size-indicator">
                 {Math.round(size.width)} × {Math.round(size.height)}px
+                <span className="grid-info"> (Grid: {RESIZE_GRID_SIZE}px)</span>
               </div>
             )}
             

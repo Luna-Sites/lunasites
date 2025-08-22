@@ -39,23 +39,50 @@ const View = (props) => {
   const filled = data.styles?.filled !== false; // Default to true if not specified
   const width = data.styles?.width;
   
-  // Apply size properties from data (unified resize functionality)
-  const fontSize = data.fontSize || 16;
-  const padding = data.padding || 12;
-  const buttonWidth = data.buttonWidth || 'auto';
-  
   // Use container size if available (from our unified resize system)
   const containerSize = data.containerSize;
+  
+  // Calculate dynamic font size based on container size and text length
+  let dynamicFontSize = data.fontSize || 16;
+  let dynamicPadding = data.padding || 12;
+  
+  if (containerSize) {
+    // Get text length to adjust font size accordingly
+    const textLength = (data.title || 'Button').length;
+    
+    // Scale font size based on container dimensions
+    // Use smaller of width/height ratios to ensure text fits
+    const widthRatio = containerSize.width / 200; // Base width of 200px
+    const heightRatio = containerSize.height / 50; // Base height of 50px
+    const scaleRatio = Math.min(widthRatio, heightRatio);
+    
+    // Base font size scales between 10px and 32px
+    let baseFontSize = Math.max(10, Math.min(32, 16 * scaleRatio));
+    
+    // Adjust font size based on text length
+    // For longer text, reduce font size to help it fit better
+    if (textLength > 20) {
+      const lengthFactor = Math.max(0.7, 1 - (textLength - 20) * 0.01);
+      baseFontSize = baseFontSize * lengthFactor;
+    }
+    
+    dynamicFontSize = Math.max(10, baseFontSize);
+    
+    // Padding scales proportionally but less aggressively
+    dynamicPadding = Math.max(4, Math.min(20, 12 * Math.sqrt(scaleRatio)));
+  }
+  
+  const buttonWidth = data.buttonWidth || 'auto';
   
   // Create button styles based on block-specific configuration
   const buttonStyles = {
     ...style,
-    fontSize: `${fontSize}px`,
-    padding: `${padding}px`,
+    fontSize: `${Math.round(dynamicFontSize)}px`,
+    padding: `${Math.round(dynamicPadding)}px ${Math.round(dynamicPadding * 1.5)}px`,
     // Use container size if available, otherwise use individual properties
     ...(containerSize && {
       width: `${containerSize.width}px`,
-      height: `${containerSize.height}px`,
+      height: `${containerSize.height}px`, // Keep fixed height for resizing
     }),
     ...(buttonWidth !== 'auto' && !containerSize && { width: buttonWidth }),
     // Ensure button fills container and centers text
@@ -63,6 +90,18 @@ const View = (props) => {
     alignItems: 'center',
     justifyContent: 'center',
     boxSizing: 'border-box',
+    // Always allow text wrapping to fit within container
+    whiteSpace: 'normal',
+    wordWrap: 'break-word',
+    wordBreak: 'break-word',
+    overflowWrap: 'break-word',
+    overflow: 'hidden', // Keep text within button bounds
+    textAlign: 'center',
+    lineHeight: 1.3,
+    minWidth: '60px',
+    minHeight: '30px',
+    // Ensure text doesn't overflow container width
+    maxWidth: '100%',
   };
 
   // Create container styles - make container fit content

@@ -72,18 +72,23 @@ const calculateImageProperties = (width, height, currentData) => {
  * Calculate button block properties  
  */
 const calculateButtonProperties = (width, height, currentData) => {
-  // Button should fill most of the container
-  const buttonWidth = Math.max(80, width - 20);
+  // Calculate scale ratio based on container dimensions
+  const widthRatio = width / 200; // Base width of 200px
+  const heightRatio = height / 50; // Base height of 50px
+  const scaleRatio = Math.min(widthRatio, heightRatio);
   
-  // Scale padding based on container height
-  const verticalPadding = Math.max(8, Math.min(32, height / 6));
+  // Font size scales between 10px and 32px based on container size
+  const fontSize = Math.max(10, Math.min(32, 16 * scaleRatio));
   
-  // Scale font size based on container size
-  const fontSize = Math.max(12, Math.min(24, Math.min(width / 12, height / 4)));
+  // Padding scales proportionally but less aggressively
+  const padding = Math.max(4, Math.min(20, 12 * Math.sqrt(scaleRatio)));
+  
+  // Button width matches container width
+  const buttonWidth = width;
   
   return {
     buttonWidth: buttonWidth,
-    padding: Math.round(verticalPadding),
+    padding: Math.round(padding),
     fontSize: Math.round(fontSize),
   };
 };
