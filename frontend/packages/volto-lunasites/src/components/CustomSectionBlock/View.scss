@@ -39,7 +39,7 @@
   
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-auto-rows: minmax(60px, auto);
+  grid-auto-rows: 60px; // Fixed row height for consistent sizing
   gap: var(--grid-gap);
   width: 100%;
   
@@ -47,11 +47,15 @@
     background: white;
     border-radius: 4px;
     overflow: hidden;
+    height: 100%; // Fill the grid cell height
+    display: flex; // Use flexbox to ensure content fills container
+    align-items: stretch; // Stretch content to full height
     
     // Allow content to expand
     & > * {
       width: 100%;
       height: 100%;
+      flex: 1; // Ensure content fills flex container
     }
   }
   

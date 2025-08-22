@@ -79,8 +79,8 @@
       // Button resizes based on container - don't force width/height
       // These properties should come from block data
       min-width: auto !important;
-      width: auto !important;
-      height: auto !important;
+      width: 100% !important;  // Fill container width
+      height: 100% !important; // Fill container height
       max-width: 100% !important;
       border: none;
       outline: none;

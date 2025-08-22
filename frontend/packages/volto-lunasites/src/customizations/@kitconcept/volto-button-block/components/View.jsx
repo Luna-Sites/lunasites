@@ -82,9 +82,12 @@ const View = (props) => {
     ...style,
     fontSize: `${Math.round(dynamicFontSize)}px`,
     padding: `${Math.round(dynamicPadding)}px ${Math.round(dynamicPadding * 1.5)}px`,
-    // In grid, don't set explicit dimensions - let CSS handle it
+    // In grid, fill the container completely
     // Otherwise use container size for freeform/linear layouts
-    ...(!isInGrid && containerSize ? {
+    ...(isInGrid ? {
+      width: '100%',
+      height: '100%',
+    } : containerSize ? {
       width: `${containerSize.width}px`,
       height: `${containerSize.height}px`,
     } : {}),
@@ -108,9 +111,10 @@ const View = (props) => {
     maxWidth: '100%',
   };
 
-  // Create container styles - make container fit content
+  // Create container styles - make container fit content or fill grid cell
   const containerStyles = {
-    display: 'inline-block', // Make container fit content size
+    display: isInGrid ? 'block' : 'inline-block', // Fill grid cell when in grid
+    ...(isInGrid && { width: '100%', height: '100%' }), // Explicit full size in grid
     ...(width && { '--button-width': width }),
     ...(buttonWidth !== 'auto' && { '--button-width': buttonWidth }),
   };
@@ -180,7 +184,10 @@ const View = (props) => {
         position: 'relative' // Needed for resize handles positioning
       }}
     >
-      <div className={cx('align', data.inneralign)}>
+      <div 
+        className={cx('align', data.inneralign)}
+        style={isInGrid ? { width: '100%', height: '100%' } : {}}
+      >
         {href && !isEditMode ? (
           isInternal ? (
             <Button
