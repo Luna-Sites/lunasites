@@ -1,0 +1,132 @@
+// Simplified CustomSectionBlock View Styles
+.custom-section-block-view {
+  margin: 2rem 0;
+  position: relative; // For freeform positioning
+  
+  .section-title {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+// Freeform View - Absolute positioned blocks
+.freeform-view {
+  position: relative;
+  min-height: 400px; // Maintain height for positioned content
+  width: 100%;
+  
+  .freeform-item {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    
+    // Ensure blocks don't expand
+    .block {
+      width: fit-content !important;
+      height: auto !important;
+      
+      // Images maintain their size
+      &.image img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      
+      // Text blocks have max width
+      &.text,
+      &.slate {
+        max-width: 600px;
+      }
+      
+      // Buttons stay compact
+      &.button,
+      &.__button {
+        width: auto !important;
+      }
+    }
+  }
+}
+
+// Grid View - Content-aware responsive grid
+.grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-auto-rows: min-content;
+  gap: 1.5rem;
+  
+  .grid-item {
+    // Let content determine size
+    width: 100%;
+    height: auto;
+    
+    // Ensure blocks behave properly
+    .block {
+      width: 100% !important;
+      max-width: none !important;
+      
+      // Images should be responsive
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+      
+      // Buttons shouldn't stretch full width
+      &.button {
+        width: auto !important;
+        display: inline-block;
+      }
+    }
+  }
+}
+
+// Linear View - Traditional vertical stack
+.linear-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  
+  .linear-item {
+    width: 100%;
+    
+    // Blocks use their default sizing in linear mode
+    .block {
+      width: 100%;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (min-width: 768px) {
+  .grid-view {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-view {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+}
+
+// Two column variant
+.custom-section-block-view[data-columns="2"] {
+  .grid-view {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// Three column variant
+.custom-section-block-view[data-columns="3"] {
+  .grid-view {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// Four column variant
+.custom-section-block-view[data-columns="4"] {
+  .grid-view {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

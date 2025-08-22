@@ -1,0 +1,270 @@
+// Freeform Grid - Squarespace-style free positioning
+.freeform-grid {
+  position: relative;
+  width: 100%;
+  min-height: 500px; // Good working space
+  background: linear-gradient(
+    to bottom,
+    rgba(248, 249, 250, 0.5),
+    rgba(248, 249, 250, 0.2)
+  );
+  border: 2px dashed rgba(0, 123, 193, 0.2);
+  border-radius: 8px;
+  overflow: hidden; // Contain absolute positioned blocks
+  
+  // Subtle grid pattern background for visual reference
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      linear-gradient(rgba(0, 123, 193, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 123, 193, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+  }
+}
+
+// Freeform block wrapper - positioned absolutely
+.freeform-block-wrapper {
+  position: absolute;
+  transition: box-shadow 0.2s ease, z-index 0.2s ease;
+  
+  // Ensure block sizes to its content
+  width: fit-content;
+  height: fit-content;
+  max-width: 100%;
+  
+  // Selected state
+  &.selected {
+    box-shadow: 0 0 0 2px #007bc1;
+    border-radius: 4px;
+    
+    .drag-overlay {
+      border: 2px solid #007bc1;
+    }
+  }
+  
+  // Dragging state
+  &.dragging {
+    opacity: 0.8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
+    .block-content {
+      pointer-events: none; // Prevent interaction while dragging
+    }
+  }
+  
+  // Drag overlay - invisible layer for dragging
+  .drag-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    cursor: grab;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: border-color 0.2s ease;
+    
+    &:hover {
+      border-color: rgba(0, 123, 193, 0.3);
+    }
+    
+    &:active {
+      cursor: grabbing;
+    }
+  }
+  
+  // Block content container
+  .block-content {
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    height: fit-content;
+    
+    // Ensure Volto blocks don't expand
+    .block {
+      width: fit-content !important;
+      max-width: none !important;
+      
+      // Special handling for different block types
+      &.image img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      
+      &.text,
+      &.slate {
+        max-width: 600px;
+        word-wrap: break-word;
+      }
+      
+      &.button,
+      &.__button {
+        width: auto !important;
+      }
+    }
+  }
+  
+  // Delete button
+  .delete-block-button {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 28px;
+    height: 28px;
+    background: #ff4444;
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s ease;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    
+    &:hover {
+      background: #cc0000;
+      transform: scale(1.1);
+    }
+  }
+  
+  // Show delete button when selected
+  &.selected .delete-block-button {
+    opacity: 1;
+  }
+  
+  // Resize handles
+  .resize-handle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border: 2px solid #007bc1;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 100;
+    cursor: nwse-resize;
+    
+    &.top-left {
+      top: -6px;
+      left: -6px;
+      cursor: nw-resize;
+    }
+    
+    &.top-right {
+      top: -6px;
+      right: -6px;
+      cursor: ne-resize;
+    }
+    
+    &.bottom-left {
+      bottom: -6px;
+      left: -6px;
+      cursor: sw-resize;
+    }
+    
+    &.bottom-right {
+      bottom: -6px;
+      right: -6px;
+      cursor: se-resize;
+    }
+    
+    &:hover {
+      background: #007bc1;
+    }
+  }
+  
+  // Show resize handles when selected
+  &.selected .resize-handle {
+    opacity: 1;
+  }
+}
+
+// Snap guides
+.snap-guide {
+  position: absolute;
+  background: #4caf50;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+  z-index: 999;
+  
+  &.vertical {
+    width: 1px;
+    top: 0;
+    bottom: 0;
+  }
+  
+  &.horizontal {
+    height: 1px;
+    left: 0;
+    right: 0;
+  }
+  
+  &.active {
+    opacity: 0.8;
+  }
+}
+
+// Empty state
+.freeform-grid .empty-state {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #666;
+  pointer-events: none;
+  
+  p {
+    margin: 0.5rem 0;
+    font-size: 16px;
+    
+    &.hint {
+      font-size: 14px;
+      color: #999;
+    }
+  }
+}
+
+// Animation for blocks appearing
+@keyframes blockAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.freeform-block-wrapper {
+  animation: blockAppear 0.3s ease;
+}
+
+// Ensure proper layering
+.custom-section-block-edit {
+  .freeform-grid {
+    position: relative;
+    
+    // Float add button should be on top
+    & ~ .floating-add-button,
+    .grid-add-button {
+      z-index: 500;
+    }
+  }
+}

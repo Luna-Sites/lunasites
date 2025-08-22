@@ -1,0 +1,249 @@
+// Simple Grid - Clean, content-aware grid layout
+.simple-grid {
+  // Use flexbox for better content sizing
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  min-height: 300px; // Adequate working space
+  background: rgba(248, 249, 250, 0.3);
+  border: 2px dashed rgba(0, 123, 193, 0.2);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+
+  // When empty
+  &:empty::after {
+    content: 'Drop blocks here';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(0, 123, 193, 0.5);
+    font-size: 14px;
+    pointer-events: none;
+  }
+}
+
+// Block wrapper - minimal, content-aware
+.grid-block-wrapper {
+  position: relative;
+  // Remove background and styling - let the block itself handle that
+  transition: all 0.2s ease;
+  cursor: move;
+
+  // Critical: Size EXACTLY to content, no extra space
+  width: fit-content !important;
+  height: fit-content !important;
+  max-width: 100%; // Prevent overflow
+  display: inline-block;
+  
+  // Drag handle - subtle, positioned overlay
+  .drag-handle {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 24px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 123, 193, 0.1);
+    border-radius: 4px;
+    font-size: 12px;
+    color: #007bc1;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+    cursor: grab;
+    user-select: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  // Show handle on hover or when selected
+  &:hover .drag-handle,
+  &.selected .drag-handle {
+    opacity: 1;
+  }
+  
+  // Delete button styling
+  .delete-block-button {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+      background: #cc0000;
+    }
+  }
+  
+  // Show delete button when selected
+  &.selected .delete-block-button {
+    opacity: 1;
+  }
+
+  // Selected state
+  &.selected {
+    box-shadow: 0 0 0 2px #007bc1;
+  }
+
+  // Dragging state
+  &.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+    
+    .block-content {
+      pointer-events: none;
+    }
+  }
+
+  // Drag over state - show drop indicator
+  &.drag-over {
+    box-shadow: 0 0 0 2px #4caf50;
+    transform: scale(1.02);
+  }
+
+  // NO block-content wrapper - we removed this div entirely!
+  // Blocks render directly inside grid-block-wrapper
+}
+
+// Different grid layouts based on viewport
+@media (min-width: 768px) {
+  .simple-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .simple-grid {
+    // Allow more columns on larger screens
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+// Grid layout variations
+.simple-grid {
+  // Two column layout
+  &.two-column {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  // Three column layout  
+  &.three-column {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  // Masonry-style (different heights)
+  &.masonry {
+    grid-auto-flow: dense;
+    grid-auto-rows: auto;
+  }
+}
+
+// Ensure Volto blocks behave properly in grid
+.simple-grid {
+  // Target all Volto blocks directly
+  .block,
+  [class*="block-editor-"] {
+    // Force blocks to size to their content ONLY
+    width: fit-content !important;
+    max-width: 100% !important; // Prevent overflow
+    height: auto !important;
+    display: inline-block !important;
+    
+    // Remove any padding/margin that creates extra space
+    &:not(.text):not(.slate) {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+  }
+  
+  // Images should be responsive but not huge
+  &.image {
+    max-width: 400px;
+    
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  // Text blocks get reasonable width
+  &.text,
+  &.slate {
+    max-width: 600px;
+    word-wrap: break-word;
+  }
+  
+  // Buttons should be compact - CRITICAL FIX
+  &.button,
+  &.__button {
+    width: fit-content !important;
+    height: fit-content !important;
+    display: inline-block !important;
+    
+    // Ensure button wrapper doesn't expand
+    .button-block-wrapper,
+    .block-editor-__button {
+      width: fit-content !important;
+      display: inline-block !important;
+    }
+    
+    // The actual button element
+    button, a.button {
+      width: auto !important;
+      display: inline-block !important;
+    }
+  }
+}
+
+// Animation for reordering
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.grid-block-wrapper {
+  animation: slideIn 0.3s ease;
+}
+
+// Override any Volto default widths that might interfere
+.custom-section-block-edit {
+  .simple-grid {
+    // Force all inner blocks to respect content sizing
+    * {
+      box-sizing: border-box;
+    }
+    
+    // Reset any full-width defaults from Volto
+    .ui.segment,
+    .ui.container {
+      width: auto !important;
+      max-width: none !important;
+    }
+  }
+}

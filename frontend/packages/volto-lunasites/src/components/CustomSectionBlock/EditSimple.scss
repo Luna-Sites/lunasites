@@ -1,0 +1,201 @@
+// Simplified CustomSectionBlock Edit Styles
+.custom-section-block-edit {
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  
+  &.selected {
+    box-shadow: 0 0 0 2px #007bc1;
+  }
+}
+
+// Section header with title and layout toggle
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  
+  .section-title-input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    
+    &:focus {
+      outline: none;
+      border-color: #007bc1;
+    }
+  }
+  
+  .layout-toggle {
+    padding: 0.5rem 1rem;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: #e0e0e0;
+    }
+    
+    &.mode-freeform {
+      background: #4caf50;
+      color: white;
+      border-color: #4caf50;
+    }
+    
+    &.mode-grid {
+      background: #007bc1;
+      color: white;
+      border-color: #007bc1;
+    }
+    
+    &.mode-linear {
+      background: #ff9800;
+      color: white;
+      border-color: #ff9800;
+    }
+  }
+}
+
+// Empty state
+.empty-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  
+  .empty-message {
+    margin-top: 1rem;
+    color: #666;
+    font-size: 14px;
+  }
+}
+
+// Freeform layout container
+.freeform-layout-container {
+  position: relative;
+  
+  .freeform-add-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 500;
+  }
+}
+
+// Grid layout container
+.grid-layout-container {
+  position: relative;
+  min-height: 300px; // Ensure reasonable working space
+  
+  .grid-add-button {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 10;
+  }
+}
+
+// Linear layout
+.linear-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  
+  .linear-block {
+    position: relative;
+    padding: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: #f5f5f5;
+    }
+    
+    &.selected {
+      border-color: #007bc1;
+      background: #f0f8ff;
+    }
+  }
+}
+
+// Block wrapper for both layouts
+.block-wrapper {
+  position: relative;
+  
+  // Delete button
+  .delete-block-button {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 24px;
+    height: 24px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+    
+    &:hover {
+      background: #cc0000;
+    }
+  }
+  
+  &:hover .delete-block-button {
+    opacity: 1;
+  }
+}
+
+// Ensure Volto blocks behave properly
+.custom-section-block-edit {
+  // Reset block widths for grid mode
+  .simple-grid .block {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  
+  // Keep full width for linear mode
+  .linear-layout .block {
+    width: 100%;
+  }
+  
+  // Fix specific block types
+  .block {
+    &.image img {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    &.button {
+      // Buttons should not be full width in grid
+      .simple-grid & {
+        width: auto !important;
+        
+        .button-block-wrapper {
+          display: inline-block;
+        }
+      }
+    }
+    
+    &.text,
+    &.slate {
+      // Ensure text wraps properly
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+  }
+}
