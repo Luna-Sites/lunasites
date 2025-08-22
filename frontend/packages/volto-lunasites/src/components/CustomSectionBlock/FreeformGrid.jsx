@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import { unifiedBlockResize, initializeBlockSizing, getDefaultContainerSize } from './utils/contentPropertyCalculator';
 import './FreeformGrid.scss';
 
 /**
@@ -13,6 +14,7 @@ const FreeformGrid = ({
   blocks,
   blocksLayout,
   onUpdateBlockPosition,
+  onUpdateBlockSize, // New prop for size updates
   selectedBlock,
   onSelectBlock,
   renderBlock,
@@ -21,10 +23,14 @@ const FreeformGrid = ({
 }) => {
   const [draggedBlock, setDraggedBlock] = useState(null);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [resizedBlock, setResizedBlock] = useState(null);
+  const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0, handle: null });
   const [guides, setGuides] = useState({ vertical: [], horizontal: [] });
   const [activeGuides, setActiveGuides] = useState({ vertical: null, horizontal: null });
   const containerRef = useRef(null);
   const SNAP_THRESHOLD = 10; // pixels
+  const MIN_BLOCK_SIZE = { width: 100, height: 60 }; // Minimum block dimensions in px
+  const MAX_BLOCK_SIZE = { width: 800, height: 600 }; // Maximum block dimensions in px
 
   // Get or initialize position for a block
   const getBlockPosition = useCallback((blockId) => {
@@ -33,6 +39,15 @@ const FreeformGrid = ({
     
     // Use stored position or default
     return block.position || { x: 0, y: 0 };
+  }, [blocks]);
+
+  // Get or initialize container size for a block
+  const getBlockSize = useCallback((blockId) => {
+    const block = blocks[blockId];
+    if (!block) return { width: 200, height: 150 }; // Default size in px
+    
+    // Use stored container size or calculate default based on block type
+    return block.containerSize || getDefaultContainerSize(block['@type'] || 'text');
   }, [blocks]);
 
   // Generate alignment guides from all blocks
@@ -193,7 +208,86 @@ const FreeformGrid = ({
     setActiveGuides({ vertical: null, horizontal: null });
   }, []);
 
-  // Set up global mouse event listeners
+  // Handle resize start
+  const handleResizeStart = useCallback((e, blockId, handle) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const container = containerRef.current;
+    if (!container) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const blockSize = getBlockSize(blockId);
+    
+    setResizedBlock(blockId);
+    setResizeStart({
+      x: e.clientX,
+      y: e.clientY,
+      width: blockSize.width,
+      height: blockSize.height,
+      handle: handle
+    });
+    onSelectBlock(blockId);
+  }, [getBlockSize, onSelectBlock]);
+
+  // Handle resize move with unified system
+  const handleResizeMove = useCallback((e) => {
+    if (!resizedBlock || !containerRef.current || !onUpdateBlockSize) return;
+
+    const container = containerRef.current;
+    const containerRect = container.getBoundingClientRect();
+    
+    const deltaX = e.clientX - resizeStart.x;
+    const deltaY = e.clientY - resizeStart.y;
+    
+    let newWidth = resizeStart.width;
+    let newHeight = resizeStart.height;
+    
+    // Calculate new dimensions based on resize handle
+    switch (resizeStart.handle) {
+      case 'bottom-right':
+        newWidth = resizeStart.width + deltaX;
+        newHeight = resizeStart.height + deltaY;
+        break;
+      case 'bottom-left':
+        newWidth = resizeStart.width - deltaX;
+        newHeight = resizeStart.height + deltaY;
+        break;
+      case 'top-right':
+        newWidth = resizeStart.width + deltaX;
+        newHeight = resizeStart.height - deltaY;
+        break;
+      case 'top-left':
+        newWidth = resizeStart.width - deltaX;
+        newHeight = resizeStart.height - deltaY;
+        break;
+    }
+    
+    // Apply constraints
+    newWidth = Math.max(MIN_BLOCK_SIZE.width, Math.min(MAX_BLOCK_SIZE.width, newWidth));
+    newHeight = Math.max(MIN_BLOCK_SIZE.height, Math.min(MAX_BLOCK_SIZE.height, newHeight));
+    
+    // Get current block data
+    const currentBlock = blocks[resizedBlock];
+    if (!currentBlock) return;
+    
+    // Use unified resize system to update both container and content
+    const updatedBlockData = unifiedBlockResize(currentBlock, {
+      width: newWidth,
+      height: newHeight
+    });
+    
+    // Update with unified data (container size + content properties)
+    onUpdateBlockSize(resizedBlock, updatedBlockData);
+  }, [resizedBlock, resizeStart, onUpdateBlockSize, blocks]);
+
+  // Handle resize end
+  const handleResizeEnd = useCallback(() => {
+    setResizedBlock(null);
+    setResizeStart({ x: 0, y: 0, width: 0, height: 0, handle: null });
+  }, []);
+
+  // Set up global mouse event listeners for dragging
   useEffect(() => {
     if (draggedBlock) {
       document.addEventListener('mousemove', handleMouseMove);
@@ -209,6 +303,21 @@ const FreeformGrid = ({
       };
     }
   }, [draggedBlock, handleMouseMove, handleMouseUp]);
+
+  // Set up global mouse event listeners for resizing
+  useEffect(() => {
+    if (resizedBlock) {
+      document.addEventListener('mousemove', handleResizeMove);
+      document.addEventListener('mouseup', handleResizeEnd);
+      document.body.style.userSelect = 'none';
+      
+      return () => {
+        document.removeEventListener('mousemove', handleResizeMove);
+        document.removeEventListener('mouseup', handleResizeEnd);
+        document.body.style.userSelect = '';
+      };
+    }
+  }, [resizedBlock, handleResizeMove, handleResizeEnd]);
 
   // Handle block selection
   const handleBlockClick = useCallback((e, blockId) => {
@@ -248,8 +357,10 @@ const FreeformGrid = ({
         if (!block) return null;
 
         const position = getBlockPosition(blockId);
+        const size = getBlockSize(blockId);
         const isSelected = selectedBlock === blockId;
         const isDragging = draggedBlock === blockId;
+        const isResizing = resizedBlock === blockId;
 
         return (
           <div
@@ -257,14 +368,17 @@ const FreeformGrid = ({
             className={cx('freeform-block-wrapper', {
               'selected': isSelected,
               'dragging': isDragging,
+              'resizing': isResizing,
             })}
             style={{
               position: 'absolute',
               left: `${position.x}%`,
               top: `${position.y}%`,
+              width: `${size.width}px`,
+              height: `${size.height}px`,
               transform: 'translate(0, 0)', // Start from exact position
-              cursor: isDragging ? 'grabbing' : 'grab',
-              zIndex: isDragging ? 1000 : isSelected ? 100 : 1,
+              cursor: isDragging ? 'grabbing' : isResizing ? 'resizing' : 'grab',
+              zIndex: isDragging || isResizing ? 1000 : isSelected ? 100 : 1,
             }}
             onClick={(e) => handleBlockClick(e, blockId)}
             data-block-id={blockId}
@@ -293,11 +407,34 @@ const FreeformGrid = ({
             {/* Resize handles when selected */}
             {isSelected && (
               <>
-                <div className="resize-handle top-left" data-resize="top-left" />
-                <div className="resize-handle top-right" data-resize="top-right" />
-                <div className="resize-handle bottom-left" data-resize="bottom-left" />
-                <div className="resize-handle bottom-right" data-resize="bottom-right" />
+                <div 
+                  className="resize-handle top-left" 
+                  data-resize="top-left"
+                  onMouseDown={(e) => handleResizeStart(e, blockId, 'top-left')}
+                />
+                <div 
+                  className="resize-handle top-right" 
+                  data-resize="top-right"
+                  onMouseDown={(e) => handleResizeStart(e, blockId, 'top-right')}
+                />
+                <div 
+                  className="resize-handle bottom-left" 
+                  data-resize="bottom-left"
+                  onMouseDown={(e) => handleResizeStart(e, blockId, 'bottom-left')}
+                />
+                <div 
+                  className="resize-handle bottom-right" 
+                  data-resize="bottom-right"
+                  onMouseDown={(e) => handleResizeStart(e, blockId, 'bottom-right')}
+                />
               </>
+            )}
+
+            {/* Size indicator during resize */}
+            {isResizing && (
+              <div className="size-indicator">
+                {Math.round(size.width)} × {Math.round(size.height)}px
+              </div>
             )}
             
             {/* Block content */}
@@ -325,6 +462,7 @@ FreeformGrid.propTypes = {
     items: PropTypes.array.isRequired,
   }).isRequired,
   onUpdateBlockPosition: PropTypes.func.isRequired,
+  onUpdateBlockSize: PropTypes.func, // Prop for unified size/content updates
   selectedBlock: PropTypes.string,
   onSelectBlock: PropTypes.func,
   renderBlock: PropTypes.func.isRequired,

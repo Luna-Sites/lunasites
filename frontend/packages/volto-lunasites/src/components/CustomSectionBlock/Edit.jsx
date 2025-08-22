@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 import cx from 'classnames';
 import FreeformGrid from './FreeformGrid';
 import FloatingAddButton from '../FloatingAddButton';
+import { initializeBlockSizing } from './utils/contentPropertyCalculator';
 import './Edit.scss';
 
 /**
@@ -44,15 +45,18 @@ const CustomSectionBlockEdit = ({
     });
   }, [isFreeformMode, data, block, onChangeBlock]);
 
-  // Add new block
+  // Add new block with proper initialization
   const handleAddBlock = useCallback((blockData) => {
     const blockId = uuid();
     
-    // For freeform mode, add default position
-    const enhancedBlockData = {
+    // Initialize block with unified sizing system
+    let enhancedBlockData = {
       ...blockData,
       position: blockData.position || { x: 10, y: 10 }, // Default position
     };
+    
+    // Add container size and content properties
+    enhancedBlockData = initializeBlockSizing(enhancedBlockData);
     
     const newBlocks = {
       ...blocks,
@@ -91,6 +95,20 @@ const CustomSectionBlockEdit = ({
         [blockId]: {
           ...blocks[blockId],
           position,
+        },
+      },
+    });
+  }, [blocks, data, block, onChangeBlock]);
+
+  // Handle unified block size and content update
+  const handleUpdateBlockSize = useCallback((blockId, updatedBlockData) => {
+    onChangeBlock(block, {
+      ...data,
+      blocks: {
+        ...blocks,
+        [blockId]: {
+          ...blocks[blockId],
+          ...updatedBlockData, // Contains containerSize + content properties
         },
       },
     });
@@ -190,6 +208,7 @@ const CustomSectionBlockEdit = ({
             blocks={blocks}
             blocksLayout={blocks_layout}
             onUpdateBlockPosition={handleUpdateBlockPosition}
+            onUpdateBlockSize={handleUpdateBlockSize}
             selectedBlock={selectedChildBlock}
             onSelectBlock={setSelectedChildBlock}
             renderBlock={renderBlock}

@@ -39,18 +39,30 @@ const View = (props) => {
   const filled = data.styles?.filled !== false; // Default to true if not specified
   const width = data.styles?.width;
   
-  // Apply size properties from data (new resize functionality)
+  // Apply size properties from data (unified resize functionality)
   const fontSize = data.fontSize || 16;
   const padding = data.padding || 12;
   const buttonWidth = data.buttonWidth || 'auto';
   
+  // Use container size if available (from our unified resize system)
+  const containerSize = data.containerSize;
+  
   // Create button styles based on block-specific configuration
   const buttonStyles = {
     ...style,
-    width: undefined,
     fontSize: `${fontSize}px`,
     padding: `${padding}px`,
-    ...(buttonWidth !== 'auto' && { width: buttonWidth }),
+    // Use container size if available, otherwise use individual properties
+    ...(containerSize && {
+      width: `${containerSize.width}px`,
+      height: `${containerSize.height}px`,
+    }),
+    ...(buttonWidth !== 'auto' && !containerSize && { width: buttonWidth }),
+    // Ensure button fills container and centers text
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxSizing: 'border-box',
   };
 
   // Create container styles - make container fit content

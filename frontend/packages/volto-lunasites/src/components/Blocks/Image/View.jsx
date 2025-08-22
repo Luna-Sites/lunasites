@@ -39,9 +39,14 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
     data.description ||
     (data?.copyright_and_sources ?? data.credit?.data);
 
-  // Apply image-specific resize properties
+  // Apply image-specific resize properties (unified system)
+  const containerSize = data.containerSize;
   const imageWidth = data.imageWidth && data.imageWidth !== 'auto' ? data.imageWidth : null;
   const imageHeight = data.imageHeight && data.imageHeight !== 'auto' ? data.imageHeight : null;
+  
+  // Use container size if available, otherwise use individual properties
+  const finalWidth = containerSize ? containerSize.width : imageWidth;
+  const finalHeight = containerSize ? containerSize.height : imageHeight;
   
   // Get the resize configuration for image blocks (only in edit mode)
   const resizeConfig = isEditMode ? getResizeConfig('image') : null;
@@ -97,9 +102,9 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
                   //   small: data.size === 's',
                   // })}
                   style={{
-                    ...(imageWidth && { width: imageWidth }),
-                    ...(imageHeight && { height: imageHeight }),
-                    ...(imageWidth || imageHeight ? { objectFit: 'cover' } : {}), // Only apply objectFit when resizing
+                    ...(finalWidth && { width: `${finalWidth}px` }),
+                    ...(finalHeight && { height: `${finalHeight}px` }),
+                    ...(finalWidth || finalHeight ? { objectFit: 'cover' } : {}), // Only apply objectFit when resizing
                   }}
                   item={
                     data.image_scales

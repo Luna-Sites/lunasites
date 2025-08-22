@@ -33,9 +33,10 @@
   position: absolute;
   transition: box-shadow 0.2s ease, z-index 0.2s ease;
   
-  // Ensure block sizes to its content
-  width: fit-content;
-  height: fit-content;
+  // Use explicit dimensions for proper resizing
+  // Width and height are set via inline styles
+  min-width: 60px;
+  min-height: 40px;
   max-width: 100%;
   
   // Selected state
@@ -55,6 +56,19 @@
     
     .block-content {
       pointer-events: none; // Prevent interaction while dragging
+    }
+  }
+  
+  // Resizing state
+  &.resizing {
+    box-shadow: 0 0 0 2px #ff9800;
+    
+    .block-content {
+      pointer-events: none; // Prevent interaction while resizing
+    }
+    
+    .drag-overlay {
+      pointer-events: none; // Disable dragging while resizing
     }
   }
   
@@ -84,30 +98,45 @@
   .block-content {
     position: relative;
     z-index: 1;
-    width: fit-content;
-    height: fit-content;
+    width: 100%;
+    height: 100%;
     
-    // Ensure Volto blocks don't expand
+    // Ensure Volto blocks fill the container
     .block {
-      width: fit-content !important;
-      max-width: none !important;
+      width: 100% !important;
+      height: 100% !important;
       
       // Special handling for different block types
-      &.image img {
-        max-width: 100%;
-        height: auto;
-        display: block;
+      &.image {
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
       }
       
       &.text,
       &.slate {
-        max-width: 600px;
-        word-wrap: break-word;
+        overflow: hidden;
+        
+        // Scale font size based on container size
+        .slate-editor {
+          font-size: calc(12px + 0.5vw);
+          line-height: 1.4;
+        }
       }
       
       &.button,
       &.__button {
-        width: auto !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        .ui.button {
+          flex: 1;
+          height: 100%;
+        }
       }
     }
   }
@@ -191,6 +220,30 @@
   &.selected .resize-handle {
     opacity: 1;
   }
+  
+  // Size indicator during resize
+  .size-indicator {
+    position: absolute;
+    top: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: monospace;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1001;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  // Show size indicator when resizing
+  &.resizing .size-indicator {
+    opacity: 1;
+  }
 }
 
 // Snap guides
@@ -254,6 +307,11 @@
 
 .freeform-block-wrapper {
   animation: blockAppear 0.3s ease;
+  
+  // Smooth transitions for size changes
+  &:not(.resizing) {
+    transition: width 0.2s ease, height 0.2s ease;
+  }
 }
 
 // Ensure proper layering
