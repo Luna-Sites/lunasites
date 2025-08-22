@@ -10,7 +10,7 @@
   );
   border: 2px dashed rgba(0, 123, 193, 0.2);
   border-radius: 8px;
-  overflow: hidden; // Contain absolute positioned blocks
+  overflow: visible; // Allow handles to show outside grid
   
   // Subtle grid pattern background for visual reference
   &::before {
@@ -186,7 +186,7 @@
     border-radius: 50%;
     opacity: 0;
     transition: opacity 0.2s ease;
-    z-index: 100;
+    z-index: 1000; // Higher z-index to ensure visibility
     cursor: nwse-resize;
     
     &.top-left {

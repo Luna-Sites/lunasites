@@ -52,10 +52,12 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
   const containerStyles = hasImage && hasBeenResized ? {
     width: `${containerSize.width}px`,
     height: `${containerSize.height}px`,
-    display: 'block',
-    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     position: 'relative',
     backgroundColor: '#f5f5f5', // Light gray for empty space
+    // Don't use overflow at all - let CSS handle image sizing
   } : {
     display: 'inline-block',
     position: 'relative',
@@ -104,11 +106,14 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
                   },
                 )}
                 style={{
+                  margin: 0,
                   ...(hasBeenResized ? {
                     width: '100%',
                     height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   } : {}),
-                  margin: 0,
                 }}
               >
                 <Image
@@ -120,9 +125,11 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
                   //   small: data.size === 's',
                   // })}
                   style={hasBeenResized ? {
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain', // Always use contain to show full image
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain', // Fit within container
                     display: 'block',
                   } : {
                     maxWidth: '100%',
