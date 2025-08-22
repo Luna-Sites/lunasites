@@ -51,6 +51,9 @@ importers:
       '@eeacms/volto-tags-block':
         specifier: '*'
         version: 3.0.1
+      '@eeacms/volto-timeline-block':
+        specifier: 2.0.1
+        version: 2.0.1
       '@kitconcept/volto-banner-block':
         specifier: '*'
         version: 1.0.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -114,6 +117,9 @@ importers:
       remixicon:
         specifier: ^4.3.0
         version: 4.6.0
+      volto-form-block:
+        specifier: 3.13.0
+        version: 3.13.0(@plone/volto@core+packages+volto)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(volto-subblocks@2.1.0(@plone/volto@core+packages+volto)(react@18.2.0))
       volto-lunasites:
         specifier: workspace:*
         version: link:packages/volto-lunasites
@@ -2808,6 +2814,9 @@ packages:
   '@eeacms/volto-tags-block@3.0.1':
     resolution: {integrity: sha512-uLFkvIA0ZUnBhMX506wyiiYZDAFkmNaU/nwYFuzvJJISjz+mP0wKIaWd52GiPc6YZvaU65bwAC2wQyBvG6xTPA==}
 
+  '@eeacms/volto-timeline-block@2.0.1':
+    resolution: {integrity: sha512-DnpXj+KSK/AiLfKLyafeLQvfp6aFuDSfe/49wNt1WTUllHSYW7ftiPD3nmHIUaOKOqCB2x+FmdGbS6abKsrT1w==}
+
   '@eeacms/volto-widget-theme-picker@2.0.0':
     resolution: {integrity: sha512-f3+B7ATw0EoehO2rqU9NZoJABBtFUGy+zDGynm7MCSsfWcy6yafmCsOw2MKssBFXkgBicfpLLdE8ESEEITy6aA==}
 
@@ -3223,6 +3232,12 @@ packages:
 
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
+
+  '@hcaptcha/react-hcaptcha@0.3.10':
+    resolution: {integrity: sha512-lpxQGKFFPf5fzieY6Z1Hik5zGvXu6GGUnZdmjeGWB+OjzY2ucTPxfN3biPCfy18Od6YKdkkSUZUyteVLdUbigA==}
+    peerDependencies:
+      react: '>= 16.3.0'
+      react-dom: '>= 16.3.0'
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -5038,6 +5053,17 @@ packages:
     resolution: {integrity: sha512-izX+5CnkpON3NQGcEm3/d7LfFQNo9ZpFtX2QsINgCYK9LT2VCIdi8D3bMaMSNhrAJCznRoAkFic76uvLroALBw==}
     peerDependencies:
       react: ^18 || ^19
+
+  '@tanstack/react-table@8.21.2':
+    resolution: {integrity: sha512-11tNlEDTdIhMJba2RBH+ecJ9l1zgS2kjmexDPAraulc8jeNA4xocSNeyzextT0XJyASil4XsCYlJmf5jEWAtYg==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+
+  '@tanstack/table-core@8.21.2':
+    resolution: {integrity: sha512-uvXk/U4cBiFMxt+p9/G7yUWI/UbHYbyghLCjlpWZ3mLeIZiUBSKcUnw9UnKkdRz7Z/N4UBuFLWQdJCjUe7HjvA==}
+    engines: {node: '>=12'}
 
   '@testing-library/cypress@10.0.1':
     resolution: {integrity: sha512-e8uswjTZIBhaIXjzEcrQQ8nHRWHgZH7XBxKuIWxZ/T7FxfWhCR48nFhUX5nfPizjVOKSThEfOSv67jquc1ASkw==}
@@ -8553,6 +8579,9 @@ packages:
     engines: {node: '>= 8.9.0'}
     peerDependencies:
       webpack: ^4.0.0
+
+  file-saver@2.0.5:
+    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
 
   file-selector@0.1.19:
     resolution: {integrity: sha512-kCWw3+Aai8Uox+5tHCNgMFaUdgidxvMnLWO6fM5sZ0hA2wlHP5/DHGF0ECe84BiB95qdJbKNEJhWKVDvMN+JDQ==}
@@ -12783,6 +12812,12 @@ packages:
   react-ga4@2.1.0:
     resolution: {integrity: sha512-ZKS7PGNFqqMd3PJ6+C2Jtz/o1iU9ggiy8Y8nUeksgVuvNISbmrQtJiZNvC/TjDsqD0QlU5Wkgs7i+w9+OjHhhQ==}
 
+  react-google-recaptcha-v3@1.11.0:
+    resolution: {integrity: sha512-kLQqpz/77m8+trpBwzqcxNtvWZYoZ/YO6Vm2cVTHW8hs80BWUfDpC7RDwuAvpswwtSYApWfaSpIDFWAIBNIYxQ==}
+    peerDependencies:
+      react: ^16.3 || ^17.0 || ^18.0 || ^19.0
+      react-dom: ^17.0 || ^18.0 || ^19.0
+
   react-image-gallery@1.2.7:
     resolution: {integrity: sha512-ts7yMWykvZhslGMuvVAUk7a1dJIx9QtIwK6Clv8dOGxPsJid92FRrLvXbZDvkYcUyj48sHalnBhqU6mZNCB2jg==}
     peerDependencies:
@@ -15133,6 +15168,17 @@ packages:
       jsdom:
         optional: true
 
+  volto-form-block@3.13.0:
+    resolution: {integrity: sha512-gjoiy9/d2DItFwCm4HEYiYtsnixSZun2Lx2GjFyZlPVD1a+BWCgHKmy+YMNfF1a3qGsZd9+af9PkRByavECGZQ==}
+    peerDependencies:
+      '@plone/volto': '>=16.0.0-alpha.38'
+      volto-subblocks: ^2.1.0
+
+  volto-subblocks@2.1.0:
+    resolution: {integrity: sha512-AlhMb+PacQRGCIY/xc7p1zr3RhN64An/+ckVQ2YOytIVOtoChMUwxxSIj5Fkz7uScgIlzL/n976QqJlIf4k0rg==}
+    peerDependencies:
+      '@plone/volto': '>=16.0.0-alpha.38'
+
   vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}
 
@@ -16822,6 +16868,8 @@ snapshots:
 
   '@eeacms/volto-tags-block@3.0.1': {}
 
+  '@eeacms/volto-timeline-block@2.0.1': {}
+
   '@eeacms/volto-widget-theme-picker@2.0.0': {}
 
   '@emnapi/core@1.4.3':
@@ -17137,6 +17185,11 @@ snapshots:
   '@hapi/topo@5.1.0':
     dependencies:
       '@hapi/hoek': 9.3.0
+
+  '@hcaptcha/react-hcaptcha@0.3.10(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
@@ -20174,6 +20227,14 @@ snapshots:
     dependencies:
       '@tanstack/query-core': 5.80.6
       react: 18.2.0
+
+  '@tanstack/react-table@8.21.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@tanstack/table-core': 8.21.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+
+  '@tanstack/table-core@8.21.2': {}
 
   '@testing-library/cypress@10.0.1(cypress@13.13.2)':
     dependencies:
@@ -24800,6 +24861,8 @@ snapshots:
       loader-utils: 1.4.2
       schema-utils: 2.7.1
       webpack: 5.90.1
+
+  file-saver@2.0.5: {}
 
   file-selector@0.1.19:
     dependencies:
@@ -30379,6 +30442,12 @@ snapshots:
 
   react-ga4@2.1.0: {}
 
+  react-google-recaptcha-v3@1.11.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      hoist-non-react-statics: 3.3.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+
   react-image-gallery@1.2.7(react@18.2.0):
     dependencies:
       react: 18.2.0
@@ -33681,6 +33750,26 @@ snapshots:
       - supports-color
       - terser
     optional: true
+
+  volto-form-block@3.13.0(@plone/volto@core+packages+volto)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(volto-subblocks@2.1.0(@plone/volto@core+packages+volto)(react@18.2.0)):
+    dependencies:
+      '@hcaptcha/react-hcaptcha': 0.3.10(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@plone/volto': link:core/packages/volto
+      '@tanstack/react-table': 8.21.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      file-saver: 2.0.5
+      react-google-recaptcha-v3: 1.11.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      volto-subblocks: 2.1.0(@plone/volto@core+packages+volto)(react@18.2.0)
+    transitivePeerDependencies:
+      - react
+      - react-dom
+
+  volto-subblocks@2.1.0(@plone/volto@core+packages+volto)(react@18.2.0):
+    dependencies:
+      '@plone/volto': link:core/packages/volto
+      react-dnd: 5.0.0(react@18.2.0)
+      react-dnd-html5-backend: 5.0.1
+    transitivePeerDependencies:
+      - react
 
   vue-template-compiler@2.7.16:
     dependencies:

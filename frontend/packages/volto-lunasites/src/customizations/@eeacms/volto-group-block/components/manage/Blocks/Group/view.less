@@ -6,7 +6,7 @@
   max-width: none !important;
   margin-right: auto !important;
   margin-left: auto !important;
-  width: 95% !important;
+  width: 100% !important;
 
   // Ensure inner content respects container dimensions
   .ui.drag.block.inner.group {
@@ -50,8 +50,11 @@
   width: 100% !important;
 }
 
-// Content inside respects container dimensions - only apply to first level blocks-group-wrapper
-.blocks-group-wrapper:not(.blocks-group-wrapper .blocks-group-wrapper) > * {
+// Content inside respects container dimensions - only apply to first level blocks-group-wrapper, exclude footer
+.blocks-group-wrapper:not(.blocks-group-wrapper .blocks-group-wrapper):not(
+    footer .blocks-group-wrapper
+  )
+  > * {
   max-width: var(--layout-container-width);
   margin-right: auto;
   margin-left: auto;

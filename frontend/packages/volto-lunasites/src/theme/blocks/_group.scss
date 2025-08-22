@@ -9,14 +9,14 @@
     border: 2px solid #e0e6ed;
     border-radius: 8px;
     padding: 2rem;
-    background-color: #fafbfc;
+
     transition: all 0.2s ease;
     position: relative;
     min-height: 120px;
 
     &:hover {
       border-color: #094ce1;
-      background-color: #f8fafc;
+
       box-shadow: 0 2px 8px rgba(9, 76, 225, 0.1);
     }
 

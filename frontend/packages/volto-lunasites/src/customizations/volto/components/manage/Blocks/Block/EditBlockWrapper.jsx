@@ -41,6 +41,13 @@ const EditBlockWrapper = (props) => {
   const customSectionsState = useSelector(state => state.customSections);
   const [showSaveModal, setShowSaveModal] = React.useState(false);
 
+  // Fetch custom sections when component mounts if not already loaded
+  React.useEffect(() => {
+    if (!customSectionsState?.loaded && !customSectionsState?.loading) {
+      dispatch(getCustomSections());
+    }
+  }, [customSectionsState?.loaded, customSectionsState?.loading, dispatch]);
+
   // Close modal when save is successful
   React.useEffect(() => {
     if (saveState?.loaded && showSaveModal) {

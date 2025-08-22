@@ -9,7 +9,6 @@ const addons = [
   '@kitconcept/volto-logos-block',
   '@kitconcept/volto-separator-block',
   '@kitconcept/volto-slider-block',
-  // '@eeacms/volto-tabs-block',
   '@eeacms/volto-group-block',
   '@eeacms/volto-columns-block',
   '@eeacms/volto-block-divider',
@@ -20,12 +19,14 @@ const addons = [
   '@eeacms/volto-metadata-block',
   '@eeacms/volto-quote-block',
   '@eeacms/volto-tags-block',
+  '@eeacms/volto-timeline-block',
   '@plone-collective/volto-footer',
   'lunasites-advanced-styling',
   'volto-lunasites',
   'luna-super-listing',
   'luna-super-hero',
   'luna-super-tabs',
+  'volto-form-block',
 ];
 
 module.exports = {

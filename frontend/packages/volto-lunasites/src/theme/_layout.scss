@@ -93,7 +93,7 @@ footer {
 }
 
 // Container definitions for elements - only apply to first level blocks, not nested ones
-#page-document > .blocks-group-wrapper > * {
+#page-document > .blocks-group-wrapper:not(footer .blocks-group-wrapper) > * {
   @include layout-container-width();
 }
 

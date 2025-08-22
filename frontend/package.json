@@ -61,13 +61,15 @@
     "@eeacms/volto-metadata-block": "*",
     "@eeacms/volto-quote-block": "2.0.1",
     "@eeacms/volto-tags-block": "*",
+    "@eeacms/volto-timeline-block": "2.0.1",
     "react-aria-components": "^1.7.0",
     "luna-super-listing": "*",
     "luna-super-hero": "*",
     "luna-super-tabs": "*",
     "lunasites-advanced-styling": "workspace:*",
     "remixicon": "^4.3.0",
-    "react-resize-detector": "12.1.0"
+    "react-resize-detector": "12.1.0",
+    "volto-form-block": "3.13.0"
   },
   "devDependencies": {
     "mrs-developer": "^2.2.0",
