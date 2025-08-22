@@ -48,21 +48,6 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
   // Check if user has explicitly resized via containerSize
   const hasBeenResized = !!containerSize;
   
-  // Container styles - only apply sizing when explicitly resized
-  const containerStyles = hasImage && hasBeenResized ? {
-    width: `${containerSize.width}px`,
-    height: `${containerSize.height}px`,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    backgroundColor: '#f5f5f5', // Light gray for empty space
-    // Don't use overflow at all - let CSS handle image sizing
-  } : {
-    display: 'inline-block',
-    position: 'relative',
-  };
-  
   // Get the resize configuration for image blocks (only in edit mode)
   const resizeConfig = isEditMode ? getResizeConfig('image') : null;
 
@@ -73,16 +58,13 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
         {
           center: !Boolean(data.align),
           detached,
-          'edit-mode': isEditMode,
+          'has-container-size': hasBeenResized, // Mark for CSS to handle
         },
         data.align,
         className,
       )}
-      style={{
-        ...style,
-        ...containerStyles,
-        position: 'relative', // Needed for resize handles positioning
-      }}
+      data-has-container-size={hasBeenResized ? 'true' : 'false'}
+      style={style}
     >
       {data.url && (
         <>
@@ -97,45 +79,13 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
                   },
                   data.align,
                   {
-                    // START CUSTOMIZATION
-                    // 'full-width': data.align === 'full',
-                    // END CUSTOMIZATION
                     large: data.size === 'l',
                     medium: data.size === 'm' || !data.size,
                     small: data.size === 's',
                   },
                 )}
-                style={{
-                  margin: 0,
-                  ...(hasBeenResized ? {
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  } : {}),
-                }}
               >
                 <Image
-                  // Removed for now
-                  // className={cx({
-                  //   'full-width': data.align === 'full',
-                  //   large: data.size === 'l',
-                  //   medium: data.size === 'm',
-                  //   small: data.size === 's',
-                  // })}
-                  style={hasBeenResized ? {
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    width: 'auto',
-                    height: 'auto',
-                    objectFit: 'contain', // Fit within container
-                    display: 'block',
-                  } : {
-                    maxWidth: '100%',
-                    height: 'auto',
-                    display: 'block',
-                  }}
                   item={
                     data.image_scales
                       ? {

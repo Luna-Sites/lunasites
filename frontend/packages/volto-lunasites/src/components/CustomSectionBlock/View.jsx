@@ -4,6 +4,7 @@ import cx from 'classnames';
 import config from '@plone/volto/registry';
 import './View.scss';
 import './FreeformGrid.scss';
+import './unified-blocks.scss'; // Force consistent block rendering
 
 /**
  * Simplified CustomSectionBlock View Component

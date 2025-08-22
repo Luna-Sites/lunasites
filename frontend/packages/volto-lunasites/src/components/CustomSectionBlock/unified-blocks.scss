@@ -1,0 +1,187 @@
+// Unified Block Styles - Force identical rendering in Edit and View modes
+// This aggressively overrides Volto's default behavior to ensure visual consistency
+
+// Reset ALL Volto edit-mode specific styles
+.block-editor-wrapper,
+.block-editor,
+.block-chooser,
+.blocks-chooser {
+  &::before,
+  &::after {
+    display: none !important; // Remove edit mode indicators
+  }
+}
+
+// Force all blocks to render identically regardless of mode
+.block,
+.block-editor-wrapper .block,
+.freeform-block-wrapper .block,
+.freeform-item .block,
+.linear-item .block {
+  // Reset ALL Volto default styles that differ between modes
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  
+  // Ensure blocks fill their containers
+  width: 100% !important;
+  height: 100% !important;
+  
+  // Image blocks - force consistent rendering
+  &.image {
+    position: relative !important;
+    
+    figure {
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background: transparent !important;
+    }
+    
+    img {
+      max-width: 100% !important;
+      max-height: 100% !important;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain !important; // Always use contain for consistency
+      display: block !important;
+      border: none !important;
+      outline: none !important;
+    }
+    
+    // Remove any edit mode specific image styling
+    .image-editor,
+    .image-wrapper {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+  }
+  
+  // Button blocks - force consistent rendering
+  &.__button,
+  &.button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    
+    .ui.button,
+    button {
+      // Let button component handle its own sizing
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+    
+    // Remove edit mode wrappers
+    .button-editor,
+    .button-wrapper {
+      width: 100% !important;
+      height: 100% !important;
+      border: none !important;
+      outline: none !important;
+    }
+  }
+  
+  // Text/Slate blocks - force consistent rendering
+  &.text,
+  &.slate {
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    
+    // Remove edit mode borders and outlines
+    .slate-editor,
+    .text-editor,
+    .DraftEditor-root,
+    .public-DraftEditor-content {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      min-height: auto !important;
+    }
+    
+    // Ensure text fills container
+    p, div, span {
+      background: transparent !important;
+    }
+  }
+  
+  // Video blocks
+  &.video {
+    width: 100% !important;
+    height: 100% !important;
+    
+    iframe,
+    video {
+      width: 100% !important;
+      height: 100% !important;
+      border: none !important;
+    }
+  }
+}
+
+// Force image blocks to respect container size in both modes
+.freeform-block-wrapper,
+.freeform-item {
+  .block.image {
+    // When containerSize is set, respect it
+    &[data-has-container-size="true"] {
+      figure {
+        width: 100% !important;
+        height: 100% !important;
+      }
+      
+      img {
+        object-fit: contain !important;
+      }
+    }
+  }
+}
+
+// Remove ALL Volto edit mode UI elements
+.blocks-edit-wrapper {
+  .block-add-button,
+  .block-toolbar,
+  .block-drag-handle {
+    // Keep functionality but remove visual differences
+    opacity: 0;
+    transition: opacity 0.2s;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// Ensure consistent rendering in freeform grid
+.freeform-grid {
+  .block-content {
+    // Don't add any styling that would differ between modes
+    border: none !important;
+    outline: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+// Override any theme-specific block differences
+.ui.container,
+.ui.segment {
+  .block {
+    // Ensure no container adds different styles in different modes
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}

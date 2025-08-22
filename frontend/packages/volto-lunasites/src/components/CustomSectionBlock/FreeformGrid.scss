@@ -102,45 +102,7 @@
     z-index: 1;
     width: 100%;
     height: 100%;
-    
-    // Ensure Volto blocks fill the container
-    .block {
-      width: 100% !important;
-      height: 100% !important;
-      
-      // Special handling for different block types
-      &.image {
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-      }
-      
-      &.text,
-      &.slate {
-        overflow: hidden;
-        
-        // Scale font size based on container size
-        .slate-editor {
-          font-size: calc(12px + 0.5vw);
-          line-height: 1.4;
-        }
-      }
-      
-      &.button,
-      &.__button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        
-        .ui.button {
-          flex: 1;
-          height: 100%;
-        }
-      }
-    }
+    // Let unified-blocks.scss handle all block-specific styling
   }
   
   // Delete button

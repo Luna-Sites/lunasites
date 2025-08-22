@@ -6,6 +6,7 @@ import FreeformGrid from './FreeformGrid';
 import FloatingAddButton from '../FloatingAddButton';
 import { initializeBlockSizing } from './utils/contentPropertyCalculator';
 import './Edit.scss';
+import './unified-blocks.scss'; // Force consistent block rendering
 
 /**
  * Simplified CustomSectionBlock Edit Component
