@@ -90,7 +90,21 @@ const FreeformGrid = ({
         // Position is now in pixels
         const blockTop = block.position.y || 0;
         const blockSize = getBlockSize(blockId);
-        const blockBottom = blockTop + (blockSize?.height || 100);
+        
+        // For text blocks, try to get actual rendered height
+        const isTextBlock = block['@type'] === 'text' || block['@type'] === 'slate' || block['@type'] === 'description';
+        let blockHeight = blockSize?.height || 100;
+        
+        if (isTextBlock && containerRef.current) {
+          const blockElement = containerRef.current.querySelector(`[data-block-id="${blockId}"]`);
+          if (blockElement) {
+            // Get the actual rendered height including all content
+            const actualHeight = blockElement.scrollHeight || blockElement.offsetHeight;
+            blockHeight = Math.max(actualHeight, blockHeight);
+          }
+        }
+        
+        const blockBottom = blockTop + blockHeight;
         
         // Update max bottom if this block is lower
         if (blockBottom > maxBottom) {
@@ -109,6 +123,40 @@ const FreeformGrid = ({
     if (Math.abs(newHeight - containerHeight) > 10) { // Only update if significant change
       setContainerHeight(newHeight);
     }
+  }, [blocks, blocksLayout.items, calculateContainerHeight, containerHeight]);
+  
+  // Watch for text content changes with MutationObserver
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const observer = new MutationObserver(() => {
+      // Recalculate container height when text content changes
+      const newHeight = calculateContainerHeight();
+      if (Math.abs(newHeight - containerHeight) > 10) {
+        setContainerHeight(newHeight);
+      }
+    });
+    
+    // Observe all text blocks for changes
+    blocksLayout.items.forEach(blockId => {
+      const block = blocks[blockId];
+      const isTextBlock = block?.['@type'] === 'text' || block?.['@type'] === 'slate' || block?.['@type'] === 'description';
+      
+      if (isTextBlock) {
+        const blockElement = containerRef.current.querySelector(`[data-block-id="${blockId}"]`);
+        if (blockElement) {
+          observer.observe(blockElement, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+            attributes: true,
+            attributeFilter: ['style', 'class']
+          });
+        }
+      }
+    });
+    
+    return () => observer.disconnect();
   }, [blocks, blocksLayout.items, calculateContainerHeight, containerHeight]);
 
   // Generate alignment guides from all blocks
@@ -506,6 +554,9 @@ const FreeformGrid = ({
         
         // Check if image block has content
         const isEmptyImageBlock = block['@type'] === 'image' && !block.url;
+        
+        // Check if it's a text-type block
+        const isTextBlock = block['@type'] === 'text' || block['@type'] === 'slate' || block['@type'] === 'description';
 
         return (
           <div
@@ -515,6 +566,7 @@ const FreeformGrid = ({
               'dragging': isDragging,
               'resizing': isResizing,
               'empty-image': isEmptyImageBlock,
+              'has-text-block': isTextBlock,
             })}
             style={{
               position: 'absolute',
@@ -523,7 +575,8 @@ const FreeformGrid = ({
               // Only apply explicit dimensions if block has been sized
               ...(hasExplicitSize && {
                 width: `${size.width}px`,
-                height: `${size.height}px`,
+                // For text blocks, let height be auto
+                ...(isTextBlock ? {} : { height: `${size.height}px` }),
               }),
               transform: 'translate(0, 0)', // Start from exact position
               cursor: isDragging ? 'grabbing' : isResizing ? 'resizing' : 'grab',
@@ -532,8 +585,27 @@ const FreeformGrid = ({
             onClick={(e) => handleBlockClick(e, blockId)}
             data-block-id={blockId}
           >
-            {/* Drag handle - only show for blocks with content or when selected */}
-            {(isSelected || block['@type'] !== 'image' || block.url) && (
+            {/* Dedicated drag handle for text blocks */}
+            {(block['@type'] === 'text' || block['@type'] === 'slate' || block['@type'] === 'description') && (
+              <div 
+                className="text-drag-handle"
+                onMouseDown={(e) => handleMouseDown(e, blockId)}
+                title="Drag to move"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <circle cx="4" cy="4" r="1.5"/>
+                  <circle cx="12" cy="4" r="1.5"/>
+                  <circle cx="4" cy="8" r="1.5"/>
+                  <circle cx="12" cy="8" r="1.5"/>
+                  <circle cx="4" cy="12" r="1.5"/>
+                  <circle cx="12" cy="12" r="1.5"/>
+                </svg>
+              </div>
+            )}
+            
+            {/* Regular drag overlay for non-text blocks */}
+            {(block['@type'] !== 'text' && block['@type'] !== 'slate' && block['@type'] !== 'description') && 
+             (isSelected || block['@type'] !== 'image' || block.url) && (
               <div 
                 className="drag-overlay"
                 onMouseDown={(e) => handleMouseDown(e, blockId)}

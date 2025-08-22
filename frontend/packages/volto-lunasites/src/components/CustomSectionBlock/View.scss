@@ -2,6 +2,8 @@
 .custom-section-block-view {
   margin: 2rem 0;
   position: relative; // For freeform positioning
+  display: block;
+  clear: both;
   
   .section-title {
     margin-bottom: 1.5rem;
@@ -14,12 +16,20 @@
 // Freeform View - Absolute positioned blocks
 .freeform-view {
   position: relative;
-  min-height: 400px; // Maintain height for positioned content
   width: 100%;
+  display: block;
+  // Don't use overflow hidden as it might cut content
+  overflow: visible;
   
   .freeform-item {
     position: absolute;
     // Let unified-blocks.scss handle all block styling
+    
+    // Text blocks should expand naturally
+    &.text-block {
+      height: auto;
+      min-height: 40px;
+    }
   }
 }
 

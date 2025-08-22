@@ -31,7 +31,41 @@ const CustomSectionBlockView = ({ data, properties }) => {
       const block = blocks[blockId];
       if (block?.position) {
         const blockTop = block.position.y || 0;
-        const blockHeight = block.containerSize?.height || 100;
+        
+        // For text blocks, estimate height based on content
+        const isTextBlock = block['@type'] === 'text' || 
+                           block['@type'] === 'slate' || 
+                           block['@type'] === 'description';
+        
+        let blockHeight = block.containerSize?.height || 100;
+        
+        // For text blocks, use a larger estimated height
+        if (isTextBlock) {
+          // Get text content from different block types
+          let textContent = '';
+          
+          if (block['@type'] === 'slate' && block.value) {
+            // Slate blocks store content in value array
+            textContent = block.value.map(node => node.children?.map(child => child.text || '').join('') || '').join(' ');
+          } else if (block['@type'] === 'text') {
+            // Text blocks might have plaintext or text property
+            textContent = block.plaintext || block.text || '';
+          } else if (block['@type'] === 'description') {
+            // Description blocks store in description field
+            textContent = block.description || '';
+          }
+          
+          // Estimate height based on text length and container width
+          const containerWidth = block.containerSize?.width || 200;
+          const charsPerLine = Math.floor(containerWidth / 8); // Approximate 8px per character
+          const estimatedLines = Math.max(1, Math.ceil(textContent.length / charsPerLine));
+          const lineHeight = 24; // Standard line height
+          const padding = 20; // Some padding for text blocks
+          const estimatedHeight = estimatedLines * lineHeight + padding;
+          
+          blockHeight = Math.max(blockHeight || 50, estimatedHeight);
+        }
+        
         const blockBottom = blockTop + blockHeight;
         
         if (blockBottom > maxBottom) {
@@ -40,8 +74,8 @@ const CustomSectionBlockView = ({ data, properties }) => {
       }
     });
     
-    // Add padding bottom
-    return maxBottom + 100;
+    // Add modest padding bottom
+    return maxBottom + 50;
   }, [blocks, blocks_layout.items, isFreeformMode]);
 
   // Render a single block
@@ -77,7 +111,7 @@ const CustomSectionBlockView = ({ data, properties }) => {
         // Freeform Layout - Absolute positioned blocks
         <div className="freeform-view" style={{
           position: 'relative',
-          minHeight: `${containerHeight}px`,
+          height: `${containerHeight}px`,
         }}>
           {blocks_layout.items.map((blockId) => {
             const childBlock = blocks[blockId];
@@ -85,11 +119,16 @@ const CustomSectionBlockView = ({ data, properties }) => {
             
             const position = childBlock.position || { x: 0, y: 0 };
             const containerSize = childBlock.containerSize;
+            const isTextBlock = childBlock['@type'] === 'text' || 
+                               childBlock['@type'] === 'slate' || 
+                               childBlock['@type'] === 'description';
             
             return (
               <div 
                 key={blockId} 
-                className="freeform-item"
+                className={cx('freeform-item', {
+                  'text-block': isTextBlock
+                })}
                 style={{
                   position: 'absolute',
                   left: `${position.x}px`,
@@ -97,7 +136,8 @@ const CustomSectionBlockView = ({ data, properties }) => {
                   // Apply explicit size if available
                   ...(containerSize && {
                     width: `${containerSize.width}px`,
-                    height: `${containerSize.height}px`,
+                    // For text blocks, don't apply fixed height in view mode
+                    ...(isTextBlock ? {} : { height: `${containerSize.height}px` }),
                   }),
                 }}
               >

@@ -148,6 +148,30 @@ const CustomSectionBlockEdit = ({
       return <div>Unknown block type: {childBlock['@type']}</div>;
     }
 
+    // Handle Description block specially - it expects onChangeField
+    if (childBlock['@type'] === 'description') {
+      return (
+        <BlockComponent
+          data={childBlock}
+          properties={properties}
+          block={blockId}
+          pathname={pathname || properties?.['@id'] || ''}
+          manage={manage}
+          onChangeBlock={handleChildBlockChange}
+          onSelectBlock={setSelectedChildBlock}
+          onChangeField={(field, value) => {
+            // Update the description block's data
+            handleChildBlockChange(blockId, {
+              ...childBlock,
+              [field]: value,
+            });
+          }}
+          selected={selectedChildBlock === blockId}
+          blocksConfig={blocksConfig}
+        />
+      );
+    }
+
     // Return the block component directly without any wrapper
     // The delete button will be handled by the parent container
     return (
@@ -158,6 +182,7 @@ const CustomSectionBlockEdit = ({
         pathname={pathname || properties?.['@id'] || ''}
         manage={manage}
         onChangeBlock={handleChildBlockChange}
+        onSelectBlock={setSelectedChildBlock}
         selected={selectedChildBlock === blockId}
         blocksConfig={blocksConfig}
       />
@@ -170,7 +195,7 @@ const CustomSectionBlockEdit = ({
     manage,
     handleChildBlockChange,
     selectedChildBlock,
-    handleDeleteBlock,
+    setSelectedChildBlock,
   ]);
 
   const isEmpty = blocks_layout.items.length === 0;

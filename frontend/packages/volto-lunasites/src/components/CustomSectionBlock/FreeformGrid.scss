@@ -41,6 +41,12 @@
   min-height: 40px;
   max-width: 100%;
   
+  // For text blocks, allow height to grow with content
+  &.has-text-block {
+    height: auto;
+    min-height: 40px;
+  }
+  
   // Selected state
   &.selected {
     box-shadow: 0 0 0 2px #007bc1;
@@ -94,6 +100,48 @@
     &:active {
       cursor: grabbing;
     }
+  }
+  
+  // Dedicated drag handle for text blocks
+  .text-drag-handle {
+    position: absolute;
+    top: 8px;
+    left: -28px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: grab;
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    color: #666;
+    
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+    
+    &:hover {
+      background: #f0f0f0;
+      transform: scale(1.1);
+      color: #007bc1;
+    }
+    
+    &:active {
+      cursor: grabbing;
+      transform: scale(0.95);
+    }
+  }
+  
+  // Show text drag handle on hover or when selected
+  &:hover .text-drag-handle,
+  &.selected .text-drag-handle {
+    opacity: 1;
   }
   
   // Block content container

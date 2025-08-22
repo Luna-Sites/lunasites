@@ -92,14 +92,16 @@
     }
   }
   
-  // Text/Slate blocks - force consistent rendering
+  // Text/Slate blocks - force consistent rendering but allow interaction
   &.text,
-  &.slate {
+  &.slate,
+  &.description {
     width: 100% !important;
-    height: 100% !important;
-    overflow: hidden !important;
+    height: auto !important; // Let height grow with content
+    min-height: 100% !important; // But fill container as minimum
+    overflow: visible !important; // Allow content to expand container
     
-    // Remove edit mode borders and outlines
+    // Remove edit mode borders and outlines but preserve functionality
     .slate-editor,
     .text-editor,
     .DraftEditor-root,
@@ -107,9 +109,9 @@
       border: none !important;
       outline: none !important;
       box-shadow: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      min-height: auto !important;
+      // Keep padding for text readability
+      min-height: 1em !important; // Minimum height for cursor visibility
+      height: auto !important;
     }
     
     // Ensure text fills container
