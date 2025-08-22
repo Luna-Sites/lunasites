@@ -2,8 +2,10 @@ import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import config from '@plone/volto/registry';
+import { hasGridProperties } from './utils/gridMigration';
 import './View.scss';
 import './FreeformGrid.scss';
+import './Grid12Layout.scss';
 import './unified-blocks.scss'; // Force consistent block rendering
 
 /**
@@ -16,12 +18,14 @@ const CustomSectionBlockView = ({ data, properties }) => {
     title = '',
     blocks = {},
     blocks_layout = { items: [] },
-    layout_mode = 'freeform', // Default to freeform
+    layout_mode = 'grid', // Default to grid
+    grid_gap = 16,
   } = data;
   
-  const isFreeformMode = layout_mode !== 'linear';
+  const isGridMode = layout_mode === 'grid';
+  const isFreeformMode = layout_mode === 'freeform';
   
-  // Calculate container height based on block positions
+  // Calculate container height based on block positions (for freeform mode)
   const containerHeight = useMemo(() => {
     if (!isFreeformMode) return 'auto';
     
@@ -104,10 +108,42 @@ const CustomSectionBlockView = ({ data, properties }) => {
   }
 
   return (
-    <section className={cx('custom-section-block-view', { 'freeform': isFreeformMode })}>
+    <section className={cx('custom-section-block-view', { 
+      'freeform': isFreeformMode,
+      'grid': isGridMode,
+    })}>
       {title && <h2 className="section-title">{title}</h2>}
       
-      {isFreeformMode ? (
+      {isGridMode ? (
+        // Grid Layout - 12-column responsive grid
+        <div className="grid-view" style={{
+          '--grid-gap': `${grid_gap}px`,
+        }}>
+          {blocks_layout.items.map((blockId) => {
+            const childBlock = blocks[blockId];
+            if (!childBlock) return null;
+            
+            // Get grid properties
+            const gridColumn = childBlock.gridColumn || 1;
+            const gridRow = childBlock.gridRow || 1;
+            const columnSpan = childBlock.columnSpan || 3;
+            const rowSpan = childBlock.rowSpan || 1;
+            
+            return (
+              <div 
+                key={blockId} 
+                className="grid-item"
+                style={{
+                  gridColumn: `${gridColumn} / span ${columnSpan}`,
+                  gridRow: `${gridRow} / span ${rowSpan}`,
+                }}
+              >
+                {renderBlock(blockId)}
+              </div>
+            );
+          })}
+        </div>
+      ) : isFreeformMode ? (
         // Freeform Layout - Absolute positioned blocks
         <div className="freeform-view" style={{
           position: 'relative',
@@ -168,6 +204,7 @@ CustomSectionBlockView.propTypes = {
       items: PropTypes.array,
     }),
     layout_mode: PropTypes.string,
+    grid_gap: PropTypes.number,
   }).isRequired,
   properties: PropTypes.object,
 };

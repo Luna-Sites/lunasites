@@ -1,10 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuid } from 'uuid';
 import cx from 'classnames';
 import FreeformGrid from './FreeformGrid';
+import Grid12Layout from './Grid12Layout';
 import FloatingAddButton from '../FloatingAddButton';
 import { initializeBlockSizing } from './utils/contentPropertyCalculator';
+import { migrateSectionToGrid } from './utils/gridMigration';
 import './Edit.scss';
 import './unified-blocks.scss'; // Force consistent block rendering
 
@@ -24,9 +26,16 @@ const CustomSectionBlockEdit = ({
   blocksConfig,
   properties,
 }) => {
-  const { title = '', blocks = {}, blocks_layout = { items: [] } } = data;
+  const { 
+    title = '', 
+    blocks = {}, 
+    blocks_layout = { items: [] },
+    layout_mode = 'grid', // Default to grid
+    show_grid_overlay = true,
+    grid_gap = 16,
+  } = data;
   const [selectedChildBlock, setSelectedChildBlock] = useState(null);
-  const [isFreeformMode, setIsFreeformMode] = useState(data.layout_mode !== 'linear');
+  const [showMigrationPrompt, setShowMigrationPrompt] = useState(false);
 
   // Handle title change
   const handleTitleChange = useCallback((e) => {
@@ -36,34 +45,85 @@ const CustomSectionBlockEdit = ({
     });
   }, [data, block, onChangeBlock]);
 
-  // Toggle between freeform and linear layouts
-  const toggleLayoutMode = useCallback(() => {
-    const newMode = !isFreeformMode;
-    setIsFreeformMode(newMode);
+  // Toggle between layout modes
+  const handleLayoutModeChange = useCallback((newMode) => {
+    // If switching from freeform to grid, offer migration
+    if (data.layout_mode === 'freeform' && newMode === 'grid' && blocks_layout.items.length > 0) {
+      setShowMigrationPrompt(true);
+      return;
+    }
+    
     onChangeBlock(block, {
       ...data,
-      layout_mode: newMode ? 'freeform' : 'linear',
+      layout_mode: newMode,
     });
-  }, [isFreeformMode, data, block, onChangeBlock]);
+  }, [data, block, onChangeBlock, blocks_layout.items.length]);
+  
+  // Handle migration from freeform to grid
+  const handleMigration = useCallback((confirm) => {
+    setShowMigrationPrompt(false);
+    
+    if (confirm) {
+      const containerWidth = 1200; // Default container width
+      const migratedBlocks = migrateSectionToGrid(blocks, blocks_layout.items, containerWidth);
+      
+      onChangeBlock(block, {
+        ...data,
+        blocks: migratedBlocks,
+        layout_mode: 'grid',
+      });
+    }
+  }, [blocks, blocks_layout.items, data, block, onChangeBlock]);
 
   // Add new block with proper initialization
   const handleAddBlock = useCallback((blockData) => {
     const blockId = uuid();
     
-    // Start with base block data and position (in pixels)
-    let enhancedBlockData = {
-      ...blockData,
-      position: blockData.position || { x: 50, y: 50 }, // Default position in pixels
-    };
+    let enhancedBlockData = { ...blockData };
     
-    // Add container size and content properties (may return unchanged for images)
-    const sizedBlockData = initializeBlockSizing(enhancedBlockData);
-    
-    // Ensure position is preserved even if initializeBlockSizing returns early
-    enhancedBlockData = {
-      ...sizedBlockData,
-      position: enhancedBlockData.position, // Ensure position is always present
-    };
+    // Initialize based on layout mode
+    if (layout_mode === 'grid') {
+      // For grid mode, find next available position
+      let nextRow = 1;
+      let nextColumn = 1;
+      
+      // Find the next available grid position
+      blocks_layout.items.forEach(id => {
+        const existingBlock = blocks[id];
+        if (existingBlock && existingBlock.gridRow) {
+          const blockEndRow = existingBlock.gridRow + (existingBlock.rowSpan || 1);
+          if (blockEndRow > nextRow) {
+            nextRow = blockEndRow;
+          }
+        }
+      });
+      
+      // If we have existing blocks, place new one in the next row
+      if (blocks_layout.items.length > 0) {
+        nextColumn = 1; // Start at first column of new row
+      }
+      
+      enhancedBlockData = {
+        ...blockData,
+        gridColumn: blockData.gridColumn || nextColumn,
+        gridRow: blockData.gridRow || nextRow,
+        columnSpan: blockData.columnSpan || 4,
+        rowSpan: blockData.rowSpan || 1,
+      };
+    } else if (layout_mode === 'freeform') {
+      // For freeform mode, add position
+      enhancedBlockData = {
+        ...blockData,
+        position: blockData.position || { x: 50, y: 50 },
+      };
+      
+      // Add container size and content properties
+      const sizedBlockData = initializeBlockSizing(enhancedBlockData);
+      enhancedBlockData = {
+        ...sizedBlockData,
+        position: enhancedBlockData.position,
+      };
+    }
     
     const newBlocks = {
       ...blocks,
@@ -117,6 +177,17 @@ const CustomSectionBlockEdit = ({
           ...blocks[blockId],
           ...updatedBlockData, // Contains containerSize + content properties
         },
+      },
+    });
+  }, [blocks, data, block, onChangeBlock]);
+  
+  // Handle block update (for Grid12Layout)
+  const handleUpdateBlock = useCallback((blockId, updatedBlockData) => {
+    onChangeBlock(block, {
+      ...data,
+      blocks: {
+        ...blocks,
+        [blockId]: updatedBlockData,
       },
     });
   }, [blocks, data, block, onChangeBlock]);
@@ -212,14 +283,30 @@ const CustomSectionBlockEdit = ({
           className="section-title-input"
         />
         
-        {/* Layout Mode Toggle */}
-        <button
-          className={cx('layout-toggle', { 'freeform': isFreeformMode })}
-          onClick={toggleLayoutMode}
-          aria-label={`Switch to ${isFreeformMode ? 'linear' : 'freeform'} layout`}
-        >
-          {isFreeformMode ? '⚡ Freeform' : '☰ Linear'}
-        </button>
+        {/* Layout Mode Selector */}
+        <div className="layout-mode-selector">
+          <button
+            className={cx('layout-mode-btn', { active: layout_mode === 'linear' })}
+            onClick={() => handleLayoutModeChange('linear')}
+            title="Linear layout - vertical stack"
+          >
+            ☰
+          </button>
+          <button
+            className={cx('layout-mode-btn', { active: layout_mode === 'grid' })}
+            onClick={() => handleLayoutModeChange('grid')}
+            title="Grid layout - 12 columns"
+          >
+            ⊞
+          </button>
+          <button
+            className={cx('layout-mode-btn', { active: layout_mode === 'freeform' })}
+            onClick={() => handleLayoutModeChange('freeform')}
+            title="Freeform layout - free positioning"
+          >
+            ⚡
+          </button>
+        </div>
       </div>
 
       {/* Content Area */}
@@ -233,7 +320,30 @@ const CustomSectionBlockEdit = ({
           />
           <p className="empty-message">Add your first block to get started</p>
         </div>
-      ) : isFreeformMode ? (
+      ) : layout_mode === 'grid' ? (
+        // Grid Layout - 12-column responsive grid
+        <div className="grid-layout-container">
+          <Grid12Layout
+            blocks={blocks}
+            blocksLayout={blocks_layout}
+            onUpdateBlock={handleUpdateBlock}
+            selectedBlock={selectedChildBlock}
+            onSelectBlock={setSelectedChildBlock}
+            renderBlock={renderBlock}
+            onDeleteBlock={handleDeleteBlock}
+            showGridOverlay={show_grid_overlay}
+            gridGap={grid_gap}
+          />
+          
+          <FloatingAddButton
+            onAddBlock={handleAddBlock}
+            blockId={block}
+            blocksConfig={blocksConfig}
+            properties={properties}
+            className="grid-add-button"
+          />
+        </div>
+      ) : layout_mode === 'freeform' ? (
         // Freeform Layout - Squarespace-style free positioning
         <div className="freeform-layout-container">
           <FreeformGrid
@@ -276,6 +386,25 @@ const CustomSectionBlockEdit = ({
             blocksConfig={blocksConfig}
             properties={properties}
           />
+        </div>
+      )}
+      
+      {/* Migration Prompt */}
+      {showMigrationPrompt && (
+        <div className="migration-prompt">
+          <div className="migration-dialog">
+            <h3>Migrate to Grid Layout?</h3>
+            <p>Converting from freeform to grid layout will automatically arrange your blocks in a 12-column grid.</p>
+            <p>Block positions will be preserved as closely as possible.</p>
+            <div className="migration-actions">
+              <button onClick={() => handleMigration(true)} className="primary">
+                Migrate to Grid
+              </button>
+              <button onClick={() => handleMigration(false)} className="secondary">
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

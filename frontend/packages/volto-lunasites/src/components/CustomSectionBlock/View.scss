@@ -33,6 +33,49 @@
   }
 }
 
+// Grid View - 12-column responsive grid
+.grid-view {
+  --grid-gap: 16px;
+  
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(60px, auto);
+  gap: var(--grid-gap);
+  width: 100%;
+  
+  .grid-item {
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    
+    // Allow content to expand
+    & > * {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  
+  // Responsive breakpoints
+  @media (max-width: 1023px) {
+    // Tablet: 6 columns
+    grid-template-columns: repeat(6, 1fr);
+    
+    .grid-item {
+      // JavaScript will handle span adjustments
+    }
+  }
+  
+  @media (max-width: 767px) {
+    // Mobile: Stack vertically
+    grid-template-columns: 1fr;
+    
+    .grid-item {
+      grid-column: 1 !important;
+      // Maintain row spans
+    }
+  }
+}
+
 // Linear View - Traditional vertical stack
 .linear-view {
   display: flex;
