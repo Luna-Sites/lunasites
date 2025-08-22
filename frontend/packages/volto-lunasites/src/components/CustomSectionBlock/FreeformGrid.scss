@@ -33,8 +33,10 @@
   position: absolute;
   transition: box-shadow 0.2s ease, z-index 0.2s ease;
   
-  // Use explicit dimensions for proper resizing
-  // Width and height are set via inline styles
+  // Default to content size if no explicit dimensions
+  width: fit-content;
+  height: fit-content;
+  // Minimum sizes for interaction
   min-width: 60px;
   min-height: 40px;
   max-width: 100%;
@@ -219,6 +221,25 @@
   // Show resize handles when selected
   &.selected .resize-handle {
     opacity: 1;
+  }
+  
+  // Special handling for empty image blocks (upload interface)
+  &.empty-image {
+    // Remove drag overlay to allow interaction with upload buttons
+    .drag-overlay {
+      display: none;
+    }
+    
+    // Still allow selection
+    &.selected {
+      box-shadow: 0 0 0 2px #007bc1;
+    }
+    
+    // Ensure content is interactive
+    .block-content {
+      pointer-events: auto !important;
+      z-index: 2;
+    }
   }
   
   // Size indicator during resize

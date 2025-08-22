@@ -39,14 +39,27 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
     data.description ||
     (data?.copyright_and_sources ?? data.credit?.data);
 
-  // Apply image-specific resize properties (unified system)
-  const containerSize = data.containerSize;
-  const imageWidth = data.imageWidth && data.imageWidth !== 'auto' ? data.imageWidth : null;
-  const imageHeight = data.imageHeight && data.imageHeight !== 'auto' ? data.imageHeight : null;
+  // Check if we have an actual image to display
+  const hasImage = data.url || data.image_scales;
   
-  // Use container size if available, otherwise use individual properties
-  const finalWidth = containerSize ? containerSize.width : imageWidth;
-  const finalHeight = containerSize ? containerSize.height : imageHeight;
+  // Apply image-specific resize properties
+  const containerSize = data.containerSize;
+  
+  // Check if user has explicitly resized via containerSize
+  const hasBeenResized = !!containerSize;
+  
+  // Container styles - only apply sizing when explicitly resized
+  const containerStyles = hasImage && hasBeenResized ? {
+    width: `${containerSize.width}px`,
+    height: `${containerSize.height}px`,
+    display: 'block',
+    overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: '#f5f5f5', // Light gray for empty space
+  } : {
+    display: 'inline-block',
+    position: 'relative',
+  };
   
   // Get the resize configuration for image blocks (only in edit mode)
   const resizeConfig = isEditMode ? getResizeConfig('image') : null;
@@ -65,6 +78,7 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
       )}
       style={{
         ...style,
+        ...containerStyles,
         position: 'relative', // Needed for resize handles positioning
       }}
     >
@@ -90,7 +104,11 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
                   },
                 )}
                 style={{
-                  display: 'inline-block', // Make figure fit content
+                  ...(hasBeenResized ? {
+                    width: '100%',
+                    height: '100%',
+                  } : {}),
+                  margin: 0,
                 }}
               >
                 <Image
@@ -101,10 +119,15 @@ export const ImageView = ({ className, data, detached, properties, style, isEdit
                   //   medium: data.size === 'm',
                   //   small: data.size === 's',
                   // })}
-                  style={{
-                    ...(finalWidth && { width: `${finalWidth}px` }),
-                    ...(finalHeight && { height: `${finalHeight}px` }),
-                    ...(finalWidth || finalHeight ? { objectFit: 'cover' } : {}), // Only apply objectFit when resizing
+                  style={hasBeenResized ? {
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain', // Always use contain to show full image
+                    display: 'block',
+                  } : {
+                    maxWidth: '100%',
+                    height: 'auto',
+                    display: 'block',
                   }}
                   item={
                     data.image_scales

@@ -55,15 +55,18 @@ const calculateTextProperties = (width, height, currentData) => {
  * Calculate image block properties
  */
 const calculateImageProperties = (width, height, currentData) => {
-  // Leave some padding around the image
-  const padding = 10;
-  const imageWidth = Math.max(50, width - padding * 2);
-  const imageHeight = Math.max(40, height - padding * 2);
+  // Images should fill the entire container
+  const imageWidth = width;
+  const imageHeight = height;
+  
+  // Default to 'contain' to show the full image without cropping
+  // User can change to 'cover' if they want to fill the container
+  let imageFit = 'contain';
   
   return {
     imageWidth: imageWidth,
     imageHeight: imageHeight,
-    // Maintain aspect ratio option
+    imageFit: currentData.imageFit || imageFit, // Allow override
     maintainAspectRatio: currentData.maintainAspectRatio ?? true,
   };
 };
@@ -120,7 +123,7 @@ export const getDefaultContainerSize = (blockType) => {
       return { width: 300, height: 120 };
     
     case 'image':
-      return { width: 250, height: 200 };
+      return null; // Don't force default size for images - use natural dimensions
     
     case 'button':
       return { width: 180, height: 60 };
@@ -142,14 +145,26 @@ export const initializeBlockSizing = (blockData) => {
   const blockType = blockData['@type'];
   
   // Get default container size if not specified
-  const containerSize = blockData.containerSize || getDefaultContainerSize(blockType);
+  const defaultSize = getDefaultContainerSize(blockType);
+  const containerSize = blockData.containerSize || defaultSize;
   
-  // Calculate initial content properties
-  const contentProperties = calculateContentProperties(blockType, containerSize, blockData);
+  // For images without existing containerSize, don't force initial sizing
+  // But preserve all other properties including position
+  if (blockType === 'image' && !blockData.containerSize) {
+    return {
+      ...blockData,
+      // Ensure we keep all properties, just don't add containerSize
+    };
+  }
+  
+  // Calculate initial content properties only if we have a container size
+  const contentProperties = containerSize 
+    ? calculateContentProperties(blockType, containerSize, blockData)
+    : {};
   
   return {
     ...blockData,
-    containerSize,
+    ...(containerSize && { containerSize }),
     ...contentProperties,
   };
 };

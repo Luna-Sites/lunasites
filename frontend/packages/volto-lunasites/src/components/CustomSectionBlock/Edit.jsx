@@ -49,14 +49,20 @@ const CustomSectionBlockEdit = ({
   const handleAddBlock = useCallback((blockData) => {
     const blockId = uuid();
     
-    // Initialize block with unified sizing system
+    // Start with base block data and position
     let enhancedBlockData = {
       ...blockData,
       position: blockData.position || { x: 10, y: 10 }, // Default position
     };
     
-    // Add container size and content properties
-    enhancedBlockData = initializeBlockSizing(enhancedBlockData);
+    // Add container size and content properties (may return unchanged for images)
+    const sizedBlockData = initializeBlockSizing(enhancedBlockData);
+    
+    // Ensure position is preserved even if initializeBlockSizing returns early
+    enhancedBlockData = {
+      ...sizedBlockData,
+      position: enhancedBlockData.position, // Ensure position is always present
+    };
     
     const newBlocks = {
       ...blocks,

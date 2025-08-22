@@ -48,8 +48,30 @@ const FreeformGrid = ({
     const block = blocks[blockId];
     if (!block) return { width: 200, height: 150 }; // Default size in px
     
-    // Use stored container size or calculate default based on block type
-    return block.containerSize || getDefaultContainerSize(block['@type'] || 'text');
+    // Use stored container size if available
+    if (block.containerSize) {
+      return block.containerSize;
+    }
+    
+    // Get default size based on block type
+    const defaultSize = getDefaultContainerSize(block['@type'] || 'text');
+    
+    // For images without a size, try to get the actual image dimensions
+    if (!defaultSize && block['@type'] === 'image') {
+      // Try to find the image element to get its natural size
+      const imageElement = document.querySelector(`[data-block-id="${blockId}"] img`);
+      if (imageElement && imageElement.naturalWidth) {
+        // Use natural dimensions but cap at reasonable max size
+        return {
+          width: Math.min(imageElement.naturalWidth, 600),
+          height: Math.min(imageElement.naturalHeight, 400)
+        };
+      }
+      // Fallback for images
+      return { width: 300, height: 200 };
+    }
+    
+    return defaultSize || { width: 200, height: 150 };
   }, [blocks]);
 
   // Generate alignment guides from all blocks
@@ -283,14 +305,25 @@ const FreeformGrid = ({
     const currentBlock = blocks[resizedBlock];
     if (!currentBlock) return;
     
-    // Use unified resize system to update both container and content
-    const updatedBlockData = unifiedBlockResize(currentBlock, {
-      width: newWidth,
-      height: newHeight
-    });
-    
-    // Update with unified data (container size + content properties)
-    onUpdateBlockSize(resizedBlock, updatedBlockData);
+    // For images, just update the containerSize directly
+    // Don't use unifiedBlockResize which might mess with image properties
+    if (currentBlock['@type'] === 'image') {
+      onUpdateBlockSize(resizedBlock, {
+        containerSize: {
+          width: newWidth,
+          height: newHeight
+        }
+      });
+    } else {
+      // For other blocks, use unified resize system
+      const updatedBlockData = unifiedBlockResize(currentBlock, {
+        width: newWidth,
+        height: newHeight
+      });
+      
+      // Update with unified data (container size + content properties)
+      onUpdateBlockSize(resizedBlock, updatedBlockData);
+    }
   }, [resizedBlock, resizeStart, onUpdateBlockSize, blocks]);
 
   // Handle resize end
@@ -373,6 +406,12 @@ const FreeformGrid = ({
         const isSelected = selectedBlock === blockId;
         const isDragging = draggedBlock === blockId;
         const isResizing = resizedBlock === blockId;
+        
+        // Check if block has been explicitly sized (for images especially)
+        const hasExplicitSize = block.containerSize || (block['@type'] !== 'image');
+        
+        // Check if image block has content
+        const isEmptyImageBlock = block['@type'] === 'image' && !block.url;
 
         return (
           <div
@@ -381,13 +420,17 @@ const FreeformGrid = ({
               'selected': isSelected,
               'dragging': isDragging,
               'resizing': isResizing,
+              'empty-image': isEmptyImageBlock,
             })}
             style={{
               position: 'absolute',
               left: `${position.x}%`,
               top: `${position.y}%`,
-              width: `${size.width}px`,
-              height: `${size.height}px`,
+              // Only apply explicit dimensions if block has been sized
+              ...(hasExplicitSize && {
+                width: `${size.width}px`,
+                height: `${size.height}px`,
+              }),
               transform: 'translate(0, 0)', // Start from exact position
               cursor: isDragging ? 'grabbing' : isResizing ? 'resizing' : 'grab',
               zIndex: isDragging || isResizing ? 1000 : isSelected ? 100 : 1,
@@ -395,12 +438,14 @@ const FreeformGrid = ({
             onClick={(e) => handleBlockClick(e, blockId)}
             data-block-id={blockId}
           >
-            {/* Drag handle - entire block is draggable */}
-            <div 
-              className="drag-overlay"
-              onMouseDown={(e) => handleMouseDown(e, blockId)}
-              title="Drag to move"
-            />
+            {/* Drag handle - only show for blocks with content or when selected */}
+            {(isSelected || block['@type'] !== 'image' || block.url) && (
+              <div 
+                className="drag-overlay"
+                onMouseDown={(e) => handleMouseDown(e, blockId)}
+                title="Drag to move"
+              />
+            )}
             
             {/* Delete button when selected */}
             {isSelected && onDeleteBlock && (
