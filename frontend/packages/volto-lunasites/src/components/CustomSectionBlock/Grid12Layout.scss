@@ -135,6 +135,27 @@
       background: rgba(0, 123, 193, 0.15) !important;
       border-color: rgba(0, 123, 193, 0.5) !important;
     }
+    
+    &.resize-affected {
+      // Highlight cells that will be affected by resize
+      background: linear-gradient(135deg, 
+        rgba(255, 152, 0, 0.1) 0%,
+        rgba(255, 152, 0, 0.15) 100%) !important;
+      border-color: rgba(255, 152, 0, 0.4) !important;
+      transition: all 0.15s ease;
+      
+      // Pulse animation for better visibility
+      animation: resizePulse 1s ease-in-out infinite;
+    }
+  }
+  
+  @keyframes resizePulse {
+    0%, 100% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
   }
   
 }
@@ -151,14 +172,14 @@
   padding: 0 !important;
   overflow: visible;
   min-height: 0;
-  height: auto; // Let content determine height
+  height: 100%; // IMPORTANT: Fill the grid cell height
   display: flex; // Use flexbox to contain content properly
-  align-items: flex-start; // Align content to top
+  align-items: stretch; // Stretch content to full height
   
   // Content container - no fixed sizing
   .block-content {
     width: 100%;
-    height: auto; // Let content determine height
+    height: 100%; // IMPORTANT: Fill wrapper height
     border: none !important;
     outline: none !important;
     padding: 0 !important;
@@ -176,12 +197,12 @@
       box-shadow: none !important;
     }
     
-    // Button blocks should size to their content
+    // Button blocks should fill their container
     .block.__button,
     .block.button {
-      display: inline-block !important;
-      width: auto !important;
-      height: auto !important;
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
       padding: 0 !important;
       margin: 0 !important;
       border: none !important;
@@ -189,9 +210,20 @@
       background: transparent !important;
       box-shadow: none !important;
       
+      // Inner align div should also be full size
+      .align {
+        width: 100% !important;
+        height: 100% !important;
+        display: block !important;
+      }
+      
       .ui.button,
       button {
         margin: 0;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: unset !important;
+        max-height: 100% !important;
       }
     }
     
@@ -242,7 +274,14 @@
   }
   
   &.resizing {
-    // No outline during resize either
+    // Smooth transitions during resize
+    transition: grid-column 0.15s ease-out, grid-row 0.15s ease-out;
+    
+    // Semi-transparent during resize for better visibility
+    .block-content {
+      opacity: 0.8;
+    }
+    
     .resize-handle {
       opacity: 1;
     }
@@ -311,57 +350,121 @@
   // Resize handles
   .resize-handle {
     position: absolute;
-    background: #007bc1;
+    background: linear-gradient(135deg, #ff9800, #ff6f00);
     opacity: 0;
-    transition: opacity 0.2s ease;
-    z-index: 2;
+    transition: all 0.2s ease;
+    z-index: 100;
     
     &.right {
       top: 50%;
-      right: -4px;
-      width: 8px;
-      height: 40px;
+      right: -6px;
+      width: 12px;
+      height: 60px;
       transform: translateY(-50%);
       cursor: ew-resize;
+      border-radius: 0 6px 6px 0;
+      
+      &:hover {
+        width: 14px;
+        right: -7px;
+      }
     }
     
     &.bottom {
-      bottom: -4px;
+      bottom: -6px;
       left: 50%;
-      width: 40px;
-      height: 8px;
+      width: 60px;
+      height: 12px;
       transform: translateX(-50%);
       cursor: ns-resize;
+      border-radius: 0 0 6px 6px;
+      
+      &:hover {
+        height: 14px;
+        bottom: -7px;
+      }
     }
     
     &.bottom-right {
-      bottom: -4px;
-      right: -4px;
-      width: 12px;
-      height: 12px;
+      bottom: -6px;
+      right: -6px;
+      width: 16px;
+      height: 16px;
       cursor: nwse-resize;
-      border-radius: 0 0 4px 0;
+      border-radius: 0 0 8px 0;
+      
+      &:hover {
+        width: 18px;
+        height: 18px;
+        bottom: -7px;
+        right: -7px;
+      }
     }
     
     &:hover {
       opacity: 1 !important;
+      background: linear-gradient(135deg, #ff6f00, #ff5722);
+      box-shadow: 0 2px 8px rgba(255, 111, 0, 0.4);
     }
   }
   
   // Size indicator
   .size-indicator {
     position: absolute;
-    top: 50%;
+    top: -36px;
     left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, 
+      rgba(255, 152, 0, 0.95) 0%, 
+      rgba(255, 111, 0, 0.95) 100%);
     color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
     pointer-events: none;
-    z-index: 100;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    
+    .size-value {
+      font-family: 'SF Mono', Monaco, monospace;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    
+    .size-label {
+      opacity: 0.9;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-left: 2px;
+    }
+    
+    .boundary-warning {
+      color: #ffeb3b;
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-left: 4px;
+    }
+    
+    &.at-boundary {
+      background: linear-gradient(135deg, 
+        rgba(244, 67, 54, 0.95) 0%, 
+        rgba(198, 40, 40, 0.95) 100%);
+      animation: boundaryPulse 0.5s ease-in-out infinite;
+    }
+  }
+  
+  @keyframes boundaryPulse {
+    0%, 100% {
+      transform: translateX(-50%) scale(1);
+    }
+    50% {
+      transform: translateX(-50%) scale(1.05);
+    }
   }
 }
 

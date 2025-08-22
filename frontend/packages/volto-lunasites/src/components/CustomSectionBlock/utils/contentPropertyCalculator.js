@@ -24,6 +24,7 @@ export const calculateContentProperties = (blockType, containerSize, currentData
       return calculateImageProperties(width, height, currentData);
     
     case 'button':
+    case '__button':
       return calculateButtonProperties(width, height, currentData);
     
     case 'video':
@@ -126,6 +127,7 @@ export const getDefaultContainerSize = (blockType) => {
       return null; // Don't force default size for images - use natural dimensions
     
     case 'button':
+    case '__button':
       return { width: 180, height: 60 };
     
     case 'video':

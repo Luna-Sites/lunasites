@@ -218,6 +218,36 @@ const CustomSectionBlockEdit = ({
     if (!BlockComponent) {
       return <div>Unknown block type: {childBlock['@type']}</div>;
     }
+    
+    // Apply dynamic styles based on calculated properties
+    const blockType = childBlock['@type'];
+    const isButtonBlock = blockType === '__button' || blockType === 'button';
+    const isTextBlock = blockType === 'text' || blockType === 'slate';
+    
+    const dynamicStyles = {};
+    
+    // Button block styles
+    if (isButtonBlock) {
+      if (childBlock.fontSize) {
+        dynamicStyles['--button-font-size'] = `${childBlock.fontSize}px`;
+      }
+      if (childBlock.padding) {
+        dynamicStyles['--button-padding'] = `${childBlock.padding}px`;
+      }
+      if (childBlock.buttonWidth) {
+        dynamicStyles['--button-width'] = `${childBlock.buttonWidth}px`;
+      }
+    }
+    
+    // Text block styles
+    if (isTextBlock) {
+      if (childBlock.fontSize) {
+        dynamicStyles['--text-font-size'] = `${childBlock.fontSize}px`;
+      }
+      if (childBlock.lineHeight) {
+        dynamicStyles['--text-line-height'] = childBlock.lineHeight;
+      }
+    }
 
     // Handle Description block specially - it expects onChangeField
     if (childBlock['@type'] === 'description') {
@@ -243,8 +273,79 @@ const CustomSectionBlockEdit = ({
       );
     }
 
-    // Return the block component directly without any wrapper
-    // The delete button will be handled by the parent container
+    // Wrap button blocks with dynamic styling
+    if (isButtonBlock) {
+      return (
+        <div style={{...dynamicStyles, width: '100%', height: '100%'}} className="button-size-wrapper">
+          <style>{`
+            .button-size-wrapper {
+              width: 100% !important;
+              height: 100% !important;
+              display: block !important;
+            }
+            .button-size-wrapper .ui.button {
+              font-size: var(--button-font-size, 16px) !important;
+              padding: var(--button-padding, 12px) calc(var(--button-padding, 12px) * 1.5) !important;
+              width: 100% !important;
+              height: 100% !important;
+              min-height: unset !important;
+              max-width: 100% !important;
+              max-height: 100% !important;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: center !important;
+            }
+            .button-size-wrapper .block.__button {
+              width: 100% !important;
+              height: 100% !important;
+            }
+            .button-size-wrapper .align {
+              width: 100% !important;
+              height: 100% !important;
+            }
+          `}</style>
+          <BlockComponent
+            data={childBlock}
+            properties={properties}
+            block={blockId}
+            pathname={pathname || properties?.['@id'] || ''}
+            manage={manage}
+            onChangeBlock={handleChildBlockChange}
+            onSelectBlock={setSelectedChildBlock}
+            selected={selectedChildBlock === blockId}
+            blocksConfig={blocksConfig}
+          />
+        </div>
+      );
+    }
+    
+    // Wrap text blocks with dynamic styling
+    if (isTextBlock) {
+      return (
+        <div style={dynamicStyles} className="text-size-wrapper">
+          <style>{`
+            .text-size-wrapper p,
+            .text-size-wrapper div[role="textbox"] {
+              font-size: var(--text-font-size, 16px) !important;
+              line-height: var(--text-line-height, 1.5) !important;
+            }
+          `}</style>
+          <BlockComponent
+            data={childBlock}
+            properties={properties}
+            block={blockId}
+            pathname={pathname || properties?.['@id'] || ''}
+            manage={manage}
+            onChangeBlock={handleChildBlockChange}
+            onSelectBlock={setSelectedChildBlock}
+            selected={selectedChildBlock === blockId}
+            blocksConfig={blocksConfig}
+          />
+        </div>
+      );
+    }
+    
+    // Return other blocks directly without wrapper
     return (
       <BlockComponent
         data={childBlock}

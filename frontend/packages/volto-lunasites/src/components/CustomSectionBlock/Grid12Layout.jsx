@@ -2,6 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { migrateBlockToGrid, hasGridProperties, resolveGridOverlaps } from './utils/gridMigration';
+import { calculateContentProperties } from './utils/contentPropertyCalculator';
 import './Grid12Layout.scss';
 
 /**
@@ -242,20 +243,47 @@ const Grid12Layout = ({
     onSelectBlock(blockId);
   }, [blocks, onSelectBlock]);
   
-  // Handle resize move
+  // Handle resize move with accurate grid calculations
   const handleResizeMove = useCallback((e) => {
     if (!resizingBlock || !containerRef.current) return;
     
     const container = containerRef.current;
     const containerRect = container.getBoundingClientRect();
-    const columnWidth = containerRect.width / GRID_COLUMNS;
-    const rowHeight = MIN_ROW_HEIGHT + gridGap;
+    
+    // Get computed styles for accurate padding
+    const computedStyle = window.getComputedStyle(container);
+    const paddingLeft = parseFloat(computedStyle.paddingLeft) || gridGap;
+    const paddingRight = parseFloat(computedStyle.paddingRight) || gridGap;
+    
+    // Calculate actual grid width
+    const gridWidth = containerRect.width - paddingLeft - paddingRight;
+    
+    // Accurate column width calculation accounting for gaps
+    const totalColumnGaps = gridGap * (GRID_COLUMNS - 1);
+    const cellWidth = (gridWidth - totalColumnGaps) / GRID_COLUMNS;
+    const cellPlusGap = cellWidth + gridGap;
+    
+    // Row height with gap
+    const rowHeight = MIN_ROW_HEIGHT;
+    const rowPlusGap = rowHeight + gridGap;
     
     const deltaX = e.clientX - resizingBlock.startX;
     const deltaY = e.clientY - resizingBlock.startY;
     
-    const columnDelta = Math.round(deltaX / columnWidth);
-    const rowDelta = Math.round(deltaY / rowHeight);
+    // Add 40% threshold for snapping to next column/row
+    const SNAP_THRESHOLD = 0.4;
+    
+    // Calculate column delta with threshold
+    let columnDelta = 0;
+    if (Math.abs(deltaX) > cellWidth * SNAP_THRESHOLD) {
+      columnDelta = Math.sign(deltaX) * Math.floor(Math.abs(deltaX) / cellWidth + (1 - SNAP_THRESHOLD));
+    }
+    
+    // Calculate row delta with threshold
+    let rowDelta = 0;
+    if (Math.abs(deltaY) > rowHeight * SNAP_THRESHOLD) {
+      rowDelta = Math.sign(deltaY) * Math.floor(Math.abs(deltaY) / rowHeight + (1 - SNAP_THRESHOLD));
+    }
     
     let newColumnSpan = resizingBlock.originalSpans.columnSpan;
     let newRowSpan = resizingBlock.originalSpans.rowSpan;
@@ -283,26 +311,64 @@ const Grid12Layout = ({
         break;
     }
     
+    // Check if we're hitting boundaries
+    const isAtMaxWidth = newColumnSpan >= (GRID_COLUMNS - gridColumn + 1);
+    const isAtMinWidth = newColumnSpan <= MIN_COLUMN_SPAN;
+    const isAtMinHeight = newRowSpan <= MIN_ROW_SPAN;
+    
     setResizePreview({
       columnSpan: newColumnSpan,
       rowSpan: newRowSpan,
+      atBoundary: {
+        maxWidth: isAtMaxWidth,
+        minWidth: isAtMinWidth,
+        minHeight: isAtMinHeight,
+      }
     });
   }, [resizingBlock, blocks, gridGap]);
   
-  // Handle resize end
+  // Handle resize end - update both grid properties and content properties
   const handleResizeEnd = useCallback(() => {
-    if (resizingBlock && resizePreview) {
+    if (resizingBlock && resizePreview && containerRef.current) {
       const block = blocks[resizingBlock.id];
+      
+      // Calculate actual pixel dimensions based on grid cells
+      const container = containerRef.current;
+      const computedStyle = window.getComputedStyle(container);
+      const paddingLeft = parseFloat(computedStyle.paddingLeft) || gridGap;
+      const paddingRight = parseFloat(computedStyle.paddingRight) || gridGap;
+      
+      const gridWidth = container.offsetWidth - paddingLeft - paddingRight;
+      const totalColumnGaps = gridGap * (GRID_COLUMNS - 1);
+      const cellWidth = (gridWidth - totalColumnGaps) / GRID_COLUMNS;
+      
+      // Calculate container size in pixels
+      const containerWidth = (cellWidth * resizePreview.columnSpan) + (gridGap * (resizePreview.columnSpan - 1));
+      const containerHeight = (MIN_ROW_HEIGHT * resizePreview.rowSpan) + (gridGap * (resizePreview.rowSpan - 1));
+      
+      // Calculate content properties based on new container size
+      const contentProps = calculateContentProperties(
+        block['@type'], 
+        { width: containerWidth, height: containerHeight },
+        block
+      );
+      
+      // Update block with both grid properties and content properties
+      // IMPORTANT: Preserve gridColumn and gridRow for proper positioning
       onUpdateBlock(resizingBlock.id, {
         ...block,
+        gridColumn: block.gridColumn || 1,  // Preserve existing position
+        gridRow: block.gridRow || 1,        // Preserve existing position
         columnSpan: resizePreview.columnSpan,
         rowSpan: resizePreview.rowSpan,
+        containerSize: { width: containerWidth, height: containerHeight },
+        ...contentProps, // Apply calculated content properties
       });
     }
     
     setResizingBlock(null);
     setResizePreview(null);
-  }, [resizingBlock, resizePreview, blocks, onUpdateBlock]);
+  }, [resizingBlock, resizePreview, blocks, onUpdateBlock, gridGap]);
   
   // Set up drag event listeners
   useEffect(() => {
@@ -351,6 +417,21 @@ const Grid12Layout = ({
     const cells = [];
     // Render extra rows for drag and drop
     const visibleRows = Math.max(maxRows + 5, 10);
+    
+    // Calculate affected cells during resize
+    let affectedCells = null;
+    if (resizingBlock && resizePreview) {
+      const block = blocks[resizingBlock.id];
+      if (block) {
+        affectedCells = {
+          startCol: block.gridColumn || 1,
+          startRow: block.gridRow || 1,
+          endCol: (block.gridColumn || 1) + resizePreview.columnSpan - 1,
+          endRow: (block.gridRow || 1) + resizePreview.rowSpan - 1,
+        };
+      }
+    }
+    
     for (let row = 1; row <= visibleRows; row++) {
       for (let col = 1; col <= GRID_COLUMNS; col++) {
         const isHovered = hoveredCell && 
@@ -358,12 +439,20 @@ const Grid12Layout = ({
           hoveredCell.gridRow === row;
         const isDragTarget = draggedBlockId && isHovered;
         
+        // Check if this cell is affected by resize
+        const isResizeAffected = affectedCells &&
+          col >= affectedCells.startCol &&
+          col <= affectedCells.endCol &&
+          row >= affectedCells.startRow &&
+          row <= affectedCells.endRow;
+        
         cells.push(
           <div
             key={`${row}-${col}`}
             className={cx('grid-cell', { 
               'drag-over': isHovered,
-              'drag-target': isDragTarget 
+              'drag-target': isDragTarget,
+              'resize-affected': isResizeAffected
             })}
             style={{
               gridColumn: col,
@@ -523,8 +612,24 @@ const Grid12Layout = ({
             
             {/* Size indicator */}
             {isResizing && resizePreview && (
-              <div className="size-indicator">
-                {resizePreview.columnSpan} × {resizePreview.rowSpan}
+              <div className={cx('size-indicator', {
+                'at-boundary': resizePreview.atBoundary && (
+                  resizePreview.atBoundary.maxWidth || 
+                  resizePreview.atBoundary.minWidth || 
+                  resizePreview.atBoundary.minHeight
+                )
+              })}>
+                <span className="size-value">{resizePreview.columnSpan} × {resizePreview.rowSpan}</span>
+                <span className="size-label"> cells</span>
+                {resizePreview.atBoundary && resizePreview.atBoundary.maxWidth && (
+                  <span className="boundary-warning"> (max width)</span>
+                )}
+                {resizePreview.atBoundary && resizePreview.atBoundary.minWidth && (
+                  <span className="boundary-warning"> (min width)</span>
+                )}
+                {resizePreview.atBoundary && resizePreview.atBoundary.minHeight && (
+                  <span className="boundary-warning"> (min height)</span>
+                )}
               </div>
             )}
             

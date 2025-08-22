@@ -74,17 +74,21 @@ const View = (props) => {
   
   const buttonWidth = data.buttonWidth || 'auto';
   
+  // Check if we're in a grid layout (has grid properties)
+  const isInGrid = data.gridColumn && data.columnSpan;
+  
   // Create button styles based on block-specific configuration
   const buttonStyles = {
     ...style,
     fontSize: `${Math.round(dynamicFontSize)}px`,
     padding: `${Math.round(dynamicPadding)}px ${Math.round(dynamicPadding * 1.5)}px`,
-    // Use container size if available, otherwise use individual properties
-    ...(containerSize && {
+    // In grid, don't set explicit dimensions - let CSS handle it
+    // Otherwise use container size for freeform/linear layouts
+    ...(!isInGrid && containerSize ? {
       width: `${containerSize.width}px`,
-      height: `${containerSize.height}px`, // Keep fixed height for resizing
-    }),
-    ...(buttonWidth !== 'auto' && !containerSize && { width: buttonWidth }),
+      height: `${containerSize.height}px`,
+    } : {}),
+    ...(buttonWidth !== 'auto' && !containerSize && !isInGrid && { width: buttonWidth }),
     // Ensure button fills container and centers text
     display: 'flex',
     alignItems: 'center',
