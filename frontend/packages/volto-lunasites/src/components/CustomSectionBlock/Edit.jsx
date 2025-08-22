@@ -49,10 +49,10 @@ const CustomSectionBlockEdit = ({
   const handleAddBlock = useCallback((blockData) => {
     const blockId = uuid();
     
-    // Start with base block data and position
+    // Start with base block data and position (in pixels)
     let enhancedBlockData = {
       ...blockData,
-      position: blockData.position || { x: 10, y: 10 }, // Default position
+      position: blockData.position || { x: 50, y: 50 }, // Default position in pixels
     };
     
     // Add container size and content properties (may return unchanged for images)

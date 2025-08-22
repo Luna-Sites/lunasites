@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import config from '@plone/volto/registry';
@@ -19,6 +19,29 @@ const CustomSectionBlockView = ({ data, properties }) => {
   } = data;
   
   const isFreeformMode = layout_mode !== 'linear';
+  
+  // Calculate container height based on block positions
+  const containerHeight = useMemo(() => {
+    if (!isFreeformMode) return 'auto';
+    
+    let maxBottom = 400; // Minimum height
+    
+    blocks_layout.items.forEach(blockId => {
+      const block = blocks[blockId];
+      if (block?.position) {
+        const blockTop = block.position.y || 0;
+        const blockHeight = block.containerSize?.height || 100;
+        const blockBottom = blockTop + blockHeight;
+        
+        if (blockBottom > maxBottom) {
+          maxBottom = blockBottom;
+        }
+      }
+    });
+    
+    // Add padding bottom
+    return maxBottom + 100;
+  }, [blocks, blocks_layout.items, isFreeformMode]);
 
   // Render a single block
   const renderBlock = useCallback((blockId) => {
@@ -51,12 +74,16 @@ const CustomSectionBlockView = ({ data, properties }) => {
       
       {isFreeformMode ? (
         // Freeform Layout - Absolute positioned blocks
-        <div className="freeform-view">
+        <div className="freeform-view" style={{
+          position: 'relative',
+          minHeight: `${containerHeight}px`,
+        }}>
           {blocks_layout.items.map((blockId) => {
             const childBlock = blocks[blockId];
             if (!childBlock) return null;
             
             const position = childBlock.position || { x: 0, y: 0 };
+            const containerSize = childBlock.containerSize;
             
             return (
               <div 
@@ -64,10 +91,13 @@ const CustomSectionBlockView = ({ data, properties }) => {
                 className="freeform-item"
                 style={{
                   position: 'absolute',
-                  left: `${position.x}%`,
-                  top: `${position.y}%`,
-                  width: 'fit-content',
-                  height: 'fit-content',
+                  left: `${position.x}px`,
+                  top: `${position.y}px`,
+                  // Apply explicit size if available
+                  ...(containerSize && {
+                    width: `${containerSize.width}px`,
+                    height: `${containerSize.height}px`,
+                  }),
                 }}
               >
                 {renderBlock(blockId)}

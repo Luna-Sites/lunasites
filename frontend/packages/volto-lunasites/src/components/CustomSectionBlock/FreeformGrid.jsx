@@ -27,19 +27,22 @@ const FreeformGrid = ({
   const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0, handle: null });
   const [guides, setGuides] = useState({ vertical: [], horizontal: [] });
   const [activeGuides, setActiveGuides] = useState({ vertical: null, horizontal: null });
+  const [containerHeight, setContainerHeight] = useState(500); // Dynamic height state
   const containerRef = useRef(null);
   const SNAP_THRESHOLD = 10; // pixels for position snapping
   const POSITION_GRID_SIZE = 10; // Snap position to 10px grid (as percentage)
   const RESIZE_GRID_SIZE = 20; // Snap resize to 20px grid
   const MIN_BLOCK_SIZE = { width: 100, height: 60 }; // Minimum block dimensions in px
   const MAX_BLOCK_SIZE = { width: 800, height: 600 }; // Maximum block dimensions in px
+  const MIN_CONTAINER_HEIGHT = 400; // Minimum container height
+  const CONTAINER_PADDING_BOTTOM = 100; // Padding below the lowest block
 
-  // Get or initialize position for a block
+  // Get or initialize position for a block (in pixels, not percentages)
   const getBlockPosition = useCallback((blockId) => {
     const block = blocks[blockId];
     if (!block) return { x: 0, y: 0 };
     
-    // Use stored position or default
+    // Position is stored in pixels to avoid movement when container resizes
     return block.position || { x: 0, y: 0 };
   }, [blocks]);
 
@@ -74,6 +77,41 @@ const FreeformGrid = ({
     return defaultSize || { width: 200, height: 150 };
   }, [blocks]);
 
+  /**
+   * Calculate optimal container height based on block positions
+   * Finds the lowest block and adds padding
+   */
+  const calculateContainerHeight = useCallback(() => {
+    let maxBottom = 0;
+    
+    // Find the lowest positioned block
+    blocksLayout.items.forEach(blockId => {
+      const block = blocks[blockId];
+      if (block?.position) {
+        // Position is now in pixels
+        const blockTop = block.position.y || 0;
+        const blockSize = getBlockSize(blockId);
+        const blockBottom = blockTop + (blockSize?.height || 100);
+        
+        // Update max bottom if this block is lower
+        if (blockBottom > maxBottom) {
+          maxBottom = blockBottom;
+        }
+      }
+    });
+    
+    // Add padding and ensure minimum height
+    return Math.max(MIN_CONTAINER_HEIGHT, maxBottom + CONTAINER_PADDING_BOTTOM);
+  }, [blocks, blocksLayout.items, getBlockSize]);
+
+  // Update container height when blocks change
+  useEffect(() => {
+    const newHeight = calculateContainerHeight();
+    if (Math.abs(newHeight - containerHeight) > 10) { // Only update if significant change
+      setContainerHeight(newHeight);
+    }
+  }, [blocks, blocksLayout.items, calculateContainerHeight, containerHeight]);
+
   // Generate alignment guides from all blocks
   const generateGuides = useCallback(() => {
     const verticalGuides = new Set();
@@ -90,38 +128,41 @@ const FreeformGrid = ({
       const containerRect = containerRef.current?.getBoundingClientRect();
       if (!containerRect) return;
 
-      // Calculate relative positions
-      const relativeLeft = pos.x;
-      const relativeRight = pos.x + (rect.width / containerRect.width * 100);
-      const relativeTop = pos.y;
-      const relativeBottom = pos.y + (rect.height / containerRect.height * 100);
-      const relativeCenterX = (relativeLeft + relativeRight) / 2;
-      const relativeCenterY = (relativeTop + relativeBottom) / 2;
+      // Calculate positions in pixels
+      const left = pos.x;
+      const right = pos.x + rect.width;
+      const top = pos.y;
+      const bottom = pos.y + rect.height;
+      const centerX = (left + right) / 2;
+      const centerY = (top + bottom) / 2;
 
-      // Add guides for edges and center
-      verticalGuides.add(relativeLeft);
-      verticalGuides.add(relativeRight);
-      verticalGuides.add(relativeCenterX);
+      // Add guides for edges and center (in pixels)
+      verticalGuides.add(left);
+      verticalGuides.add(right);
+      verticalGuides.add(centerX);
       
-      horizontalGuides.add(relativeTop);
-      horizontalGuides.add(relativeBottom);
-      horizontalGuides.add(relativeCenterY);
+      horizontalGuides.add(top);
+      horizontalGuides.add(bottom);
+      horizontalGuides.add(centerY);
     });
 
-    // Add container edge guides
-    verticalGuides.add(0);
-    verticalGuides.add(50); // Center
-    verticalGuides.add(100);
-    
-    horizontalGuides.add(0);
-    horizontalGuides.add(50); // Center
-    horizontalGuides.add(100);
+    // Add container edge guides (in pixels)
+    const containerRect = containerRef.current?.getBoundingClientRect();
+    if (containerRect) {
+      verticalGuides.add(0);
+      verticalGuides.add(containerRect.width / 2); // Center
+      verticalGuides.add(containerRect.width);
+      
+      horizontalGuides.add(0);
+      horizontalGuides.add(containerHeight / 2); // Center
+      horizontalGuides.add(containerHeight);
+    }
 
     setGuides({
       vertical: Array.from(verticalGuides),
       horizontal: Array.from(horizontalGuides),
     });
-  }, [blocksLayout.items, draggedBlock, getBlockPosition]);
+  }, [blocksLayout.items, draggedBlock, getBlockPosition, containerHeight]);
 
   // Handle drag start
   const handleMouseDown = useCallback((e, blockId) => {
@@ -134,9 +175,9 @@ const FreeformGrid = ({
     const containerRect = container.getBoundingClientRect();
     const blockPos = getBlockPosition(blockId);
     
-    // Calculate offset from mouse to block position
-    const offsetX = (e.clientX - containerRect.left) / containerRect.width * 100 - blockPos.x;
-    const offsetY = (e.clientY - containerRect.top) / containerRect.height * 100 - blockPos.y;
+    // Calculate offset from mouse to block position (in pixels)
+    const offsetX = (e.clientX - containerRect.left) - blockPos.x;
+    const offsetY = (e.clientY - containerRect.top) - blockPos.y;
 
     setDraggedBlock(blockId);
     setDragStart({ x: offsetX, y: offsetY });
@@ -153,16 +194,16 @@ const FreeformGrid = ({
     const container = containerRef.current;
     const containerRect = container.getBoundingClientRect();
     
-    // Calculate new position as percentage
-    let newX = (e.clientX - containerRect.left) / containerRect.width * 100 - dragStart.x;
-    let newY = (e.clientY - containerRect.top) / containerRect.height * 100 - dragStart.y;
+    // Calculate new position in pixels
+    let newX = (e.clientX - containerRect.left) - dragStart.x;
+    let newY = (e.clientY - containerRect.top) - dragStart.y;
 
     // Get block dimensions for snapping
     const blockElem = document.querySelector(`[data-block-id="${draggedBlock}"]`);
     if (blockElem) {
       const blockRect = blockElem.getBoundingClientRect();
-      const blockWidth = blockRect.width / containerRect.width * 100;
-      const blockHeight = blockRect.height / containerRect.height * 100;
+      const blockWidth = blockRect.width;
+      const blockHeight = blockRect.height;
       const blockCenterX = newX + blockWidth / 2;
       const blockCenterY = newY + blockHeight / 2;
       const blockRight = newX + blockWidth;
@@ -174,39 +215,39 @@ const FreeformGrid = ({
       let activeVertical = null;
       let activeHorizontal = null;
 
-      // Check vertical guides
+      // Check vertical guides (in pixels)
       guides.vertical.forEach(guide => {
         // Snap left edge
-        if (Math.abs(newX - guide) < SNAP_THRESHOLD * 100 / containerRect.width) {
+        if (Math.abs(newX - guide) < SNAP_THRESHOLD) {
           snappedX = guide;
           activeVertical = guide;
         }
         // Snap right edge
-        if (Math.abs(blockRight - guide) < SNAP_THRESHOLD * 100 / containerRect.width) {
+        if (Math.abs(blockRight - guide) < SNAP_THRESHOLD) {
           snappedX = guide - blockWidth;
           activeVertical = guide;
         }
         // Snap center
-        if (Math.abs(blockCenterX - guide) < SNAP_THRESHOLD * 100 / containerRect.width) {
+        if (Math.abs(blockCenterX - guide) < SNAP_THRESHOLD) {
           snappedX = guide - blockWidth / 2;
           activeVertical = guide;
         }
       });
 
-      // Check horizontal guides
+      // Check horizontal guides (in pixels)
       guides.horizontal.forEach(guide => {
         // Snap top edge
-        if (Math.abs(newY - guide) < SNAP_THRESHOLD * 100 / containerRect.height) {
+        if (Math.abs(newY - guide) < SNAP_THRESHOLD) {
           snappedY = guide;
           activeHorizontal = guide;
         }
         // Snap bottom edge
-        if (Math.abs(blockBottom - guide) < SNAP_THRESHOLD * 100 / containerRect.height) {
+        if (Math.abs(blockBottom - guide) < SNAP_THRESHOLD) {
           snappedY = guide - blockHeight;
           activeHorizontal = guide;
         }
         // Snap center
-        if (Math.abs(blockCenterY - guide) < SNAP_THRESHOLD * 100 / containerRect.height) {
+        if (Math.abs(blockCenterY - guide) < SNAP_THRESHOLD) {
           snappedY = guide - blockHeight / 2;
           activeHorizontal = guide;
         }
@@ -217,9 +258,31 @@ const FreeformGrid = ({
       setActiveGuides({ vertical: activeVertical, horizontal: activeHorizontal });
     }
 
-    // Constrain to container bounds
-    newX = Math.max(0, Math.min(100, newX));
-    newY = Math.max(0, Math.min(100, newY));
+    // Get block dimensions in pixels
+    let blockWidthPx = 0;
+    let blockHeightPx = 0;
+    
+    if (blockElem) {
+      const blockRect = blockElem.getBoundingClientRect();
+      blockWidthPx = blockRect.width;
+      blockHeightPx = blockRect.height;
+    }
+    
+    // Calculate if block would extend past current container bottom
+    const blockBottomPx = newY + blockHeightPx;
+    const neededHeight = blockBottomPx + CONTAINER_PADDING_BOTTOM;
+    
+    // Dynamically expand container if needed
+    if (neededHeight > containerHeight) {
+      setContainerHeight(neededHeight);
+    }
+    
+    // Constrain to container bounds (in pixels)
+    const maxX = Math.max(0, containerRect.width - blockWidthPx);
+    const maxY = Math.max(0, containerHeight - blockHeightPx);
+    
+    newX = Math.max(0, Math.min(maxX, newX));
+    newY = Math.max(0, Math.min(maxY, newY));
     
     // Snap position to grid for cleaner layouts (unless actively snapping to guides)
     if (!activeGuides.vertical && !activeGuides.horizontal) {
@@ -227,16 +290,22 @@ const FreeformGrid = ({
       newY = Math.round(newY / POSITION_GRID_SIZE) * POSITION_GRID_SIZE;
     }
 
-    // Update block position
+    // Update block position (in pixels)
     onUpdateBlockPosition(draggedBlock, { x: newX, y: newY });
-  }, [draggedBlock, dragStart, guides, onUpdateBlockPosition]);
+  }, [draggedBlock, dragStart, guides, onUpdateBlockPosition, containerHeight]);
 
   // Handle drag end
   const handleMouseUp = useCallback(() => {
     setDraggedBlock(null);
     setDragStart({ x: 0, y: 0 });
     setActiveGuides({ vertical: null, horizontal: null });
-  }, []);
+    
+    // Recalculate container height after drag to potentially shrink
+    setTimeout(() => {
+      const newHeight = calculateContainerHeight();
+      setContainerHeight(newHeight);
+    }, 0);
+  }, [calculateContainerHeight]);
 
   // Handle resize start
   const handleResizeStart = useCallback((e, blockId, handle) => {
@@ -293,17 +362,39 @@ const FreeformGrid = ({
         break;
     }
     
-    // Apply constraints
-    newWidth = Math.max(MIN_BLOCK_SIZE.width, Math.min(MAX_BLOCK_SIZE.width, newWidth));
-    newHeight = Math.max(MIN_BLOCK_SIZE.height, Math.min(MAX_BLOCK_SIZE.height, newHeight));
+    // Get current block position to check boundaries
+    const currentBlock = blocks[resizedBlock];
+    if (!currentBlock) return;
+    
+    const position = currentBlock.position || { x: 0, y: 0 };
+    
+    // Calculate maximum allowed size based on position (position is in pixels)
+    // Block should not extend beyond container bounds
+    const maxWidthFromPosition = containerRect.width - position.x;
+    const maxHeightFromPosition = containerHeight - position.y;
+    
+    // Check if resize would extend past container bottom
+    const blockBottomPx = position.y + newHeight;
+    const neededHeight = blockBottomPx + CONTAINER_PADDING_BOTTOM;
+    
+    // Dynamically expand container if needed
+    if (neededHeight > containerHeight) {
+      setContainerHeight(neededHeight);
+    }
+    
+    // Apply constraints including position-based limits
+    newWidth = Math.max(MIN_BLOCK_SIZE.width, Math.min(
+      Math.min(MAX_BLOCK_SIZE.width, maxWidthFromPosition),
+      newWidth
+    ));
+    newHeight = Math.max(MIN_BLOCK_SIZE.height, Math.min(
+      Math.min(MAX_BLOCK_SIZE.height, maxHeightFromPosition),
+      newHeight
+    ));
     
     // Snap to grid for cleaner layouts
     newWidth = Math.round(newWidth / RESIZE_GRID_SIZE) * RESIZE_GRID_SIZE;
     newHeight = Math.round(newHeight / RESIZE_GRID_SIZE) * RESIZE_GRID_SIZE;
-    
-    // Get current block data
-    const currentBlock = blocks[resizedBlock];
-    if (!currentBlock) return;
     
     // For images, just update the containerSize directly
     // Don't use unifiedBlockResize which might mess with image properties
@@ -324,13 +415,19 @@ const FreeformGrid = ({
       // Update with unified data (container size + content properties)
       onUpdateBlockSize(resizedBlock, updatedBlockData);
     }
-  }, [resizedBlock, resizeStart, onUpdateBlockSize, blocks]);
+  }, [resizedBlock, resizeStart, onUpdateBlockSize, blocks, containerHeight]);
 
   // Handle resize end
   const handleResizeEnd = useCallback(() => {
     setResizedBlock(null);
     setResizeStart({ x: 0, y: 0, width: 0, height: 0, handle: null });
-  }, []);
+    
+    // Recalculate container height after resize to potentially shrink
+    setTimeout(() => {
+      const newHeight = calculateContainerHeight();
+      setContainerHeight(newHeight);
+    }, 0);
+  }, [calculateContainerHeight]);
 
   // Set up global mouse event listeners for dragging
   useEffect(() => {
@@ -376,6 +473,10 @@ const FreeformGrid = ({
     <div 
       ref={containerRef}
       className={cx('freeform-grid', className)}
+      style={{
+        minHeight: `${containerHeight}px`,
+        transition: 'min-height 0.3s ease',
+      }}
       onClick={() => onSelectBlock(null)} // Deselect when clicking background
     >
       {/* Snap guides */}
@@ -384,13 +485,13 @@ const FreeformGrid = ({
           {activeGuides.vertical !== null && (
             <div 
               className="snap-guide vertical active"
-              style={{ left: `${activeGuides.vertical}%` }}
+              style={{ left: `${activeGuides.vertical}px` }}
             />
           )}
           {activeGuides.horizontal !== null && (
             <div 
               className="snap-guide horizontal active"
-              style={{ top: `${activeGuides.horizontal}%` }}
+              style={{ top: `${activeGuides.horizontal}px` }}
             />
           )}
         </>
@@ -424,8 +525,8 @@ const FreeformGrid = ({
             })}
             style={{
               position: 'absolute',
-              left: `${position.x}%`,
-              top: `${position.y}%`,
+              left: `${position.x}px`,
+              top: `${position.y}px`,
               // Only apply explicit dimensions if block has been sized
               ...(hasExplicitSize && {
                 width: `${size.width}px`,
