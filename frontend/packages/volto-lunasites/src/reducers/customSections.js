@@ -43,7 +43,6 @@ export default function customSections(state = initialState, action = {}) {
         loading: true,
       };
     case `${GET_CUSTOM_SECTIONS}_SUCCESS`:
-      console.log('GET_CUSTOM_SECTIONS_SUCCESS:', action.result); // Debug
       return {
         ...state,
         error: null,
@@ -107,7 +106,7 @@ export default function customSections(state = initialState, action = {}) {
           loading: false,
         },
         // Remove the deleted section from items
-        items: state.items.filter(item => item.id !== action.result.id),
+        items: state.items.filter((item) => item.id !== action.result.id),
       };
     case `${DELETE_CUSTOM_SECTION}_FAIL`:
       return {

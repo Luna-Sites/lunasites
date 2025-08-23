@@ -89,7 +89,6 @@ export function formatRelativeDate({
   });
 
   const v = Math.round(deltaMiliTime < 0 ? -1 * deltas[pos] : deltas[pos]);
-  // console.log({ date, relativeTo, v });
 
   return isNaN(v)
     ? ''

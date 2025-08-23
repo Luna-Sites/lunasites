@@ -33,7 +33,6 @@ function addMark(editor, key, value) {
         { [key]: value },
         {
           match: (node) => {
-            // console.log('node', node);
             return Text.isText(node) || editor.isVoid(node);
           },
           split: true,

@@ -14,7 +14,7 @@ const DesignSchemaProvider = ({ children }) => {
 
   const designSchema = designSchemaData?.color_schema;
   const loading = useSelector((state) => state?.designSchema?.loading);
-  
+
   // Keep track of current view type
   const [currentViewType, setCurrentViewType] = useState(null);
 
@@ -61,14 +61,19 @@ const DesignSchemaProvider = ({ children }) => {
 
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'class'
+        ) {
           const body = document.body;
-          const hasViewClass = ['view-homepage', 'view-homepage-inverse', 'view-default']
-            .some(className => body.classList.contains(className));
-          
+          const hasViewClass = [
+            'view-homepage',
+            'view-homepage-inverse',
+            'view-default',
+          ].some((className) => body.classList.contains(className));
+
           // If no view class is present but we should have one, re-apply it
           if (!hasViewClass && currentViewType) {
-            console.log('View class was removed, re-applying:', currentViewType);
             body.classList.add(currentViewType);
           }
         }
@@ -77,7 +82,7 @@ const DesignSchemaProvider = ({ children }) => {
 
     observer.observe(document.body, {
       attributes: true,
-      attributeFilter: ['class']
+      attributeFilter: ['class'],
     });
 
     return () => observer.disconnect();
@@ -224,25 +229,27 @@ const DesignSchemaProvider = ({ children }) => {
 
   const applyViewType = (data) => {
     const body = document.body;
-    
+
     // Remove existing view classes
-    const viewClasses = ['view-homepage', 'view-homepage-inverse', 'view-default'];
-    viewClasses.forEach(className => {
+    const viewClasses = [
+      'view-homepage',
+      'view-homepage-inverse',
+      'view-default',
+    ];
+    viewClasses.forEach((className) => {
       body.classList.remove(className);
     });
-    
+
     // Get view type value - handle both string and object formats
     let viewType = data.view_type;
 
     // Debug logging
-    console.log('View type received:', viewType, typeof viewType);
 
     if (viewType && typeof viewType === 'object') {
       // If it's an object, try to get the value or token
       viewType = viewType.value || viewType.token || viewType.title;
-      console.log('Extracted view type:', viewType);
     }
-    
+
     // Apply new view type if specified
     if (viewType && typeof viewType === 'string') {
       body.classList.add(`view-${viewType}`);

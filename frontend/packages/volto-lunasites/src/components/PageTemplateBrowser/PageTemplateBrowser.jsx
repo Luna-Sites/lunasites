@@ -15,7 +15,11 @@ import Icon from '@plone/volto/components/theme/Icon/Icon';
 
 // Local component imports
 import PageTemplateCard from './PageTemplateCard';
-import { pageCategories, subCategories, getPagesByCategory } from './pageTemplates';
+import {
+  pageCategories,
+  subCategories,
+  getPagesByCategory,
+} from './pageTemplates';
 
 // Icons
 import plusSVG from '@plone/volto/icons/circle-plus.svg';
@@ -32,10 +36,9 @@ const PageTemplateBrowser = React.memo(
     currentPath = '/',
   }) => {
     const intl = useIntl();
-    const [selectedMainCategory, setSelectedMainCategory] = useState('section-based');
+    const [selectedMainCategory, setSelectedMainCategory] =
+      useState('section-based');
     const [selectedSubCategory, setSelectedSubCategory] = useState('all');
-
-    console.log('PageTemplateBrowser render:', { selectedMainCategory, selectedSubCategory });
 
     const handleCreatePage = useCallback(
       (pageTemplate) => {
@@ -82,7 +85,7 @@ const PageTemplateBrowser = React.memo(
               <div className="categories-sidebar">
                 <div className="categories-list">
                   {pageCategories.map((category) => (
-                    <div 
+                    <div
                       key={category.id}
                       className={`category-item ${selectedMainCategory === category.id ? 'active' : ''}`}
                       onClick={() => setSelectedMainCategory(category.id)}
@@ -96,18 +99,29 @@ const PageTemplateBrowser = React.memo(
               {/* Main Content Area */}
               <div className="content-area">
                 {/* Category Explanation - Always visible */}
-                <div className="category-explanation" style={{
-                  margin: '210px 0 20px 0'
-                }}>
+                <div
+                  className="category-explanation"
+                  style={{
+                    margin: '210px 0 20px 0',
+                  }}
+                >
                   <h3>
-                    {selectedMainCategory === 'section-based' ? 'Section Based Pages' :
-                     selectedMainCategory === 'linear-blocks' ? 'Linear Blocks Pages' :
-                     selectedMainCategory === 'free-grid' ? 'Free Grid Pages' : 'Section Based Pages'}
+                    {selectedMainCategory === 'section-based'
+                      ? 'Section Based Pages'
+                      : selectedMainCategory === 'linear-blocks'
+                        ? 'Linear Blocks Pages'
+                        : selectedMainCategory === 'free-grid'
+                          ? 'Free Grid Pages'
+                          : 'Section Based Pages'}
                   </h3>
                   <p>
-                    {selectedMainCategory === 'section-based' ? 'Build pages with reusable sections - hero, testimonials, services. Perfect for landing pages and structured content.' :
-                     selectedMainCategory === 'linear-blocks' ? 'Traditional vertical layout with stacked content blocks. Classic format for blog posts, articles, and simple pages.' :
-                     selectedMainCategory === 'free-grid' ? 'Flexible drag & drop layout like Wix. Position elements anywhere on the page for creative and unique designs. Coming soon!' : 'Build pages with reusable sections - hero, testimonials, services. Perfect for landing pages and structured content.'}
+                    {selectedMainCategory === 'section-based'
+                      ? 'Build pages with reusable sections - hero, testimonials, services. Perfect for landing pages and structured content.'
+                      : selectedMainCategory === 'linear-blocks'
+                        ? 'Traditional vertical layout with stacked content blocks. Classic format for blog posts, articles, and simple pages.'
+                        : selectedMainCategory === 'free-grid'
+                          ? 'Flexible drag & drop layout like Wix. Position elements anywhere on the page for creative and unique designs. Coming soon!'
+                          : 'Build pages with reusable sections - hero, testimonials, services. Perfect for landing pages and structured content.'}
                   </p>
                 </div>
 
@@ -126,10 +140,13 @@ const PageTemplateBrowser = React.memo(
                     ))}
                   </div>
                 </div>
-                
+
                 {/* Pages Grid */}
                 <div className="pages-grid">
-                  {getPagesByCategory(selectedMainCategory, selectedSubCategory).map((pageTemplate) => (
+                  {getPagesByCategory(
+                    selectedMainCategory,
+                    selectedSubCategory,
+                  ).map((pageTemplate) => (
                     <PageTemplateCard
                       key={pageTemplate.id}
                       pageTemplate={pageTemplate}

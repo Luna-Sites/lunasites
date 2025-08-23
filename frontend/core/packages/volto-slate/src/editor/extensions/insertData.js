@@ -102,7 +102,6 @@ export const insertData = (editor) => {
             (b) => Editor.isInline(editor, b) || Text.isText(b),
           ) > -1
         ) {
-          // console.log('insert fragment', fragment);
           // TODO: we want normalization also when dealing with fragments
           Transforms.insertFragment(editor, fragment);
           return true;

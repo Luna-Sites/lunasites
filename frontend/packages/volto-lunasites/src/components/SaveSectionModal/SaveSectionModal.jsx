@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Button, Input, TextArea, Header, Message, Dropdown } from 'semantic-ui-react';
+import {
+  Modal,
+  Form,
+  Button,
+  Input,
+  TextArea,
+  Header,
+  Message,
+  Dropdown,
+} from 'semantic-ui-react';
 import { defineMessages, injectIntl } from 'react-intl';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import saveSVG from '@plone/volto/icons/save.svg';
@@ -40,7 +49,14 @@ const messages = defineMessages({
   },
 });
 
-const SaveSectionModal = ({ open, onClose, onSave, intl, loading = false, existingCategories = [] }) => {
+const SaveSectionModal = ({
+  open,
+  onClose,
+  onSave,
+  intl,
+  loading = false,
+  existingCategories = [],
+}) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
@@ -49,10 +65,10 @@ const SaveSectionModal = ({ open, onClose, onSave, intl, loading = false, existi
 
   // Update category options when existingCategories change
   useEffect(() => {
-    const options = existingCategories.map(cat => ({ 
-      key: cat, 
-      value: cat, 
-      text: cat 
+    const options = existingCategories.map((cat) => ({
+      key: cat,
+      value: cat,
+      text: cat,
     }));
     setCategoryOptions(options);
   }, [existingCategories]);
@@ -63,14 +79,12 @@ const SaveSectionModal = ({ open, onClose, onSave, intl, loading = false, existi
       return;
     }
 
-    const sectionData = { 
-      name: name.trim(), 
+    const sectionData = {
+      name: name.trim(),
       description: description.trim(),
-      category: category.trim() || 'General'
+      category: category.trim() || 'General',
     };
-    
-    console.log('Modal sending data:', sectionData); // Debug
-    
+
     try {
       await onSave(sectionData);
       // Reset form
@@ -95,7 +109,7 @@ const SaveSectionModal = ({ open, onClose, onSave, intl, loading = false, existi
   const handleAddCategory = (e, { value }) => {
     // Add new category to options if it doesn't exist
     const newOption = { key: value, value: value, text: value };
-    if (!categoryOptions.find(opt => opt.value === value)) {
+    if (!categoryOptions.find((opt) => opt.value === value)) {
       setCategoryOptions([...categoryOptions, newOption]);
     }
     setCategory(value);
@@ -107,7 +121,7 @@ const SaveSectionModal = ({ open, onClose, onSave, intl, loading = false, existi
         <Icon name={saveSVG} size="24px" />
         {intl.formatMessage(messages.saveSectionTitle)}
       </Header>
-      
+
       <Modal.Content>
         <Form>
           <Form.Field>
@@ -119,7 +133,7 @@ const SaveSectionModal = ({ open, onClose, onSave, intl, loading = false, existi
               autoFocus
             />
           </Form.Field>
-          
+
           <Form.Field>
             <label>{intl.formatMessage(messages.sectionCategory)}</label>
             <Dropdown
@@ -143,25 +157,17 @@ const SaveSectionModal = ({ open, onClose, onSave, intl, loading = false, existi
               rows={3}
             />
           </Form.Field>
-          
-          {error && (
-            <Message error>
-              {error}
-            </Message>
-          )}
+
+          {error && <Message error>{error}</Message>}
         </Form>
       </Modal.Content>
-      
+
       <Modal.Actions>
-        <Button
-          basic
-          onClick={handleClose}
-          disabled={loading}
-        >
+        <Button basic onClick={handleClose} disabled={loading}>
           <Icon name={clearSVG} size="18px" />
           {intl.formatMessage(messages.cancel)}
         </Button>
-        
+
         <Button
           primary
           onClick={handleSubmit}

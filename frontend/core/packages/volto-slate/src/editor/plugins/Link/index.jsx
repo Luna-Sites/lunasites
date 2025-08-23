@@ -54,7 +54,6 @@ const LinkEditor = (props) => {
   const dispatch = useDispatch();
 
   const active = getActiveElement(editor);
-  // console.log('active', active);
   const [node] = active || [];
 
   if (showEditor && !savedPosition.current) {

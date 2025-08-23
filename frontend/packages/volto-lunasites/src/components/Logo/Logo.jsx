@@ -37,10 +37,6 @@ const Logo = () => {
   const logoText = designSchemaData?.logo_text || null;
   const logoImage = designSchemaData?.logo_image || null;
   const logoTextBold = designSchemaData?.logo_text_bold || false;
-  
-  // Debug: să vedem ce valoare primim
-  console.log('Logo text bold value:', logoTextBold, 'Type:', typeof logoTextBold);
-  console.log('Full design schema data:', designSchemaData);
 
   // Render logo based on availability: both > image only > text only > default
   const renderLogo = () => {
@@ -89,10 +85,10 @@ const Logo = () => {
             className="logo-image"
             style={{ flexShrink: 0 }}
           />
-          <div 
+          <div
             className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}
-            style={{ 
-              flexShrink: 0
+            style={{
+              flexShrink: 0,
             }}
           >
             <RenderBlocks content={textContent} />
@@ -133,7 +129,7 @@ const Logo = () => {
       };
 
       return (
-        <div 
+        <div
           className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}
         >
           <RenderBlocks content={textContent} />

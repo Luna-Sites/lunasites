@@ -167,7 +167,6 @@ export const createAndSelectNewBlockAfter = (editor, blockValue, intl) => {
 
   const blocksFieldname = getBlocksFieldname(properties);
   const blocksLayoutFieldname = getBlocksLayoutFieldname(properties);
-  // console.log('layout', blocksLayoutFieldname, newFormData);
 
   ReactDOM.unstable_batchedUpdates(() => {
     blockProps.saveSlateBlockSelection(blockId, 'start');

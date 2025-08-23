@@ -51,18 +51,11 @@ export const customEnterHandler = ({ editor, event }) => {
       // Check if the text node exists and has content
       const paragraphNode = block.children[0];
       const actualTextNode = paragraphNode?.children?.[0];
-      console.log({
-        paragraphNode,
-        actualTextNode,
-        hasText: !!actualTextNode?.text,
-        endsWithNewline: actualTextNode?.text?.endsWith('\n'),
-      });
       if (
         actualTextNode &&
         actualTextNode.text &&
         actualTextNode.text.endsWith('\n')
       ) {
-        console.log('Deleting newline character');
         // Remove the newline character
         Transforms.delete(editor, {
           at: {
