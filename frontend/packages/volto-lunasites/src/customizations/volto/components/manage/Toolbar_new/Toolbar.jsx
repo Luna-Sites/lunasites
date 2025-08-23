@@ -301,10 +301,7 @@ class Toolbar extends Component {
   // Custom handler for opening PageTemplateBrowser
   handleOpenPageBrowser = (e) => {
     e.preventDefault();
-    console.log('Opening PageTemplateBrowser from toolbar!');
-    this.setState({ showPageBrowser: true }, () => {
-      console.log('State updated, showPageBrowser:', this.state.showPageBrowser);
-    });
+    this.setState({ showPageBrowser: true }, () => {});
   };
 
   handleCreatePage = (pageTemplate) => {

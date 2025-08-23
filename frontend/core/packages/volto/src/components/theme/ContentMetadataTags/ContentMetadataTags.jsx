@@ -62,7 +62,6 @@ const ContentMetadataTags = (props) => {
 
   const contentImageInfo = getContentImageInfo();
 
-  console.log('pl', toPublicURL(contentImageInfo.url));
   const getTitle = () => {
     const includeSiteTitle =
       config?.settings?.siteTitleFormat?.includeSiteTitle || false;

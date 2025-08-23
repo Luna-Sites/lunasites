@@ -52,6 +52,7 @@ class SmartInheritService(Service):
             'tools_header',
             'logo_image',
             'logo_text',
+            'logo_text_bold',
             'hide_login_button',
             'hide_search_button'
         ]
@@ -208,6 +209,7 @@ class SmartInheritService(Service):
             'tools_header': [],
             'logo_image': None,
             'logo_text': None,
+            'logo_text_bold': False,
             'hide_login_button': False,
             'hide_search_button': False
         }

@@ -37,24 +37,13 @@ const Types = ({ types, pathname, content, currentLanguage }) => {
     };
   }, []);
 
-  // Debug logging
-  console.log('Types component rendered!', { 
-    types, 
-    typesLength: types?.length, 
-    pathname, 
-    content,
-    showPageBrowser 
-  });
-
   const handleCreatePage = (pageTemplate) => {
     // Extract current path for navigation
-    const currentPath = pathname
-      .replace(/\/contents$/, '')
-      .replace(/\/$/, '');
-    
+    const currentPath = pathname.replace(/\/contents$/, '').replace(/\/$/, '');
+
     // Build the route URL for creating the page
     const addContentTypeRoute = `${currentPath}/add?type=${pageTemplate.contentType}`;
-    
+
     // Navigate to the add page
     history.push(addContentTypeRoute);
   };
@@ -62,19 +51,22 @@ const Types = ({ types, pathname, content, currentLanguage }) => {
   const handleOpenPageBrowser = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('Button clicked! Current state:', showPageBrowser);
     setShowPageBrowser(true);
-    console.log('State set to true');
   };
 
   return (types && types.length > 0) ||
-    (settings.isMultilingual && content['@components'] && content['@components'].translations) ? (
+    (settings.isMultilingual &&
+      content['@components'] &&
+      content['@components'].translations) ? (
     <>
       <div className="menu-more pastanaga-menu">
         {types && types.length > 0 && (
           <>
             <header>
-              <FormattedMessage id="Add Content" defaultMessage="Add Content…" />
+              <FormattedMessage
+                id="Add Content"
+                defaultMessage="Add Content…"
+              />
             </header>
             <div className="pastanaga-menu-list">
               <ul>
@@ -86,7 +78,9 @@ const Types = ({ types, pathname, content, currentLanguage }) => {
                     id="toolbar-browse-page-templates"
                     className="item featured-item"
                     style={{
-                      background: showPageBrowser ? 'red' : 'linear-gradient(135deg, #094ce1 0%, #073bb8 100%)',
+                      background: showPageBrowser
+                        ? 'red'
+                        : 'linear-gradient(135deg, #094ce1 0%, #073bb8 100%)',
                       color: 'white',
                       fontWeight: '600',
                       borderRadius: '4px',
@@ -95,19 +89,31 @@ const Types = ({ types, pathname, content, currentLanguage }) => {
                       border: 'none',
                       cursor: 'pointer',
                       width: '100%',
-                      textAlign: 'left'
+                      textAlign: 'left',
                     }}
                   >
                     🎨 Browse Page Templates {showPageBrowser ? '(OPEN)' : ''}
                   </button>
                 </li>
-                
+
                 {/* Separator */}
-                <li style={{ borderTop: '1px solid #eee', margin: '8px 0', padding: '4px 0' }}>
-                  <small style={{ color: '#666', fontSize: '0.8em', padding: '0 12px' }}>
-                    <FormattedMessage 
-                      id="Or create blank content:" 
-                      defaultMessage="Or create blank content:" 
+                <li
+                  style={{
+                    borderTop: '1px solid #eee',
+                    margin: '8px 0',
+                    padding: '4px 0',
+                  }}
+                >
+                  <small
+                    style={{
+                      color: '#666',
+                      fontSize: '0.8em',
+                      padding: '0 12px',
+                    }}
+                  >
+                    <FormattedMessage
+                      id="Or create blank content:"
+                      defaultMessage="Or create blank content:"
                     />
                   </small>
                 </li>
@@ -134,7 +140,7 @@ const Types = ({ types, pathname, content, currentLanguage }) => {
                         key={item.title}
                         style={{ opacity: '0.7' }}
                       >
-{item.title}
+                        {item.title}
                       </a>
                     </li>
                   );
@@ -143,7 +149,7 @@ const Types = ({ types, pathname, content, currentLanguage }) => {
             </div>
           </>
         )}
-        
+
         {/* Multilingual translations section - keep original functionality */}
         {settings.isMultilingual && content['@components'].translations && (
           <>
@@ -166,10 +172,7 @@ const Types = ({ types, pathname, content, currentLanguage }) => {
                   ),
                   (item) => (
                     <li key={item}>
-                      <a
-                        href={`${pathname}/@add-translation`}
-                        className="item"
-                      >
+                      <a href={`${pathname}/@add-translation`} className="item">
                         {langmap[item].nativeName}{' '}
                         {item !== currentLanguage &&
                           `(${langmap[item].englishName})`}
@@ -184,52 +187,58 @@ const Types = ({ types, pathname, content, currentLanguage }) => {
       </div>
 
       {/* Debug state indicator */}
-      <div style={{
-        position: 'fixed',
-        bottom: '10px',
-        right: '10px',
-        background: showPageBrowser ? 'red' : 'green',
-        color: 'white',
-        padding: '10px',
-        borderRadius: '5px',
-        zIndex: 9999999
-      }}>
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '10px',
+          right: '10px',
+          background: showPageBrowser ? 'red' : 'green',
+          color: 'white',
+          padding: '10px',
+          borderRadius: '5px',
+          zIndex: 9999999,
+        }}
+      >
         Modal State: {showPageBrowser ? 'OPEN' : 'CLOSED'}
       </div>
 
       {/* Page Template Browser Modal using Portal */}
-      {showPageBrowser && portalElement && ReactDOM.createPortal(
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          backgroundColor: 'rgba(0,0,0,0.8)',
-          zIndex: 2147483647,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          pointerEvents: 'all'
-        }}>
-          <div style={{
-            background: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            maxWidth: '500px',
-            outline: 'none',
-            position: 'relative',
-            pointerEvents: 'all'
-          }}>
-            <h2>Test Modal Works with Portal!</h2>
-            <p>showPageBrowser: {showPageBrowser.toString()}</p>
-            <button onClick={() => setShowPageBrowser(false)}>
-              Close
-            </button>
-          </div>
-        </div>,
-        portalElement
-      )}
+      {showPageBrowser &&
+        portalElement &&
+        ReactDOM.createPortal(
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'rgba(0,0,0,0.8)',
+              zIndex: 2147483647,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              pointerEvents: 'all',
+            }}
+          >
+            <div
+              style={{
+                background: 'white',
+                padding: '20px',
+                borderRadius: '8px',
+                maxWidth: '500px',
+                outline: 'none',
+                position: 'relative',
+                pointerEvents: 'all',
+              }}
+            >
+              <h2>Test Modal Works with Portal!</h2>
+              <p>showPageBrowser: {showPageBrowser.toString()}</p>
+              <button onClick={() => setShowPageBrowser(false)}>Close</button>
+            </div>
+          </div>,
+          portalElement,
+        )}
     </>
   ) : null;
 };

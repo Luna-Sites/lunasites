@@ -22,7 +22,10 @@ import BlockChooserButton from '@plone/volto/components/manage/BlockChooser/Bloc
 import trashSVG from '@plone/volto/icons/delete.svg';
 import saveSVG from '@plone/volto/icons/save.svg';
 import { SaveSectionModal } from '../../../../../../components/SaveSectionModal';
-import { saveCustomSection, getCustomSections } from '../../../../../../actions/customSections';
+import {
+  saveCustomSection,
+  getCustomSections,
+} from '../../../../../../actions/customSections';
 
 const messages = defineMessages({
   delete: {
@@ -37,8 +40,8 @@ const messages = defineMessages({
 
 const EditBlockWrapper = (props) => {
   const dispatch = useDispatch();
-  const saveState = useSelector(state => state.customSections?.save);
-  const customSectionsState = useSelector(state => state.customSections);
+  const saveState = useSelector((state) => state.customSections?.save);
+  const customSectionsState = useSelector((state) => state.customSections);
   const [showSaveModal, setShowSaveModal] = React.useState(false);
 
   // Fetch custom sections when component mounts if not already loaded
@@ -51,14 +54,13 @@ const EditBlockWrapper = (props) => {
   // Close modal when save is successful
   React.useEffect(() => {
     if (saveState?.loaded && showSaveModal) {
-      console.log('Save successful, closing modal'); // Debug
       setShowSaveModal(false);
-      
+
       // Force refresh of custom sections data
       dispatch(getCustomSections());
     }
   }, [saveState?.loaded, showSaveModal, dispatch]);
-  
+
   const hideHandler = (data) => {
     return (
       !!data.fixed ||
@@ -74,9 +76,7 @@ const EditBlockWrapper = (props) => {
   const handleModalSave = ({ name, description, category }) => {
     const { blockProps } = props;
     const { data } = blockProps;
-    
-    console.log('handleModalSave received:', { name, description, category }); // Debug
-    
+
     // Get section data to save
     const sectionData = {
       name,
@@ -165,7 +165,7 @@ const EditBlockWrapper = (props) => {
                 <Icon name={trashSVG} size="19px" />
               </Button>
             )}
-            
+
             <Button
               icon
               basic
@@ -215,45 +215,47 @@ const EditBlockWrapper = (props) => {
               <Icon name={trashSVG} size="18px" />
             </Button>
           )}
-          {config.experimental.addBlockButton.enabled && showBlockChooser && type !== 'group' && (
-            <BlockChooserButton
-              data={data}
-              block={block}
-              onInsertBlock={(id, value) => {
-                if (blockHasValue(data)) {
-                  onSelectBlock(onInsertBlock(id, value));
-                } else {
-                  const blocksFieldname = getBlocksFieldname(properties);
-                  const newFormData = applyBlockInitialValue({
-                    id,
-                    value,
-                    blocksConfig,
-                    formData: {
-                      ...properties,
-                      [blocksFieldname]: {
-                        ...properties[blocksFieldname],
-                        [id]: value || null,
+          {config.experimental.addBlockButton.enabled &&
+            showBlockChooser &&
+            type !== 'group' && (
+              <BlockChooserButton
+                data={data}
+                block={block}
+                onInsertBlock={(id, value) => {
+                  if (blockHasValue(data)) {
+                    onSelectBlock(onInsertBlock(id, value));
+                  } else {
+                    const blocksFieldname = getBlocksFieldname(properties);
+                    const newFormData = applyBlockInitialValue({
+                      id,
+                      value,
+                      blocksConfig,
+                      formData: {
+                        ...properties,
+                        [blocksFieldname]: {
+                          ...properties[blocksFieldname],
+                          [id]: value || null,
+                        },
                       },
-                    },
-                    intl,
-                  });
-                  const newValue = newFormData[blocksFieldname][id];
-                  onChangeBlock(id, newValue);
-                }
-              }}
-              onMutateBlock={onMutateBlock}
-              allowedBlocks={allowedBlocks}
-              showRestricted={showRestricted}
-              blocksConfig={blocksConfig}
-              size="24px"
-              properties={properties}
-              navRoot={navRoot}
-              contentType={contentType}
-            />
-          )}
+                      intl,
+                    });
+                    const newValue = newFormData[blocksFieldname][id];
+                    onChangeBlock(id, newValue);
+                  }
+                }}
+                onMutateBlock={onMutateBlock}
+                allowedBlocks={allowedBlocks}
+                showRestricted={showRestricted}
+                blocksConfig={blocksConfig}
+                size="24px"
+                properties={properties}
+                navRoot={navRoot}
+                contentType={contentType}
+              />
+            )}
         </div>
       </div>
-      
+
       {/* Save Section Modal */}
       <SaveSectionModal
         open={showSaveModal}

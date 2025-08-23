@@ -60,8 +60,6 @@ const View = (props) => {
   const leftIcon = data.leftIcon;
   const rightIcon = data.rightIcon;
 
-  // Debug inneralign
-  console.log('inneralign data:', data.inneralign, 'full data:', data);
   // Create button styles based on block-specific configuration
   const buttonStyles = {
     ...style,

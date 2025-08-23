@@ -99,7 +99,5 @@ export async function apiRequest(
     instance.interceptors.response.use(_handleResponse, _handleError);
   }
 
-  // console.log({ method, path, options });
-  // console.log(instance.request(axiosConfigAdapter(method, path, options)));
   return instance.request(axiosConfigAdapter(method, path, options));
 }

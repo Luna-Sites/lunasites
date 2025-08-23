@@ -86,16 +86,6 @@ const BlockChooserButton = (props) => {
     // Additional check: if the properties object is small and focused, it's likely inside a group
     const isNested = hasNestedStructure && Object.keys(properties).length <= 3;
 
-    // eslint-disable-next-line no-console
-    // console.log('BlockChooser Context Detection:', {
-    //   block,
-    //   hasNestedStructure,
-    //   isNotAtPageLevel,
-    //   isNested,
-    //   propertiesKeys: Object.keys(properties || {}),
-    //   properties: properties,
-    // });
-
     return isNested || isNotAtPageLevel;
   }, [properties, block]);
 
