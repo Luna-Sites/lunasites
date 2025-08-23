@@ -3,7 +3,7 @@ import cx from 'classnames';
 import './CardsGrid.css';
 
 const CardsGridView = ({ data, className }) => {
-  const { cards = [], columns = 4, variation = 'card' } = data;
+  const { cards = [], columns = 4, variation = 'card', cardSize = 'large' } = data;
 
   // Helper function to get image URL
   const getImageUrl = (image) => {
@@ -61,6 +61,7 @@ const CardsGridView = ({ data, className }) => {
         'cards-grid',
         `cards-grid-${variation}`,
         `columns-${columns}`,
+        `size-${cardSize}`,
         className,
       )}
     >

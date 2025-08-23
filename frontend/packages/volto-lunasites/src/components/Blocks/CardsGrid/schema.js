@@ -49,6 +49,22 @@ const messages = defineMessages({
     id: 'Card Grid',
     defaultMessage: 'Card Grid',
   },
+  cardSize: {
+    id: 'Card Size',
+    defaultMessage: 'Card Size',
+  },
+  small: {
+    id: 'Small',
+    defaultMessage: 'Small',
+  },
+  medium: {
+    id: 'Medium',
+    defaultMessage: 'Medium',
+  },
+  large: {
+    id: 'Large',
+    defaultMessage: 'Large',
+  },
 });
 
 export const CardsGridSchema = (props) => {
@@ -60,7 +76,7 @@ export const CardsGridSchema = (props) => {
       {
         id: 'default',
         title: 'Default',
-        fields: ['headline', 'variation', 'columns'],
+        fields: ['headline', 'variation', 'columns', 'cardSize'],
       },
       {
         id: 'cards',
@@ -88,6 +104,16 @@ export const CardsGridSchema = (props) => {
         minimum: 1,
         maximum: 8,
         default: 4,
+      },
+      cardSize: {
+        title: intl.formatMessage(messages.cardSize),
+        type: 'string',
+        choices: [
+          ['small', intl.formatMessage(messages.small)],
+          ['medium', intl.formatMessage(messages.medium)],
+          ['large', intl.formatMessage(messages.large)],
+        ],
+        default: 'large',
       },
       cards: {
         title: intl.formatMessage(messages.cards),
