@@ -64,6 +64,9 @@ import {
   ScrollingBannerEdit,
   scrollingBannerSchemaEnhancer,
 } from './components/Blocks/ScrollingBanner';
+import { CardsGridView, CardsGridEdit } from './components/Blocks/CardsGrid';
+import SimpleImageWidget from './components/Blocks/CardsGrid/SimpleImageWidget';
+import gridCardsSVG from '@plone/volto/icons/apps.svg';
 
 // Design Schema System
 import { DesignSchemaProvider, ColorSchemaField } from './components';
@@ -161,6 +164,9 @@ const applyConfig = (config) => {
 
   // Register simple icon picker widget
   config.widgets.widget.simple_icon_picker = SimpleIconPicker;
+  
+  // Register simple image widget for Cards Grid
+  config.widgets.widget.simple_image = SimpleImageWidget;
 
   config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;
@@ -494,6 +500,19 @@ const applyConfig = (config) => {
     schemaEnhancer: scrollingBannerSchemaEnhancer,
     mostUsed: false,
     sidebarTab: 1,
+  };
+
+  // Cards Grid Block
+  config.blocks.blocksConfig.cardsGrid = {
+    id: 'cardsGrid',
+    title: 'Cards Grid',
+    icon: gridCardsSVG,
+    group: 'common',
+    view: CardsGridView,
+    edit: CardsGridEdit,
+    sidebarTab: 1,
+    restricted: false,
+    mostUsed: true,
   };
 
   // Check if the separator is present before enhancing it
