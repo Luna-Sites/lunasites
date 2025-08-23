@@ -1,0 +1,23 @@
+/* Logo component styles */
+
+/* Apply bold font weight to all text elements inside logo-text-bold */
+.logo-text-bold,
+.logo-text-bold * {
+  font-weight: bold !important;
+}
+
+/* Ensure the style applies to Slate content */
+.logo-text-bold .slate-editor,
+.logo-text-bold .slate-editor p,
+.logo-text-bold .slate-editor span,
+.logo-text-bold .slate-editor strong,
+.logo-text-bold .slate-editor em,
+.logo-text-bold .slate-editor a,
+.logo-text-bold h1,
+.logo-text-bold h2,
+.logo-text-bold h3,
+.logo-text-bold h4,
+.logo-text-bold h5,
+.logo-text-bold h6 {
+  font-weight: bold !important;
+}

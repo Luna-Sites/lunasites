@@ -8,6 +8,7 @@ import { toBackendLang } from '@plone/volto/helpers';
 import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 import { serializeNodesToText } from '@plone/volto-slate/editor/render';
 import RenderBlocks from '@plone/volto/components/theme/View/RenderBlocks';
+import './Logo.css';
 
 const messages = defineMessages({
   site: {
@@ -35,6 +36,11 @@ const Logo = () => {
   // Extract logo data from design schema
   const logoText = designSchemaData?.logo_text || null;
   const logoImage = designSchemaData?.logo_image || null;
+  const logoTextBold = designSchemaData?.logo_text_bold || false;
+  
+  // Debug: să vedem ce valoare primim
+  console.log('Logo text bold value:', logoTextBold, 'Type:', typeof logoTextBold);
+  console.log('Full design schema data:', designSchemaData);
 
   // Render logo based on availability: both > image only > text only > default
   const renderLogo = () => {
@@ -83,7 +89,12 @@ const Logo = () => {
             className="logo-image"
             style={{ flexShrink: 0 }}
           />
-          <div className="logo-text-content" style={{ flexShrink: 0 }}>
+          <div 
+            className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}
+            style={{ 
+              flexShrink: 0
+            }}
+          >
             <RenderBlocks content={textContent} />
           </div>
         </div>
@@ -122,7 +133,9 @@ const Logo = () => {
       };
 
       return (
-        <div className="logo-text-content">
+        <div 
+          className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}
+        >
           <RenderBlocks content={textContent} />
         </div>
       );

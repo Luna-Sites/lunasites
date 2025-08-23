@@ -30,7 +30,7 @@ class IDesignSchema(model.Schema):
     model.fieldset(
         'design_schema',
         label=_('Design Schema'),
-        fields=['color_schema', 'view_type', 'navbar_width', 'container_width', 'tools_header', 'hide_login_button', 'hide_search_button'],
+        fields=['color_schema', 'view_type', 'navbar_width', 'container_width', 'tools_header', 'hide_login_button', 'hide_search_button', 'logo_image', 'logo_text', 'logo_text_bold'],
     )
     
 
@@ -63,6 +63,13 @@ class IDesignSchema(model.Schema):
         title=_('Logo Text'),
         description=_('Custom text logo with rich formatting. If filled, this will override logo image.'),
         required=False,
+    )
+    
+    logo_text_bold = schema.Bool(
+        title=_('Bold Logo Text'),
+        description=_('Make the logo text bold'),
+        required=False,
+        default=False,
     )
     
     directives.widget(
@@ -183,6 +190,14 @@ class DesignSchemaBehavior:
     @hide_search_button.setter
     def hide_search_button(self, value):
         self.context.hide_search_button = value
+    
+    @property
+    def logo_text_bold(self):
+        return getattr(self.context, 'logo_text_bold', False)
+
+    @logo_text_bold.setter
+    def logo_text_bold(self, value):
+        self.context.logo_text_bold = value
     
     def get_width_type(self, width_value):
         """Auto-detect width type based on value format"""
