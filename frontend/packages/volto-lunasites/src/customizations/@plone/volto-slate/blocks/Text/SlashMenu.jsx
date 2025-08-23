@@ -64,7 +64,7 @@ const SlashMenu = ({
             active={index === selected}
             onClick={(e) => {
               const newBlockData = { '@type': block.id };
-              
+
               // Use smart mutation if we have access to form data
               if (properties && onChangeFormData && editor) {
                 try {
@@ -75,20 +75,23 @@ const SlashMenu = ({
                     properties,
                   );
                   onChangeFormData(result.formData);
-                  
+
                   // Focus on the new block if one was created
                   if (result.newBlockId && onSelectBlock) {
                     onSelectBlock(result.newBlockId);
                   }
                 } catch (error) {
-                  console.error('Smart mutation failed, falling back to standard:', error);
+                  console.error(
+                    'Smart mutation failed, falling back to standard:',
+                    error,
+                  );
                   onMutateBlock(currentBlock, newBlockData);
                 }
               } else {
                 // Fallback to standard mutation
                 onMutateBlock(currentBlock, newBlockData);
               }
-              
+
               e.stopPropagation();
             }}
           >
@@ -298,15 +301,16 @@ const PersistentSlashMenu = ({ editor }) => {
           properties,
         );
         onChangeFormData(result.formData);
-        
+
         // Focus on the new block if one was created
-        }
       } catch (error) {
-        console.error('Smart mutation failed, falling back to standard:', error);
+        console.error(
+          'Smart mutation failed, falling back to standard:',
+          error,
+        );
         onMutateBlock(block, newBlockData, emptySlateBlock());
       }
     } else {
-      console.log('Fallback to standard mutation');
       // Fallback to standard mutation
       onMutateBlock(block, newBlockData, emptySlateBlock());
     }
