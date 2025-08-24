@@ -58,6 +58,15 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Clickable card styles */
+a.card-clickable {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 
 /* Size Variations for Card Grid */
@@ -108,13 +117,29 @@
 
 /* Icon Grid specific card styles */
 .cards-grid-icon .card-item {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   transition: all 0.3s ease;
 }
 
 .cards-grid-icon .card-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+}
+
+/* No Background variant for Icon Grid */
+.cards-grid-icon.no-background .card-item {
+  background: transparent;
+  box-shadow: none;
+  padding: 0.5rem;
+}
+
+.cards-grid-icon.no-background .card-item:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.cards-grid-icon.no-background.icon-layout-left-right .card-item {
+  padding: 0.5rem;
 }
 
 .cards-grid-icon .card-item:hover .card-icon {
@@ -131,6 +156,71 @@
   flex-direction: column;
   justify-content: flex-start;
   overflow: hidden;
+}
+
+/* Icon Grid - Left-Right Layout */
+.cards-grid-icon.icon-layout-left-right .card-item {
+  text-align: left;
+  aspect-ratio: auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  height: auto;
+  min-height: auto;
+  max-height: 100px;
+  width: 100%;
+}
+
+.cards-grid-icon.icon-layout-left-right .card-icon {
+  margin-bottom: 0;
+  width: 80px;
+  height: 80px;
+  flex: 0 0 80px;
+  border-radius: 8px;
+}
+
+.cards-grid-icon.icon-layout-left-right.size-small .card-item {
+  padding: 0.5rem;
+}
+
+.cards-grid-icon.icon-layout-left-right.size-small .card-icon {
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
+}
+
+.cards-grid-icon.icon-layout-left-right.size-medium .card-item {
+  padding: 0.625rem;
+}
+
+.cards-grid-icon.icon-layout-left-right.size-medium .card-icon {
+  width: 70px;
+  height: 70px;
+  flex: 0 0 70px;
+}
+
+.cards-grid-icon.icon-layout-left-right .card-content {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cards-grid-icon.icon-layout-left-right .card-title {
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+.cards-grid-icon.icon-layout-left-right .card-description {
+  -webkit-line-clamp: 2;
+  margin-bottom: 0.5rem;
+}
+
+.cards-grid-icon.icon-layout-left-right .card-link-text {
+  margin-top: 0.25rem;
 }
 
 /* Size Variations for Icon Grid */
@@ -160,6 +250,11 @@
   overflow: hidden;
   border-radius: 8px;
   background: #f5f5f5;
+}
+
+/* Remove icon background for no-background variant */
+.cards-grid-icon.no-background .card-icon {
+  background: transparent;
 }
 
 .cards-grid-icon .card-icon img {
@@ -213,7 +308,7 @@
   -webkit-box-orient: vertical;
 }
 
-.cards-grid-icon .card-link {
+.cards-grid-icon .card-link-text {
   font-size: 0.85rem;
   margin-top: auto;
 }
@@ -249,15 +344,15 @@
   -webkit-line-clamp: 2;
 }
 
-.cards-grid-icon.size-small .card-link {
+.cards-grid-icon.size-small .card-link-text {
   font-size: 0.7rem;
 }
 
-.cards-grid-icon.size-medium .card-link {
+.cards-grid-icon.size-medium .card-link-text {
   font-size: 0.775rem;
 }
 
-.card-link {
+.card-link-text {
   color: #007eb1;
   text-decoration: none;
   font-weight: 500;
@@ -266,8 +361,29 @@
   margin-top: auto;
 }
 
-.card-link:hover {
+a.card-clickable:hover .card-link-text {
   text-decoration: underline;
+}
+
+/* Responsive adjustments for left-right layout */
+@media (max-width: 768px) {
+  .cards-grid-icon.icon-layout-left-right .card-icon {
+    width: 60px;
+    height: 60px;
+    flex: 0 0 60px;
+  }
+  
+  .cards-grid-icon.icon-layout-left-right.size-small .card-icon {
+    width: 50px;
+    height: 50px;
+    flex: 0 0 50px;
+  }
+  
+  .cards-grid-icon.icon-layout-left-right.size-medium .card-icon {
+    width: 55px;
+    height: 55px;
+    flex: 0 0 55px;
+  }
 }
 
 /* Responsive Design */
@@ -321,6 +437,11 @@
   border: 2px dashed #ddd;
   padding: 1rem;
   position: relative;
+}
+
+.cards-grid-edit .card-item {
+  cursor: default !important;
+  pointer-events: none;
 }
 
 .cards-grid-edit.cards-grid-container:empty::after {

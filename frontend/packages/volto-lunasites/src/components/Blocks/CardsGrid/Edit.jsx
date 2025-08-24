@@ -10,7 +10,7 @@ const CardsGridEdit = (props) => {
 
   return (
     <>
-      <CardsGridView data={data} className="cards-grid-edit" />
+      <CardsGridView data={data} className="cards-grid-edit" isEditMode={true} />
       
       <SidebarPortal selected={selected}>
         <InlineForm

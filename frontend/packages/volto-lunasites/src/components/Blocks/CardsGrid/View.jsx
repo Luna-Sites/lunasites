@@ -2,8 +2,8 @@ import React from 'react';
 import cx from 'classnames';
 import './CardsGrid.css';
 
-const CardsGridView = ({ data, className }) => {
-  const { cards = [], columns = 4, variation = 'card', cardSize = 'large' } = data;
+const CardsGridView = ({ data, className, isEditMode = false }) => {
+  const { cards = [], columns = 4, variation = 'card', cardSize = 'large', iconLayout = 'centered', removeBackground = false } = data;
 
   // Helper function to get image URL
   const getImageUrl = (image) => {
@@ -62,6 +62,8 @@ const CardsGridView = ({ data, className }) => {
         `cards-grid-${variation}`,
         `columns-${columns}`,
         `size-${cardSize}`,
+        variation === 'icon' && iconLayout ? `icon-layout-${iconLayout}` : '',
+        variation === 'icon' && removeBackground ? 'no-background' : '',
         className,
       )}
     >
@@ -72,8 +74,13 @@ const CardsGridView = ({ data, className }) => {
           const imageUrl = getImageUrl(card.image);
           const linkUrl = getLinkUrl(card.link);
           
+          const CardWrapper = linkUrl && !isEditMode ? 'a' : 'div';
+          const cardProps = linkUrl && !isEditMode 
+            ? { href: linkUrl, className: "card-item card-clickable" } 
+            : { className: "card-item" };
+          
           return (
-            <div key={index} className="card-item">
+            <CardWrapper key={index} {...cardProps}>
               {variation === 'icon' && imageUrl && (
                 <div className="card-icon">
                   <img src={imageUrl} alt={card.title || ''} />
@@ -85,21 +92,23 @@ const CardsGridView = ({ data, className }) => {
                   <img src={imageUrl} alt={card.title || ''} />
                 </div>
               )}
-            
-            {card.title && (
-              <h3 className="card-title">{card.title}</h3>
-            )}
-            
-            {card.description && (
-              <p className="card-description">{card.description}</p>
-            )}
-            
-              {linkUrl && (
-                <a href={linkUrl} className="card-link">
-                  {card.linkText || 'Read more'}
-                </a>
-              )}
-            </div>
+              
+              <div className="card-content">
+                {card.title && (
+                  <h3 className="card-title">{card.title}</h3>
+                )}
+                
+                {card.description && (
+                  <p className="card-description">{card.description}</p>
+                )}
+                
+                {linkUrl && card.linkText && (
+                  <span className="card-link-text">
+                    {card.linkText}
+                  </span>
+                )}
+              </div>
+            </CardWrapper>
           );
         })}
       </div>

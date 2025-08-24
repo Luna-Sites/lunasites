@@ -65,10 +65,34 @@ const messages = defineMessages({
     id: 'Large',
     defaultMessage: 'Large',
   },
+  iconLayout: {
+    id: 'Icon Layout',
+    defaultMessage: 'Icon Layout',
+  },
+  centered: {
+    id: 'Centered',
+    defaultMessage: 'Centered',
+  },
+  leftRight: {
+    id: 'Left-Right',
+    defaultMessage: 'Left-Right',
+  },
+  removeBackground: {
+    id: 'Remove background',
+    defaultMessage: 'Remove background',
+  },
 });
 
 export const CardsGridSchema = (props) => {
-  const { intl } = props;
+  const { intl, data = {} } = props;
+
+  const fields = ['headline', 'variation', 'columns', 'cardSize'];
+  
+  // Add iconLayout and removeBackground fields only when variation is 'icon'
+  if (data.variation === 'icon') {
+    fields.push('iconLayout');
+    fields.push('removeBackground');
+  }
 
   return {
     title: intl.formatMessage(messages.cardsGrid),
@@ -76,7 +100,7 @@ export const CardsGridSchema = (props) => {
       {
         id: 'default',
         title: 'Default',
-        fields: ['headline', 'variation', 'columns', 'cardSize'],
+        fields: fields,
       },
       {
         id: 'cards',
@@ -115,6 +139,20 @@ export const CardsGridSchema = (props) => {
         ],
         default: 'large',
       },
+      iconLayout: {
+        title: intl.formatMessage(messages.iconLayout),
+        type: 'string',
+        choices: [
+          ['centered', intl.formatMessage(messages.centered)],
+          ['left-right', intl.formatMessage(messages.leftRight)],
+        ],
+        default: 'centered',
+      },
+      removeBackground: {
+        title: intl.formatMessage(messages.removeBackground),
+        type: 'boolean',
+        default: false,
+      },
       cards: {
         title: intl.formatMessage(messages.cards),
         type: 'array',
@@ -152,7 +190,6 @@ export const CardsGridSchema = (props) => {
             linkText: {
               title: intl.formatMessage(messages.cardLinkText),
               type: 'string',
-              default: 'Read more',
             },
           },
           required: [],
