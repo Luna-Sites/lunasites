@@ -161,21 +161,35 @@ const ColorSchemaWidget = (props) => {
   };
 
   const generateColorPreview = (schema) => {
+    // Filter out background color from circles and use it as backdrop
+    const circleColors = colorFields.filter(field => field.key !== 'background_color');
+    const backgroundColor = schema.background_color || '#ffffff';
+    
     return (
       <div style={{
         display: 'flex',
+        alignItems: 'center',
         height: '40px',
-        borderRadius: '4px',
-        overflow: 'hidden',
-        border: '1px solid #ddd'
+        borderRadius: '20px',
+        backgroundColor: backgroundColor,
+        border: '1px solid #ddd',
+        padding: '5px 10px',
+        position: 'relative',
+        overflow: 'visible'
       }}>
-        {colorFields.map(field => (
+        {circleColors.map((field, index) => (
           <div
             key={field.key}
             style={{
-              flex: 1,
+              width: '30px',
+              height: '30px',
+              borderRadius: '50%',
               backgroundColor: schema[field.key] || '#ffffff',
-              minWidth: '10px'
+              border: '2px solid white',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              marginLeft: index > 0 ? '-10px' : '0',
+              zIndex: circleColors.length - index,
+              position: 'relative'
             }}
             title={field.label}
           />

@@ -46,4 +46,36 @@
       name="@custom-sections"
       />
 
+  <!-- Luna Theming REST API Service -->
+  <plone:service
+      method="GET"
+      factory=".luna_theming.LunaThemingGet"
+      for="zope.interface.Interface"
+      permission="zope2.View"
+      name="@luna-theming"
+      />
+
+  <plone:service
+      method="POST"
+      factory=".luna_theming.LunaThemingPost"
+      for="zope.interface.Interface"
+      permission="cmf.ModifyPortalContent"
+      name="@luna-theming"
+      />
+
+  <plone:service
+      method="PUT"
+      factory=".luna_theming.LunaThemingPost"
+      for="zope.interface.Interface"
+      permission="cmf.ModifyPortalContent"
+      name="@luna-theming"
+      />
+
+  <!-- Luna Theming Expandable Element -->
+  <adapter
+      factory=".luna_theming.LunaThemingExpansion"
+      name="luna_theming"
+      />
+
+
 </configure>

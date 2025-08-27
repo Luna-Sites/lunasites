@@ -6,6 +6,14 @@
     >
 
 
+  <!-- Luna Theming Control Panel -->
+  <browser:page
+      name="luna-theming-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      permission="cmf.ManagePortal"
+      class=".luna_theming.LunaThemingControlPanelView"
+      />
+
   <!-- -*- extra stuff goes here -*- -->
 
 </configure>

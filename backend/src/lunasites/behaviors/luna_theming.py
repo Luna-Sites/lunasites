@@ -1,24 +1,37 @@
-"""Module where all interfaces, events and exceptions live."""
+"""Luna Theming behavior for extensible site styling."""
 
+from plone.autoform import directives
+from plone.autoform.interfaces import IFormFieldProvider
+from plone.behavior import annotation
 from plone.schema import JSONField
+from plone.supermodel import model
 from zope import schema
-from zope.interface import Interface
-from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+from zope.interface import provider
 
 from lunasites import _
 
 
-class IBrowserLayer(IDefaultBrowserLayer):
-    """Marker interface that defines a browser layer."""
+@provider(IFormFieldProvider)
+class ILunaTheming(model.Schema):
+    """Luna Theming behavior for extensible site styling."""
 
+    model.fieldset(
+        "luna_theming",
+        label=_("Luna Theming"),
+        fields=["luna_theming_data"],
+    )
 
-class ILunaThemingRegistry(Interface):
-    """Luna Theming Registry Settings."""
+    directives.widget(
+        "luna_theming_data",
+        frontendOptions={
+            "widget": "luna_theming_widget",
+        },
+    )
 
-    luna_theming_config = JSONField(
+    luna_theming_data = JSONField(
         title=_("Luna Theming Configuration"),
         description=_(
-            "Global theming configuration including colors, fonts, buttons and more."
+            "Extensible theming configuration including colors, fonts, buttons and more."
         ),
         required=False,
         default={
@@ -49,3 +62,8 @@ class ILunaThemingRegistry(Interface):
         },
         missing_value={},
     )
+
+
+@annotation.factory
+class LunaThemingAnnotation:
+    """Luna Theming annotation storage."""

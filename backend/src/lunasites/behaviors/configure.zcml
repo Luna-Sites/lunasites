@@ -12,4 +12,13 @@
       marker=".design_schema.IDesignSchema"
       />
 
+  <!-- Luna Theming Behavior -->
+  <plone:behavior
+      title="Luna Theming"
+      description="Extensible theming configuration including colors, fonts, buttons and more"
+      provides=".luna_theming.ILunaTheming"
+      factory=".luna_theming.LunaThemingAnnotation"
+      marker=".luna_theming.ILunaTheming"
+      />
+
 </configure>

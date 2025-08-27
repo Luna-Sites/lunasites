@@ -4,3 +4,9 @@ export {
   getCustomSections,
   deleteCustomSection,
 } from './customSections';
+export {
+  getLunaTheming,
+  setLunaTheming,
+  applyLunaThemingPreset,
+  clearLunaTheming,
+} from './lunaTheming';
