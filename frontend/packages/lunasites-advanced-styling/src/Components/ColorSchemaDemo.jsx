@@ -54,13 +54,13 @@ const ColorSchemaDemo = () => {
             <Card className="color-schema-card">
               <Card.Content
                 style={{
-                  backgroundColor: 'var(--lunasites-header-color)',
+                  backgroundColor: 'var(--lunasites-header-text-color)',
                   color: 'white',
                 }}
               >
                 <Card.Header>Header Color</Card.Header>
                 <Card.Description>
-                  Uses --lunasites-header-color
+                  Uses --lunasites-header-text-color
                 </Card.Description>
               </Card.Content>
             </Card>

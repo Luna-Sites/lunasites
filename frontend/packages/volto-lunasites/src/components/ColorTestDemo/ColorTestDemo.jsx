@@ -15,8 +15,11 @@ const ColorTestDemo = () => {
           .trim(),
         primary: style.getPropertyValue('--lunasites-primary-color').trim(),
         secondary: style.getPropertyValue('--lunasites-secondary-color').trim(),
-        header: style.getPropertyValue('--lunasites-header-color').trim(),
+        tertiary: style.getPropertyValue('--lunasites-tertiary-color').trim(),
+        neutral: style.getPropertyValue('--lunasites-neutral-color').trim(),
         text: style.getPropertyValue('--lunasites-text-color').trim(),
+        // Legacy support
+        header: style.getPropertyValue('--lunasites-header-text-color').trim(),
         accent: style.getPropertyValue('--lunasites-accent-color').trim(),
       });
     };
@@ -26,9 +29,11 @@ const ColorTestDemo = () => {
 
     // Listen for color changes
     window.addEventListener('colorSchemaApplied', updateColors);
+    window.addEventListener('lunaThemingApplied', updateColors);
 
     return () => {
       window.removeEventListener('colorSchemaApplied', updateColors);
+      window.removeEventListener('lunaThemingApplied', updateColors);
     };
   }, []);
 
@@ -82,7 +87,7 @@ const ColorTestDemo = () => {
       >
         <h3
           style={{
-            color: 'var(--lunasites-header-color)',
+            color: 'var(--lunasites-header-text-color)',
             margin: '0 0 10px 0',
           }}
         >

@@ -9,6 +9,7 @@ import { SimpleColorPickerCore } from 'lunasites-advanced-styling/Widgets/Simple
 import { useSelector, useDispatch } from 'react-redux';
 import config from '@plone/registry';
 import { getDesignSite } from '../../actions/colorSchema';
+import { getLunaTheming, setLunaTheming } from '../../actions';
 import { ModernColorPicker } from '../ColorPicker';
 
 const ColorSchemaField = (props) => {
@@ -21,12 +22,6 @@ const ColorSchemaField = (props) => {
     primary_color: '',
     secondary_color: '',
     tertiary_color: '',
-    header_bg_color: '',
-    header_text_color: '',
-    text_color: '',
-    accent_color: '',
-    dropdown_color: '',
-    dropdown_font_color: '',
     ...value,
   });
   const [presets, setPresets] = React.useState([]);
@@ -36,11 +31,7 @@ const ColorSchemaField = (props) => {
     React.useState(null);
   const [activeColorPicker, setActiveColorPicker] = React.useState(null);
 
-  // Get inherited color schema info similar to volto-footer
-  const pathname = useSelector((state) => state.router?.location?.pathname);
-  const [inheritedSchema, setInheritedSchema] = React.useState({});
-
-  const mainColorFields = [
+  const colorFields = [
     {
       key: 'background_color',
       label: 'Background',
@@ -68,145 +59,40 @@ const ColorSchemaField = (props) => {
     },
   ];
 
-  const colorFields = [
-    ...mainColorFields,
-    {
-      key: 'header_bg_color',
-      label: 'Header BG',
-      description: 'Header background',
-    },
-    {
-      key: 'header_text_color',
-      label: 'Header Text',
-      description: 'Header text color',
-    },
-    {
-      key: 'dropdown_color',
-      label: 'Dropdown BG',
-      description: 'Dropdown background',
-    },
-    {
-      key: 'dropdown_font_color',
-      label: 'Dropdown Text',
-      description: 'Dropdown font color',
-    },
-  ];
-
-  // Load presets and inherited schema on mount
+  // Load presets on mount
   React.useEffect(() => {
     loadPresets();
-    loadInheritedSchema();
-  }, [pathname]);
+  }, []);
 
-  const isUrlExcluded = (url) => {
-    const { nonContentRoutes = [], addonRoutes = [] } = config.settings;
-    const matchesNonContent = nonContentRoutes.some((route) =>
-      route instanceof RegExp ? route.test(url) : false,
-    );
-    const matchesAddon = addonRoutes.some((route) =>
-      typeof route.path === 'string' ? url.startsWith(route.path) : false,
-    );
-
-    return matchesNonContent || matchesAddon;
-  };
-
-  const loadInheritedSchema = async () => {
-    try {
-      let cleanedUrl = pathname;
-
-      // First clean the URL from /edit or /add
-      if (pathname?.endsWith('/edit')) {
-        cleanedUrl = cleanedUrl.slice(0, -'/edit'.length);
-      }
-      if (pathname?.endsWith('/add')) {
-        cleanedUrl = cleanedUrl.slice(0, -'/add'.length);
-      }
-      // Then check if we need to use ++api++
-      if (isUrlExcluded(pathname) || pathname.includes('/controlpanel'))
-        cleanedUrl = flattenToAppURL(cleanedUrl);
-      const result = await dispatch(getDesignSite(pathname));
-
-      if (result?.response) {
-        const data = result.response;
-
-        const inheritedData =
-          data['lunasites.behaviors.design_schema.IDesignSchema']?.data
-            ?.color_schema || {};
-
-        setInheritedSchema(inheritedData);
-      }
-    } catch (error) {
-      console.error('Failed to load inherited color schema:', error);
-    }
-  };
-
-  const getInheritedSchema = React.useCallback(() => {
-    // Use the inherited schema from API call
-    return inheritedSchema;
-  }, [inheritedSchema]);
 
   // Update schema when value changes
   React.useEffect(() => {
     if (value && Object.keys(value).length > 0) {
       setColorSchema((prev) => ({ ...prev, ...value }));
-    } else {
-      // If value is empty/null, populate with inherited values
-      const inherited = getInheritedSchema();
-      const initialSchema = {
-        background_color: inherited.background_color || '',
-        primary_color: inherited.primary_color || '',
-        secondary_color: inherited.secondary_color || '',
-        header_bg_color: inherited.header_bg_color || '',
-        header_text_color: inherited.header_text_color || '',
-        text_color: inherited.text_color || '',
-        accent_color: inherited.accent_color || '',
-      };
-      setColorSchema(initialSchema);
-
-      // Save inherited values immediately
-      const cleanedSchema = {};
-      Object.entries(initialSchema).forEach(([key, value]) => {
-        if (value && value.trim()) {
-          cleanedSchema[key] = value;
-        }
-      });
-      if (Object.keys(cleanedSchema).length > 0) {
-        onChange(id, cleanedSchema);
-      }
     }
-  }, [value, getInheritedSchema, onChange, id]);
+  }, [value]);
 
   const getEffectiveSchema = React.useCallback(() => {
-    const inherited = getInheritedSchema();
-
-    // Fallback to defaults only if no CSS variable is set
+    // Return just the current colors with defaults
     const defaults = {
       background_color: '#ffffff',
+      neutral_color: '#222222',
       primary_color: '#094ce1',
       secondary_color: '#e73d5c',
-      header_bg_color: '#ffffff',
-      header_text_color: '#2c3e50',
-      text_color: '#333333',
-      accent_color: '#6bb535',
-      dropdown_color: '#ffffff',
-      dropdown_font_color: '#212529',
+      tertiary_color: '#6bb535',
     };
 
-    const current = {};
+    const effective = { ...defaults };
+
+    // Apply current values
     Object.entries(colorSchema).forEach(([key, value]) => {
       if (value && value.trim()) {
-        current[key] = value;
+        effective[key] = value;
       }
     });
 
-    // Use inherited values, fallback to defaults, then override with current
-    const base = {};
-    Object.keys(defaults).forEach((key) => {
-      base[key] = inherited[key] || defaults[key];
-    });
-
-    return { ...base, ...current };
-  }, [colorSchema, getInheritedSchema]);
+    return effective;
+  }, [colorSchema]);
 
   // Apply colors immediately when they change
   React.useEffect(() => {
@@ -671,6 +557,22 @@ const ColorSchemaField = (props) => {
     // Apply to site immediately
     const effectiveSchema = { ...getEffectiveSchema(), [field]: color || '' };
     applyCSSVariables(effectiveSchema);
+
+    // Update Plone registry with the color changes
+    const registryData = {
+      colors: {
+        background_color: effectiveSchema.background_color || '#ffffff',
+        neutral_color: effectiveSchema.neutral_color || '#222222',
+        primary_color: effectiveSchema.primary_color || '#094ce1',
+        secondary_color: effectiveSchema.secondary_color || '#e73d5c',
+        tertiary_color: effectiveSchema.tertiary_color || '#6bb535',
+      }
+    };
+    console.log('Sending to registry:', registryData);
+    dispatch(setLunaTheming(registryData)).then(() => {
+      // Refresh Redux state after backend update
+      dispatch(getLunaTheming());
+    });
   };
 
   const clearColorSchema = () => {
@@ -694,6 +596,21 @@ const ColorSchemaField = (props) => {
     const effectiveSchema = getEffectiveSchema();
     applyCSSVariables(effectiveSchema);
 
+    // Clear registry by setting default values
+    const defaultRegistryData = {
+      colors: {
+        background_color: '#ffffff',
+        neutral_color: '#222222',
+        primary_color: '#094ce1',
+        secondary_color: '#e73d5c',
+        tertiary_color: '#6bb535',
+      }
+    };
+    dispatch(setLunaTheming(defaultRegistryData)).then(() => {
+      // Refresh Redux state after backend update
+      dispatch(getLunaTheming());
+    });
+
     toast.success('Colors cleared - using inherited values');
   };
 
@@ -714,6 +631,22 @@ const ColorSchemaField = (props) => {
       setColorSchema(presetSchema);
       onChange(id, cleanedSchema);
       applyCSSVariables(presetSchema);
+
+      // Update Plone registry with the preset colors
+      const registryData = {
+        colors: {
+          background_color: presetSchema.background_color || '#ffffff',
+          neutral_color: presetSchema.neutral_color || '#222222',
+          primary_color: presetSchema.primary_color || '#094ce1',
+          secondary_color: presetSchema.secondary_color || '#e73d5c',
+          tertiary_color: presetSchema.tertiary_color || '#6bb535',
+        }
+      };
+      dispatch(setLunaTheming(registryData)).then(() => {
+        // Refresh Redux state after backend update
+        dispatch(getLunaTheming());
+      });
+
       toast.success(`Applied preset: ${presetName}`);
     }
   };
@@ -845,7 +778,7 @@ const ColorSchemaField = (props) => {
 
   const generateColorPreview = () => {
     const effectiveSchema = getEffectiveSchema();
-    const circleColors = mainColorFields.filter(
+    const circleColors = colorFields.filter(
       (field) => field.key !== 'background_color',
     );
     const backgroundColor = effectiveSchema.background_color || '#ffffff';
@@ -991,11 +924,8 @@ const ColorSchemaField = (props) => {
                   marginBottom: '15px',
                 }}
               >
-                {mainColorFields.slice(0, 2).map((field) => {
-                  const currentColor =
-                    colorSchema[field.key] ||
-                    getInheritedSchema()[field.key] ||
-                    '#cccccc';
+                {colorFields.slice(0, 2).map((field) => {
+                  const currentColor = colorSchema[field.key] || '';
                   return (
                     <div
                       key={field.key}
@@ -1013,13 +943,9 @@ const ColorSchemaField = (props) => {
                         padding: '10px',
                         color:
                           field.key === 'background_color'
-                            ? colorSchema.neutral_color ||
-                              getInheritedSchema().neutral_color ||
-                              '#333'
+                            ? colorSchema.neutral_color || '#333'
                             : field.key === 'neutral_color'
-                              ? colorSchema.background_color ||
-                                getInheritedSchema().background_color ||
-                                '#fff'
+                              ? colorSchema.background_color || '#fff'
                               : '#fff',
                         textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                       }}
@@ -1110,11 +1036,8 @@ const ColorSchemaField = (props) => {
                   gap: '15px',
                 }}
               >
-                {mainColorFields.slice(2, 5).map((field) => {
-                  const currentColor =
-                    colorSchema[field.key] ||
-                    getInheritedSchema()[field.key] ||
-                    '#cccccc';
+                {colorFields.slice(2, 5).map((field) => {
+                  const currentColor = colorSchema[field.key] || '';
                   return (
                     <div
                       key={field.key}
@@ -1132,17 +1055,11 @@ const ColorSchemaField = (props) => {
                         padding: '10px',
                         color:
                           field.key === 'primary_color'
-                            ? colorSchema.background_color ||
-                              getInheritedSchema().background_color ||
-                              '#fff'
+                            ? colorSchema.background_color || '#fff'
                             : field.key === 'secondary_color'
-                              ? colorSchema.neutral_color ||
-                                getInheritedSchema().neutral_color ||
-                                '#fff'
+                              ? colorSchema.neutral_color || '#fff'
                               : field.key === 'tertiary_color'
-                                ? colorSchema.neutral_color ||
-                                  getInheritedSchema().neutral_color ||
-                                  '#fff'
+                                ? colorSchema.neutral_color || '#fff'
                                 : '#fff',
                         textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                       }}
@@ -1239,7 +1156,7 @@ const ColorSchemaField = (props) => {
                   }}
                 >
                   {presets.map((preset) => {
-                    const circleColors = mainColorFields.filter(
+                    const circleColors = colorFields.filter(
                       (field) => field.key !== 'background_color',
                     );
                     const backgroundColor =

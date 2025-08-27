@@ -154,7 +154,7 @@ const SimpleColorPicker = (props) => {
         computedStyle.getPropertyValue('--lunasites-secondary-color').trim() ||
         '#e73d5c',
       Header:
-        computedStyle.getPropertyValue('--lunasites-header-color').trim() ||
+        computedStyle.getPropertyValue('--lunasites-header-text-color').trim() ||
         '#2c3e50',
       Text:
         computedStyle.getPropertyValue('--lunasites-text-color').trim() ||
@@ -427,7 +427,7 @@ const SimpleColorPickerCore = ({ id, value, onChange, showGradientOption }) => {
         computedStyle.getPropertyValue('--lunasites-secondary-color').trim() ||
         '#e73d5c',
       Header:
-        computedStyle.getPropertyValue('--lunasites-header-color').trim() ||
+        computedStyle.getPropertyValue('--lunasites-header-text-color').trim() ||
         '#2c3e50',
       Text:
         computedStyle.getPropertyValue('--lunasites-text-color').trim() ||

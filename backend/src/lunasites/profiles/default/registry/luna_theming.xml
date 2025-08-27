@@ -2,35 +2,13 @@
 <registry xmlns:i18n="http://xml.zope.org/namespaces/i18n"
           i18n:domain="lunasites">
 
-  <!-- Luna Theming Registry -->
-  <records interface="lunasites.interfaces.ILunaThemingRegistry"
-           prefix="lunasites.luna_theming">
-    <value key="luna_theming_config">{
-      "colors": {
-        "background_color": "#ffffff",
-        "neutral_color": "#222222", 
-        "primary_color": "#094ce1",
-        "secondary_color": "#e73d5c",
-        "tertiary_color": "#6bb535"
-      },
-      "fonts": {
-        "primary_font": "Inter",
-        "secondary_font": "Helvetica",
-        "font_sizes": {
-          "small": "14px",
-          "medium": "16px", 
-          "large": "18px",
-          "xl": "24px",
-          "xxl": "32px"
-        }
-      },
-      "buttons": {
-        "border_radius": "6px",
-        "padding": "8px 16px",
-        "font_weight": "500",
-        "transition": "all 0.15s ease"
-      }
-    }</value>
-  </records>
+  <!-- Luna Theming Configuration -->
+  <record name="lunasites.luna_theming_config">
+    <field type="plone.registry.field.Text">
+      <title>Luna Theming Configuration</title>
+      <description>JSON storage for Luna Theming system configuration</description>
+    </field>
+    <value>{"colors": {"background_color": "#ffffff", "neutral_color": "#222222", "primary_color": "#094ce1", "secondary_color": "#e73d5c", "tertiary_color": "#6bb535"}, "fonts": {"primary_font": "Inter", "secondary_font": "Helvetica", "font_sizes": {"small": "14px", "medium": "16px", "large": "18px", "xl": "24px", "xxl": "32px"}}, "buttons": {"border_radius": "6px", "padding": "8px 16px", "font_weight": "500", "transition": "all 0.15s ease"}}</value>
+  </record>
 
 </registry>

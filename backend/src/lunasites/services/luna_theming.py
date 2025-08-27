@@ -1,13 +1,16 @@
 """Luna Theming REST API service."""
 
+import json
+import logging
 from plone import api
 from plone.registry.interfaces import IRegistry
 from plone.restapi.interfaces import IExpandableElement
 from plone.restapi.services import Service
+from plone.protect.interfaces import IDisableCSRFProtection
 from zope.component import adapter, getUtility
-from zope.interface import implementer, Interface
+from zope.interface import implementer, Interface, alsoProvides
 
-from lunasites.interfaces import ILunaThemingRegistry
+logger = logging.getLogger(__name__)
 
 
 class LunaThemingGet(Service):
@@ -18,7 +21,14 @@ class LunaThemingGet(Service):
         registry = getUtility(IRegistry)
         
         # Get Luna Theming data from registry
-        theming_data = registry.get('lunasites.luna_theming.luna_theming_config', {})
+        theming_data = registry.get('lunasites.luna_theming_config')
+        
+        # Parse JSON if string
+        if isinstance(theming_data, str):
+            try:
+                theming_data = json.loads(theming_data)
+            except (json.JSONDecodeError, TypeError):
+                theming_data = None
         
         # Ensure we have default structure
         if not theming_data:
@@ -62,22 +72,39 @@ class LunaThemingGet(Service):
 class LunaThemingPost(Service):
     """POST/PUT Luna Theming configuration."""
 
+    def __init__(self, context, request):
+        super().__init__(context, request)
+        # Disable CSRF protection for this service
+        alsoProvides(request, IDisableCSRFProtection)
+
     def reply(self):
         """Update Luna Theming configuration."""
+        logger.info("LunaThemingPost.reply() called")
+        
         data = self.request.get('BODY', '{}')
+        logger.info(f"Raw BODY data: {data}")
         
         if isinstance(data, bytes):
             import json
             data = json.loads(data.decode('utf-8'))
         
+        logger.info(f"Parsed data: {data}")
         theming_data = data.get('luna_theming', {})
+        logger.info(f"Theming data: {theming_data}")
         
         # Validate and sanitize theming data
         theming_data = self._validate_theming_data(theming_data)
+        logger.info(f"Validated theming data: {theming_data}")
         
         # Save to registry
         registry = getUtility(IRegistry)
-        registry['lunasites.luna_theming.luna_theming_config'] = theming_data
+        old_value = registry.get('lunasites.luna_theming_config')
+        logger.info(f"Old registry value: {old_value}")
+        
+        registry['lunasites.luna_theming_config'] = json.dumps(theming_data)
+        
+        new_value = registry.get('lunasites.luna_theming_config')
+        logger.info(f"New registry value: {new_value}")
         
         return {
             'luna_theming': theming_data,

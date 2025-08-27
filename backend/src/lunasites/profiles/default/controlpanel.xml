@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object name="portal_controlpanel">
 
-  <!-- Luna Theming Control Panel -->
-  <object name="luna-theming"
-          meta_type="Configlet">
-    <property name="title" i18n:translate="">Luna Theming</property>
-    <property name="description" i18n:translate="">Configure global theming settings including colors, fonts, buttons and more.</property>
-    <property name="category">Products</property>
-    <property name="condition_expr"></property>
-    <property name="action_id">luna-theming</property>
-    <property name="appId">luna-theming</property>
-    <property name="permission">Manage portal</property>
-    <property name="visible">True</property>
-    <object name="luna-theming" meta_type="CMF Action" i18n:domain="lunasites">
-      <property name="title" i18n:translate="">Luna Theming</property>
-      <property name="description" i18n:translate="">Configure global theming settings including colors, fonts, buttons and more.</property>
-      <property name="url_expr">string:${portal_url}/@@luna-theming-controlpanel</property>
-      <property name="permissions">
-        <element value="Manage portal"/>
-      </property>
-      <property name="condition">python:True</property>
-      <property name="visible">True</property>
-    </object>
-  </object>
-
   <!-- -*- extra stuff goes here -*- -->
 
 </object>

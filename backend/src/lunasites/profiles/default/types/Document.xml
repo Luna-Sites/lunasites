@@ -7,7 +7,6 @@
   <!-- Enable Design Schema Behavior -->
   <property name="behaviors" purge="false">
     <element value="lunasites.behaviors.design_schema.IDesignSchema"/>
-    <element value="lunasites.behaviors.luna_theming.ILunaTheming"/>
   </property>
 
 </object>

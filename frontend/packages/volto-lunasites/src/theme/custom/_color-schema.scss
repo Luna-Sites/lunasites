@@ -2,16 +2,25 @@
 // This file provides CSS custom properties for the color schema system
 
 :root {
-  // Default color schema values
+  // Default color schema values - these will be overridden by Luna Theming
   --lunasites-background-color: #ffffff;
+  --lunasites-neutral-color: #222222;
   --lunasites-primary-color: #094ce1;
   --lunasites-secondary-color: #e73d5c;
-  --lunasites-header-bg-color: #ffffff;
-  --lunasites-header-text-color: #2c3e50;
-  --lunasites-text-color: #333333;
-  --lunasites-accent-color: #6bb535;
-  --lunasites-dropdown-color: #ffffff;
-  --lunasites-dropdown-font-color: #212529;
+  --lunasites-tertiary-color: #6bb535;
+  
+  // Computed/derived colors
+  --lunasites-text-color: var(--lunasites-neutral-color);
+  --lunasites-accent-color: var(--lunasites-tertiary-color);
+  --lunasites-header-bg-color: var(--lunasites-background-color);
+  --lunasites-header-text-color: var(--lunasites-primary-color);
+  --lunasites-header-color: var(--lunasites-primary-color); // Deprecated
+  --lunasites-dropdown-color: var(--lunasites-background-color);
+  --lunasites-dropdown-font-color: var(--lunasites-neutral-color);
+  --lunasites-toolbar-color: var(--lunasites-background-color);
+  --lunasites-toolbar-font-color: var(--lunasites-neutral-color);
+  --lunasites-toolbar-border-color: var(--lunasites-neutral-color);
+  --lunasites-toolbar-border-thickness: 1px;
 
   // Derived colors (auto-generated from primary colors)
   --lunasites-primary-light: color-mix(
@@ -671,10 +680,16 @@ a {
 // Dark mode support (if background is dark)
 @media (prefers-color-scheme: dark) {
   :root {
-    // These will be overridden by the color schema widget
+    // These will be overridden by Luna Theming
     // but provide fallbacks for dark mode
     --lunasites-background-color: #1a1a1a;
-    --lunasites-text-color: #ffffff;
+    --lunasites-neutral-color: #ffffff;
+    --lunasites-primary-color: #3498db;
+    --lunasites-secondary-color: #e74c3c;
+    --lunasites-tertiary-color: #2ecc71;
+    
+    // Computed colors will automatically update
+    --lunasites-text-color: var(--lunasites-neutral-color);
     --lunasites-toolbar-color: #343a40;
     --lunasites-toolbar-font-color: #ffffff;
     --lunasites-dropdown-color: #495057;
