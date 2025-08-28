@@ -64,7 +64,6 @@ const ColorSchemaField = (props) => {
     loadPresets();
   }, []);
 
-
   // Update schema when value changes
   React.useEffect(() => {
     if (value && Object.keys(value).length > 0) {
@@ -566,7 +565,7 @@ const ColorSchemaField = (props) => {
         primary_color: effectiveSchema.primary_color || '#094ce1',
         secondary_color: effectiveSchema.secondary_color || '#e73d5c',
         tertiary_color: effectiveSchema.tertiary_color || '#6bb535',
-      }
+      },
     };
     console.log('Sending to registry:', registryData);
     dispatch(setLunaTheming(registryData)).then(() => {
@@ -604,7 +603,7 @@ const ColorSchemaField = (props) => {
         primary_color: '#094ce1',
         secondary_color: '#e73d5c',
         tertiary_color: '#6bb535',
-      }
+      },
     };
     dispatch(setLunaTheming(defaultRegistryData)).then(() => {
       // Refresh Redux state after backend update
@@ -640,7 +639,7 @@ const ColorSchemaField = (props) => {
           primary_color: presetSchema.primary_color || '#094ce1',
           secondary_color: presetSchema.secondary_color || '#e73d5c',
           tertiary_color: presetSchema.tertiary_color || '#6bb535',
-        }
+        },
       };
       dispatch(setLunaTheming(registryData)).then(() => {
         // Refresh Redux state after backend update
@@ -668,18 +667,30 @@ const ColorSchemaField = (props) => {
         setOriginalColorsForPreview(currentEffectiveSchema);
       }
 
-      // Apply preset colors for preview
-      const presetSchema = { ...preset };
-      delete presetSchema.name;
-      applyCSSVariables(presetSchema);
+      // Apply preset colors for preview using AppExtras method
+      const root = document.documentElement;
+      
+      // Apply all colors from preset
+      Object.entries(preset).forEach(([key, value]) => {
+        if (key !== 'name' && value) {
+          root.style.setProperty(`--lunasites-${key.replace(/_/g, '-')}`, value);
+        }
+      });
     },
     [originalColorsForPreview, getEffectiveSchema],
   );
 
   const stopPreview = React.useCallback(() => {
-    // Restore original colors
+    // Restore original colors using AppExtras method
     if (originalColorsForPreview) {
-      applyCSSVariables(originalColorsForPreview);
+      const root = document.documentElement;
+      
+      Object.entries(originalColorsForPreview).forEach(([key, value]) => {
+        if (value) {
+          root.style.setProperty(`--lunasites-${key.replace(/_/g, '-')}`, value);
+        }
+      });
+      
       setOriginalColorsForPreview(null);
     }
   }, [originalColorsForPreview]);
@@ -699,7 +710,6 @@ const ColorSchemaField = (props) => {
       };
     }
   }, [activeColorPicker]);
-
 
   const applyCSSVariables = (schema) => {
     const root = document.documentElement;
@@ -890,7 +900,7 @@ const ColorSchemaField = (props) => {
           <Header style={{ padding: '20px', borderBottom: '1px solid #eee' }}>
             Color Schema Editor
             <button
-              onClick={clearColorSchema}
+              onClick={() => setShowSidebar(false)}
               style={{
                 float: 'right',
                 background: 'none',
@@ -899,7 +909,7 @@ const ColorSchemaField = (props) => {
                 padding: '0',
               }}
             >
-              <Icon name={rightArrowSVG} size="24px" title="Clear Colors" />
+              <Icon name={rightArrowSVG} size="24px" title="Close" />
             </button>
           </Header>
 
@@ -951,7 +961,7 @@ const ColorSchemaField = (props) => {
                       }}
                       onClick={() => {
                         setActiveColorPicker(
-                          activeColorPicker === field.key ? null : field.key
+                          activeColorPicker === field.key ? null : field.key,
                         );
                       }}
                     >
@@ -1008,12 +1018,12 @@ const ColorSchemaField = (props) => {
                             color: 'inherit',
                             textAlign: 'center',
                             width: '100%',
-                            outline: 'none'
+                            outline: 'none',
                           }}
                           onClick={(e) => e.stopPropagation()}
                         />
                       </div>
-                      
+
                       {/* Custom Color Picker */}
                       {activeColorPicker === field.key && (
                         <ModernColorPicker
@@ -1065,7 +1075,7 @@ const ColorSchemaField = (props) => {
                       }}
                       onClick={() => {
                         setActiveColorPicker(
-                          activeColorPicker === field.key ? null : field.key
+                          activeColorPicker === field.key ? null : field.key,
                         );
                       }}
                     >
@@ -1122,12 +1132,12 @@ const ColorSchemaField = (props) => {
                             color: 'inherit',
                             textAlign: 'center',
                             width: '100%',
-                            outline: 'none'
+                            outline: 'none',
                           }}
                           onClick={(e) => e.stopPropagation()}
                         />
                       </div>
-                      
+
                       {/* Custom Color Picker */}
                       {activeColorPicker === field.key && (
                         <ModernColorPicker
@@ -1186,8 +1196,6 @@ const ColorSchemaField = (props) => {
                             preview.style.boxShadow =
                               '0 8px 20px rgba(0,0,0,0.15)';
                           }
-                          // Preview colors on site
-                          previewPreset(preset);
                         }}
                         onMouseLeave={(e) => {
                           const preview =
@@ -1197,8 +1205,6 @@ const ColorSchemaField = (props) => {
                             preview.style.boxShadow =
                               '0 2px 8px rgba(0,0,0,0.1)';
                           }
-                          // Stop preview and restore original colors
-                          stopPreview();
                         }}
                       >
                         {/* Overlapping Circles Preview */}

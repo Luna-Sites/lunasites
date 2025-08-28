@@ -12,4 +12,12 @@
       marker=".design_schema.IDesignSchema"
       />
 
+  <!-- Site Theming Behavior -->
+  <plone:behavior
+      title="Site Theming"
+      description="Adds theming configuration for site-wide appearance"
+      provides=".theming.ISiteTheming"
+      marker=".theming.ISiteTheming"
+      />
+
 </configure>

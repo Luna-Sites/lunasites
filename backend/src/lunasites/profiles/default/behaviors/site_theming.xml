@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object name="lunasites.behaviors.theming.ISiteTheming" 
+        meta_type="Dexterity Behavior">
+  <property name="title">Site Theming</property>
+  <property name="description">Adds theming configuration for site-wide appearance</property>
+  <property name="interface">lunasites.behaviors.theming.ISiteTheming</property>
+  <property name="marker">lunasites.behaviors.theming.ISiteTheming</property>
+  <property name="factory"></property>
+  <property name="enabled">True</property>
+</object>

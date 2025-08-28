@@ -1,0 +1,14 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="lunasites">
+
+  <!-- Color Schema Widget -->
+  <adapter
+      for="zope.schema.interfaces.IDict
+           *"
+      provides="z3c.form.interfaces.IFieldWidget"
+      factory=".ColorSchemaWidget"
+      name="color_schema"
+      />
+
+</configure>

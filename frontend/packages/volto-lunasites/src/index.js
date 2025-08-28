@@ -121,10 +121,10 @@ function BlockClassButton({ format, icon, ...props }) {
 }
 
 // Custom Section Block
-import { 
-  CustomSectionBlockEdit, 
-  CustomSectionBlockView, 
-  CustomSectionBlockSchema 
+import {
+  CustomSectionBlockEdit,
+  CustomSectionBlockView,
+  CustomSectionBlockSchema,
 } from './components';
 
 // Custom keyboard handler
@@ -164,7 +164,7 @@ const applyConfig = (config) => {
 
   // Register simple icon picker widget
   config.widgets.widget.simple_icon_picker = SimpleIconPicker;
-  
+
   // Register simple image widget for Cards Grid
   config.widgets.widget.simple_image = SimpleImageWidget;
 
@@ -309,10 +309,6 @@ const applyConfig = (config) => {
       match: '',
       component: AppExtras,
     },
-    {
-      match: '',
-      component: DesignSchemaProvider,
-    },
   ];
 
   config.blocks.blocksConfig.accordion = {
@@ -419,7 +415,7 @@ const applyConfig = (config) => {
   config.settings.slate.textblockKeyboardHandlers.Enter = [
     customEnterHandler, // Our custom handler first
     ...config.settings.slate.textblockKeyboardHandlers.Enter.filter(
-      handler => handler.name !== 'softBreak'
+      (handler) => handler.name !== 'softBreak',
     ), // Remove softBreak handler and add remaining handlers
   ];
 

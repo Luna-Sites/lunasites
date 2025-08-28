@@ -575,10 +575,27 @@ header {
 
 // Links
 a {
-  color: var(--lunasites-primary-color);
+  color: var(--lunasites-tertiary-color);
 
   &:hover {
-    color: var(--lunasites-primary-dark);
+    color: var(--lunasites-primary-color);
+  }
+}
+
+// Content area links - override hardcoded styles
+.content-area p > a, 
+.content-area li > a, 
+.content-area .breadcrumb a, 
+.breadcrumbs p > a, 
+.breadcrumbs li > a, 
+.breadcrumbs .breadcrumb a {
+  color: var(--lunasites-neutral-color) !important;
+  text-decoration: underline;
+  text-decoration-color: var(--lunasites-tertiary-color) !important;
+  
+  &:hover {
+    color: var(--lunasites-primary-color) !important;
+    text-decoration-color: var(--lunasites-primary-color) !important;
   }
 }
 
