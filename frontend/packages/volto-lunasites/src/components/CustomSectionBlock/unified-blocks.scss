@@ -1,23 +1,28 @@
 // Unified Block Styles - Force identical rendering in Edit and View modes
-// This aggressively overrides Volto's default behavior to ensure visual consistency
+// ONLY WITHIN CustomSectionBlock to avoid breaking standard Volto layouts
 
-// Reset ALL Volto edit-mode specific styles
-.block-editor-wrapper,
-.block-editor,
-.block-chooser,
-.blocks-chooser {
-  &::before,
-  &::after {
-    display: none !important; // Remove edit mode indicators
+// Apply styles only within CustomSectionBlock containers
+.custom-section-block-edit,
+.custom-section-block-view {
+  
+  // Reset Volto edit-mode specific styles within our block
+  .block-editor-wrapper,
+  .block-editor,
+  .block-chooser,
+  .blocks-chooser {
+    &::before,
+    &::after {
+      display: none !important; // Remove edit mode indicators
+    }
   }
-}
 
-// Force all blocks to render identically regardless of mode
-.block,
-.block-editor-wrapper .block,
-.freeform-block-wrapper .block,
-.freeform-item .block,
-.linear-item .block {
+  // Force blocks to render identically within our grid/freeform layouts
+  .block,
+  .block-editor-wrapper .block,
+  .freeform-block-wrapper .block,
+  .freeform-item .block,
+  .linear-item .block,
+  .grid-block-wrapper .block {
   // Reset ALL Volto default styles that differ between modes
   border: none !important;
   outline: none !important;
@@ -137,58 +142,50 @@
       border: none !important;
     }
   }
-}
-
-// Force image blocks to respect container size in both modes
-.freeform-block-wrapper,
-.freeform-item {
-  .block.image {
-    // When containerSize is set, respect it
-    &[data-has-container-size="true"] {
-      figure {
-        width: 100% !important;
-        height: 100% !important;
+  } // Close .block styles
+  
+  // Force image blocks to respect container size in both modes
+  .freeform-block-wrapper,
+  .freeform-item {
+    .block.image {
+      // When containerSize is set, respect it
+      &[data-has-container-size="true"] {
+        figure {
+          width: 100% !important;
+          height: 100% !important;
+        }
+        
+        img {
+          object-fit: contain !important;
+        }
       }
+    }
+  }
+
+  // Remove Volto edit mode UI elements within our block
+  .blocks-edit-wrapper {
+    .block-add-button,
+    .block-toolbar,
+    .block-drag-handle {
+      // Keep functionality but remove visual differences
+      opacity: 0;
+      transition: opacity 0.2s;
       
-      img {
-        object-fit: contain !important;
+      &:hover {
+        opacity: 1;
       }
     }
   }
-}
 
-// Remove ALL Volto edit mode UI elements
-.blocks-edit-wrapper {
-  .block-add-button,
-  .block-toolbar,
-  .block-drag-handle {
-    // Keep functionality but remove visual differences
-    opacity: 0;
-    transition: opacity 0.2s;
-    
-    &:hover {
-      opacity: 1;
+  // Ensure consistent rendering in freeform grid
+  .freeform-grid {
+    .block-content {
+      // Don't add any styling that would differ between modes
+      border: none !important;
+      outline: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
     }
   }
-}
 
-// Ensure consistent rendering in freeform grid
-.freeform-grid {
-  .block-content {
-    // Don't add any styling that would differ between modes
-    border: none !important;
-    outline: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-}
-
-// Override any theme-specific block differences
-.ui.container,
-.ui.segment {
-  .block {
-    // Ensure no container adds different styles in different modes
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-}
+} // Close .custom-section-block-edit, .custom-section-block-view scope

@@ -28,6 +28,7 @@ const Grid12Layout = ({
   const [resizingBlock, setResizingBlock] = useState(null);
   const [resizePreview, setResizePreview] = useState(null);
   const containerRef = useRef(null);
+  const blockRefs = useRef({});
   
   // Grid configuration
   const GRID_COLUMNS = 12;
@@ -50,6 +51,78 @@ const Grid12Layout = ({
   }, [blocks, blocksLayout.items]);
   
   const maxRows = calculateMaxRows();
+  
+  // Auto-expand text blocks based on content
+  const calculateRequiredRows = useCallback((element) => {
+    if (!element || !containerRef.current) return 1;
+    
+    // Get the actual content height
+    const contentHeight = element.scrollHeight;
+    
+    // Calculate row height including gap
+    const rowHeightWithGap = MIN_ROW_HEIGHT + gridGap;
+    
+    // Calculate required rows
+    const requiredRows = Math.ceil(contentHeight / rowHeightWithGap);
+    
+    return Math.max(1, requiredRows);
+  }, [gridGap]);
+  
+  // Watch for text content changes and auto-adjust rowSpan
+  useEffect(() => {
+    const checkTextBlockHeights = () => {
+      blocksLayout.items.forEach(blockId => {
+        const block = blocks[blockId];
+        if (!block) return;
+        
+        const isTextBlock = block['@type'] === 'text' || 
+                           block['@type'] === 'slate' || 
+                           block['@type'] === 'description';
+        
+        if (isTextBlock && blockRefs.current[blockId]) {
+          const element = blockRefs.current[blockId];
+          const requiredRows = calculateRequiredRows(element);
+          const currentRowSpan = block.rowSpan || 1;
+          const manualRowSpan = block.manualRowSpan || 1;
+          
+          // Only update if we need more rows than current
+          // Respect manual resize as minimum
+          const targetRowSpan = Math.max(requiredRows, manualRowSpan);
+          
+          if (targetRowSpan !== currentRowSpan && targetRowSpan > currentRowSpan) {
+            onUpdateBlock(blockId, {
+              ...block,
+              rowSpan: targetRowSpan,
+              manualRowSpan: manualRowSpan, // Preserve manual setting
+              autoExpanded: true
+            });
+          }
+        }
+      });
+    };
+    
+    // Check heights after a short delay to ensure content is rendered
+    const timeoutId = setTimeout(checkTextBlockHeights, 100);
+    
+    // Also set up a ResizeObserver for more responsive updates
+    const resizeObserver = new ResizeObserver(checkTextBlockHeights);
+    
+    // Observe all text block elements
+    Object.keys(blockRefs.current).forEach(blockId => {
+      const block = blocks[blockId];
+      if (block && (block['@type'] === 'text' || block['@type'] === 'slate' || block['@type'] === 'description')) {
+        const element = blockRefs.current[blockId];
+        if (element) {
+          resizeObserver.observe(element);
+        }
+      }
+    });
+    
+    return () => {
+      clearTimeout(timeoutId);
+      resizeObserver.disconnect();
+    };
+  }, [blocks, blocksLayout.items, calculateRequiredRows, onUpdateBlock]);
   
   // Ensure all blocks have grid properties
   const getBlockGridProps = useCallback((blockId) => {
@@ -292,6 +365,9 @@ const Grid12Layout = ({
     const gridColumn = block.gridColumn || 1;
     const gridRow = block.gridRow || 1;
     
+    // Check if this is a text block that should only resize width
+    const isTextBlock = block['@type'] === 'text' || block['@type'] === 'slate' || block['@type'] === 'description';
+    
     switch (resizingBlock.handle) {
       case 'right':
         newColumnSpan = Math.max(MIN_COLUMN_SPAN, 
@@ -299,15 +375,25 @@ const Grid12Layout = ({
             resizingBlock.originalSpans.columnSpan + columnDelta));
         break;
       case 'bottom':
+        // Allow text blocks to resize vertically - gives them more space for content
         newRowSpan = Math.max(MIN_ROW_SPAN, 
           resizingBlock.originalSpans.rowSpan + rowDelta);
+        // Mark as manually resized so auto-expand respects this minimum
+        if (isTextBlock && block) {
+          block.manualRowSpan = newRowSpan;
+        }
         break;
       case 'bottom-right':
         newColumnSpan = Math.max(MIN_COLUMN_SPAN, 
           Math.min(GRID_COLUMNS - gridColumn + 1, 
             resizingBlock.originalSpans.columnSpan + columnDelta));
+        // Allow vertical resize for all blocks
         newRowSpan = Math.max(MIN_ROW_SPAN, 
           resizingBlock.originalSpans.rowSpan + rowDelta);
+        // Mark as manually resized for text blocks
+        if (isTextBlock && block) {
+          block.manualRowSpan = newRowSpan;
+        }
         break;
     }
     
@@ -353,6 +439,11 @@ const Grid12Layout = ({
         block
       );
       
+      // Check if this is a text block
+      const isTextBlock = block['@type'] === 'text' || 
+                          block['@type'] === 'slate' || 
+                          block['@type'] === 'description';
+      
       // Update block with both grid properties and content properties
       // IMPORTANT: Preserve gridColumn and gridRow for proper positioning
       onUpdateBlock(resizingBlock.id, {
@@ -361,6 +452,8 @@ const Grid12Layout = ({
         gridRow: block.gridRow || 1,        // Preserve existing position
         columnSpan: resizePreview.columnSpan,
         rowSpan: resizePreview.rowSpan,
+        // For text blocks, save manual row span
+        ...(isTextBlock && { manualRowSpan: resizePreview.rowSpan }),
         containerSize: { width: containerWidth, height: containerHeight },
         ...contentProps, // Apply calculated content properties
       });
@@ -544,6 +637,10 @@ const Grid12Layout = ({
           rowSpan: resizePreview.rowSpan,
         } : gridProps;
         
+        const isTextBlock = block['@type'] === 'text' || 
+                            block['@type'] === 'slate' || 
+                            block['@type'] === 'description';
+        
         return (
           <div
             key={blockId}
@@ -551,10 +648,12 @@ const Grid12Layout = ({
               'selected': isSelected,
               'dragging': isDragging,
               'resizing': isResizing,
+              'is-text-block': isTextBlock,  // Add explicit class for text blocks
             })}
             style={{
               gridColumn: `${displayProps.gridColumn} / span ${displayProps.columnSpan}`,
-              gridRow: `${displayProps.gridRow} / span ${displayProps.rowSpan}`,
+              // All blocks should respect their grid spans for predictable layout
+              gridRow: `${displayProps.gridRow} / span ${displayProps.rowSpan || 1}`,
             }}
             onClick={(e) => handleBlockClick(e, blockId)}
             data-block-id={blockId}
@@ -592,17 +691,19 @@ const Grid12Layout = ({
               </button>
             )}
             
-            {/* Resize handles */}
+            {/* Resize handles - hide vertical resize for text blocks */}
             {isSelected && (
               <>
                 <div 
                   className="resize-handle right"
                   onMouseDown={(e) => handleResizeStart(e, blockId, 'right')}
                 />
+                {/* Show bottom resize for ALL blocks including text - users need to expand text areas */}
                 <div 
                   className="resize-handle bottom"
                   onMouseDown={(e) => handleResizeStart(e, blockId, 'bottom')}
                 />
+                {/* Show corner handle for all blocks */}
                 <div 
                   className="resize-handle bottom-right"
                   onMouseDown={(e) => handleResizeStart(e, blockId, 'bottom-right')}
@@ -634,7 +735,12 @@ const Grid12Layout = ({
             )}
             
             {/* Block content */}
-            <div className="block-content">
+            <div 
+              className="block-content"
+              ref={isTextBlock ? (el) => {
+                if (el) blockRefs.current[blockId] = el;
+              } : null}
+            >
               {renderBlock(blockId)}
             </div>
           </div>

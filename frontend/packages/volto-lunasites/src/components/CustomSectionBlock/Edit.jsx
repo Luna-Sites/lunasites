@@ -103,12 +103,17 @@ const CustomSectionBlockEdit = ({
         nextColumn = 1; // Start at first column of new row
       }
       
+      // Check if this is a text block to give it a better default height
+      const isTextBlock = blockData['@type'] === 'text' || 
+                         blockData['@type'] === 'slate' || 
+                         blockData['@type'] === 'description';
+      
       enhancedBlockData = {
         ...blockData,
         gridColumn: blockData.gridColumn || nextColumn,
         gridRow: blockData.gridRow || nextRow,
         columnSpan: blockData.columnSpan || 4,
-        rowSpan: blockData.rowSpan || 1,
+        rowSpan: blockData.rowSpan || (isTextBlock ? 2 : 1), // Text blocks start with 2 rows
       };
     } else if (layout_mode === 'freeform') {
       // For freeform mode, add position
@@ -240,10 +245,10 @@ const CustomSectionBlockEdit = ({
     }
     
     // Text block styles
+    // Text blocks no longer use dynamic font sizing
+    // Font size is controlled by the user through text editing tools
     if (isTextBlock) {
-      if (childBlock.fontSize) {
-        dynamicStyles['--text-font-size'] = `${childBlock.fontSize}px`;
-      }
+      // Line height can still be set if needed for specific styling
       if (childBlock.lineHeight) {
         dynamicStyles['--text-line-height'] = childBlock.lineHeight;
       }
@@ -273,17 +278,17 @@ const CustomSectionBlockEdit = ({
       );
     }
 
-    // Wrap button blocks with dynamic styling
-    if (isButtonBlock) {
+    // Wrap button blocks with dynamic styling ONLY in grid layout
+    if (isButtonBlock && layout_mode === 'grid') {
       return (
-        <div style={{...dynamicStyles, width: '100%', height: '100%'}} className="button-size-wrapper">
+        <div style={{...dynamicStyles, width: '100%', height: '100%'}} className="custom-section-button-wrapper">
           <style>{`
-            .button-size-wrapper {
+            .custom-section-button-wrapper {
               width: 100% !important;
               height: 100% !important;
               display: block !important;
             }
-            .button-size-wrapper .ui.button {
+            .custom-section-button-wrapper .ui.button {
               font-size: var(--button-font-size, 16px) !important;
               padding: var(--button-padding, 12px) calc(var(--button-padding, 12px) * 1.5) !important;
               width: 100% !important;
@@ -295,11 +300,11 @@ const CustomSectionBlockEdit = ({
               align-items: center !important;
               justify-content: center !important;
             }
-            .button-size-wrapper .block.__button {
+            .custom-section-button-wrapper .block.__button {
               width: 100% !important;
               height: 100% !important;
             }
-            .button-size-wrapper .align {
+            .custom-section-button-wrapper .align {
               width: 100% !important;
               height: 100% !important;
             }
@@ -319,14 +324,37 @@ const CustomSectionBlockEdit = ({
       );
     }
     
-    // Wrap text blocks with dynamic styling
-    if (isTextBlock) {
+    // For button blocks in non-grid mode, render normally
+    if (isButtonBlock && layout_mode !== 'grid') {
       return (
-        <div style={dynamicStyles} className="text-size-wrapper">
+        <BlockComponent
+          data={childBlock}
+          properties={properties}
+          block={blockId}
+          pathname={pathname || properties?.['@id'] || ''}
+          manage={manage}
+          onChangeBlock={handleChildBlockChange}
+          onSelectBlock={setSelectedChildBlock}
+          selected={selectedChildBlock === blockId}
+          blocksConfig={blocksConfig}
+        />
+      );
+    }
+    
+    // Wrap text blocks with container ONLY in grid layout
+    if (isTextBlock && layout_mode === 'grid') {
+      return (
+        <div style={dynamicStyles} className="custom-section-text-wrapper">
           <style>{`
-            .text-size-wrapper p,
-            .text-size-wrapper div[role="textbox"] {
-              font-size: var(--text-font-size, 16px) !important;
+            .custom-section-text-wrapper {
+              width: 100%;
+              min-height: 100%;
+              /* Remove fixed height and overflow to allow content to grow */
+              /* Text should determine its own height based on content */
+            }
+            .custom-section-text-wrapper p,
+            .custom-section-text-wrapper div[role="textbox"] {
+              /* Font size is now controlled by the text editor, not resize */
               line-height: var(--text-line-height, 1.5) !important;
             }
           `}</style>

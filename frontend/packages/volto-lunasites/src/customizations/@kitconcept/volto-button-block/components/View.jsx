@@ -185,7 +185,7 @@ const View = (props) => {
       }}
     >
       <div 
-        className={cx('align', data.inneralign)}
+        className={cx('align', data.inneralign || 'left')}  // Default to left alignment
         style={isInGrid ? { width: '100%', height: '100%' } : {}}
       >
         {href && !isEditMode ? (

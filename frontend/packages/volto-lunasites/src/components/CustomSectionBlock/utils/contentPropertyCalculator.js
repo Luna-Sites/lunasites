@@ -39,17 +39,14 @@ export const calculateContentProperties = (blockType, containerSize, currentData
  * Calculate text/slate block properties
  */
 const calculateTextProperties = (width, height, currentData) => {
-  // Scale font size based on container width
-  // Typical range: 12px to 48px
-  const baseFontSize = Math.max(12, Math.min(48, width / 15));
+  // Text blocks should NOT scale font size with container size
+  // Font size should be controlled by the user through text editing tools
+  // Container resize should only affect the text container dimensions
+  // Text will naturally reflow within the resized container
   
-  // Adjust line height based on container height
-  const lineHeight = Math.max(1.2, Math.min(2.0, height / (baseFontSize * 3)));
-  
-  return {
-    fontSize: Math.round(baseFontSize),
-    lineHeight: Math.round(lineHeight * 10) / 10, // Round to 1 decimal
-  };
+  // Return empty object - no content properties should change during resize
+  // This ensures text blocks behave like normal responsive containers
+  return {};
 };
 
 /**
@@ -121,7 +118,9 @@ export const getDefaultContainerSize = (blockType) => {
   switch (blockType) {
     case 'text':
     case 'slate':
-      return { width: 300, height: 120 };
+      // Text blocks don't have fixed heights - content determines height
+      // Only set initial width for grid placement
+      return { width: 300, height: null };
     
     case 'image':
       return null; // Don't force default size for images - use natural dimensions

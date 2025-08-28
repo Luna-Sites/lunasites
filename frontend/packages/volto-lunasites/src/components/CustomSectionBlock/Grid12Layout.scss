@@ -12,7 +12,7 @@
   // Main grid container
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), 1fr);
-  grid-auto-rows: var(--min-row-height); // Fixed row height for predictable positioning
+  grid-auto-rows: var(--min-row-height); // Fixed row height for predictable grid
   gap: var(--grid-gap);
   
   // Visual refinements
@@ -160,26 +160,104 @@
   
 }
 
-// Grid block wrapper - invisible container for controls
+// Grid block wrapper - container for blocks with subtle visual cues
 .grid-block-wrapper {
   position: relative;
   z-index: 1;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-  // Completely invisible wrapper - no visual elements
-  background: transparent !important;
-  border: none !important;
+  transition: all 0.2s ease;
+  // Subtle visual boundary for all blocks
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px dashed rgba(0, 0, 0, 0.1);
   outline: none !important;
-  padding: 0 !important;
+  padding: 4px;
+  border-radius: 4px;
   overflow: visible;
   min-height: 0;
   height: 100%; // IMPORTANT: Fill the grid cell height
   display: flex; // Use flexbox to contain content properly
   align-items: stretch; // Stretch content to full height
   
+  &:hover:not(.selected) {
+    border-color: rgba(0, 123, 193, 0.3);
+    background: rgba(255, 255, 255, 0.5);
+    
+    // Show delete button on hover
+    .delete-button {
+      opacity: 0.8;
+    }
+  }
+  
+  &.selected {
+    border-color: rgba(0, 123, 193, 0.5);
+    border-style: solid;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 0 1px rgba(0, 123, 193, 0.1);
+    
+    // Show delete button when selected
+    .delete-button {
+      opacity: 1;
+    }
+  }
+  
+  // Text blocks with auto-expanding behavior
+  &.is-text-block {
+    height: 100%; // Fill the allocated grid space
+    min-height: var(--min-row-height);
+    align-items: flex-start;
+    overflow: visible; // Allow delete button to show
+    position: relative;
+    
+    // Prominent visual outline for text blocks
+    border: 2px dashed rgba(52, 152, 219, 0.5) !important;
+    padding: 12px !important;
+    background: rgba(52, 152, 219, 0.05);
+    border-radius: 6px;
+    
+    &.selected {
+      border-color: rgba(52, 152, 219, 0.8) !important;
+      border-style: solid !important;
+      border-width: 2px !important;
+      background: rgba(52, 152, 219, 0.08);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+      
+      // Ensure delete button is visible for text blocks
+      .delete-button {
+        opacity: 1 !important;
+      }
+    }
+    
+    &:hover:not(.selected) {
+      border-color: rgba(52, 152, 219, 0.6) !important;
+      background: rgba(52, 152, 219, 0.07);
+    }
+    
+    // Content area for measurement
+    .block-content {
+      height: 100%;
+      overflow-y: auto; // Allow scrolling if needed during transition
+      overflow-x: hidden;
+      
+      // Hide scrollbar but keep functionality
+      &::-webkit-scrollbar {
+        width: 3px;
+        opacity: 0;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: rgba(52, 152, 219, 0.2);
+        border-radius: 2px;
+      }
+    }
+  }
+  
   // Content container - no fixed sizing
   .block-content {
     width: 100%;
-    height: 100%; // IMPORTANT: Fill wrapper height
+    height: 100%; // IMPORTANT: Fill wrapper height for non-text blocks
     border: none !important;
     outline: none !important;
     padding: 0 !important;
@@ -197,9 +275,10 @@
       box-shadow: none !important;
     }
     
-    // Button blocks should fill their container
+    // Button blocks should fill their container ONLY in grid layout
     .block.__button,
     .block.button {
+      // Only apply aggressive styling within grid
       display: block !important;
       width: 100% !important;
       height: 100% !important;
@@ -210,7 +289,7 @@
       background: transparent !important;
       box-shadow: none !important;
       
-      // Inner align div should also be full size
+      // Inner align div also full size in grid
       .align {
         width: 100% !important;
         height: 100% !important;

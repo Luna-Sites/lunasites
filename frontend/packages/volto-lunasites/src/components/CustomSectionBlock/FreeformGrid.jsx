@@ -437,9 +437,22 @@ const FreeformGrid = ({
     newWidth = Math.round(newWidth / RESIZE_GRID_SIZE) * RESIZE_GRID_SIZE;
     newHeight = Math.round(newHeight / RESIZE_GRID_SIZE) * RESIZE_GRID_SIZE;
     
-    // For images, just update the containerSize directly
-    // Don't use unifiedBlockResize which might mess with image properties
-    if (currentBlock['@type'] === 'image') {
+    // Check if this is a text block - they should only resize width
+    const isTextBlock = currentBlock['@type'] === 'text' || 
+                       currentBlock['@type'] === 'slate' || 
+                       currentBlock['@type'] === 'description';
+    
+    if (isTextBlock) {
+      // Text blocks only resize width - height is determined by content
+      onUpdateBlockSize(resizedBlock, {
+        containerSize: {
+          width: newWidth,
+          // Don't set height for text blocks - let content determine it
+          height: null
+        }
+      });
+    } else if (currentBlock['@type'] === 'image') {
+      // Images just update the containerSize directly
       onUpdateBlockSize(resizedBlock, {
         containerSize: {
           width: newWidth,
@@ -627,29 +640,70 @@ const FreeformGrid = ({
               </button>
             )}
 
-            {/* Resize handles when selected */}
+            {/* Resize handles when selected - only horizontal for text blocks */}
             {isSelected && (
               <>
-                <div 
-                  className="resize-handle top-left" 
-                  data-resize="top-left"
-                  onMouseDown={(e) => handleResizeStart(e, blockId, 'top-left')}
-                />
-                <div 
-                  className="resize-handle top-right" 
-                  data-resize="top-right"
-                  onMouseDown={(e) => handleResizeStart(e, blockId, 'top-right')}
-                />
-                <div 
-                  className="resize-handle bottom-left" 
-                  data-resize="bottom-left"
-                  onMouseDown={(e) => handleResizeStart(e, blockId, 'bottom-left')}
-                />
-                <div 
-                  className="resize-handle bottom-right" 
-                  data-resize="bottom-right"
-                  onMouseDown={(e) => handleResizeStart(e, blockId, 'bottom-right')}
-                />
+                {/* For text blocks, only show left/right handles for width resize */}
+                {isTextBlock ? (
+                  <>
+                    <div 
+                      className="resize-handle left" 
+                      data-resize="left"
+                      onMouseDown={(e) => handleResizeStart(e, blockId, 'left')}
+                      style={{
+                        position: 'absolute',
+                        left: '-4px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '8px',
+                        height: '30px',
+                        cursor: 'ew-resize',
+                        background: 'rgba(0, 123, 193, 0.3)',
+                        borderRadius: '2px'
+                      }}
+                    />
+                    <div 
+                      className="resize-handle right" 
+                      data-resize="right"
+                      onMouseDown={(e) => handleResizeStart(e, blockId, 'right')}
+                      style={{
+                        position: 'absolute',
+                        right: '-4px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '8px',
+                        height: '30px',
+                        cursor: 'ew-resize',
+                        background: 'rgba(0, 123, 193, 0.3)',
+                        borderRadius: '2px'
+                      }}
+                    />
+                  </>
+                ) : (
+                  // For non-text blocks, show corner handles
+                  <>
+                    <div 
+                      className="resize-handle top-left" 
+                      data-resize="top-left"
+                      onMouseDown={(e) => handleResizeStart(e, blockId, 'top-left')}
+                    />
+                    <div 
+                      className="resize-handle top-right" 
+                      data-resize="top-right"
+                      onMouseDown={(e) => handleResizeStart(e, blockId, 'top-right')}
+                    />
+                    <div 
+                      className="resize-handle bottom-left" 
+                      data-resize="bottom-left"
+                      onMouseDown={(e) => handleResizeStart(e, blockId, 'bottom-left')}
+                    />
+                    <div 
+                      className="resize-handle bottom-right" 
+                      data-resize="bottom-right"
+                      onMouseDown={(e) => handleResizeStart(e, blockId, 'bottom-right')}
+                    />
+                  </>
+                )}
               </>
             )}
 
