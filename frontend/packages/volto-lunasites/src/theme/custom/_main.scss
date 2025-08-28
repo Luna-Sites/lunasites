@@ -4,6 +4,9 @@
 // Import button block customizations
 @import 'button-block';
 
+// Import header variables first
+@import 'header';
+
 // Import color schema system
 @import 'color-schema';
 .simple-field-name {

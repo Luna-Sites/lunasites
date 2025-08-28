@@ -1,12 +1,15 @@
 import React from 'react';
 import { BodyClass } from '@plone/volto/helpers';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { compose } from 'redux';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable/Loadable';
 import { getLunaTheming } from '../../actions';
 
 const AppExtras = (props) => {
-  const { content, lunaTheming, dispatch, pathname } = props;
+  const { content, dispatch, pathname } = props;
+  const [siteSettings, setSiteSettings] = React.useState(null);
+  const lunaTheming = useSelector((state) => state.lunaTheming);
+  console.log('aaa', { lunaTheming });
 
   const viewClass = content?.view
     ? `view-${content?.view?.token?.toLowerCase() || ''}`
@@ -20,16 +23,24 @@ const AppExtras = (props) => {
   // Apply CSS variables whenever theming data changes in Redux
   React.useEffect(() => {
     console.log(lunaTheming);
-    if (lunaTheming?.data?.colors) {
-      console.log('appling');
-      applyCSSVariables(lunaTheming.data.colors);
+    if (lunaTheming?.data) {
+      console.log('appling', lunaTheming.data);
+      applyCSSVariables(lunaTheming.data);
     }
   }, [lunaTheming?.data]);
 
-  const applyCSSVariables = (colors) => {
+  const applyCSSVariables = (theme) => {
+    const colors = theme.colors;
+    console.log(theme);
+    const headerVariation = theme.header;
     const root = document.documentElement;
 
     console.log('AppExtras: Applying CSS variables from registry:', colors);
+    console.log('Primary color from colors object:', colors?.primary_color);
+    console.log(
+      'Background color from colors object:',
+      colors?.background_color,
+    );
 
     // Apply colors - only the main 5 colors from color palette
     if (colors) {
@@ -68,14 +79,6 @@ const AppExtras = (props) => {
       );
       root.style.setProperty(
         '--lunasites-header-color',
-        colors.primary_color || '#094ce1',
-      );
-      root.style.setProperty(
-        '--lunasites-header-bg-color',
-        colors.background_color || '#ffffff',
-      );
-      root.style.setProperty(
-        '--lunasites-header-text-color',
         colors.primary_color || '#094ce1',
       );
 
@@ -123,6 +126,176 @@ const AppExtras = (props) => {
       '--lunasites-link-color',
       colors.tertiary_color || '#6bb535',
     );
+
+    // Apply header variations from registry
+
+    console.log('lalal', headerVariation);
+    applyHeaderVariation(
+      headerVariation?.variation || 'primary_navigation',
+      colors,
+    );
+  };
+
+  const applyHeaderVariation = (variation, colors) => {
+    console.log(variation, colors);
+    const root = document.documentElement;
+
+    console.log(
+      'Applying header variation:',
+      variation,
+      'with colors:',
+      colors,
+    );
+
+    switch (variation) {
+      case 'primary_navigation':
+        // Header bg → Primary, Header text → Tertiary, Dropdown bg → Neutral, Dropdown text → Tertiary
+        root.style.setProperty(
+          '--lunasites-header-bg-color',
+          colors.primary_color || '#094ce1',
+        );
+        root.style.setProperty(
+          '--lunasites-header-text-color',
+          colors.tertiary_color || '#6bb535',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-color',
+          colors.neutral_color || '#222222',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-font-color',
+          colors.tertiary_color || '#6bb535',
+        );
+        break;
+
+      case 'neutral_navigation':
+        // Header bg → Neutral, Header text → Tertiary, Dropdown bg → Background, Dropdown text → Neutral
+        root.style.setProperty(
+          '--lunasites-header-bg-color',
+          colors.neutral_color || '#222222',
+        );
+        root.style.setProperty(
+          '--lunasites-header-text-color',
+          colors.tertiary_color || '#6bb535',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-color',
+          colors.background_color || '#ffffff',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-font-color',
+          colors.neutral_color || '#222222',
+        );
+        break;
+
+      case 'light_background_navigation':
+        // Header bg → Background, Header text → Neutral, Dropdown bg → Tertiary, Dropdown text → Neutral
+        root.style.setProperty(
+          '--lunasites-header-bg-color',
+          colors.background_color || '#ffffff',
+        );
+        root.style.setProperty(
+          '--lunasites-header-text-color',
+          colors.neutral_color || '#222222',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-color',
+          colors.tertiary_color || '#6bb535',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-font-color',
+          colors.neutral_color || '#222222',
+        );
+        break;
+
+      case 'secondary_accent_navigation':
+        // Header bg → Secondary, Header text → Tertiary, Dropdown bg → Primary, Dropdown text → Tertiary
+        root.style.setProperty(
+          '--lunasites-header-bg-color',
+          colors.secondary_color || '#e73d5c',
+        );
+        root.style.setProperty(
+          '--lunasites-header-text-color',
+          colors.tertiary_color || '#6bb535',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-color',
+          colors.primary_color || '#094ce1',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-font-color',
+          colors.tertiary_color || '#6bb535',
+        );
+        break;
+
+      case 'minimal_white_navigation':
+        // Header bg → Tertiary, Header text → Neutral, Dropdown bg → Primary, Dropdown text → Tertiary
+        root.style.setProperty(
+          '--lunasites-header-bg-color',
+          colors.tertiary_color || '#6bb535',
+        );
+        root.style.setProperty(
+          '--lunasites-header-text-color',
+          colors.neutral_color || '#222222',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-color',
+          colors.primary_color || '#094ce1',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-font-color',
+          colors.tertiary_color || '#6bb535',
+        );
+        break;
+
+      case 'inverted_neutral_navigation':
+        // Header bg → Neutral, Header text → Background/Secondary, Dropdown bg → Tertiary, Dropdown text → Neutral
+        root.style.setProperty(
+          '--lunasites-header-bg-color',
+          colors.neutral_color || '#222222',
+        );
+        root.style.setProperty(
+          '--lunasites-header-text-color',
+          colors.background_color || '#ffffff',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-color',
+          colors.tertiary_color || '#6bb535',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-font-color',
+          colors.neutral_color || '#222222',
+        );
+        break;
+
+      default:
+        // Fallback to primary_navigation
+        root.style.setProperty(
+          '--lunasites-header-bg-color',
+          colors.primary_color || '#094ce1',
+        );
+        root.style.setProperty(
+          '--lunasites-header-text-color',
+          colors.tertiary_color || '#6bb535',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-color',
+          colors.neutral_color || '#222222',
+        );
+        root.style.setProperty(
+          '--lunasites-dropdown-font-color',
+          colors.tertiary_color || '#6bb535',
+        );
+    }
+
+    console.log(
+      'Header bg color set to:',
+      root.style.getPropertyValue('--lunasites-header-bg-color'),
+    );
+    console.log(
+      'Header text color set to:',
+      root.style.getPropertyValue('--lunasites-header-text-color'),
+    );
   };
 
   return viewClass ? <BodyClass className={viewClass} /> : null;
@@ -134,5 +307,6 @@ export default compose(
     content: state.content.data,
     lunaTheming: state.lunaTheming,
     pathname: state.router?.location?.pathname,
+    portal: state.content.data?.parent || state.content.data, // Get portal data
   })),
 )(AppExtras);

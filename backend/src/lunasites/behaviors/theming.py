@@ -13,7 +13,7 @@ class ISiteTheming(model.Schema):
         'theming',
         label=u'Theming',
         description=u'Configure site-wide appearance and theming',
-        fields=['color_schema']
+        fields=['color_schema', 'header_variation']
     )
     
     directives.widget(
@@ -30,4 +30,18 @@ class ISiteTheming(model.Schema):
         value_type=schema.TextLine(title=u"Value"),
         required=False,
         default={}
+    )
+    
+    directives.widget(
+        'header_variation',
+        frontendOptions={
+            'widget': 'header_variation'
+        }
+    )
+    
+    header_variation = schema.TextLine(
+        title=u"Header Style",
+        description=u"Choose header color variation",
+        required=False,
+        default=u'primary_navigation'
     )

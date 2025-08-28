@@ -1,0 +1,16 @@
+// Header CSS Variables and Styling
+// This file manages header color variations and styling
+
+:root {
+  // Header colors (will be overridden by header variations from AppExtras)
+  --lunasites-header-bg-color: var(--lunasites-background-color);
+  --lunasites-header-text-color: var(--lunasites-primary-color);
+}
+
+// Header variations will be applied dynamically by AppExtras based on ISiteTheming behavior
+// Available variations: simple, primary, secondary, tertiary
+//
+// simple: background + primary text (default)
+// primary: primary bg + background text  
+// secondary: secondary bg + background text
+// tertiary: tertiary bg + background text

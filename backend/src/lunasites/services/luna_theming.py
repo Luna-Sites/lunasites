@@ -65,6 +65,9 @@ class LunaThemingGet(Service):
                 "padding": "8px 16px",
                 "font_weight": "500",
                 "transition": "all 0.15s ease"
+            },
+            "header": {
+                "variation": "simple"
             }
         }
 
@@ -96,18 +99,33 @@ class LunaThemingPost(Service):
         theming_data = self._validate_theming_data(theming_data)
         logger.info(f"Validated theming data: {theming_data}")
         
-        # Save to registry
+        # Save to registry - merge with existing data
         registry = getUtility(IRegistry)
         old_value = registry.get('lunasites.luna_theming_config')
         logger.info(f"Old registry value: {old_value}")
         
-        registry['lunasites.luna_theming_config'] = json.dumps(theming_data)
+        # Parse existing data to merge
+        existing_data = {}
+        if old_value:
+            try:
+                if isinstance(old_value, str):
+                    existing_data = json.loads(old_value)
+                else:
+                    existing_data = old_value
+            except (json.JSONDecodeError, TypeError):
+                existing_data = {}
+        
+        # Merge with existing data
+        merged_data = {**existing_data, **theming_data}
+        logger.info(f"Merged data: {merged_data}")
+        
+        registry['lunasites.luna_theming_config'] = json.dumps(merged_data)
         
         new_value = registry.get('lunasites.luna_theming_config')
         logger.info(f"New registry value: {new_value}")
         
         return {
-            'luna_theming': theming_data,
+            'luna_theming': merged_data,
             'status': 'updated',
             'source': 'registry'
         }
@@ -144,6 +162,20 @@ class LunaThemingPost(Service):
             for prop in button_props:
                 if prop in buttons:
                     validated['buttons'][prop] = buttons[prop]
+        
+        # Validate header section
+        if 'header' in data:
+            header = data['header']
+            validated['header'] = {}
+            if 'variation' in header:
+                # Valid header variations
+                valid_variations = [
+                    'primary_navigation', 'neutral_navigation', 'light_background_navigation',
+                    'secondary_accent_navigation', 'minimal_white_navigation', 'inverted_neutral_navigation'
+                ]
+
+                if header['variation'] in valid_variations:
+                    validated['header']['variation'] = header['variation']
         
         return validated
     
