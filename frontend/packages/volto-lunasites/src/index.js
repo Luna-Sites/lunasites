@@ -72,6 +72,7 @@ import gridCardsSVG from '@plone/volto/icons/apps.svg';
 import { DesignSchemaProvider, ColorSchemaField } from './components';
 import HeaderVariationField from './components/HeaderVariationField/HeaderVariationField';
 import LogoConfigField from './components/LogoConfigField/LogoConfigField';
+import ContainerWidthField from './components/ContainerWidthField/ContainerWidthField';
 import * as reducers from './reducers';
 import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
 import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
@@ -163,6 +164,9 @@ const applyConfig = (config) => {
 
   // Register logo config widget
   config.widgets.widget.logo_config = LogoConfigField;
+
+  // Register container width widget
+  config.widgets.widget.container_width = ContainerWidthField;
 
   // Register tools header widget
   config.widgets.widget.tools_header = ToolsHeaderField;

@@ -181,6 +181,10 @@ class LunaThemingPost(Service):
         if 'logo_config' in data:
             validated['logo_config'] = data['logo_config']
         
+        # Pass through container_width without validation
+        if 'container_width' in data:
+            validated['container_width'] = data['container_width']
+        
         return validated
     
     def _is_valid_color(self, color):

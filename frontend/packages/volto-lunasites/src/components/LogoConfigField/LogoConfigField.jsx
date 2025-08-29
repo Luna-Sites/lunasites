@@ -79,7 +79,7 @@ const LogoConfigField = (props) => {
 
   const handleChange = async (newConfig) => {
     console.log('LogoConfigField handleChange called with:', newConfig);
-    
+
     // Update the form field value
     onChange(id, newConfig);
 
@@ -92,7 +92,7 @@ const LogoConfigField = (props) => {
       ...currentData,
       logo_config: newConfig,
     };
-    
+
     console.log('Sending updated data to registry:', updatedData);
 
     // Save to registry
@@ -106,7 +106,7 @@ const LogoConfigField = (props) => {
   // Debounced version for text changes
   const debouncedHandleChange = React.useMemo(
     () => debounce(handleChange, 500),
-    [handleChange]
+    [handleChange],
   );
 
   const handleImageUpload = (event) => {
@@ -283,17 +283,6 @@ const LogoConfigField = (props) => {
                   : config.text && <RichTextWidgetView value={config.text} />}
               </div>
             )}
-        </div>
-
-        <div
-          style={{
-            fontSize: '13px',
-            fontWeight: '600',
-            color: '#374151',
-            lineHeight: '1.3',
-          }}
-        >
-          Logo Configuration
         </div>
       </div>
     );

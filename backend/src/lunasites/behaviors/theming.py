@@ -15,7 +15,7 @@ class ISiteTheming(model.Schema):
         'theming',
         label=u'Theming',
         description=u'Configure site-wide appearance and theming',
-        fields=['color_schema', 'header_variation', 'logo_config']
+        fields=['color_schema', 'header_variation', 'logo_config', 'container_width']
     )
     
     directives.widget(
@@ -60,4 +60,19 @@ class ISiteTheming(model.Schema):
         description=u"Configure site logo image, text and layout options",
         required=False,
         default={}
+    )
+    
+    directives.widget(
+        'container_width',
+        frontendOptions={
+            'widget': 'container_width'
+        }
+    )
+    
+    container_width = schema.Choice(
+        title=u"Container Width",
+        description=u"Choose container width for content layout",
+        values=['narrow', 'normal', 'wide', 'full'],
+        default='normal',
+        required=False,
     )

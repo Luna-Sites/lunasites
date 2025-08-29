@@ -33,6 +33,7 @@ const AppExtras = (props) => {
     const colors = theme.colors;
     console.log(theme);
     const headerVariation = theme.header;
+    const containerWidth = theme.container_width;
     const root = document.documentElement;
 
     console.log('AppExtras: Applying CSS variables from registry:', colors);
@@ -134,6 +135,9 @@ const AppExtras = (props) => {
       headerVariation?.variation || 'primary_navigation',
       colors,
     );
+
+    // Apply container width
+    applyContainerWidth(containerWidth || 'normal');
   };
 
   const applyHeaderVariation = (variation, colors) => {
@@ -296,6 +300,24 @@ const AppExtras = (props) => {
       'Header text color set to:',
       root.style.getPropertyValue('--lunasites-header-text-color'),
     );
+  };
+
+  const applyContainerWidth = (width) => {
+    const root = document.documentElement;
+    
+    console.log('Applying container width:', width);
+    
+    const widthMapping = {
+      narrow: '800px',
+      normal: '1200px', 
+      wide: '1400px',
+      full: '100vw'
+    };
+
+    const cssValue = widthMapping[width] || widthMapping.normal;
+    root.style.setProperty('--lunasites-container-width', cssValue);
+    
+    console.log('Container width set to:', cssValue);
   };
 
   return viewClass ? <BodyClass className={viewClass} /> : null;
