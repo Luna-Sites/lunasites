@@ -27,7 +27,6 @@ const messages = defineMessages({
 const Navigation = ({ pathname }) => {
   const [desktopMenuOpen, setDesktopMenuOpen] = useState(null);
   const [currentOpenIndex, setCurrentOpenIndex] = useState(null);
-  const [hoverTimeout, setHoverTimeout] = useState(null);
   const navigation = useRef(null);
   const dispatch = useDispatch();
   const intl = useIntl();
@@ -48,10 +47,8 @@ const Navigation = ({ pathname }) => {
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside, false);
-      // Cleanup timeouts on unmount
-      if (hoverTimeout) clearTimeout(hoverTimeout);
     };
-  }, [hoverTimeout]);
+  }, []);
 
   useEffect(() => {
     if (!hasApiExpander('navigation', getBaseUrl(pathname))) {
@@ -63,27 +60,29 @@ const Navigation = ({ pathname }) => {
     return (url === '' && pathname === '/') || (url !== '' && pathname === url);
   };
 
-  const openMenu = (index) => {
-    if (hoverTimeout) {
-      clearTimeout(hoverTimeout);
-      setHoverTimeout(null);
+  const toggleMenu = (index) => {
+    if (desktopMenuOpen === index) {
+      setDesktopMenuOpen(null);
+      setCurrentOpenIndex(null);
+    } else {
+      setDesktopMenuOpen(index);
+      setCurrentOpenIndex(index);
     }
-    setDesktopMenuOpen(index);
-    setCurrentOpenIndex(index);
   };
 
   const closeMenu = () => {
-    const timeout = setTimeout(() => {
-      setDesktopMenuOpen(null);
-      setCurrentOpenIndex(null);
-    }, 0); // Instant close
-    setHoverTimeout(timeout);
+    setDesktopMenuOpen(null);
+    setCurrentOpenIndex(null);
   };
 
-  const cancelClose = () => {
-    if (hoverTimeout) {
-      clearTimeout(hoverTimeout);
-      setHoverTimeout(null);
+  const handleItemClick = (item, index, e) => {
+    // If item has children, toggle dropdown
+    if (item.items && item.items.length > 0) {
+      e.preventDefault();
+      toggleMenu(index);
+    } else {
+      // If no children, navigate directly
+      closeMenu();
     }
   };
 
@@ -113,29 +112,44 @@ const Navigation = ({ pathname }) => {
             <li key={item.url}>
               {enableFatMenu ? (
                 <>
-                  <button
-                    onMouseEnter={() => openMenu(index)}
-                    className={cx('item', {
-                      active:
-                        desktopMenuOpen === index ||
-                        (!desktopMenuOpen && pathname === item.url),
-                    })}
-                    aria-label={intl.formatMessage(messages.openFatMenu)}
-                    aria-expanded={desktopMenuOpen === index ? true : false}
-                  >
-                    {item.title}
-                  </button>
-
-                  <div 
-                    className="submenu-wrapper"
-                    onMouseEnter={cancelClose}
-                    onMouseLeave={closeMenu}
-                  >
-                    <div
-                      className={cx('submenu', {
+                  {item.items && item.items.length > 0 ? (
+                    <button
+                      onClick={(e) => handleItemClick(item, index, e)}
+                      className={cx('item', 'has-dropdown', {
                         active: desktopMenuOpen === index,
+                        current: pathname === item.url,
+                      })}
+                      aria-label={intl.formatMessage(messages.openFatMenu)}
+                      aria-expanded={desktopMenuOpen === index ? true : false}
+                    >
+                      <span className="item-text">{item.title}</span>
+                      <span className={cx('dropdown-arrow', {
+                        'arrow-open': desktopMenuOpen === index
+                      })}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M7 10L12 15L17 10H7Z"/>
+                        </svg>
+                      </span>
+                    </button>
+                  ) : (
+                    <NavLink
+                      to={item.url === '' ? '/' : item.url}
+                      onClick={() => closeMenu()}
+                      className={cx('item', 'nav-link', {
+                        active: pathname === item.url,
                       })}
                     >
+                      {item.title}
+                    </NavLink>
+                  )}
+
+                  {item.items && item.items.length > 0 && (
+                    <div className="submenu-wrapper">
+                      <div
+                        className={cx('submenu', {
+                          active: desktopMenuOpen === index,
+                        })}
+                      >
                       <div className="submenu-inner">
                         <NavLink
                           to={item.url === '' ? '/' : item.url}
@@ -202,8 +216,9 @@ const Navigation = ({ pathname }) => {
                             ))}
                         </ul>
                       </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </>
               ) : (
                 <NavItem item={item} lang={lang} key={item.url} />

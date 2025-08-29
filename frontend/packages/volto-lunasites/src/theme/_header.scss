@@ -76,7 +76,8 @@
         display: flex;
         justify-content: flex-end;
 
-        a.item {
+        a.item,
+        button.item {
           padding: 0 8px;
           margin: 0 2px;
           color: $black;
@@ -84,6 +85,28 @@
           font-weight: 600;
           line-height: 20px;
           text-align: center;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          .dropdown-arrow {
+            transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+
+            &.arrow-open {
+              transform: rotate(180deg);
+            }
+
+            svg {
+              width: 14px;
+              height: 14px;
+            }
+          }
         }
       }
 
@@ -548,13 +571,24 @@ body.has-toolbar.has-sidebar {
     .submenu {
       display: none;
       height: auto;
-      padding: 50px 102px 70px;
-      background: $lightgrey;
-      box-shadow: 0px 15px 20px 0px rgba(0, 0, 0, 0.25);
-      border-radius: 20px;
-      margin-top: 10px;
-      transition: all 0.3s ease-in-out;
+      padding: 0;
+      background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.98),
+        rgba(248, 251, 255, 0.99)
+      );
+      backdrop-filter: blur(24px);
+      box-shadow:
+        0 25px 50px rgba(0, 0, 0, 0.12),
+        0 12px 24px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(255, 255, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      border-radius: 32px;
+      margin-top: 20px;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
+
+      overflow: hidden;
 
       @media only screen and (min-width: $tablet-breakpoint) and (max-width: $computer-breakpoint) {
         padding: 40px 40px;
@@ -567,7 +601,7 @@ body.has-toolbar.has-sidebar {
         flex-wrap: wrap;
         justify-content: flex-start;
         padding: 0;
-        padding-top: 50px;
+        padding-top: 30px;
         list-style: none;
 
         .sub-submenu ul {
@@ -597,24 +631,62 @@ body.has-toolbar.has-sidebar {
 
       .close {
         position: absolute;
-        top: 27px;
-        right: 75px;
+        top: 30px;
+        right: 40px;
         border: 0;
-        margin-left: 28px;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.9),
+          rgba(248, 251, 255, 0.95)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.6);
         color: $black;
         cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+        &:hover {
+          background: linear-gradient(
+            145deg,
+            rgba(248, 251, 255, 0.95),
+            rgba(239, 246, 255, 1)
+          );
+          transform: scale(1.08) rotate(90deg);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
         &:focus {
-          outline: 1px solid $black;
+          outline: 2px solid rgba(59, 130, 246, 0.3);
+          outline-offset: 2px;
         }
       }
 
       &-inner {
         width: 100%;
+        max-width: var(--layout-container-width, 1000px);
+        margin: 0 auto;
+        padding: 30px 50px 35px;
+
+        @media only screen and (max-width: 1200px) {
+          padding: 25px 40px 30px;
+        }
+
+        @media only screen and (max-width: 768px) {
+          padding: 20px 30px 25px;
+        }
 
         h2 {
           position: relative;
           display: inline-block;
-          margin-left: 25px;
+          margin-left: 0;
+          margin-bottom: 20px;
           color: $black;
           @include introduction();
           text-align: left;
@@ -622,9 +694,7 @@ body.has-toolbar.has-sidebar {
 
         .subitem-wrapper {
           width: 20%;
-          padding: 0 20px 0 10px;
-          padding-left: 25px;
-          border-left: 1px solid #000;
+
           transition: all 0.2s ease-in-out;
 
           &:hover {
@@ -685,17 +755,19 @@ body.has-toolbar.has-sidebar {
 
       &.active {
         display: flex;
-        animation: slideDown 0.3s ease-out;
+        animation: slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       @keyframes slideDown {
         from {
           opacity: 0;
-          transform: translateY(-10px);
+          transform: translateY(-30px) scale(0.92);
+          backdrop-filter: blur(0px);
         }
         to {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateY(0) scale(1);
+          backdrop-filter: blur(24px);
         }
       }
 
@@ -703,18 +775,37 @@ body.has-toolbar.has-sidebar {
         position: relative;
         display: inline-flex;
         align-items: flex-start;
-        padding-bottom: 8px;
+        padding: 12px 0;
         color: $black;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border-radius: 12px;
 
         @include body-text-bold();
 
-        span {
-          border-bottom: 1px solid transparent;
-          word-break: break-word;
+        &:hover {
+          color: #3b82f6;
+          transform: translateX(4px);
         }
 
-        span:hover {
-          border-bottom: 1px solid #000;
+        span {
+          position: relative;
+          word-break: break-word;
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+
+            transition: width 0.3s ease;
+          }
+        }
+
+        &:hover span::after {
+          width: 100%;
         }
       }
     }
@@ -779,7 +870,7 @@ body.has-toolbar.has-sidebar {
   .header button {
     font-weight: 700;
   }
-  
+
   // Hidden elements for design schema in mobile nav
   .hidden {
     visibility: hidden !important;

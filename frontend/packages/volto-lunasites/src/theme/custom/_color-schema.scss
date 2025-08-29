@@ -8,7 +8,7 @@
   --lunasites-primary-color: #094ce1;
   --lunasites-secondary-color: #e73d5c;
   --lunasites-tertiary-color: #6bb535;
-  
+
   // Computed/derived colors
   --lunasites-text-color: var(--lunasites-neutral-color);
   --lunasites-accent-color: var(--lunasites-tertiary-color);
@@ -429,9 +429,7 @@ header {
   color: var(--lunasites-header-text-color) !important;
   background: var(--lunasites-header-bg-color) !important;
 }
-.navigation ul.desktop-menu .submenu-inner .subitem-wrapper {
-  border-left: 1px solid var(--lunasites-header-text-color) !important;
-}
+
 .header-wrapper
   .header
   .search-wrapper
@@ -581,16 +579,16 @@ a {
 }
 
 // Content area links - override hardcoded styles
-.content-area p > a, 
-.content-area li > a, 
-.content-area .breadcrumb a, 
-.breadcrumbs p > a, 
-.breadcrumbs li > a, 
+.content-area p > a,
+.content-area li > a,
+.content-area .breadcrumb a,
+.breadcrumbs p > a,
+.breadcrumbs li > a,
 .breadcrumbs .breadcrumb a {
   color: var(--lunasites-neutral-color) !important;
   text-decoration: underline;
   text-decoration-color: var(--lunasites-tertiary-color) !important;
-  
+
   &:hover {
     color: var(--lunasites-primary-color) !important;
     text-decoration-color: var(--lunasites-primary-color) !important;
@@ -702,7 +700,7 @@ a {
     --lunasites-primary-color: #3498db;
     --lunasites-secondary-color: #e74c3c;
     --lunasites-tertiary-color: #2ecc71;
-    
+
     // Computed colors will automatically update
     --lunasites-text-color: var(--lunasites-neutral-color);
     --lunasites-toolbar-color: #343a40;
