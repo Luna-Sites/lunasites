@@ -13,6 +13,7 @@ import { serializeNodesToText } from '@plone/volto-slate/editor/render';
 import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 import isUndefined from 'lodash/isUndefined';
 import isString from 'lodash/isString';
+import debounce from 'lodash/debounce';
 import SlateEditor from '@plone/volto-slate/editor/SlateEditor';
 import { handleKeyDetached } from '@plone/volto-slate/blocks/Text/keyboard';
 import {
@@ -77,24 +78,36 @@ const LogoConfigField = (props) => {
   };
 
   const handleChange = async (newConfig) => {
+    console.log('LogoConfigField handleChange called with:', newConfig);
+    
     // Update the form field value
     onChange(id, newConfig);
 
     // Get current luna theming data from registry
     const currentData = lunaTheming?.data || {};
+    console.log('Current luna theming data:', currentData);
 
     // Update ONLY the logo config section, preserve everything else
     const updatedData = {
       ...currentData,
       logo_config: newConfig,
     };
+    
+    console.log('Sending updated data to registry:', updatedData);
 
     // Save to registry
-    await dispatch(setLunaTheming(updatedData));
+    const result = await dispatch(setLunaTheming(updatedData));
+    console.log('setLunaTheming result:', result);
 
     // Refresh registry data
     dispatch(getLunaTheming());
   };
+
+  // Debounced version for text changes
+  const debouncedHandleChange = React.useMemo(
+    () => debounce(handleChange, 500),
+    [handleChange]
+  );
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -124,7 +137,7 @@ const LogoConfigField = (props) => {
       text: value,
     };
 
-    handleChange(newConfig);
+    debouncedHandleChange(newConfig);
   };
 
   const handleLayoutChange = (layout) => {
@@ -218,6 +231,8 @@ const LogoConfigField = (props) => {
             justifyContent: 'center',
             flexDirection: layout === 'vertical' ? 'column' : 'row',
             gap: layout === 'horizontal' ? '12px' : '8px',
+            background: 'var(--lunasites-header-bg-color, #f8f9fa)',
+            border: '1px solid rgba(0,0,0,0.1)',
           }}
         >
           {!hasImage && !hasText && (
@@ -447,13 +462,28 @@ const LogoConfigField = (props) => {
                     name="logo-text-editor"
                     value={getValue(getCurrentConfig().text)}
                     onChange={(newValue) => {
-                      handleTextChange('text', newValue);
+                      // Validate the new value to prevent path errors
+                      if (Array.isArray(newValue) && newValue.length > 0) {
+                        handleTextChange('text', newValue);
+                      }
                     }}
                     selected={selected}
                     showToolbar={true}
                     toolbarAlwaysVisible={false}
                     extensions={config.settings.slate.slateWidgetExtensions}
-                    onKeyDown={handleKeyDetached}
+                    onKeyDown={(event, editor) => {
+                      // Handle Enter key safely
+                      if (event.key === 'Enter') {
+                        event.preventDefault();
+                        // Insert a simple line break instead of creating new blocks
+                        editor.insertText('\n');
+                        return;
+                      }
+                      // Use default handling for other keys
+                      if (handleKeyDetached) {
+                        handleKeyDetached(event, editor);
+                      }
+                    }}
                     placeholder="Enter site name or logo text"
                     editableProps={{
                       'aria-multiline': 'true',

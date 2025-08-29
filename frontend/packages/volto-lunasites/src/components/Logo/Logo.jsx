@@ -36,7 +36,8 @@ const Logo = () => {
   // Get logo config from luna theming
   const lunaTheming = useSelector((state) => state.lunaTheming);
   const logoConfig = lunaTheming?.data?.logo_config || {};
-  
+
+  console.log({ lunaTheming });
   // Extract logo data - prioritize luna theming over design schema (legacy support)
   const logoText = logoConfig.text || designSchemaData?.logo_text || null;
   const logoImage = logoConfig.image || designSchemaData?.logo_image || null;
@@ -47,8 +48,9 @@ const Logo = () => {
   const renderLogo = () => {
     const hasText =
       logoText &&
-      (typeof logoText === 'string' ? logoText.length > 0 : 
-       logoText.length > 0 && serializeNodesToText(logoText)?.trim() !== '');
+      (typeof logoText === 'string'
+        ? logoText.length > 0
+        : logoText.length > 0 && serializeNodesToText(logoText)?.trim() !== '');
     const hasImage = logoImage;
 
     // Handle layout-specific rendering
@@ -72,7 +74,9 @@ const Logo = () => {
       // Handle both string and slate text
       if (typeof logoText === 'string') {
         return (
-          <div className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}>
+          <div
+            className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}
+          >
             {logoText}
           </div>
         );
@@ -91,7 +95,9 @@ const Logo = () => {
         };
 
         return (
-          <div className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}>
+          <div
+            className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}
+          >
             <RenderBlocks content={textContent} />
           </div>
         );
@@ -108,7 +114,9 @@ const Logo = () => {
       const renderTextContent = () => {
         if (typeof logoText === 'string') {
           return (
-            <div className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}>
+            <div
+              className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}
+            >
               {logoText}
             </div>
           );
@@ -127,7 +135,9 @@ const Logo = () => {
           };
 
           return (
-            <div className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}>
+            <div
+              className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}
+            >
               <RenderBlocks content={textContent} />
             </div>
           );
@@ -154,9 +164,7 @@ const Logo = () => {
             className="logo-image"
             style={{ flexShrink: 0 }}
           />
-          <div style={{ flexShrink: 0 }}>
-            {renderTextContent()}
-          </div>
+          <div style={{ flexShrink: 0 }}>{renderTextContent()}</div>
         </div>
       );
     }

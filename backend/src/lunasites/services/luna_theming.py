@@ -177,6 +177,10 @@ class LunaThemingPost(Service):
                 if header['variation'] in valid_variations:
                     validated['header']['variation'] = header['variation']
         
+        # Pass through logo_config without validation
+        if 'logo_config' in data:
+            validated['logo_config'] = data['logo_config']
+        
         return validated
     
     def _is_valid_color(self, color):
