@@ -3,6 +3,8 @@ from plone.autoform import directives
 from plone.supermodel import model
 from zope import schema
 from zope.interface import provider
+from eea.schema.slate.field import SlateJSONField
+from plone.schema import JSONField
 
 
 @provider(IFormFieldProvider)
@@ -13,7 +15,7 @@ class ISiteTheming(model.Schema):
         'theming',
         label=u'Theming',
         description=u'Configure site-wide appearance and theming',
-        fields=['color_schema', 'header_variation']
+        fields=['color_schema', 'header_variation', 'logo_config']
     )
     
     directives.widget(
@@ -44,4 +46,18 @@ class ISiteTheming(model.Schema):
         description=u"Choose header color variation",
         required=False,
         default=u'primary_navigation'
+    )
+    
+    directives.widget(
+        'logo_config',
+        frontendOptions={
+            'widget': 'logo_config'
+        }
+    )
+    
+    logo_config = JSONField(
+        title=u"Logo Configuration",
+        description=u"Configure site logo image, text and layout options",
+        required=False,
+        default={}
     )

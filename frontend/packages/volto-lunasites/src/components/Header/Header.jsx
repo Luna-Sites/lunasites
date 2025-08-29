@@ -133,6 +133,7 @@ const Header = (props) => {
         'lunasites.behaviors.design_schema.IDesignSchema'
       ]?.data,
   );
+  const lunaTheming = useSelector((state) => state.lunaTheming);
   const intl = useIntl();
   const translatedSiteLabel = intl.formatMessage(messages.siteLabel);
 
@@ -155,6 +156,7 @@ const Header = (props) => {
             siteAction={siteAction}
             toolsHeader={toolsHeader}
             designSchemaData={designSchemaData}
+            lunaTheming={lunaTheming}
           />
         ) : (
           <InternetHeader
@@ -164,6 +166,7 @@ const Header = (props) => {
             siteAction={siteAction}
             toolsHeader={toolsHeader}
             designSchemaData={designSchemaData}
+            lunaTheming={lunaTheming}
           />
         )}
       </Container>

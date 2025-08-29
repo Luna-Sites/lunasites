@@ -33,42 +33,110 @@ const Logo = () => {
       ]?.data,
   );
 
-  // Extract logo data from design schema
-  const logoText = designSchemaData?.logo_text || null;
-  const logoImage = designSchemaData?.logo_image || null;
+  // Get logo config from luna theming
+  const lunaTheming = useSelector((state) => state.lunaTheming);
+  const logoConfig = lunaTheming?.data?.logo_config || {};
+  
+  // Extract logo data - prioritize luna theming over design schema (legacy support)
+  const logoText = logoConfig.text || designSchemaData?.logo_text || null;
+  const logoImage = logoConfig.image || designSchemaData?.logo_image || null;
+  const logoLayout = logoConfig.layout || 'horizontal';
   const logoTextBold = designSchemaData?.logo_text_bold || false;
 
-  // Render logo based on availability: both > image only > text only > default
+  // Render logo based on layout configuration
   const renderLogo = () => {
     const hasText =
       logoText &&
-      logoText.length > 0 &&
-      serializeNodesToText(logoText)?.trim() !== '';
+      (typeof logoText === 'string' ? logoText.length > 0 : 
+       logoText.length > 0 && serializeNodesToText(logoText)?.trim() !== '');
     const hasImage = logoImage;
 
-    // Case 1: Both image and text available - show both (image first, then text)
+    // Handle layout-specific rendering
+    if (logoLayout === 'logo_only' && hasImage) {
+      const imageSrc =
+        typeof logoImage === 'string'
+          ? logoImage
+          : logoImage.download || logoImage['@id'] || logoImage;
+
+      return (
+        <img
+          src={flattenToAppURL(imageSrc)}
+          alt={intl.formatMessage(messages.homepage)}
+          title={intl.formatMessage(messages.homepage)}
+          className="logo-image"
+        />
+      );
+    }
+
+    if (logoLayout === 'text_only' && hasText) {
+      // Handle both string and slate text
+      if (typeof logoText === 'string') {
+        return (
+          <div className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}>
+            {logoText}
+          </div>
+        );
+      } else {
+        const textContent = {
+          blocks: {
+            'logo-text': {
+              '@type': 'slate',
+              value: logoText,
+              plaintext: '',
+            },
+          },
+          blocks_layout: {
+            items: ['logo-text'],
+          },
+        };
+
+        return (
+          <div className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}>
+            <RenderBlocks content={textContent} />
+          </div>
+        );
+      }
+    }
+
+    // Case 1: Both image and text available with layout options
     if (hasImage && hasText) {
       const imageSrc =
         typeof logoImage === 'string'
           ? logoImage
           : logoImage.download || logoImage['@id'] || logoImage;
 
-      const textContent = {
-        blocks: {
-          'logo-text': {
-            '@type': 'slate',
-            value: logoText,
-            plaintext: '',
-          },
-        },
-        blocks_layout: {
-          items: ['logo-text'],
-        },
+      const renderTextContent = () => {
+        if (typeof logoText === 'string') {
+          return (
+            <div className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}>
+              {logoText}
+            </div>
+          );
+        } else {
+          const textContent = {
+            blocks: {
+              'logo-text': {
+                '@type': 'slate',
+                value: logoText,
+                plaintext: '',
+              },
+            },
+            blocks_layout: {
+              items: ['logo-text'],
+            },
+          };
+
+          return (
+            <div className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}>
+              <RenderBlocks content={textContent} />
+            </div>
+          );
+        }
       };
 
       return (
         <div
-          className="logo-combined"
+          className={`logo-combined logo-layout-${logoLayout}`}
           style={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -76,6 +144,7 @@ const Logo = () => {
             gap: '8px',
             width: '100%',
             maxWidth: 'fit-content',
+            flexDirection: logoLayout === 'vertical' ? 'column' : 'row',
           }}
         >
           <img
@@ -85,13 +154,8 @@ const Logo = () => {
             className="logo-image"
             style={{ flexShrink: 0 }}
           />
-          <div
-            className={`logo-text-content ${logoTextBold ? 'logo-text-bold' : ''}`}
-            style={{
-              flexShrink: 0,
-            }}
-          >
-            <RenderBlocks content={textContent} />
+          <div style={{ flexShrink: 0 }}>
+            {renderTextContent()}
           </div>
         </div>
       );
