@@ -42,23 +42,27 @@ const SlashMenu = ({
   properties,
   onChangeFormData,
   onSelectBlock,
+  menuRef,
 }) => {
   const intl = useIntl();
 
   const menuStyle = menuPosition
     ? {
-        position: 'absolute',
+        position: 'fixed',
         top: `${menuPosition.top}px`,
         left: `${menuPosition.left}px`,
         zIndex: 1000,
+        maxHeight: '300px',
+        overflowY: 'auto',
       }
     : {};
 
   return (
-    <div className="power-user-menu" style={menuStyle}>
+    <div className="power-user-menu" style={menuStyle} ref={menuRef}>
       <Menu vertical fluid borderless>
         {availableBlocks.map((block, index) => (
           <Menu.Item
+            data-index={index}
             key={block.id}
             className={block.id}
             active={index === selected}
@@ -81,10 +85,8 @@ const SlashMenu = ({
                     onSelectBlock(result.newBlockId);
                   }
                 } catch (error) {
-                  console.error(
-                    'Smart mutation failed, falling back to standard:',
-                    error,
-                  );
+                  // Smart mutation failed, falling back to standard
+                  console.error('Smart mutation failed:', error);
                   onMutateBlock(currentBlock, newBlockData);
                 }
               } else {
@@ -167,17 +169,13 @@ const getMenuPosition = (editor) => {
 
   try {
     // Use ReactEditor to get DOM node at current selection
-    const domNode = ReactEditor.toDOMNode(editor, editor);
     const domRange = ReactEditor.toDOMRange(editor, selection);
     const rect = domRange.getBoundingClientRect();
 
-    // Get the editor container
-    const editorRect = domNode.getBoundingClientRect();
-
-    // Position menu relative to the editor container
+    // Position menu relative to viewport (for fixed positioning)
     return {
-      top: rect.bottom - editorRect.top + 5, // 5px below cursor, relative to editor
-      left: rect.left - editorRect.left,
+      top: rect.bottom + 5, // 5px below cursor, relative to viewport
+      left: rect.left,
     };
   } catch (error) {
     // Fallback: return null to use default positioning
@@ -194,6 +192,7 @@ const getMenuPosition = (editor) => {
 const PersistentSlashMenu = ({ editor }) => {
   const props = editor.getBlockProps();
   const intl = useIntl();
+  const menuRef = React.useRef();
   const {
     block,
     blocksConfig,
@@ -326,6 +325,16 @@ const PersistentSlashMenu = ({ editor }) => {
       slashMenuSelected >= slashMenuSize - 1 ? 0 : slashMenuSelected + 1,
     );
 
+  // Auto scroll to selected item
+  React.useEffect(() => {
+    if (menuRef.current && show) {
+      const selectedItem = menuRef.current.querySelector(`[data-index="${slashMenuSelected}"]`);
+      if (selectedItem) {
+        selectedItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }, [slashMenuSelected, show]);
+
   return show ? (
     <SlashMenu
       currentBlock={block}
@@ -337,6 +346,7 @@ const PersistentSlashMenu = ({ editor }) => {
       properties={properties}
       onChangeFormData={onChangeFormData}
       onSelectBlock={onSelectBlock}
+      menuRef={menuRef}
     />
   ) : (
     ''
