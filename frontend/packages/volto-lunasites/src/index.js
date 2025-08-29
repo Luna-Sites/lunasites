@@ -68,6 +68,12 @@ import { CardsGridView, CardsGridEdit } from './components/Blocks/CardsGrid';
 import SimpleImageWidget from './components/Blocks/CardsGrid/SimpleImageWidget';
 import gridCardsSVG from '@plone/volto/icons/apps.svg';
 
+// Luna Button Block
+import LunaButtonBlock from './components/Blocks/Button';
+
+// Custom Widgets
+import StyledSelectWidget from './components/Widgets/StyledSelect';
+
 // Design Schema System
 import { DesignSchemaProvider, ColorSchemaField } from './components';
 import HeaderVariationField from './ThemeEngine/widgets/HeaderVariationField/HeaderVariationField';
@@ -179,6 +185,9 @@ const applyConfig = (config) => {
 
   // Register simple image widget for Cards Grid
   config.widgets.widget.simple_image = SimpleImageWidget;
+
+  // Register the beautiful StyledSelect widget
+  config.widgets.widget.styled_select = StyledSelectWidget;
 
   config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;
@@ -308,13 +317,8 @@ const applyConfig = (config) => {
   config.settings.slidingSearchAnimation = true;
   config.settings.openExternalLinkInNewTab = true;
 
-  config.blocks.blocksConfig.__button = {
-    ...config.blocks.blocksConfig.__button,
-    schemaEnhancer: withBlockSpecificStyling(addAdvancedStyling, {
-      __button: blockSpecificConfigs['__button'],
-    }),
-    colors: BG_COLORS,
-  };
+  // Replace the old button block with Luna Button (simplified, no styling enhancements)
+  config.blocks.blocksConfig.__button = LunaButtonBlock;
   config.settings.appExtras = [
     ...config.settings.appExtras,
     {
@@ -534,6 +538,9 @@ const applyConfig = (config) => {
     restricted: false,
     mostUsed: true,
   };
+
+  // Luna Button Block - Simple button with inline text editing
+  config.blocks.blocksConfig.lunaButton = LunaButtonBlock;
 
   // Check if the separator is present before enhancing it
   if (config.blocks.blocksConfig?.separator?.id) {
