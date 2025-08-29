@@ -7,7 +7,7 @@ import { Button } from 'semantic-ui-react';
 import rightArrowSVG from '@plone/volto/icons/right-key.svg';
 import uploadSVG from '@plone/volto/icons/upload.svg';
 import clearSVG from '@plone/volto/icons/clear.svg';
-import { setLunaTheming, getLunaTheming } from '../../actions';
+import { setLunaTheming, getLunaTheming } from '../../../actions';
 import { toast } from 'react-toastify';
 import { serializeNodesToText } from '@plone/volto-slate/editor/render';
 import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';

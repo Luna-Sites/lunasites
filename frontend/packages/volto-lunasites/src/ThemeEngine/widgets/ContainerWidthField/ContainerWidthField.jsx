@@ -4,7 +4,7 @@ import FormFieldWrapper from '@plone/volto/components/manage/Widgets/FormFieldWr
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import SidebarPopup from '@plone/volto/components/manage/Sidebar/SidebarPopup';
 import rightArrowSVG from '@plone/volto/icons/right-key.svg';
-import { setLunaTheming, getLunaTheming } from '../../actions';
+import { setLunaTheming, getLunaTheming } from '../../../actions';
 import { toast } from 'react-toastify';
 
 const ContainerWidthField = (props) => {

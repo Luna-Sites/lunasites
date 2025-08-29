@@ -5,7 +5,7 @@ import Icon from '@plone/volto/components/theme/Icon/Icon';
 import SidebarPopup from '@plone/volto/components/manage/Sidebar/SidebarPopup';
 import { Button } from 'semantic-ui-react';
 import rightArrowSVG from '@plone/volto/icons/right-key.svg';
-import { setLunaTheming, getLunaTheming } from '../../actions';
+import { setLunaTheming, getLunaTheming } from '../../../actions';
 
 const HeaderVariationField = (props) => {
   const { id, title, description, value, onChange } = props;

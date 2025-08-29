@@ -70,9 +70,9 @@ import gridCardsSVG from '@plone/volto/icons/apps.svg';
 
 // Design Schema System
 import { DesignSchemaProvider, ColorSchemaField } from './components';
-import HeaderVariationField from './components/HeaderVariationField/HeaderVariationField';
-import LogoConfigField from './components/LogoConfigField/LogoConfigField';
-import ContainerWidthField from './components/ContainerWidthField/ContainerWidthField';
+import HeaderVariationField from './ThemeEngine/widgets/HeaderVariationField/HeaderVariationField';
+import LogoConfigField from './ThemeEngine/widgets/LogoConfigField/LogoConfigField';
+import ContainerWidthField from './ThemeEngine/widgets/ContainerWidthField/ContainerWidthField';
 import * as reducers from './reducers';
 import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
 import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';

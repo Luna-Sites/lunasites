@@ -8,9 +8,9 @@ import { toast } from 'react-toastify';
 import { SimpleColorPickerCore } from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
 import { useSelector, useDispatch } from 'react-redux';
 import config from '@plone/registry';
-import { getDesignSite } from '../../actions/colorSchema';
-import { getLunaTheming, setLunaTheming } from '../../actions';
-import { ModernColorPicker } from '../ColorPicker';
+import { getDesignSite } from '../../../actions/colorSchema';
+import { getLunaTheming, setLunaTheming } from '../../../actions';
+import { ModernColorPicker } from '../../../components/ColorPicker';
 
 const ColorSchemaField = (props) => {
   const { id, value, onChange } = props;
