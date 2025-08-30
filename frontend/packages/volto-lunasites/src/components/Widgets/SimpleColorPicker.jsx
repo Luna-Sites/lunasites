@@ -260,7 +260,8 @@ const SimpleColorPicker = (props) => {
     setShowPicker(false);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = (e) => {
+    e.preventDefault();
     // Revert to original colors and gradients if not applied
     setCustomColors(originalCustomColors);
     setCustomGradients(originalCustomGradients);

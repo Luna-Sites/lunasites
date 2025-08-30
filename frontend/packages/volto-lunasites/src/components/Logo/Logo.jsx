@@ -37,7 +37,6 @@ const Logo = () => {
   const lunaTheming = useSelector((state) => state.lunaTheming);
   const logoConfig = lunaTheming?.data?.logo_config || {};
 
-  console.log({ lunaTheming });
   // Extract logo data - prioritize luna theming over design schema (legacy support)
   const logoText = logoConfig.text || designSchemaData?.logo_text || null;
   const logoImage = logoConfig.image || designSchemaData?.logo_image || null;

@@ -6,7 +6,6 @@ import { Icon } from '@eeacms/volto-accordion-block/components/manage/Blocks/Acc
 import config from '@plone/volto/registry';
 import { defineMessages, injectIntl } from 'react-intl';
 import './title-styles.less';
-import { getInlineStyles } from 'lunasites-advanced-styling/StyleWrapper/StyleWrapperView';
 
 const messages = defineMessages({
   EnterTitle: {
@@ -80,7 +79,6 @@ const CustomAccordionEdit = (props) => {
       }
       style={{
         ...panelInlineStyles,
-        ...getInlineStyles(panel, props, true),
       }}
       {...accordionConfig.options}
     >
@@ -133,7 +131,6 @@ const CustomAccordionEdit = (props) => {
                 background: panelStyles.backgroundColor,
               }),
               ...(panelStyles.textColor && { color: panelStyles.textColor }),
-              ...getInlineStyles(panel, props, true),
             }}
           >
             {children}

@@ -1,7 +1,6 @@
 import { defineMessages } from 'react-intl';
 import config from '@plone/volto/registry';
 import { v4 as uuid } from 'uuid';
-import { getAdvancedStyling } from 'lunasites-advanced-styling';
 
 const messages = defineMessages({
   accordion: {
@@ -34,8 +33,6 @@ const messages = defineMessages({
 
 // Individual accordion panel schema (similar to heroSlideSchema in luna-super-hero)
 export const accordionPanelSchema = (intl) => {
-  const advancedStyling = getAdvancedStyling(intl);
-
   return {
     title: 'Accordion Panel',
     fieldsets: [
@@ -47,7 +44,7 @@ export const accordionPanelSchema = (intl) => {
       {
         id: 'styling',
         title: intl.formatMessage(messages.panelStyling),
-        fields: [...advancedStyling.fields, 'panel_titleColor'],
+        fields: ['panel_titleColor'],
       },
     ],
     properties: {
@@ -56,7 +53,6 @@ export const accordionPanelSchema = (intl) => {
         title: intl.formatMessage(messages.panelTitle),
         type: 'string',
       },
-      ...advancedStyling.properties,
       panel_titleColor: {
         title: intl.formatMessage(messages.panelTitleColor),
         type: 'color',

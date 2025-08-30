@@ -20,12 +20,8 @@ import { Container } from '@plone/components';
 import TopSideFacets from './components/Blocks/Search/TopSideFacets';
 
 import GridListingBlockTemplate from './components/Blocks/Listing/GridTemplate';
-import {
-  withBlockSpecificStyling,
-  addAdvancedStyling,
-} from 'lunasites-advanced-styling';
 
-import { Editor, Transforms, Text } from 'slate';
+import { Editor, Transforms } from 'slate';
 import alignLeftIcon from '@plone/volto/icons/align-left.svg';
 import alignRightIcon from '@plone/volto/icons/align-right.svg';
 import alignCenterIcon from '@plone/volto/icons/align-center.svg';
@@ -36,9 +32,7 @@ import LineSpacingSelector from './components/LineSpacingSelector';
 import ColorsSelector from './components/ColorsSelector';
 
 import {
-  MarkElementButton,
   ToolbarButton,
-  BlockButton,
 } from '@plone/volto-slate/editor/ui';
 
 import { useSlate } from 'slate-react';
@@ -69,13 +63,13 @@ import SimpleImageWidget from './components/Blocks/CardsGrid/SimpleImageWidget';
 import gridCardsSVG from '@plone/volto/icons/apps.svg';
 
 // Design Schema System
-import { DesignSchemaProvider, ColorSchemaField } from './components';
+import { ColorSchemaField } from './components';
 import HeaderVariationField from './ThemeEngine/widgets/HeaderVariationField/HeaderVariationField';
 import LogoConfigField from './ThemeEngine/widgets/LogoConfigField/LogoConfigField';
 import ContainerWidthField from './ThemeEngine/widgets/ContainerWidthField/ContainerWidthField';
 import * as reducers from './reducers';
 import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
-import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
+import SimpleColorPicker from './components/Widgets/SimpleColorPicker';
 import SimpleIconPicker from './components/Widgets/SimpleIconPicker';
 
 const isBlockClassActive = (editor, format) => {
@@ -310,9 +304,6 @@ const applyConfig = (config) => {
 
   config.blocks.blocksConfig.__button = {
     ...config.blocks.blocksConfig.__button,
-    schemaEnhancer: withBlockSpecificStyling(addAdvancedStyling, {
-      __button: blockSpecificConfigs['__button'],
-    }),
     colors: BG_COLORS,
   };
   config.settings.appExtras = [
@@ -348,20 +339,18 @@ const applyConfig = (config) => {
       'separator',
     ],
     colors: BG_COLORS,
-    schemaEnhancer: composeSchema(AccordionSchemaEnhancer, addAdvancedStyling),
+    schemaEnhancer: AccordionSchemaEnhancer,
     sidebarTab: 1,
   };
 
   config.blocks.blocksConfig.slateTable = {
     ...config.blocks.blocksConfig.slateTable,
-    schemaEnhancer: addAdvancedStyling,
     colors: BG_COLORS,
   };
 
   config.blocks.blocksConfig.listing = {
     ...config.blocks.blocksConfig.listing,
     colors: BG_COLORS,
-    schemaEnhancer: addAdvancedStyling,
     allowed_headline_tags: [['h2', 'h2']],
     variations: [
       ...config.blocks.blocksConfig.listing.variations,
@@ -446,7 +435,6 @@ const applyConfig = (config) => {
   config.blocks.blocksConfig.slate = {
     ...config.blocks.blocksConfig.slate,
     colors: BG_COLORS,
-    schemaEnhancer: addAdvancedStyling,
     sidebarTab: 1,
   };
 
@@ -455,7 +443,7 @@ const applyConfig = (config) => {
     group: 'teasers',
     imageScale: 'larger',
     colors: BG_COLORS,
-    schemaEnhancer: composeSchema(addAdvancedStyling, teaserSchemaEnhancer),
+    schemaEnhancer: teaserSchemaEnhancer,
   };
 
   config.blocks.blocksConfig.video = {
@@ -480,7 +468,6 @@ const applyConfig = (config) => {
     sidebarTab: 0,
     allowed_headings: [['h2', 'h2']],
     colors: BG_COLORS,
-    schemaEnhancer: addAdvancedStyling,
   };
 
   config.blocks.blocksConfig.search = {
@@ -504,7 +491,7 @@ const applyConfig = (config) => {
     view: EventMetadataView,
     edit: EventMetadataView,
     schema: BlockSettingsSchema,
-    restricted: ({ properties, block }) =>
+    restricted: ({ properties }) =>
       properties['@type'] === 'Event' ? false : true,
     mostUsed: false,
     sidebarTab: 0,
@@ -539,10 +526,7 @@ const applyConfig = (config) => {
   if (config.blocks.blocksConfig?.separator?.id) {
     config.blocks.blocksConfig.separator = {
       ...config.blocks.blocksConfig.separator,
-      schemaEnhancer: composeSchema(
-        config.blocks.blocksConfig.separator.schemaEnhancer,
-        addAdvancedStyling,
-      ),
+      schemaEnhancer: config.blocks.blocksConfig.separator.schemaEnhancer,
       colors: BG_COLORS,
     };
   }
@@ -769,7 +753,7 @@ const applyConfig = (config) => {
   // TOC Block
   config.blocks.blocksConfig.toc = {
     ...config.blocks.blocksConfig.toc,
-    schemaEnhancer: composeSchema(addAdvancedStyling, tocBlockSchemaEnhancer),
+    schemaEnhancer: tocBlockSchemaEnhancer,
     // remove horizontal variation
     variations: [config.blocks.blocksConfig.toc.variations[0]],
   };
@@ -783,7 +767,6 @@ const applyConfig = (config) => {
   // Columns Block
   config.blocks.blocksConfig.columnsBlock = {
     ...config.blocks.blocksConfig.columnsBlock,
-    schemaEnhancer: addAdvancedStyling,
     colors: BG_COLORS,
   };
 
@@ -800,7 +783,6 @@ const applyConfig = (config) => {
     mostUsed: false,
     sidebarTab: 1,
     colors: BG_COLORS,
-    schemaEnhancer: addAdvancedStyling,
   };
 
   return config;

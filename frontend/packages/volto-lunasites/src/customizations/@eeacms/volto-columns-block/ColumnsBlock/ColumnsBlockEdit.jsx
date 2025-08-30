@@ -31,7 +31,6 @@ import { COLUMNSBLOCK } from '@eeacms/volto-columns-block/constants';
 import { getStyle } from '@eeacms/volto-columns-block/Styles';
 
 import '@eeacms/volto-columns-block/less/columns.less';
-import { getInlineStyles } from 'lunasites-advanced-styling/StyleWrapper/StyleWrapperView';
 
 const messages = defineMessages({
   labelColumn: {
@@ -304,7 +303,6 @@ class ColumnsBlockEdit extends React.Component {
                     className={cx('block-column', column.column_class)}
                     key={column['@id']}
                     {...(gridSizes[gridCols[index]] || gridCols[index])}
-                    style={getInlineStyles(column, this.props, true)}
                   >
                     <div
                       style={{

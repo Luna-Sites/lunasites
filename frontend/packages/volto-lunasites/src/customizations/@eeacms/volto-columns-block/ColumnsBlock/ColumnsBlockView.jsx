@@ -5,7 +5,6 @@ import { Grid } from 'semantic-ui-react';
 import { RenderBlocks } from '@plone/volto/components';
 import { COLUMNSBLOCK } from '@eeacms/volto-columns-block/constants';
 import cx from 'classnames';
-import { getInlineStyles } from 'lunasites-advanced-styling/StyleWrapper/StyleWrapperView';
 
 import { getColumns } from '@eeacms/volto-columns-block/ColumnsBlock/utils';
 import { getStyle } from '@eeacms/volto-columns-block/Styles';
@@ -44,7 +43,6 @@ const ColumnsBlockView = (props) => {
                 'vertical-align-middle': verticalAlign === 'middle',
                 'vertical-align-bottom': verticalAlign === 'bottom',
               })}
-              style={getInlineStyles(column, props, true)}
             >
               <div
                 style={{
