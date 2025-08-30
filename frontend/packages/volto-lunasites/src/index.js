@@ -20,6 +20,7 @@ import { Container } from '@plone/components';
 import TopSideFacets from './components/Blocks/Search/TopSideFacets';
 
 import GridListingBlockTemplate from './components/Blocks/Listing/GridTemplate';
+import PinterestListingBlockTemplate from './components/Blocks/Listing/PinterestTemplate';
 
 import { Editor, Transforms } from 'slate';
 import alignLeftIcon from '@plone/volto/icons/align-left.svg';
@@ -31,9 +32,7 @@ import FontSizeSelector from './components/FontSizeSelector';
 import LineSpacingSelector from './components/LineSpacingSelector';
 import ColorsSelector from './components/ColorsSelector';
 
-import {
-  ToolbarButton,
-} from '@plone/volto-slate/editor/ui';
+import { ToolbarButton } from '@plone/volto-slate/editor/ui';
 
 import { useSlate } from 'slate-react';
 import { useCallback } from 'react';
@@ -358,6 +357,11 @@ const applyConfig = (config) => {
         id: 'grid',
         title: 'Grid',
         template: GridListingBlockTemplate,
+      },
+      {
+        id: 'pinterest',
+        title: 'Pinterest Gallery',
+        template: PinterestListingBlockTemplate,
       },
     ],
   };
