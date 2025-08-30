@@ -23,17 +23,15 @@ const PinterestTemplate = ({ items, linkTitle, linkHref, isEditMode }) => {
   const { settings } = config;
   const renderItems = items.filter(
     (content) =>
-      settings.imageObjects.includes(content['@type']) && content.image_field,
+      settings.imageObjects.includes(content['@type']) &&
+      (content.image_field || content.preview_image || content.image),
   );
+  console.log({ renderItems }, items);
 
   return (
     <>
       <div className="pinterest-gallery">
         {renderItems.map((item) => {
-          const imageUrl = `${flattenToAppURL(item['@id'])}/@@images/${
-            item.image_field
-          }/large`;
-          
           return (
             <div className="pinterest-item" key={item['@id']}>
               <ConditionalLink item={item} condition={!isEditMode}>
