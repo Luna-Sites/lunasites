@@ -6,7 +6,7 @@ import config from '@plone/volto/registry';
 
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
 
-const GridTemplate = ({ items, linkTitle, linkHref, isEditMode }) => {
+const GridTemplate = ({ items, linkTitle, linkHref, isEditMode, b_size, currentPage = 1 }) => {
   let link = null;
   let href = linkHref?.[0]?.['@id'] || '';
 
@@ -20,10 +20,16 @@ const GridTemplate = ({ items, linkTitle, linkHref, isEditMode }) => {
     link = <a href={href}>{linkTitle || href}</a>;
   }
 
+  // Apply manual pagination if b_size is provided
+  const renderItems =
+    b_size && b_size > 0
+      ? items.slice((currentPage - 1) * b_size, currentPage * b_size)
+      : items;
+
   return (
     <>
       <div className="items">
-        {items.map((item) => {
+        {renderItems.map((item) => {
           const ItemBodyTemplate = () => {
             const hasType = item['@type'];
             const CustomItemBodyTemplate = config.getComponent({
@@ -75,6 +81,8 @@ GridTemplate.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
   linkMore: PropTypes.any,
   isEditMode: PropTypes.bool,
+  b_size: PropTypes.number,
+  currentPage: PropTypes.number,
 };
 
 export default GridTemplate;

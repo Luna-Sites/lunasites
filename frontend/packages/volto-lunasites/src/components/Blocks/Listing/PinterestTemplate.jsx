@@ -26,7 +26,6 @@ const PinterestTemplate = ({ items, linkTitle, linkHref, isEditMode }) => {
       settings.imageObjects.includes(content['@type']) &&
       (content.image_field || content.preview_image || content.image),
   );
-  console.log({ renderItems }, items);
 
   return (
     <>

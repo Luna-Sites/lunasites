@@ -116,6 +116,37 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  .pinterest-loading {
+    width: 100%;
+    text-align: center;
+    padding: 40px 20px;
+    break-inside: avoid;
+
+    .loading-spinner {
+      font-size: 16px;
+      color: #666;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+  }
+
+  .pinterest-end {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    break-inside: avoid;
+
+    .end-message {
+      font-size: 14px;
+      color: #999;
+      font-style: italic;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 // Alternative CSS Grid approach for better control
