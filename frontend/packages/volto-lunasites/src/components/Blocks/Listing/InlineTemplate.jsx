@@ -5,8 +5,9 @@ import { flattenToAppURL } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
 
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
+import './InlineTemplate.scss';
 
-const SummaryTemplate = ({ 
+const InlineTemplate = ({ 
   items, 
   linkTitle, 
   linkHref, 
@@ -19,6 +20,8 @@ const SummaryTemplate = ({
   descriptionLength = 100,
   imageAspectRatio = 'auto',
   cardStyle = 'default',
+  showImage = true,
+  imagePlacement = 'left',
 }) => {
   let link = null;
   let href = linkHref?.[0]?.['@id'] || '';
@@ -50,7 +53,7 @@ const SummaryTemplate = ({
         {items.map((item) => {
           const hasType = item['@type'];
           const CustomItemBodyTemplate = config.getComponent({
-            name: 'SummaryListingItemTemplate',
+            name: 'InlineListingItemTemplate',
             dependencies: [hasType],
           }).component;
 
@@ -58,8 +61,10 @@ const SummaryTemplate = ({
             CustomItemBodyTemplate ? (
               <CustomItemBodyTemplate item={item} />
             ) : (
-              <>
-                <Component componentName="PreviewImage" item={item} alt="" />
+              <div className={`inline-item ${imagePlacement === 'right' ? 'image-right' : 'image-left'}`}>
+                {showImage && (
+                  <Component componentName="PreviewImage" item={item} alt="" className="inline-image" />
+                )}
                 <div className="listing-body">
                   {showTitle && (
                     <h3>{truncateText(item.title ? item.title : item.id, titleLength)}</h3>
@@ -78,7 +83,7 @@ const SummaryTemplate = ({
                     </div>
                   )}
                 </div>
-              </>
+              </div>
             );
           return (
             <div className={`listing-item card-style-${cardStyle} aspect-ratio-${imageAspectRatio}`} key={item['@id']}>
@@ -95,7 +100,7 @@ const SummaryTemplate = ({
   );
 };
 
-SummaryTemplate.propTypes = {
+InlineTemplate.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
   linkTitle: PropTypes.string,
   linkHref: PropTypes.arrayOf(PropTypes.any),
@@ -108,6 +113,8 @@ SummaryTemplate.propTypes = {
   descriptionLength: PropTypes.number,
   imageAspectRatio: PropTypes.string,
   cardStyle: PropTypes.string,
+  showImage: PropTypes.bool,
+  imagePlacement: PropTypes.string,
 };
 
-export default SummaryTemplate;
+export default InlineTemplate;

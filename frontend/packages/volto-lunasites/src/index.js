@@ -20,6 +20,7 @@ import { Container } from '@plone/components';
 import TopSideFacets from './components/Blocks/Search/TopSideFacets';
 
 import GridListingBlockTemplate from './components/Blocks/Listing/GridTemplate';
+import InlineListingBlockTemplate from './components/Blocks/Listing/InlineTemplate';
 import PinterestListingBlockTemplate from './components/Blocks/Listing/PinterestTemplate';
 import { listingSchemaEnhancer } from './components/Blocks/Listing/listingSchema';
 
@@ -354,7 +355,9 @@ const applyConfig = (config) => {
     allowed_headline_tags: [['h2', 'h2']],
     schemaEnhancer: listingSchemaEnhancer,
     variations: [
-      ...config.blocks.blocksConfig.listing.variations,
+      ...config.blocks.blocksConfig.listing.variations.map(variation => 
+        variation.id === 'summary' ? { ...variation, template: InlineListingBlockTemplate } : variation
+      ),
       {
         id: 'grid',
         title: 'Grid',

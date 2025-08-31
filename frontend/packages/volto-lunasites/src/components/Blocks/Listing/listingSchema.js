@@ -11,23 +11,34 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
     delete schema.properties.headline;
   }
 
-  // Add Card Settings fieldset
-  schema.fieldsets.push({
-    id: 'card_settings',
-    title: 'Card Settings',
-    fields: [
-      'showTitle',
-      'showDescription',
-      'showDate',
-      'showAuthor',
-      'titleLength',
-      'descriptionLength',
-      'imageAspectRatio',
-      'cardStyle',
-      ...(formData.cardStyle === 'default' ? ['filled'] : []),
-      ...(formData.variation === 'grid' ? ['maxNumberOfColumns'] : []),
-    ],
-  });
+  // Filter out default variation to hide it
+  if (schema.properties.variation?.choices) {
+    schema.properties.variation.choices = schema.properties.variation.choices.filter(
+      ([id, title]) => id !== 'default'
+    );
+  }
+
+  // Add Card Settings fieldset only for our custom variations
+  if (['grid', 'summary', 'pinterest'].includes(formData.variation)) {
+    schema.fieldsets.push({
+      id: 'card_settings',
+      title: 'Card Settings',
+      fields: [
+        'showTitle',
+        'showDescription',
+        'showDate',
+        'showAuthor',
+        'titleLength',
+        'descriptionLength',
+        'imageAspectRatio',
+        'cardStyle',
+        ...(formData.cardStyle === 'default' ? ['filled'] : []),
+        ...(formData.variation === 'grid' ? ['maxNumberOfColumns'] : []),
+        ...(formData.variation === 'summary' ? ['showImage'] : []),
+        ...(formData.variation === 'summary' && formData.showImage ? ['imagePlacement'] : []),
+      ],
+    });
+  }
 
   // Add card settings properties
   schema.properties.showTitle = {
@@ -106,6 +117,22 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
     type: 'boolean',
     default: true,
     description: 'Use colored background or transparent (no paper effect)',
+  };
+
+  schema.properties.showImage = {
+    title: 'Show Image',
+    type: 'boolean',
+    default: true,
+  };
+
+  schema.properties.imagePlacement = {
+    title: 'Image Placement',
+    type: 'string',
+    choices: [
+      ['left', 'Left'],
+      ['right', 'Right'],
+    ],
+    default: 'left',
   };
 
   return schema;
