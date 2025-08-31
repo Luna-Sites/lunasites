@@ -21,6 +21,7 @@ import TopSideFacets from './components/Blocks/Search/TopSideFacets';
 
 import GridListingBlockTemplate from './components/Blocks/Listing/GridTemplate';
 import PinterestListingBlockTemplate from './components/Blocks/Listing/PinterestTemplate';
+import { listingSchemaEnhancer } from './components/Blocks/Listing/listingSchema';
 
 import { Editor, Transforms } from 'slate';
 import alignLeftIcon from '@plone/volto/icons/align-left.svg';
@@ -351,6 +352,7 @@ const applyConfig = (config) => {
     ...config.blocks.blocksConfig.listing,
     colors: BG_COLORS,
     allowed_headline_tags: [['h2', 'h2']],
+    schemaEnhancer: listingSchemaEnhancer,
     variations: [
       ...config.blocks.blocksConfig.listing.variations,
       {
@@ -360,7 +362,7 @@ const applyConfig = (config) => {
       },
       {
         id: 'pinterest',
-        title: 'Pinterest Gallery',
+        title: 'Art Gallery',
         template: PinterestListingBlockTemplate,
       },
     ],
