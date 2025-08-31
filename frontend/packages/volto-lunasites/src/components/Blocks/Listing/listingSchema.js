@@ -85,10 +85,8 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
     title: 'Card Style',
     type: 'string',
     choices: [
-      ['default', 'Default'],
-      ['minimal', 'Minimal'],
-      ['overlay', 'Overlay'],
-      ['compact', 'Compact'],
+      ['default', 'Default - All info visible'],
+      ['overlay', 'Overlay - Info on hover'],
     ],
     default: 'default',
   };

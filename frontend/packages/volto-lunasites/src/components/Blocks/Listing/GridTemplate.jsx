@@ -5,8 +5,24 @@ import { flattenToAppURL } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
 
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
+import './GridTemplate.scss';
 
-const GridTemplate = ({ items, linkTitle, linkHref, isEditMode, b_size, currentPage = 1 }) => {
+const GridTemplate = ({
+  items,
+  linkTitle,
+  linkHref,
+  isEditMode,
+  b_size,
+  currentPage = 1,
+  showTitle = true,
+  showDescription = true,
+  showDate = false,
+  showAuthor = false,
+  titleLength = 50,
+  descriptionLength = 100,
+  imageAspectRatio = 'auto',
+  cardStyle = 'default',
+}) => {
   let link = null;
   let href = linkHref?.[0]?.['@id'] || '';
 
@@ -19,6 +35,17 @@ const GridTemplate = ({ items, linkTitle, linkHref, isEditMode, b_size, currentP
   } else if (href) {
     link = <a href={href}>{linkTitle || href}</a>;
   }
+
+  // Helper functions
+  const truncateText = (text, maxLength) => {
+    if (!text || text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    return new Date(dateStr).toLocaleDateString();
+  };
 
   // Apply manual pagination if b_size is provided
   const renderItems =
@@ -40,25 +67,78 @@ const GridTemplate = ({ items, linkTitle, linkHref, isEditMode, b_size, currentP
             return CustomItemBodyTemplate ? (
               <CustomItemBodyTemplate item={item} />
             ) : (
-              <div className="card-container">
-                {item.image_field !== '' && (
-                  <Component
-                    componentName="PreviewImage"
-                    item={item}
-                    alt=""
-                    className="item-image"
-                  />
-                )}
-                <div className="item">
-                  <div className="content">
+              <div
+                className={`card-container card-style-${cardStyle} aspect-ratio-${imageAspectRatio}`}
+              >
+                <div className="image-container">
+                  {item.image_field !== '' && (
+                    <Component
+                      componentName="PreviewImage"
+                      item={item}
+                      alt=""
+                      className="item-image"
+                    />
+                  )}
+                  {cardStyle === 'overlay' && (
+                    <div className="overlay">
+                      <div className="overlay-content">
+                        {item?.head_title && (
+                          <div className="headline">{item.head_title}</div>
+                        )}
+                        {showTitle && (
+                          <h2>{truncateText(item?.title, titleLength)}</h2>
+                        )}
+                        {showDescription &&
+                          !item.hide_description &&
+                          item?.description && (
+                            <p>
+                              {truncateText(
+                                item.description,
+                                descriptionLength,
+                              )}
+                            </p>
+                          )}
+                        {showDate && item.effective && (
+                          <div className="item-date">
+                            {formatDate(item.effective)}
+                          </div>
+                        )}
+                        {showAuthor && item.creators && (
+                          <div className="item-author">
+                            By {item.creators.join(', ')}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {cardStyle === 'default' && (
+                  <div className="card-content">
                     {item?.head_title && (
                       <div className="headline">{item.head_title}</div>
                     )}
-
-                    <h2>{item?.title}</h2>
-                    {!item.hide_description && <p>{item?.description}</p>}
+                    {showTitle && (
+                      <h2>{truncateText(item?.title, titleLength)}</h2>
+                    )}
+                    {showDescription &&
+                      !item.hide_description &&
+                      item?.description && (
+                        <p>
+                          {truncateText(item.description, descriptionLength)}
+                        </p>
+                      )}
+                    {showDate && item.effective && (
+                      <div className="item-date">
+                        {formatDate(item.effective)}
+                      </div>
+                    )}
+                    {showAuthor && item.creators && (
+                      <div className="item-author">
+                        By {item.creators.join(', ')}
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
               </div>
             );
           };
@@ -79,10 +159,19 @@ const GridTemplate = ({ items, linkTitle, linkHref, isEditMode, b_size, currentP
 
 GridTemplate.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
-  linkMore: PropTypes.any,
+  linkTitle: PropTypes.string,
+  linkHref: PropTypes.arrayOf(PropTypes.any),
   isEditMode: PropTypes.bool,
   b_size: PropTypes.number,
   currentPage: PropTypes.number,
+  showTitle: PropTypes.bool,
+  showDescription: PropTypes.bool,
+  showDate: PropTypes.bool,
+  showAuthor: PropTypes.bool,
+  titleLength: PropTypes.number,
+  descriptionLength: PropTypes.number,
+  imageAspectRatio: PropTypes.string,
+  cardStyle: PropTypes.string,
 };
 
 export default GridTemplate;
