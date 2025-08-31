@@ -156,9 +156,8 @@
     bottom: 0;
     background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0) 0%,
-      var(--lunasites-primary-color, rgba(0, 0, 0, 0.05)) 80%,
-      var(--lunasites-primary-color, rgba(0, 0, 0, 0.15)) 100%
+      rgba(0, 0, 0, 0.1) 0%,
+      rgba(0, 0, 0, 0.7) 100%
     );
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -169,7 +168,7 @@
   }
 
   .overlay-content {
-    color: var(--lunasites-background-color, white);
+    color: white;
     width: 100%;
   }
 
@@ -221,8 +220,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 // Alternative CSS Grid approach for better control

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Grid } from 'semantic-ui-react';
 import { ConditionalLink, Component } from '@plone/volto/components';
 import { flattenToAppURL } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
@@ -22,6 +23,7 @@ const GridTemplate = ({
   descriptionLength = 100,
   imageAspectRatio = 'auto',
   cardStyle = 'default',
+  maxNumberOfColumns = 3,
 }) => {
   let link = null;
   let href = linkHref?.[0]?.['@id'] || '';
@@ -53,9 +55,29 @@ const GridTemplate = ({
       ? items.slice((currentPage - 1) * b_size, currentPage * b_size)
       : items;
 
+  // Smart scaling logic for responsive breakpoints
+  const getResponsiveColumns = () => {
+    if (typeof window !== 'undefined') {
+      const width = window.innerWidth;
+      if (width <= 480) {
+        return Math.min(maxNumberOfColumns, 1);
+      } else if (width <= 768) {
+        return Math.min(maxNumberOfColumns, 2);
+      } else if (width <= 1200) {
+        return Math.min(maxNumberOfColumns, 4);
+      }
+    }
+    return maxNumberOfColumns;
+  };
+
   return (
     <>
-      <div className="items">
+      <Grid
+        columns={getResponsiveColumns()}
+        doubling
+        stackable
+        className="listing-grid"
+      >
         {renderItems.map((item) => {
           const ItemBodyTemplate = () => {
             const hasType = item['@type'];
@@ -143,14 +165,14 @@ const GridTemplate = ({
             );
           };
           return (
-            <div className="listing-item" key={item['@id']}>
+            <Grid.Column key={item['@id']}>
               <ConditionalLink item={item} condition={!isEditMode}>
                 <ItemBodyTemplate item={item} />
               </ConditionalLink>
-            </div>
+            </Grid.Column>
           );
         })}
-      </div>
+      </Grid>
 
       {link && <div className="footer">{link}</div>}
     </>
@@ -172,6 +194,7 @@ GridTemplate.propTypes = {
   descriptionLength: PropTypes.number,
   imageAspectRatio: PropTypes.string,
   cardStyle: PropTypes.string,
+  maxNumberOfColumns: PropTypes.number,
 };
 
 export default GridTemplate;

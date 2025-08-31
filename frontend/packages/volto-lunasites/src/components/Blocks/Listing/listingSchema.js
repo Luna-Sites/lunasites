@@ -2,7 +2,7 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
   // Remove headline field from listing blocks
   if (schema.fieldsets[0]?.fields) {
     schema.fieldsets[0].fields = schema.fieldsets[0].fields.filter(
-      field => field !== 'headline'
+      (field) => field !== 'headline',
     );
   }
 
@@ -17,13 +17,14 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
     title: 'Card Settings',
     fields: [
       'showTitle',
-      'showDescription', 
+      'showDescription',
       'showDate',
       'showAuthor',
       'titleLength',
       'descriptionLength',
       'imageAspectRatio',
       'cardStyle',
+      ...(formData.variation === 'grid' ? ['maxNumberOfColumns'] : []),
     ],
   });
 
@@ -72,13 +73,13 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
     title: 'Image Aspect Ratio',
     type: 'string',
     choices: [
-      ['auto', 'Auto'],
-      ['1:1', 'Square (1:1)'],
       ['4:3', 'Standard (4:3)'],
+      ['1:1', 'Square (1:1)'],
       ['16:9', 'Wide (16:9)'],
       ['3:4', 'Portrait (3:4)'],
+      ...(formData.variation !== 'grid' ? [['auto', 'Auto']] : []),
     ],
-    default: 'auto',
+    default: '16:9',
   };
 
   schema.properties.cardStyle = {
@@ -89,6 +90,14 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
       ['overlay', 'Overlay - Info on hover'],
     ],
     default: 'default',
+  };
+
+  schema.properties.maxNumberOfColumns = {
+    title: 'Max Number of Columns',
+    type: 'number',
+    default: 3,
+    minimum: 1,
+    maximum: 6,
   };
 
   return schema;
