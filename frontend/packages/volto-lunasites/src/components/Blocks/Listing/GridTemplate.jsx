@@ -7,6 +7,7 @@ import config from '@plone/volto/registry';
 
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
 import './GridTemplate.scss';
+import './CardStyles.scss';
 
 const GridTemplate = ({
   items,

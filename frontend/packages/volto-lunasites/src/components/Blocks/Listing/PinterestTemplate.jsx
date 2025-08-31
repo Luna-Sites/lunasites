@@ -5,6 +5,7 @@ import { flattenToAppURL } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
 import './PinterestTemplate.scss';
+import './CardStyles.scss';
 
 const PinterestTemplate = ({ 
   items, 
@@ -58,7 +59,7 @@ const PinterestTemplate = ({
           return (
             <div className={`pinterest-item card-style-${cardStyle}`} key={item['@id']}>
               <ConditionalLink item={item} condition={!isEditMode}>
-                <div className={`pinterest-card aspect-ratio-${imageAspectRatio}`}>
+                <div className={`card-container pinterest-card card-style-${cardStyle} aspect-ratio-${imageAspectRatio}`}>
                   <div className="image-container">
                     <Component
                       componentName="PreviewImage"
