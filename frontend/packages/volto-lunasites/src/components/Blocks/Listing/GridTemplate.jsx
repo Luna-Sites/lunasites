@@ -24,6 +24,7 @@ const GridTemplate = ({
   descriptionLength = 100,
   imageAspectRatio = 'auto',
   cardStyle = 'default',
+  filled = true,
   maxNumberOfColumns = 3,
 }) => {
   let link = null;
@@ -91,7 +92,7 @@ const GridTemplate = ({
               <CustomItemBodyTemplate item={item} />
             ) : (
               <div
-                className={`card-container card-style-${cardStyle} aspect-ratio-${imageAspectRatio}`}
+                className={`card-container card-style-${cardStyle} aspect-ratio-${imageAspectRatio} ${filled ? 'filled' : 'transparent'}`}
               >
                 <div className="image-container">
                   {item.image_field !== '' && (
@@ -195,6 +196,7 @@ GridTemplate.propTypes = {
   descriptionLength: PropTypes.number,
   imageAspectRatio: PropTypes.string,
   cardStyle: PropTypes.string,
+  filled: PropTypes.bool,
   maxNumberOfColumns: PropTypes.number,
 };
 

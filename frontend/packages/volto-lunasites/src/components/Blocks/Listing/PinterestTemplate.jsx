@@ -20,6 +20,7 @@ const PinterestTemplate = ({
   descriptionLength = 100,
   imageAspectRatio = 'auto',
   cardStyle = 'default',
+  filled = true,
 }) => {
   let link = null;
   let href = linkHref?.[0]?.['@id'] || '';
@@ -59,7 +60,7 @@ const PinterestTemplate = ({
           return (
             <div className={`pinterest-item card-style-${cardStyle}`} key={item['@id']}>
               <ConditionalLink item={item} condition={!isEditMode}>
-                <div className={`card-container pinterest-card card-style-${cardStyle} aspect-ratio-${imageAspectRatio}`}>
+                <div className={`card-container pinterest-card card-style-${cardStyle} aspect-ratio-${imageAspectRatio} ${filled ? 'filled' : 'transparent'}`}>
                   <div className="image-container">
                     <Component
                       componentName="PreviewImage"
@@ -143,6 +144,7 @@ PinterestTemplate.propTypes = {
   descriptionLength: PropTypes.number,
   imageAspectRatio: PropTypes.string,
   cardStyle: PropTypes.string,
+  filled: PropTypes.bool,
 };
 
 export default PinterestTemplate;

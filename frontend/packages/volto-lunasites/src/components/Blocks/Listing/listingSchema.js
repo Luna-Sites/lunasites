@@ -24,6 +24,7 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
       'descriptionLength',
       'imageAspectRatio',
       'cardStyle',
+      ...(formData.cardStyle === 'default' ? ['filled'] : []),
       ...(formData.variation === 'grid' ? ['maxNumberOfColumns'] : []),
     ],
   });
@@ -98,6 +99,13 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
     default: 3,
     minimum: 1,
     maximum: 6,
+  };
+
+  schema.properties.filled = {
+    title: 'Filled Background',
+    type: 'boolean',
+    default: true,
+    description: 'Use colored background or transparent (no paper effect)',
   };
 
   return schema;

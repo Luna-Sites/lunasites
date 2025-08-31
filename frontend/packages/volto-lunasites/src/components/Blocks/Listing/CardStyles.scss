@@ -8,24 +8,38 @@
   transition: all 0.3s ease;
   width: 100%;
   max-width: 100%;
-  
-  // Intelligent background color formula based on user's palette
-  // Creates a subtle, branded background that's not too bold
-  background: color-mix(in srgb, var(--lunasites-background-color, #ffffff) 85%, var(--lunasites-primary-color, #094ce1) 15%);
-  
-  // Sophisticated shadow using brand colors for depth
-  box-shadow: 
-    0 2px 8px color-mix(in srgb, var(--lunasites-neutral-color, #222222) 15%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--lunasites-primary-color, #094ce1) 8%, transparent);
 
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 
-      0 8px 25px color-mix(in srgb, var(--lunasites-neutral-color, #222222) 20%, transparent),
-      0 0 0 1px color-mix(in srgb, var(--lunasites-primary-color, #094ce1) 12%, transparent);
+  // Filled cards - with background and paper effect
+  &.filled {
+    // Intelligent background color formula based on user's palette
+    background: color-mix(in srgb, var(--lunasites-background-color, #ffffff) 85%, var(--lunasites-primary-color, #094ce1) 15%);
     
-    // Subtle background shift on hover using secondary color
-    background: color-mix(in srgb, var(--lunasites-background-color, #ffffff) 80%, var(--lunasites-secondary-color, #e73d5c) 20%);
+    // Sophisticated shadow using brand colors for depth
+    box-shadow: 
+      0 2px 8px color-mix(in srgb, var(--lunasites-neutral-color, #222222) 15%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--lunasites-primary-color, #094ce1) 8%, transparent);
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 8px 25px color-mix(in srgb, var(--lunasites-neutral-color, #222222) 20%, transparent),
+        0 0 0 1px color-mix(in srgb, var(--lunasites-primary-color, #094ce1) 12%, transparent);
+      
+      // Subtle background shift on hover using secondary color
+      background: color-mix(in srgb, var(--lunasites-background-color, #ffffff) 80%, var(--lunasites-secondary-color, #e73d5c) 20%);
+    }
+  }
+
+  // Transparent cards - no background, no shadow
+  &.transparent {
+    background: transparent;
+    box-shadow: none;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+      background: transparent;
+    }
   }
 
   .image-container {
@@ -47,9 +61,18 @@
   &.card-style-default {
     .card-content {
       padding: 1.2rem;
+      color: var(--lunasites-neutral-color, #222222);
+    }
+
+    // Filled variant - with background
+    &.filled .card-content {
       // Sophisticated text background using primary color mix
       background: color-mix(in srgb, var(--lunasites-background-color, #ffffff) 90%, var(--lunasites-primary-color, #094ce1) 10%);
-      color: var(--lunasites-neutral-color, #222222);
+    }
+
+    // Transparent variant - no background (no paper effect)
+    &.transparent .card-content {
+      background: transparent;
       
       .headline {
         font-size: 0.875rem;
