@@ -18,7 +18,7 @@ export const paginationSchemaEnhancer = ({ schema, formData, intl }) => {
   }
 
   schema.fieldsets[0].fields.push('enablePagination');
-  
+
   if (hasPagination) {
     schema.fieldsets[0].fields.push('b_size');
   }

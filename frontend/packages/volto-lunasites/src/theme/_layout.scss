@@ -411,3 +411,38 @@ body.has-toolbar.has-sidebar .block .ui.basic.button.delete-button {
 }
 
 @import 'bgcolor-blocks-layout';
+
+/*-------------------
+    Edit Mode Container Adjustments
+--------------------*/
+
+// Reduce container width when sidebar is open in edit mode to provide more space
+body.has-toolbar.has-sidebar {
+  #page-edit,
+  #page-add {
+    [class*='block-editor-']:not(.contained) {
+      max-width: calc(var(--layout-container-width));
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    // Also adjust main containers
+    .blocks-group-wrapper > * {
+      max-width: calc(var(--layout-container-width));
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    // Specific adjustments for narrower blocks
+    .block.slate .slate-editor,
+    .block-editor-image.center figure,
+    .block-editor-video.center .video-inner,
+    .block-editor-codeBlock,
+    .block-editor-mermaidBlock,
+    .block-editor-description .documentDescription {
+      max-width: calc(var(--narrow-container-width));
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+}

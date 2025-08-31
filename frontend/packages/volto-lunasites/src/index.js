@@ -21,7 +21,6 @@ import TopSideFacets from './components/Blocks/Search/TopSideFacets';
 
 import GridListingBlockTemplate from './components/Blocks/Listing/GridTemplate';
 import PinterestListingBlockTemplate from './components/Blocks/Listing/PinterestTemplate';
-import { paginationSchemaEnhancer } from './components/Blocks/Listing/paginationSchema';
 
 import { Editor, Transforms } from 'slate';
 import alignLeftIcon from '@plone/volto/icons/align-left.svg';
@@ -352,7 +351,6 @@ const applyConfig = (config) => {
     ...config.blocks.blocksConfig.listing,
     colors: BG_COLORS,
     allowed_headline_tags: [['h2', 'h2']],
-    schemaEnhancer: paginationSchemaEnhancer,
     variations: [
       ...config.blocks.blocksConfig.listing.variations,
       {
