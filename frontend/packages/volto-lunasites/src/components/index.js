@@ -3,6 +3,7 @@ export { default as ColorSchemaField } from '../ThemeEngine/widgets/ColorSchemaF
 export { default as ColorTestDemo } from './ColorTestDemo';
 export { default as CompactBlockChooser } from './CompactBlockChooser';
 export { default as FloatingAddButton } from './FloatingAddButton';
+export { default as BlockSidebarPopover } from './BlockSidebarPopover';
 export {
   CustomSectionBlockEdit,
   CustomSectionBlockView,

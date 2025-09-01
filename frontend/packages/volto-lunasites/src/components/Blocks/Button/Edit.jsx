@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ContentEditable from 'react-contenteditable';
-import { SidebarPortal } from '@plone/volto/components';
 import cx from 'classnames';
 import ButtonSidebar from './ButtonSidebar';
+import BlockSidebarPopover from '../../BlockSidebarPopover';
 import './Button.scss';
 
 const Edit = (props) => {
   const { data, block, onChangeBlock, selected } = props;
   const [text, setText] = useState(data.text || 'Button');
   const editable = useRef(null);
+  const blockRef = useRef(null);
 
   useEffect(() => {
     if (selected && editable.current) {
@@ -38,7 +39,7 @@ const Edit = (props) => {
 
   return (
     <>
-      <div className={wrapperClasses}>
+      <div ref={blockRef} className={wrapperClasses}>
         <div className={buttonClasses}>
           <ContentEditable
             innerRef={editable}
@@ -56,14 +57,18 @@ const Edit = (props) => {
         </div>
       </div>
       
-      <SidebarPortal selected={selected}>
+      <BlockSidebarPopover 
+        selected={selected}
+        blockNode={blockRef.current}
+        className="button-sidebar-popover"
+      >
         <ButtonSidebar
           {...props}
           data={data}
           block={block}
           onChangeBlock={onChangeBlock}
         />
-      </SidebarPortal>
+      </BlockSidebarPopover>
     </>
   );
 };
