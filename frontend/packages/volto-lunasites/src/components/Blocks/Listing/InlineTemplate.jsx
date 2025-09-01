@@ -7,10 +7,10 @@ import config from '@plone/volto/registry';
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
 import './InlineTemplate.scss';
 
-const InlineTemplate = ({ 
-  items, 
-  linkTitle, 
-  linkHref, 
+const InlineTemplate = ({
+  items,
+  linkTitle,
+  linkHref,
   isEditMode,
   showTitle = true,
   showDescription = true,
@@ -61,13 +61,25 @@ const InlineTemplate = ({
             CustomItemBodyTemplate ? (
               <CustomItemBodyTemplate item={item} />
             ) : (
-              <div className={`inline-item ${imagePlacement === 'right' ? 'image-right' : 'image-left'}`}>
+              <div
+                className={`inline-item ${imagePlacement === 'right' ? 'image-right' : 'image-left'}`}
+              >
                 {showImage && (
-                  <Component componentName="PreviewImage" item={item} alt="" className="inline-image" />
+                  <Component
+                    componentName="PreviewImage"
+                    item={item}
+                    alt=""
+                    className="inline-image"
+                  />
                 )}
                 <div className="listing-body">
                   {showTitle && (
-                    <h3>{truncateText(item.title ? item.title : item.id, titleLength)}</h3>
+                    <h3>
+                      {truncateText(
+                        item.title ? item.title : item.id,
+                        titleLength,
+                      )}
+                    </h3>
                   )}
                   {showDescription && item.description && (
                     <p>{truncateText(item.description, descriptionLength)}</p>
@@ -86,7 +98,10 @@ const InlineTemplate = ({
               </div>
             );
           return (
-            <div className={`listing-item card-style-${cardStyle} aspect-ratio-${imageAspectRatio}`} key={item['@id']}>
+            <div
+              className={`listing-item card-style-${cardStyle} aspect-ratio-${imageAspectRatio}`}
+              key={item['@id']}
+            >
               <ConditionalLink item={item} condition={!isEditMode}>
                 <ItemBodyTemplate item={item} />
               </ConditionalLink>
