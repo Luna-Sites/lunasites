@@ -4,36 +4,36 @@
   height: 100%;
   
   &__header {
+    background: #fafafa;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  &__header-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    background: #fafafa;
-    border-radius: 10px 10px 0 0;
+    padding: 0.75rem 1rem 0.5rem;
   }
   
   &__title {
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 600;
     margin: 0;
     color: #333;
   }
   
-  &__tabs {
+  &__actions {
     display: flex;
-    gap: 2px;
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 6px;
-    padding: 2px;
+    gap: 0.25rem;
   }
   
-  &__tab {
+  &__action {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border: none;
     background: transparent;
     border-radius: 4px;
@@ -43,6 +43,45 @@
     padding: 0;
     
     &:hover {
+      background: rgba(0, 0, 0, 0.08);
+      color: #333;
+    }
+    
+    &:active {
+      background: rgba(0, 0, 0, 0.12);
+    }
+    
+    svg {
+      fill: currentColor;
+    }
+  }
+  
+  &__tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 1rem 0.75rem;
+  }
+  
+  &__tab {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    border: none;
+    background: transparent;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #666;
+    font-size: 0.875rem;
+    font-weight: 500;
+    position: relative;
+    
+    span {
+      display: block;
+    }
+    
+    &:hover {
       background: rgba(0, 0, 0, 0.05);
       color: #333;
     }
@@ -50,7 +89,18 @@
     &.active {
       background: white;
       color: var(--lunasites-primary-color, #094ce1);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+      
+      // Create connection to content area
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: white;
+      }
       
       svg {
         fill: var(--lunasites-primary-color, #094ce1);
