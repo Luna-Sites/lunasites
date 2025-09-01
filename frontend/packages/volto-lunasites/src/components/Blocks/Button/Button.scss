@@ -26,7 +26,7 @@
   border: 2px solid transparent;
   transition: all 0.3s ease;
   cursor: pointer;
-  text-decoration: none;
+  text-decoration: none !important;
   border-radius: 4px;
   
   // Size variants
@@ -272,6 +272,18 @@
     &[contenteditable="true"] {
       cursor: text;
     }
+  }
+}
+
+// Ensure links styled as buttons maintain button appearance
+a.luna-button {
+  &:hover {
+    text-decoration: none !important;
+  }
+  
+  &:focus {
+    text-decoration: none !important;
+    outline-offset: 2px;
   }
 }
 

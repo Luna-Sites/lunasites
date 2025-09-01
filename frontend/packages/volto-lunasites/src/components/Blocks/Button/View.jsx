@@ -1,4 +1,6 @@
 import React from 'react';
+import { UniversalLink } from '@plone/volto/components';
+import { flattenToAppURL } from '@plone/volto/helpers';
 import cx from 'classnames';
 import './Button.scss';
 
@@ -20,13 +22,30 @@ const View = (props) => {
   });
 
   const buttonText = data.text || 'Button';
+  
+  // Handle href from object_browser widget
+  const href = data.href?.[0]?.['@id'] || data.href;
 
-  // Simple button without link functionality
+  // Render button with or without link
+  const ButtonContent = () => (
+    <span className="luna-button__text">{buttonText}</span>
+  );
+
   return (
     <div className={wrapperClasses}>
-      <div className={buttonClasses}>
-        <span className="luna-button__text">{buttonText}</span>
-      </div>
+      {href ? (
+        <UniversalLink
+          href={flattenToAppURL(href)}
+          openLinkInNewTab={data.openInNewTab}
+          className={buttonClasses}
+        >
+          <ButtonContent />
+        </UniversalLink>
+      ) : (
+        <div className={buttonClasses}>
+          <ButtonContent />
+        </div>
+      )}
     </div>
   );
 };

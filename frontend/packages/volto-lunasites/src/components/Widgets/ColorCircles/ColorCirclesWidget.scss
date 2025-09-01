@@ -2,7 +2,7 @@
 .color-circles-widget {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .color-circles-container {
@@ -103,7 +103,7 @@
       align-items: center;
       gap: 1rem;
       width: 100%;
-      padding: 1rem;
+      // padding: 1rem;
 
       label {
         margin: 0;

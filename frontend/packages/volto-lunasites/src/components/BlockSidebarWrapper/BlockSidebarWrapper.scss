@@ -36,3 +36,11 @@
     }
   }
 }
+
+.header.pulled {
+  margin-bottom: 1rem;
+}
+
+.sidebar-container .ui.segment:not(.tab) {
+  border-bottom: none !important;
+}

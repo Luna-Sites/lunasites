@@ -80,10 +80,21 @@ export const ButtonSchema = (props) => {
       {
         id: 'default',
         title: 'Default',
-        fields: ['buttonType', 'color', 'size', 'align'],
+        fields: ['href', 'openInNewTab', 'buttonType', 'color', 'size', 'align'],
       },
     ],
     properties: {
+      href: {
+        title: intl.formatMessage(messages.link),
+        widget: 'object_browser',
+        mode: 'link',
+        selectedItemAttrs: ['Title', 'Description', 'hasPreviewImage'],
+        allowExternals: true,
+      },
+      openInNewTab: {
+        title: intl.formatMessage(messages.openInNewTab),
+        type: 'boolean',
+      },
       buttonType: {
         title: intl.formatMessage(messages.type),
         widget: 'styled_select',

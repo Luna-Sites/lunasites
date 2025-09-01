@@ -3,10 +3,10 @@
   &.inline.field {
     display: grid;
     grid-template-columns: 1fr;
+    padding: 1rem;
 
     .wrapper {
       width: 100%;
-      padding: 2rem;
       display: grid;
       grid-template-columns: 1fr 2fr;
       align-items: center;
