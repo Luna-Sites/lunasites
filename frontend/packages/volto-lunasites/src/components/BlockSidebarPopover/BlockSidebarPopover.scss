@@ -1,64 +1,68 @@
 // BlockSidebarPopover Styles
 .block-sidebar-popover {
+  h2 {
+    font-size: 18px !important;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  }
   z-index: 1000;
   pointer-events: none;
-  
+
   &__container {
     position: relative;
     pointer-events: auto;
-    width: 340px;
-    max-height: 400px;
+    width: 260px;
+    max-height: 500px;
     overflow-y: auto;
-    
+
     // Reuse the block-sidebar-wrapper styles
     background: white;
-    border-radius: 12px;
+    border-radius: 10px;
     box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.12),
-      0 4px 16px rgba(0, 0, 0, 0.08);
+      0 6px 24px rgba(0, 0, 0, 0.1),
+      0 3px 12px rgba(0, 0, 0, 0.06);
     border: 1px solid rgba(0, 0, 0, 0.05);
-    
+
     // Smooth entrance animation
     animation: popoverFadeIn 0.2s ease-out;
-    
+
     // Custom scrollbar
     &::-webkit-scrollbar {
       width: 6px;
     }
-    
+
     &::-webkit-scrollbar-track {
       background: transparent;
     }
-    
+
     &::-webkit-scrollbar-thumb {
       background: rgba(0, 0, 0, 0.2);
       border-radius: 3px;
-      
+
       &:hover {
         background: rgba(0, 0, 0, 0.3);
       }
     }
   }
-  
+
   &__content {
-    padding: 1.5rem;
-    
+    padding: 1rem;
+
     // Ensure form elements have proper spacing
     .field {
-      margin-bottom: 1rem;
-      
+      margin-bottom: 0.75rem;
+
       &:last-child {
         margin-bottom: 0;
       }
     }
-    
+
     // Style the title if present
     .ui.form .ui.dividing.header {
       margin-top: 0;
       padding-top: 0;
     }
   }
-  
+
   // Arrow pointing to the block
   &__arrow {
     position: absolute;
@@ -66,7 +70,7 @@
     height: 0;
     border-style: solid;
   }
-  
+
   // Arrow on the right side (popover on left of block)
   &.left &__arrow {
     right: -8px;
@@ -76,7 +80,7 @@
     border-color: transparent transparent transparent white;
     filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.05));
   }
-  
+
   // Arrow on the left side (popover on right of block)
   &.right &__arrow {
     left: -8px;

@@ -18,9 +18,9 @@ const BlockSidebarPopover = ({ children, selected, blockNode, className = '' }) 
     const blockRect = blockNode.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    const popoverWidth = 340; // Approximate width of the popover
-    const popoverHeight = 400; // Approximate height
-    const margin = 20; // Margin from the block
+    const popoverWidth = 260; // Width of the popover (matches CSS)
+    const popoverHeight = 500; // Max height (matches CSS)
+    const margin = 16; // Margin from the block
 
     // Determine if popover should appear on the right or left
     const spaceOnRight = viewportWidth - blockRect.right;
