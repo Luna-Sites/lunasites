@@ -80,7 +80,7 @@ export const ButtonSchema = (props) => {
       {
         id: 'default',
         title: 'Default',
-        fields: ['buttonType', 'color', 'size', 'width', 'align'],
+        fields: ['buttonType', 'color', 'size', 'align'],
       },
     ],
     properties: {
@@ -109,29 +109,24 @@ export const ButtonSchema = (props) => {
       },
       size: {
         title: intl.formatMessage(messages.size),
-        widget: 'button_group',
+        widget: 'styled_select',
         choices: [
-          ['xs', 'XS'],
-          ['s', 'S'],
-          ['m', 'M'],
-          ['l', 'L'],
-          ['xl', 'XL'],
+          ['xs', 'Extra Small'],
+          ['s', 'Small'],
+          ['m', 'Medium'],
+          ['l', 'Large'],
+          ['xl', 'Extra Large'],
         ],
         default: 'm',
       },
-      width: {
-        title: intl.formatMessage(messages.width),
-        widget: 'button_group',
-        choices: [
-          ['fit', 'Fit'],
-          ['full', 'Full'],
-        ],
-        default: 'fit',
-      },
       align: {
         title: intl.formatMessage(messages.align),
-        widget: 'align',
-        actions: ['left', 'center', 'right'],
+        widget: 'styled_select',
+        choices: [
+          ['left', 'Left'],
+          ['center', 'Center'],
+          ['right', 'Right'],
+        ],
         default: 'left',
       },
     },

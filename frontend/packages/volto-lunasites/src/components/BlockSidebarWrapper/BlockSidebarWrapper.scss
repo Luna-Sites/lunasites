@@ -1,32 +1,34 @@
 // Generic Block Sidebar Wrapper Styles
 .block-sidebar-wrapper {
   padding: 1rem;
-  
+
   &__container {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 
-                0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.06);
     padding: 1.5rem;
     border: 1px solid rgba(0, 0, 0, 0.05);
-    
+
     // Smooth transitions for hover effects
     transition: box-shadow 0.3s ease;
-    
+
     &:hover {
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12), 
-                  0 3px 10px rgba(0, 0, 0, 0.08);
+      box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.12),
+        0 3px 10px rgba(0, 0, 0, 0.08);
     }
-    
+
     // Ensure form elements have proper spacing
     .field {
       margin-bottom: 1rem;
-      
+
       &:last-child {
         margin-bottom: 0;
       }
     }
-    
+
     // Style the title if present
     .ui.form .ui.dividing.header {
       margin-top: 0;
