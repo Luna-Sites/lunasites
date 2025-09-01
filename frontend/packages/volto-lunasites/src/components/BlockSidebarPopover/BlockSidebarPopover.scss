@@ -45,11 +45,12 @@
   }
 
   &__content {
-    padding: 1rem;
+    padding: 0;
 
     // Ensure form elements have proper spacing
     .field {
       margin-bottom: 0.75rem;
+      padding: 0 1rem;
 
       &:last-child {
         margin-bottom: 0;
@@ -60,6 +61,11 @@
     .ui.form .ui.dividing.header {
       margin-top: 0;
       padding-top: 0;
+    }
+    
+    // Remove padding for tabbed sidebar
+    .tabbed-sidebar {
+      height: 100%;
     }
   }
 

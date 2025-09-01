@@ -1,26 +1,22 @@
 import React from 'react';
-import { BlockDataForm } from '@plone/volto/components';
-import { ButtonSchema } from './schema';
+import { ButtonSettingsSchema, ButtonStylesSchema } from './schema';
 import { useIntl } from 'react-intl';
+import TabbedSidebar from '../../TabbedSidebar';
 
 const ButtonSidebar = (props) => {
   const { data, block, onChangeBlock, navRoot, contentType } = props;
   const intl = useIntl();
-  const schema = ButtonSchema({ ...props, intl });
+  const settingsSchema = ButtonSettingsSchema({ ...props, intl });
+  const stylesSchema = ButtonStylesSchema({ ...props, intl });
 
   return (
-    <BlockDataForm
-      schema={schema}
-      title={schema.title}
-      onChangeField={(id, value) => {
-        onChangeBlock(block, {
-          ...data,
-          [id]: value,
-        });
-      }}
-      onChangeBlock={onChangeBlock}
-      formData={data}
+    <TabbedSidebar
+      title="Button"
+      settingsSchema={settingsSchema}
+      stylesSchema={stylesSchema}
+      data={data}
       block={block}
+      onChangeBlock={onChangeBlock}
       navRoot={navRoot}
       contentType={contentType}
     />
