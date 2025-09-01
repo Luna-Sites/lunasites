@@ -17,7 +17,7 @@
   .inline-image {
     flex-shrink: 0;
     width: 150px;
-    height: auto;
+    height: 100px;
     border-radius: 4px;
     object-fit: cover;
   }
@@ -28,12 +28,6 @@
     height: 100px;
     width: 150px !important;
     object-position: center !important;
-  }
-
-  video.inline-image {
-    object-fit: cover;
-    background: transparent;
-    height: 100px;
   }
 
   .listing-body {
@@ -72,15 +66,117 @@
     }
   }
 
-  @media (max-width: 768px) {
+  // Mobile phones (up to 480px)
+  @media (max-width: 480px) {
     .inline-image {
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
     }
     
     video.inline-image {
-      width: 80px !important;
-      height: 80px;
+      width: 70px !important;
+      height: 70px;
+    }
+
+    .listing-body {
+      h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1rem;
+      }
+
+      p {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  // Small tablets (481px to 768px)
+  @media (min-width: 481px) and (max-width: 768px) {
+    .inline-image {
+      width: 100px;
+      height: 100px;
+    }
+    
+    video.inline-image {
+      width: 100px !important;
+      height: 100px;
+    }
+
+    .listing-body {
+      h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+      }
+
+      p {
+        margin: 0 0 0.6rem 0;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  // Large tablets (769px to 1024px)
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .inline-image {
+      width: 130px;
+      height: 120px;
+    }
+    
+    video.inline-image {
+      width: 130px !important;
+      height: 120px;
+    }
+
+    .listing-body {
+      h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.2rem;
+      }
+
+      p {
+        margin: 0 0 0.7rem 0;
+      }
+    }
+  }
+
+  // Desktop (1025px to 1440px)
+  @media (min-width: 1025px) and (max-width: 1440px) {
+    .inline-image {
+      width: 180px;
+      height: 140px;
+    }
+    
+    video.inline-image {
+      width: 180px !important;
+      height: 140px;
+    }
+
+    .listing-body {
+      p {
+        margin: 0 0 0.8rem 0;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  // Large desktop (above 1440px)
+  @media (min-width: 1441px) {
+    .inline-image {
+      width: 280px;
+      height: 200px;
+    }
+    
+    video.inline-image {
+      width: 280px !important;
+      height: 200px;
+    }
+
+    .listing-body {
+      p {
+        margin: 0 0 1rem 0;
+        font-size: 1.1rem;
+      }
     }
   }
 }

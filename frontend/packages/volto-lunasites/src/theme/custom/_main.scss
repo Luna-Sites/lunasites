@@ -1330,19 +1330,19 @@ footer .blocks-form {
   max-width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
-  
+
   > * {
     max-width: 100% !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
-  
+
   .ui.table {
     width: 100% !important;
     margin: 0 1rem !important;
     max-width: calc(100% - 2rem) !important;
   }
-  
+
   .contents-header {
     margin-left: 1rem !important;
     margin-right: 1rem !important;
@@ -1403,7 +1403,7 @@ footer .blocks-form {
 
 @media (max-width: 767px) {
   :not(.hero-block) .blocks-group-wrapper > div {
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: $horizontal-space-small-screens;
+    padding-right: $horizontal-space-small-screens;
   }
 }
