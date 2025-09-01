@@ -2,8 +2,8 @@ import { defineMessages } from 'react-intl';
 
 const messages = defineMessages({
   button: {
-    id: 'Luna Button',
-    defaultMessage: 'Luna Button',
+    id: 'Button',
+    defaultMessage: 'Button',
   },
   type: {
     id: 'Type',

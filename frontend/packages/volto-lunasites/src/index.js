@@ -68,8 +68,8 @@ import { CardsGridView, CardsGridEdit } from './components/Blocks/CardsGrid';
 import SimpleImageWidget from './components/Blocks/CardsGrid/SimpleImageWidget';
 import gridCardsSVG from '@plone/volto/icons/apps.svg';
 
-// Luna Button Block
-import LunaButtonBlock from './components/Blocks/Button';
+// Button Block
+import ButtonBlock from './components/Blocks/Button';
 
 // Custom Widgets
 import StyledSelectWidget from './components/Widgets/StyledSelect';
@@ -321,8 +321,8 @@ const applyConfig = (config) => {
   config.settings.slidingSearchAnimation = true;
   config.settings.openExternalLinkInNewTab = true;
 
-  // Replace the old button block with Luna Button (simplified, no styling enhancements)
-  config.blocks.blocksConfig.__button = LunaButtonBlock;
+  // Replace the old button block with our Button (simplified, no styling enhancements)
+  config.blocks.blocksConfig.__button = ButtonBlock;
   config.settings.appExtras = [
     ...config.settings.appExtras,
     {
@@ -543,8 +543,8 @@ const applyConfig = (config) => {
     mostUsed: true,
   };
 
-  // Luna Button Block - Simple button with inline text editing
-  config.blocks.blocksConfig.lunaButton = LunaButtonBlock;
+  // Button Block - Simple button with inline text editing
+  config.blocks.blocksConfig.button = ButtonBlock;
 
   // Check if the separator is present before enhancing it
   if (config.blocks.blocksConfig?.separator?.id) {

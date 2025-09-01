@@ -10,7 +10,7 @@ const ButtonSidebar = (props) => {
   const schema = ButtonSchema({ ...props, intl });
 
   return (
-    <BlockSidebarWrapper className="luna-button-sidebar">
+    <BlockSidebarWrapper className="button-sidebar">
       <BlockDataForm
         schema={schema}
         title={schema.title}

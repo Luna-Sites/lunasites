@@ -3,8 +3,8 @@ import View from './View';
 import buttonSVG from '@plone/volto/icons/bold.svg';
 
 export default {
-  id: 'lunaButton',
-  title: 'Luna Button',
+  id: 'button',
+  title: 'Button',
   icon: buttonSVG,
   group: 'common',
   view: View,
