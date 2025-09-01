@@ -35,13 +35,6 @@ const PinterestTemplate = ({
     link = <a href={href}>{linkTitle || href}</a>;
   }
 
-  const { settings } = config;
-  const renderItems = items.filter(
-    (content) =>
-      settings.imageObjects.includes(content['@type']) &&
-      (content.image_field || content.preview_image || content.image),
-  );
-
   // Helper functions
   const truncateText = (text, maxLength) => {
     if (!text || text.length <= maxLength) return text;
@@ -53,6 +46,31 @@ const PinterestTemplate = ({
     return new Date(dateStr).toLocaleDateString();
   };
 
+  // Helper function to check if item is a video file
+  const isVideoFile = (item) => {
+    const videoExtensions = ['.mp4', '.mov', '.avi', '.webm', '.mkv', '.m4v'];
+    const fileName = item.title || item.id || '';
+    return videoExtensions.some(ext => fileName.toLowerCase().endsWith(ext)) || 
+           item['@type'] === 'File' && item.file?.filename && 
+           videoExtensions.some(ext => item.file.filename.toLowerCase().endsWith(ext));
+  };
+
+  // Helper function to get video URL
+  const getVideoUrl = (item) => {
+    if (item.file?.download) {
+      return item.file.download;
+    }
+    return item['@id'] + '/@@download/file';
+  };
+
+  const { settings } = config;
+  const renderItems = items.filter(
+    (content) =>
+      (settings.imageObjects.includes(content['@type']) &&
+      (content.image_field || content.preview_image || content.image)) ||
+      isVideoFile(content),
+  );
+
   return (
     <>
       <div className="pinterest-gallery">
@@ -62,12 +80,22 @@ const PinterestTemplate = ({
               <ConditionalLink item={item} condition={!isEditMode}>
                 <div className={`card-container pinterest-card card-style-${cardStyle} aspect-ratio-${imageAspectRatio} ${filled ? 'filled' : 'transparent'}`}>
                   <div className="image-container">
-                    <Component
-                      componentName="PreviewImage"
-                      item={item}
-                      alt={item.title || ''}
-                      className="pinterest-image"
-                    />
+                    {isVideoFile(item) ? (
+                      <video 
+                        src={getVideoUrl(item)}
+                        className="pinterest-image"
+                        muted
+                        loop
+                        autoPlay
+                      />
+                    ) : (
+                      <Component
+                        componentName="PreviewImage"
+                        item={item}
+                        alt={item.title || ''}
+                        className="pinterest-image"
+                      />
+                    )}
                     {cardStyle === 'overlay' && (
                       <div className="overlay">
                         <div className="overlay-content">

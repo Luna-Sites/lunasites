@@ -48,6 +48,12 @@
     
     // Add subtle border using tertiary color
     border-bottom: 2px solid color-mix(in srgb, var(--lunasites-tertiary-color, #6bb535) 30%, transparent);
+    
+    video {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
   }
 
   .item-image {
@@ -55,6 +61,16 @@
     height: auto;
     display: block;
     transition: transform 0.3s ease;
+  }
+
+  video.item-image,
+  video.pinterest-image,
+  video.inline-image {
+    object-fit: cover !important;
+    background: transparent !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-position: center !important;
   }
 
   // Default card style - content below image

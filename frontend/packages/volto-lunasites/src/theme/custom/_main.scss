@@ -1310,6 +1310,43 @@ footer .blocks-form {
 // Primary color variable
 :root {
   --lunasites-cms-primary-color: #094ce1;
+  --lunasites-cms-tertiary-color: #ffbf40;
+}
+
+/*-------------------
+    Contents Table Styling
+--------------------*/
+
+// Style contents table item titles with CMS colors
+.ui.table tbody tr td .icon-align-name span {
+  color: var(--lunasites-cms-primary-color) !important;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 191, 64, 0.4) !important;
+}
+
+// Make Contents view full width
+#page-contents {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  
+  > * {
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  .ui.table {
+    width: 100% !important;
+    margin: 0 1rem !important;
+    max-width: calc(100% - 2rem) !important;
+  }
+  
+  .contents-header {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+  }
 }
 
 /*-------------------

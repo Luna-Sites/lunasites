@@ -47,6 +47,23 @@ const InlineTemplate = ({
     return new Date(dateStr).toLocaleDateString();
   };
 
+  // Helper function to check if item is a video file
+  const isVideoFile = (item) => {
+    const videoExtensions = ['.mp4', '.mov', '.avi', '.webm', '.mkv', '.m4v'];
+    const fileName = item.title || item.id || '';
+    return videoExtensions.some(ext => fileName.toLowerCase().endsWith(ext)) || 
+           item['@type'] === 'File' && item.file?.filename && 
+           videoExtensions.some(ext => item.file.filename.toLowerCase().endsWith(ext));
+  };
+
+  // Helper function to get video URL
+  const getVideoUrl = (item) => {
+    if (item.file?.download) {
+      return item.file.download;
+    }
+    return item['@id'] + '/@@download/file';
+  };
+
   return (
     <>
       <div className="items">
@@ -65,12 +82,28 @@ const InlineTemplate = ({
                 className={`inline-item ${imagePlacement === 'right' ? 'image-right' : 'image-left'}`}
               >
                 {showImage && (
-                  <Component
-                    componentName="PreviewImage"
-                    item={item}
-                    alt=""
-                    className="inline-image"
-                  />
+                  isVideoFile(item) ? (
+                    <video 
+                      src={getVideoUrl(item)}
+                      className="inline-image"
+                      muted
+                      loop
+                      autoPlay
+                      style={{
+                        width: '150px',
+                        height: 'auto',
+                        borderRadius: '4px',
+                        objectFit: 'cover'
+                      }}
+                    />
+                  ) : (
+                    <Component
+                      componentName="PreviewImage"
+                      item={item}
+                      alt=""
+                      className="inline-image"
+                    />
+                  )
                 )}
                 <div className="listing-body">
                   {showTitle && (

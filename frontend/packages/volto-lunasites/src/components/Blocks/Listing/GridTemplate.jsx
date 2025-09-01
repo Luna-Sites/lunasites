@@ -51,6 +51,23 @@ const GridTemplate = ({
     return new Date(dateStr).toLocaleDateString();
   };
 
+  // Helper function to check if item is a video file
+  const isVideoFile = (item) => {
+    const videoExtensions = ['.mp4', '.mov', '.avi', '.webm', '.mkv', '.m4v'];
+    const fileName = item.title || item.id || '';
+    return videoExtensions.some(ext => fileName.toLowerCase().endsWith(ext)) || 
+           item['@type'] === 'File' && item.file?.filename && 
+           videoExtensions.some(ext => item.file.filename.toLowerCase().endsWith(ext));
+  };
+
+  // Helper function to get video URL
+  const getVideoUrl = (item) => {
+    if (item.file?.download) {
+      return item.file.download;
+    }
+    return item['@id'] + '/@@download/file';
+  };
+
   // Apply manual pagination if b_size is provided
   const renderItems =
     b_size && b_size > 0
@@ -95,13 +112,23 @@ const GridTemplate = ({
                 className={`card-container card-style-${cardStyle} aspect-ratio-${imageAspectRatio} ${filled ? 'filled' : 'transparent'}`}
               >
                 <div className="image-container">
-                  {item.image_field !== '' && (
-                    <Component
-                      componentName="PreviewImage"
-                      item={item}
-                      alt=""
-                      className="item-image"
-                    />
+                  {(item.image_field !== '' || isVideoFile(item)) && (
+                    isVideoFile(item) ? (
+                      <video 
+                        src={getVideoUrl(item)}
+                        className="item-image"
+                        muted
+                        loop
+                        autoPlay
+                      />
+                    ) : (
+                      <Component
+                        componentName="PreviewImage"
+                        item={item}
+                        alt=""
+                        className="item-image"
+                      />
+                    )
                   )}
                   {cardStyle === 'overlay' && (
                     <div className="overlay">

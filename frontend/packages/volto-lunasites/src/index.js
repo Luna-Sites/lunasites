@@ -356,7 +356,7 @@ const applyConfig = (config) => {
     schemaEnhancer: listingSchemaEnhancer,
     variations: [
       ...config.blocks.blocksConfig.listing.variations.map(variation => 
-        variation.id === 'summary' ? { ...variation, template: InlineListingBlockTemplate } : variation
+        variation.id === 'default' ? { ...variation, title: 'Summary', template: InlineListingBlockTemplate } : variation
       ),
       {
         id: 'grid',

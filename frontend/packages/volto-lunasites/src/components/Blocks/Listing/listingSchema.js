@@ -11,15 +11,9 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
     delete schema.properties.headline;
   }
 
-  // Filter out default variation to hide it
-  if (schema.properties.variation?.choices) {
-    schema.properties.variation.choices = schema.properties.variation.choices.filter(
-      ([id, title]) => id !== 'default'
-    );
-  }
 
   // Add Card Settings fieldset only for our custom variations
-  if (['grid', 'summary', 'pinterest'].includes(formData.variation)) {
+  if (['grid', 'default', 'pinterest'].includes(formData.variation)) {
     schema.fieldsets.push({
       id: 'card_settings',
       title: 'Card Settings',
@@ -31,11 +25,11 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
         'titleLength',
         'descriptionLength',
         'imageAspectRatio',
-        'cardStyle',
-        ...(formData.cardStyle === 'default' ? ['filled'] : []),
+        ...(formData.variation !== 'default' ? ['cardStyle'] : []),
+        ...(formData.cardStyle === 'default' && formData.variation !== 'default' ? ['filled'] : []),
         ...(formData.variation === 'grid' ? ['maxNumberOfColumns'] : []),
-        ...(formData.variation === 'summary' ? ['showImage'] : []),
-        ...(formData.variation === 'summary' && formData.showImage ? ['imagePlacement'] : []),
+        ...(formData.variation === 'default' ? ['showImage'] : []),
+        ...(formData.variation === 'default' && formData.showImage ? ['imagePlacement'] : []),
       ],
     });
   }
@@ -101,7 +95,7 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
       ['default', 'Default - All info visible'],
       ['overlay', 'Overlay - Info on hover'],
     ],
-    default: 'default',
+    default: formData.variation === 'pinterest' ? 'overlay' : 'default',
   };
 
   schema.properties.maxNumberOfColumns = {
@@ -115,7 +109,7 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
   schema.properties.filled = {
     title: 'Filled Background',
     type: 'boolean',
-    default: true,
+    default: false,
     description: 'Use colored background or transparent (no paper effect)',
   };
 

@@ -60,6 +60,27 @@
     border-radius: 12px;
   }
 
+  video.pinterest-image {
+    object-fit: cover !important;
+    background: transparent !important;
+    width: 100% !important;
+    height: auto !important;
+    object-position: center !important;
+    display: block !important;
+    min-height: 200px;
+  }
+
+  .image-container {
+    position: relative;
+    
+    video {
+      object-fit: cover !important;
+      width: 100% !important;
+      background: transparent !important;
+      border-radius: 12px;
+    }
+  }
+
   .pinterest-loading {
     width: 100%;
     text-align: center;

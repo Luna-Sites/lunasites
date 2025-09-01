@@ -12,3 +12,12 @@
   flex-direction: column;
 }
 
+video.item-image {
+  object-fit: cover !important;
+  background: transparent !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-position: center !important;
+  display: block !important;
+}
+
