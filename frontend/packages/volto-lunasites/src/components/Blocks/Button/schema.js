@@ -96,12 +96,14 @@ export const ButtonSchema = (props) => {
       },
       color: {
         title: intl.formatMessage(messages.color),
-        widget: 'color_list',
-        colors: [
-          { name: 'primary', label: 'Primary', color: '#007bb1' },
-          { name: 'secondary', label: 'Secondary', color: '#ea5389' },
-          { name: 'warning', label: 'Warning', color: '#ffc107' },
-          { name: 'info', label: 'Info', color: '#17a2b8' },
+        widget: 'color_circles',
+        choices: [
+          ['primary', 'Primary'],
+          ['secondary', 'Secondary'],
+          ['tertiary', 'Tertiary'],
+          ['warning', 'Warning'],
+          ['white', 'White'],
+          ['black', 'Black'],
         ],
         default: 'primary',
       },

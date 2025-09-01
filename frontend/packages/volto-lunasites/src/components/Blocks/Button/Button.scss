@@ -71,27 +71,27 @@
     width: auto;
   }
   
-  // Type variants with color combinations
+  // Type variants with color combinations using CSS variables
   &--filled {
     &.luna-button--primary {
-      background-color: #007bb1;
+      background-color: var(--lunasites-primary-color, #094ce1);
       color: white;
-      border-color: #007bb1;
+      border-color: var(--lunasites-primary-color, #094ce1);
       
       &:hover {
-        background-color: darken(#007bb1, 10%);
-        border-color: darken(#007bb1, 10%);
+        background-color: var(--lunasites-primary-dark, #073ab3);
+        border-color: var(--lunasites-primary-dark, #073ab3);
       }
     }
     
     &.luna-button--secondary {
-      background-color: #ea5389;
+      background-color: var(--lunasites-secondary-color, #e73d5c);
       color: white;
-      border-color: #ea5389;
+      border-color: var(--lunasites-secondary-color, #e73d5c);
       
       &:hover {
-        background-color: darken(#ea5389, 10%);
-        border-color: darken(#ea5389, 10%);
+        background-color: var(--lunasites-secondary-dark, #c7324d);
+        border-color: var(--lunasites-secondary-dark, #c7324d);
       }
     }
     
@@ -101,19 +101,41 @@
       border-color: #ffc107;
       
       &:hover {
-        background-color: darken(#ffc107, 10%);
-        border-color: darken(#ffc107, 10%);
+        background-color: #e0a800;
+        border-color: #e0a800;
       }
     }
     
-    &.luna-button--info {
-      background-color: #17a2b8;
+    &.luna-button--tertiary {
+      background-color: var(--lunasites-tertiary-color, #6bb535);
       color: white;
-      border-color: #17a2b8;
+      border-color: var(--lunasites-tertiary-color, #6bb535);
       
       &:hover {
-        background-color: darken(#17a2b8, 10%);
-        border-color: darken(#17a2b8, 10%);
+        background-color: var(--lunasites-tertiary-dark, #5a9a2c);
+        border-color: var(--lunasites-tertiary-dark, #5a9a2c);
+      }
+    }
+    
+    &.luna-button--white {
+      background-color: #ffffff;
+      color: #333333;
+      border-color: #ffffff;
+      
+      &:hover {
+        background-color: #f5f5f5;
+        border-color: #f5f5f5;
+      }
+    }
+    
+    &.luna-button--black {
+      background-color: #000000;
+      color: white;
+      border-color: #000000;
+      
+      &:hover {
+        background-color: #333333;
+        border-color: #333333;
       }
     }
   }
@@ -122,21 +144,21 @@
     background-color: transparent;
     
     &.luna-button--primary {
-      color: #007bb1;
-      border-color: #007bb1;
+      color: var(--lunasites-primary-color, #094ce1);
+      border-color: var(--lunasites-primary-color, #094ce1);
       
       &:hover {
-        background-color: #007bb1;
+        background-color: var(--lunasites-primary-color, #094ce1);
         color: white;
       }
     }
     
     &.luna-button--secondary {
-      color: #ea5389;
-      border-color: #ea5389;
+      color: var(--lunasites-secondary-color, #e73d5c);
+      border-color: var(--lunasites-secondary-color, #e73d5c);
       
       &:hover {
-        background-color: #ea5389;
+        background-color: var(--lunasites-secondary-color, #e73d5c);
         color: white;
       }
     }
@@ -151,12 +173,32 @@
       }
     }
     
-    &.luna-button--info {
-      color: #17a2b8;
-      border-color: #17a2b8;
+    &.luna-button--tertiary {
+      color: var(--lunasites-tertiary-color, #6bb535);
+      border-color: var(--lunasites-tertiary-color, #6bb535);
       
       &:hover {
-        background-color: #17a2b8;
+        background-color: var(--lunasites-tertiary-color, #6bb535);
+        color: white;
+      }
+    }
+    
+    &.luna-button--white {
+      color: #ffffff;
+      border-color: #ffffff;
+      
+      &:hover {
+        background-color: #ffffff;
+        color: #333333;
+      }
+    }
+    
+    &.luna-button--black {
+      color: #000000;
+      border-color: #000000;
+      
+      &:hover {
+        background-color: #000000;
         color: white;
       }
     }
@@ -167,18 +209,18 @@
     border-color: transparent;
     
     &.luna-button--primary {
-      color: #007bb1;
+      color: var(--lunasites-primary-color, #094ce1);
       
       &:hover {
-        background-color: rgba(#007bb1, 0.1);
+        background-color: var(--lunasites-primary-light, rgba(9, 76, 225, 0.1));
       }
     }
     
     &.luna-button--secondary {
-      color: #ea5389;
+      color: var(--lunasites-secondary-color, #e73d5c);
       
       &:hover {
-        background-color: rgba(#ea5389, 0.1);
+        background-color: var(--lunasites-secondary-light, rgba(231, 61, 92, 0.1));
       }
     }
     
@@ -186,15 +228,31 @@
       color: #ffc107;
       
       &:hover {
-        background-color: rgba(#ffc107, 0.1);
+        background-color: rgba(255, 193, 7, 0.1);
       }
     }
     
-    &.luna-button--info {
-      color: #17a2b8;
+    &.luna-button--tertiary {
+      color: var(--lunasites-tertiary-color, #6bb535);
       
       &:hover {
-        background-color: rgba(#17a2b8, 0.1);
+        background-color: var(--lunasites-tertiary-light, rgba(107, 181, 53, 0.1));
+      }
+    }
+    
+    &.luna-button--white {
+      color: #ffffff;
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+    
+    &.luna-button--black {
+      color: #000000;
+      
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
       }
     }
   }

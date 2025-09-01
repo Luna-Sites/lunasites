@@ -73,6 +73,7 @@ import LunaButtonBlock from './components/Blocks/Button';
 
 // Custom Widgets
 import StyledSelectWidget from './components/Widgets/StyledSelect';
+import ColorCirclesWidget from './components/Widgets/ColorCircles';
 
 // Design Schema System
 import { DesignSchemaProvider, ColorSchemaField } from './components';
@@ -188,6 +189,9 @@ const applyConfig = (config) => {
 
   // Register the beautiful StyledSelect widget
   config.widgets.widget.styled_select = StyledSelectWidget;
+  
+  // Register the ColorCircles widget for visual color selection
+  config.widgets.widget.color_circles = ColorCirclesWidget;
 
   config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;

@@ -6,7 +6,7 @@
 
     .wrapper {
       width: 100%;
-      padding: 1rem;
+      padding: 2rem;
       display: grid;
       grid-template-columns: 1fr 2fr;
       align-items: center;
@@ -27,7 +27,7 @@
 .styled-select {
   width: 100%;
   position: relative;
-  
+
   // React Aria should set --trigger-width automatically,
   // but as a fallback we ensure the popover matches the button
   [data-react-aria-top-layer] {
