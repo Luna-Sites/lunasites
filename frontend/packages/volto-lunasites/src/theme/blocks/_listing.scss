@@ -19,7 +19,6 @@
   }
 
   .listing-item {
-    padding-bottom: 40px !important;
     border-bottom: 1px solid $black;
     margin-bottom: 40px;
 
@@ -169,7 +168,7 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
         overflow: hidden;
-        
+
         &:hover {
           box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
           transform: translateY(-2px);
@@ -183,7 +182,7 @@
         object-fit: cover;
         transition: transform 0.3s ease;
       }
-      
+
       &:hover img.item-image {
         transform: scale(1.05);
       }
