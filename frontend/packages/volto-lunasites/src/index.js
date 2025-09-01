@@ -85,6 +85,16 @@ import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
 import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
 import SimpleIconPicker from './components/Widgets/SimpleIconPicker';
 
+// Custom Section Block
+import {
+  CustomSectionBlockEdit,
+  CustomSectionBlockView,
+  CustomSectionBlockSchema,
+} from './components';
+
+// Custom keyboard handler
+import { customEnterHandler } from './keyboard/customEnterHandler';
+
 const isBlockClassActive = (editor, format) => {
   if (!editor.selection) return false;
   // TODO: someone fix this
@@ -129,16 +139,6 @@ function BlockClassButton({ format, icon, ...props }) {
     />
   );
 }
-
-// Custom Section Block
-import {
-  CustomSectionBlockEdit,
-  CustomSectionBlockView,
-  CustomSectionBlockSchema,
-} from './components';
-
-// Custom keyboard handler
-import { customEnterHandler } from './keyboard/customEnterHandler';
 
 const BG_COLORS = [
   { name: 'transparent', label: 'Transparent' },
@@ -189,7 +189,7 @@ const applyConfig = (config) => {
 
   // Register the beautiful StyledSelect widget
   config.widgets.widget.styled_select = StyledSelectWidget;
-  
+
   // Register the ColorCircles widget for visual color selection
   config.widgets.widget.color_circles = ColorCirclesWidget;
 
@@ -321,8 +321,10 @@ const applyConfig = (config) => {
   config.settings.slidingSearchAnimation = true;
   config.settings.openExternalLinkInNewTab = true;
 
-  // Replace the old button block with our Button (simplified, no styling enhancements)
-  config.blocks.blocksConfig.__button = ButtonBlock;
+  // Remove the original kitconcept button block from the slash menu
+  if (config.blocks.blocksConfig.__button) {
+    delete config.blocks.blocksConfig.__button;
+  }
   config.settings.appExtras = [
     ...config.settings.appExtras,
     {
@@ -543,7 +545,7 @@ const applyConfig = (config) => {
     mostUsed: true,
   };
 
-  // Button Block - Simple button with inline text editing
+  // Replace all button blocks with our single Button implementation
   config.blocks.blocksConfig.button = ButtonBlock;
 
   // Check if the separator is present before enhancing it

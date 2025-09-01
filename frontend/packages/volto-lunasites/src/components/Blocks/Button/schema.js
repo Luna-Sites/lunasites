@@ -71,7 +71,7 @@ const messages = defineMessages({
   },
 });
 
-export const ButtonSchema = (props) => {
+export const ButtonSettingsSchema = (props) => {
   const { intl } = props;
 
   return {
@@ -80,7 +80,7 @@ export const ButtonSchema = (props) => {
       {
         id: 'default',
         title: 'Default',
-        fields: ['href', 'openInNewTab', 'buttonType', 'color', 'size', 'align'],
+        fields: ['href', 'openInNewTab'],
       },
     ],
     properties: {
@@ -95,6 +95,59 @@ export const ButtonSchema = (props) => {
         title: intl.formatMessage(messages.openInNewTab),
         type: 'boolean',
       },
+      color: {
+        title: intl.formatMessage(messages.color),
+        widget: 'color_circles',
+        choices: [
+          ['primary', 'Primary'],
+          ['secondary', 'Secondary'],
+          ['tertiary', 'Tertiary'],
+          ['warning', 'Warning'],
+          ['white', 'White'],
+          ['black', 'Black'],
+        ],
+        default: 'primary',
+      },
+      size: {
+        title: intl.formatMessage(messages.size),
+        widget: 'styled_select',
+        choices: [
+          ['xs', 'Extra Small'],
+          ['s', 'Small'],
+          ['m', 'Medium'],
+          ['l', 'Large'],
+          ['xl', 'Extra Large'],
+        ],
+        default: 'm',
+      },
+      align: {
+        title: intl.formatMessage(messages.align),
+        widget: 'styled_select',
+        choices: [
+          ['left', 'Left'],
+          ['center', 'Center'],
+          ['right', 'Right'],
+        ],
+        default: 'left',
+      },
+    },
+    required: [],
+  };
+};
+
+export const ButtonStylesSchema = (props) => {
+  const { intl } = props;
+
+  return {
+    title: intl.formatMessage(messages.button),
+    fieldsets: [
+      {
+        id: 'default',
+        title: 'Default',
+        fields: ['buttonType', 'color', 'size', 'align'],
+      },
+    ],
+    properties: {
       buttonType: {
         title: intl.formatMessage(messages.type),
         widget: 'styled_select',
@@ -144,3 +197,6 @@ export const ButtonSchema = (props) => {
     required: [],
   };
 };
+
+// Keep the original schema for backward compatibility
+export const ButtonSchema = ButtonSettingsSchema;
