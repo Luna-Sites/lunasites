@@ -116,12 +116,13 @@
     
     &.luna-button--secondary {
       background-color: var(--lunasites-secondary-color, #e73d5c);
-      color: white;
+      color: var(--lunasites-primary-color, #094ce1);
       border-color: var(--lunasites-secondary-color, #e73d5c);
       
       &:hover {
         background-color: var(--lunasites-secondary-dark, #c7324d);
         border-color: var(--lunasites-secondary-dark, #c7324d);
+        color: var(--lunasites-primary-color, #094ce1);
       }
     }
     
@@ -138,13 +139,13 @@
     
     &.luna-button--tertiary {
       background-color: var(--lunasites-tertiary-color, #6bb535);
-      color: var(--lunasites-secondary-color, #e73d5c);
+      color: var(--lunasites-primary-color, #094ce1);
       border-color: var(--lunasites-tertiary-color, #6bb535);
       
       &:hover {
         background-color: var(--lunasites-tertiary-dark, #5a9a2c);
         border-color: var(--lunasites-tertiary-dark, #5a9a2c);
-        color: var(--lunasites-secondary-color, #e73d5c);
+        color: var(--lunasites-primary-color, #094ce1);
       }
     }
     
@@ -185,12 +186,12 @@
     }
     
     &.luna-button--secondary {
-      color: var(--lunasites-secondary-color, #e73d5c);
+      color: var(--lunasites-primary-color, #094ce1);
       border-color: var(--lunasites-secondary-color, #e73d5c);
       
       &:hover {
         background-color: var(--lunasites-secondary-color, #e73d5c);
-        color: white;
+        color: var(--lunasites-primary-color, #094ce1);
       }
     }
     
@@ -205,22 +206,22 @@
     }
     
     &.luna-button--tertiary {
-      color: var(--lunasites-tertiary-color, #6bb535);
+      color: var(--lunasites-primary-color, #094ce1);
       border-color: var(--lunasites-tertiary-color, #6bb535);
       
       &:hover {
         background-color: var(--lunasites-tertiary-color, #6bb535);
-        color: var(--lunasites-secondary-color, #e73d5c);
+        color: var(--lunasites-primary-color, #094ce1);
       }
     }
     
     &.luna-button--white {
-      color: #ffffff;
+      color: var(--lunasites-primary-color, #094ce1);
       border-color: #ffffff;
       
       &:hover {
         background-color: #ffffff;
-        color: #333333;
+        color: var(--lunasites-primary-color, #094ce1);
       }
     }
     
@@ -248,7 +249,7 @@
     }
     
     &.luna-button--secondary {
-      color: var(--lunasites-secondary-color, #e73d5c);
+      color: var(--lunasites-primary-color, #094ce1);
       
       &:hover {
         background-color: var(--lunasites-secondary-light, rgba(231, 61, 92, 0.1));
@@ -264,16 +265,16 @@
     }
     
     &.luna-button--tertiary {
-      color: var(--lunasites-tertiary-color, #6bb535);
+      color: var(--lunasites-primary-color, #094ce1);
       
       &:hover {
         background-color: var(--lunasites-tertiary-light, rgba(107, 181, 53, 0.1));
-        color: var(--lunasites-secondary-color, #e73d5c);
+        color: var(--lunasites-primary-color, #094ce1);
       }
     }
     
     &.luna-button--white {
-      color: #ffffff;
+      color: var(--lunasites-primary-color, #094ce1);
       
       &:hover {
         background-color: rgba(255, 255, 255, 0.2);

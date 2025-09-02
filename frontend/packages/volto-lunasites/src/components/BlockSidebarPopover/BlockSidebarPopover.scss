@@ -11,7 +11,7 @@
     position: relative;
     pointer-events: auto;
     width: 260px;
-    max-height: 500px;
+    max-height: inherit;
     overflow-y: auto;
 
     // Reuse the block-sidebar-wrapper styles
@@ -25,23 +25,17 @@
     // Smooth entrance animation
     animation: popoverFadeIn 0.2s ease-out;
 
-    // Custom scrollbar
+    // Hide scrollbar but keep scroll functionality
     &::-webkit-scrollbar {
-      width: 6px;
+      width: 0;
+      display: none;
     }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 3px;
-
-      &:hover {
-        background: rgba(0, 0, 0, 0.3);
-      }
-    }
+    
+    // For Firefox
+    scrollbar-width: none;
+    
+    // For IE/Edge
+    -ms-overflow-style: none;
   }
 
   &__content {
@@ -95,6 +89,24 @@
     border-width: 8px 8px 8px 0;
     border-color: transparent white transparent transparent;
     filter: drop-shadow(-2px 0 2px rgba(0, 0, 0, 0.05));
+  }
+
+  // Arrow on top (popover below block) - positioned on the right
+  &.bottom &__arrow {
+    top: -8px;
+    right: 30px;
+    border-width: 0 8px 8px 8px;
+    border-color: transparent transparent white transparent;
+    filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.05));
+  }
+
+  // Arrow on bottom (popover above block) - positioned on the right
+  &.top &__arrow {
+    bottom: -8px;
+    right: 30px;
+    border-width: 8px 8px 0 8px;
+    border-color: white transparent transparent transparent;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.05));
   }
 }
 
