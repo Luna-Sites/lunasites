@@ -12,7 +12,7 @@ export default {
   restricted: false,
   mostUsed: true,
   sidebarTab: 1,
-  blockHasOwnFocusManagement: true,
+  blockHasOwnFocusManagement: false,
   defaults: {
     text: 'Button',
     buttonType: 'filled',
