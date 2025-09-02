@@ -1,0 +1,167 @@
+.pinterest-gallery {
+  columns: 4;
+  column-gap: 20px;
+  margin: 0;
+  padding: 0;
+
+  @media (max-width: 1200px) {
+    columns: 3;
+  }
+
+  @media (max-width: 768px) {
+    columns: 2;
+    column-gap: 15px;
+  }
+
+  @media (max-width: 480px) {
+    columns: 1;
+    column-gap: 10px;
+  }
+
+  .pinterest-item {
+    display: inline-block !important;
+    width: 100% !important;
+    margin-bottom: 20px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    position: relative;
+
+    @media (max-width: 768px) {
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 480px) {
+      margin-bottom: 10px;
+    }
+
+    // Override any card-container styles that might interfere
+    .card-container {
+      display: block !important;
+      flex-direction: unset !important;
+    }
+  }
+
+  .pinterest-card {
+    cursor: pointer;
+    border-radius: 12px;
+
+    &:hover {
+      .pinterest-image {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .pinterest-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+    border-radius: 12px;
+  }
+
+  video.pinterest-image {
+    object-fit: cover !important;
+    background: transparent !important;
+    width: 100% !important;
+    height: auto !important;
+    object-position: center !important;
+    display: block !important;
+    min-height: 200px;
+  }
+
+  .image-container {
+    position: relative;
+    
+    video {
+      object-fit: cover !important;
+      width: 100% !important;
+      background: transparent !important;
+      border-radius: 12px;
+    }
+  }
+
+  .pinterest-loading {
+    width: 100%;
+    text-align: center;
+    padding: 40px 20px;
+    break-inside: avoid;
+
+    .loading-spinner {
+      font-size: 16px;
+      color: #666;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+  }
+
+  .pinterest-end {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    break-inside: avoid;
+
+    .end-message {
+      font-size: 14px;
+      color: #999;
+      font-style: italic;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+// Alternative CSS Grid approach for better control
+.pinterest-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 20px;
+  grid-auto-rows: 10px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 15px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+  }
+
+  .pinterest-item {
+    // Dynamic grid row span based on image height
+    // This will be calculated with JavaScript
+  }
+}
+
+// Fallback for browsers that don't support CSS columns
+@supports not (columns: 4) {
+  .pinterest-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .pinterest-item {
+      width: calc(25% - 15px);
+
+      @media (max-width: 1200px) {
+        width: calc(33.333% - 13px);
+      }
+
+      @media (max-width: 768px) {
+        width: calc(50% - 7.5px);
+      }
+
+      @media (max-width: 480px) {
+        width: 100%;
+      }
+    }
+  }
+}

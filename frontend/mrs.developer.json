@@ -170,14 +170,7 @@
     "https": "https://github.com/Luna-Sites/luna-super-hero.git",
     "branch": "master"
   },
-  "luna-super-listing": {
-    "develop": false,
-    "output": "packages",
-    "package": "luna-super-listing",
-    "url": "git@github.com:Luna-Sites/luna-super-listing.git",
-    "https": "https://github.com/Luna-Sites/luna-super-listing.git",
-    "branch": "master"
-  },
+
   "luna-super-tabs": {
     "develop": false,
     "output": "packages",

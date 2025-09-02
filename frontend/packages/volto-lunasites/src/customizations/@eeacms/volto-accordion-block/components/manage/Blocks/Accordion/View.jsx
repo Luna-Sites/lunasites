@@ -20,7 +20,6 @@ import {
   blockHasValue,
 } from '@plone/volto/helpers';
 import { map } from 'lodash';
-import { getInlineStyles } from 'lunasites-advanced-styling/StyleWrapper/StyleWrapperView';
 
 // Custom accordionBlockHasValue that handles both old and new data structures
 const accordionBlockHasValue = (content) => {
@@ -240,7 +239,6 @@ const View = (props) => {
               }
               style={{
                 ...panelInlineStyles,
-                ...getInlineStyles(panel, props, true),
               }}
               {...accordionConfig.options}
             >
@@ -302,7 +300,6 @@ const View = (props) => {
                       ...(panelStyles.textColor && {
                         color: panelStyles.textColor,
                       }),
-                      ...getInlineStyles(panel, props, true),
                     }}
                   >
                     <RenderBlocks

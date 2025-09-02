@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react';
 import { useSlate } from 'slate-react';
 import { Editor } from 'slate';
-import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
+import SimpleColorPicker from '../Widgets/SimpleColorPicker';
 import './TextBackgroundColorSelector.scss';
 
 const injectBackgroundColorCSS = (colorValue) => {

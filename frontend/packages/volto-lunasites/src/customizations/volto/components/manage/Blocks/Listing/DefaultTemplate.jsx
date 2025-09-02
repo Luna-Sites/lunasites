@@ -11,6 +11,6 @@
  * this one.
  */
 
-import DefaultTemplate from '../../../../../../components/Blocks/Listing/DefaultTemplate';
+import InlineTemplate from '../../../../../../components/Blocks/Listing/InlineTemplate';
 
-export default DefaultTemplate;
+export default InlineTemplate;

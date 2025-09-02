@@ -57,6 +57,12 @@ ol {
     padding-right: $horizontal-space-small-screens;
   }
 }
+.block.listing {
+  @media only screen and (max-width: $largest-mobile-screen) {
+    padding-left: $horizontal-space-small-screens;
+    padding-right: $horizontal-space-small-screens;
+  }
+}
 
 // Exclude hero blocks from mobile padding for lists
 .hero-block ul,
@@ -136,14 +142,14 @@ h2 {
   @include text-heading-h2();
   @include vertical-space-h2();
   @include word-break();
-  
+
   @media only screen and (max-width: $largest-mobile-screen) {
     @include add(size, m);
     @include add(height, l);
     padding-left: $horizontal-space-small-screens;
     padding-right: $horizontal-space-small-screens;
   }
-  
+
   span {
     font-size: inherit;
     font-weight: inherit;
@@ -161,16 +167,28 @@ h2 {
     padding-right: 0;
   }
 }
-h3 {
-  @include text-heading-h3();
-  @include vertical-space-h3();
-  @include word-break();
-  
+p {
   @media only screen and (max-width: $largest-mobile-screen) {
     padding-left: $horizontal-space-small-screens;
     padding-right: $horizontal-space-small-screens;
   }
-  
+}
+h1 {
+  @media only screen and (max-width: $largest-mobile-screen) {
+    padding-left: $horizontal-space-small-screens;
+    padding-right: $horizontal-space-small-screens;
+  }
+}
+h3 {
+  @include text-heading-h3();
+  @include vertical-space-h3();
+  @include word-break();
+
+  @media only screen and (max-width: $largest-mobile-screen) {
+    padding-left: $horizontal-space-small-screens;
+    padding-right: $horizontal-space-small-screens;
+  }
+
   span {
     font-size: inherit;
     font-weight: inherit;

@@ -5,7 +5,7 @@ import { doesNodeContainClick } from 'semantic-ui-react/dist/commonjs/lib';
 import rightArrowSVG from '@plone/volto/icons/right-key.svg';
 import clearSVG from '@plone/volto/icons/clear.svg';
 import { toast } from 'react-toastify';
-import { SimpleColorPickerCore } from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
+import { SimpleColorPickerCore } from '../../../components/Widgets/SimpleColorPicker';
 import { useSelector, useDispatch } from 'react-redux';
 import config from '@plone/registry';
 import { getDesignSite } from '../../../actions/colorSchema';

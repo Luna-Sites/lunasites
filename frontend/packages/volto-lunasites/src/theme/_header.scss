@@ -812,20 +812,7 @@ body.has-toolbar.has-sidebar {
   }
 }
 
-/* Fat menu in Edit mode */
-.view-editview,
-.view-addview {
-  .navigation {
-    ul.desktop-menu .submenu-wrapper {
-      display: none;
-    }
-
-    .item:hover::before,
-    .item.active::before {
-      display: none;
-    }
-  }
-}
+/* Fat menu in Edit mode - Keep dropdown functionality enabled */
 
 // Mobile Navigation
 

@@ -4,7 +4,6 @@ FROM plone/frontend-builder:18.22.0 AS builder
 
 COPY --chown=node core /app/core
 COPY --chown=node packages/volto-lunasites /app/packages/volto-lunasites
-COPY --chown=node packages/lunasites-advanced-styling /app/packages/lunasites-advanced-styling
 COPY --chown=node volto.config.js /app/
 COPY --chown=node package.json /app/package.json.temp
 COPY --chown=node mrs.developer.json /app/

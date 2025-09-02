@@ -1,5 +1,4 @@
 import { defineMessages } from 'react-intl';
-import { getAdvancedStyling } from 'lunasites-advanced-styling';
 
 const messages = defineMessages({
   labelColumn: {
@@ -61,8 +60,6 @@ const messages = defineMessages({
 });
 
 export const columnSchema = (intl) => {
-  const advancedStyling = getAdvancedStyling(intl);
-
   return {
     title: intl.formatMessage(messages.labelColumn),
     fieldsets: [
@@ -71,17 +68,11 @@ export const columnSchema = (intl) => {
         title: intl.formatMessage(messages.labelDefault),
         fields: ['title', 'grid_vertical_align'],
       },
-      {
-        id: 'styling',
-        title: 'Styling',
-        fields: advancedStyling.fields,
-      },
     ],
     properties: {
       title: {
         title: intl.formatMessage(messages.labelColumnTitle),
       },
-      ...advancedStyling.properties,
       grid_vertical_align: {
         title: intl.formatMessage(messages.column_verticalAlign),
         default: 'top',

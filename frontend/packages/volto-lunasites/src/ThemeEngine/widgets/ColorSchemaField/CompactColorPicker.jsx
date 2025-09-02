@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'semantic-ui-react';
 import { Icon } from '@plone/volto/components';
 import clearSVG from '@plone/volto/icons/clear.svg';
-import SimpleColorPicker from 'lunasites-advanced-styling/Widgets/SimpleColorPicker';
+import SimpleColorPicker from '../../../components/Widgets/SimpleColorPicker';
 
 const CompactColorPicker = (props) => {
   const { id, value, onChange } = props;
