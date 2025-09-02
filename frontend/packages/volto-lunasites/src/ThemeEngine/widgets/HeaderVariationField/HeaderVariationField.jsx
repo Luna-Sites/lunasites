@@ -84,7 +84,6 @@ const HeaderVariationField = (props) => {
 
     // Get current luna theming data from registry
     const currentData = lunaTheming?.data || {};
-    // console.log('change', lunaTheming);
     // Update ONLY the header section, preserve everything else (colors, fonts, buttons)
     const updatedData = {
       ...currentData,
@@ -92,8 +91,6 @@ const HeaderVariationField = (props) => {
         variation: selectedVariation,
       },
     };
-
-    // console.log('HeaderVariationField: Saving updated data:', updatedData);
 
     // Save to registry
     await dispatch(setLunaTheming(updatedData));

@@ -78,14 +78,11 @@ const LogoConfigField = (props) => {
   };
 
   const handleChange = async (newConfig) => {
-    console.log('LogoConfigField handleChange called with:', newConfig);
-
     // Update the form field value
     onChange(id, newConfig);
 
     // Get current luna theming data from registry
     const currentData = lunaTheming?.data || {};
-    console.log('Current luna theming data:', currentData);
 
     // Update ONLY the logo config section, preserve everything else
     const updatedData = {
@@ -93,11 +90,8 @@ const LogoConfigField = (props) => {
       logo_config: newConfig,
     };
 
-    console.log('Sending updated data to registry:', updatedData);
-
     // Save to registry
     const result = await dispatch(setLunaTheming(updatedData));
-    console.log('setLunaTheming result:', result);
 
     // Refresh registry data
     dispatch(getLunaTheming());

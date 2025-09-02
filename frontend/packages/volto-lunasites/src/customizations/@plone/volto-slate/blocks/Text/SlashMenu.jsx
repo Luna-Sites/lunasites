@@ -181,7 +181,6 @@ const getMenuPosition = (editor) => {
     };
   } catch (error) {
     // Fallback: return null to use default positioning
-    console.log('Menu positioning failed:', error);
     return null;
   }
 };

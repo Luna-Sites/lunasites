@@ -9,7 +9,6 @@ const AppExtras = (props) => {
   const { content, dispatch, pathname } = props;
   const [siteSettings, setSiteSettings] = React.useState(null);
   const lunaTheming = useSelector((state) => state.lunaTheming);
-  console.log('aaa', { lunaTheming });
 
   const viewClass = content?.view
     ? `view-${content?.view?.token?.toLowerCase() || ''}`
@@ -22,31 +21,19 @@ const AppExtras = (props) => {
 
   // Apply CSS variables whenever theming data changes in Redux
   React.useEffect(() => {
-    console.log(lunaTheming);
     if (lunaTheming?.data) {
-      console.log('appling', lunaTheming.data);
       applyCSSVariables(lunaTheming.data);
     }
   }, [lunaTheming?.data]);
 
   const applyCSSVariables = (theme) => {
     const colors = theme.colors;
-    console.log(theme);
     const headerVariation = theme.header;
     const containerWidth = theme.container_width;
     const root = document.documentElement;
 
-    console.log('AppExtras: Applying CSS variables from registry:', colors);
-    console.log('Primary color from colors object:', colors?.primary_color);
-    console.log(
-      'Background color from colors object:',
-      colors?.background_color,
-    );
-
     // Apply colors - only the main 5 colors from color palette
     if (colors) {
-      console.log({ colors });
-
       // Main colors from registry
       root.style.setProperty(
         '--lunasites-background-color',
@@ -130,27 +117,16 @@ const AppExtras = (props) => {
 
     // Apply header variations from registry
 
-    console.log('lalal', headerVariation);
     applyHeaderVariation(
       headerVariation?.variation || 'primary_navigation',
       colors,
     );
-
     // Apply container width
     applyContainerWidth(containerWidth || 'normal');
   };
 
   const applyHeaderVariation = (variation, colors) => {
-    console.log(variation, colors);
     const root = document.documentElement;
-
-    console.log(
-      'Applying header variation:',
-      variation,
-      'with colors:',
-      colors,
-    );
-
     switch (variation) {
       case 'primary_navigation':
         // Header bg → Primary, Header text → Tertiary, Dropdown bg → Neutral, Dropdown text → Tertiary
@@ -291,33 +267,20 @@ const AppExtras = (props) => {
           colors.tertiary_color || '#6bb535',
         );
     }
-
-    console.log(
-      'Header bg color set to:',
-      root.style.getPropertyValue('--lunasites-header-bg-color'),
-    );
-    console.log(
-      'Header text color set to:',
-      root.style.getPropertyValue('--lunasites-header-text-color'),
-    );
   };
 
   const applyContainerWidth = (width) => {
     const root = document.documentElement;
-    
-    console.log('Applying container width:', width);
-    
+
     const widthMapping = {
       narrow: '800px',
-      normal: '1200px', 
+      normal: '1200px',
       wide: '1400px',
-      full: '100vw'
+      full: '100vw',
     };
 
     const cssValue = widthMapping[width] || widthMapping.normal;
     root.style.setProperty('--lunasites-container-width', cssValue);
-    
-    console.log('Container width set to:', cssValue);
   };
 
   return viewClass ? <BodyClass className={viewClass} /> : null;

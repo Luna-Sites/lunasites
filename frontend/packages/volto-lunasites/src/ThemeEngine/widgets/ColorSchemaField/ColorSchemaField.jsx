@@ -567,7 +567,6 @@ const ColorSchemaField = (props) => {
         tertiary_color: effectiveSchema.tertiary_color || '#6bb535',
       },
     };
-    console.log('Sending to registry:', registryData);
     dispatch(setLunaTheming(registryData)).then(() => {
       // Refresh Redux state after backend update
       dispatch(getLunaTheming());
@@ -669,11 +668,14 @@ const ColorSchemaField = (props) => {
 
       // Apply preset colors for preview using AppExtras method
       const root = document.documentElement;
-      
+
       // Apply all colors from preset
       Object.entries(preset).forEach(([key, value]) => {
         if (key !== 'name' && value) {
-          root.style.setProperty(`--lunasites-${key.replace(/_/g, '-')}`, value);
+          root.style.setProperty(
+            `--lunasites-${key.replace(/_/g, '-')}`,
+            value,
+          );
         }
       });
     },
@@ -684,13 +686,16 @@ const ColorSchemaField = (props) => {
     // Restore original colors using AppExtras method
     if (originalColorsForPreview) {
       const root = document.documentElement;
-      
+
       Object.entries(originalColorsForPreview).forEach(([key, value]) => {
         if (value) {
-          root.style.setProperty(`--lunasites-${key.replace(/_/g, '-')}`, value);
+          root.style.setProperty(
+            `--lunasites-${key.replace(/_/g, '-')}`,
+            value,
+          );
         }
       });
-      
+
       setOriginalColorsForPreview(null);
     }
   }, [originalColorsForPreview]);
@@ -805,7 +810,6 @@ const ColorSchemaField = (props) => {
         }}
         onClick={(e) => {
           e.stopPropagation();
-          console.log('Preview clicked, setting sidebar to true');
           setShowSidebar(true);
         }}
         onKeyDown={(e) => {
