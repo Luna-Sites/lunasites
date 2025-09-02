@@ -28,7 +28,6 @@ const AppExtras = (props) => {
 
   const applyCSSVariables = (theme) => {
     const colors = theme.colors;
-
     const headerVariation = theme.header;
     const containerWidth = theme.container_width;
     const root = document.documentElement;
@@ -122,14 +121,12 @@ const AppExtras = (props) => {
       headerVariation?.variation || 'primary_navigation',
       colors,
     );
-
     // Apply container width
     applyContainerWidth(containerWidth || 'normal');
   };
 
   const applyHeaderVariation = (variation, colors) => {
     const root = document.documentElement;
-
     switch (variation) {
       case 'primary_navigation':
         // Header bg → Primary, Header text → Tertiary, Dropdown bg → Neutral, Dropdown text → Tertiary

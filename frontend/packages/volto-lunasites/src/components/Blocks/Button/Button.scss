@@ -1,0 +1,332 @@
+// Override Semantic UI styles for Luna button block only
+.ui.drag.block.inner.button {
+  &:has(.luna-button-wrapper),
+  &:has(.luna-button-edit-container) {
+    width: 100% !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    
+    &:hover,
+    &:focus,
+    &:active,
+    &:focus-visible,
+    &:focus-within {
+      background: transparent !important;
+      background-color: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    
+    // Remove any pseudo elements that might add backgrounds
+    &:before,
+    &:after {
+      display: none !important;
+    }
+  }
+}
+
+// Button Block Styles
+.luna-button-wrapper {
+  display: block;
+  margin: 1rem 0;
+  
+  &.align-left {
+    text-align: left;
+  }
+  
+  &.align-center {
+    text-align: center;
+  }
+  
+  &.align-right {
+    text-align: right;
+  }
+}
+
+.luna-button {
+  display: inline-block;
+  font-family: inherit;
+  font-weight: 500;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none !important;
+  border-radius: 4px;
+  
+  // Size variants
+  &--xs {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+  
+  &--s {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25;
+  }
+  
+  &--m {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  &--l {
+    padding: 0.625rem 1.25rem;
+    font-size: 1.125rem;
+    line-height: 1.75;
+  }
+  
+  &--xl {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.25rem;
+    line-height: 2;
+  }
+  
+  // Width variants
+  &--full {
+    display: block;
+    width: 100%;
+  }
+  
+  &--fit {
+    display: inline-block;
+    width: auto;
+  }
+  
+  // Type variants with color combinations using CSS variables
+  &--filled {
+    &.luna-button--primary {
+      background-color: var(--lunasites-primary-color, #094ce1);
+      color: white;
+      border-color: var(--lunasites-primary-color, #094ce1);
+      
+      &:hover {
+        background-color: var(--lunasites-primary-dark, #073ab3);
+        border-color: var(--lunasites-primary-dark, #073ab3);
+      }
+    }
+    
+    &.luna-button--secondary {
+      background-color: var(--lunasites-secondary-color, #e73d5c);
+      color: var(--lunasites-primary-color, #094ce1);
+      border-color: var(--lunasites-secondary-color, #e73d5c);
+      
+      &:hover {
+        background-color: var(--lunasites-secondary-dark, #c7324d);
+        border-color: var(--lunasites-secondary-dark, #c7324d);
+        color: var(--lunasites-primary-color, #094ce1);
+      }
+    }
+    
+    &.luna-button--warning {
+      background-color: #ffc107;
+      color: #212529;
+      border-color: #ffc107;
+      
+      &:hover {
+        background-color: #e0a800;
+        border-color: #e0a800;
+      }
+    }
+    
+    &.luna-button--tertiary {
+      background-color: var(--lunasites-tertiary-color, #6bb535);
+      color: var(--lunasites-primary-color, #094ce1);
+      border-color: var(--lunasites-tertiary-color, #6bb535);
+      
+      &:hover {
+        background-color: var(--lunasites-tertiary-dark, #5a9a2c);
+        border-color: var(--lunasites-tertiary-dark, #5a9a2c);
+        color: var(--lunasites-primary-color, #094ce1);
+      }
+    }
+    
+    &.luna-button--white {
+      background-color: #ffffff;
+      color: #333333;
+      border-color: #ffffff;
+      
+      &:hover {
+        background-color: #f5f5f5;
+        border-color: #f5f5f5;
+      }
+    }
+    
+    &.luna-button--black {
+      background-color: #000000;
+      color: white;
+      border-color: #000000;
+      
+      &:hover {
+        background-color: #333333;
+        border-color: #333333;
+      }
+    }
+  }
+  
+  &--outline {
+    background-color: transparent;
+    
+    &.luna-button--primary {
+      color: var(--lunasites-primary-color, #094ce1);
+      border-color: var(--lunasites-primary-color, #094ce1);
+      
+      &:hover {
+        background-color: var(--lunasites-primary-color, #094ce1);
+        color: white;
+      }
+    }
+    
+    &.luna-button--secondary {
+      color: var(--lunasites-primary-color, #094ce1);
+      border-color: var(--lunasites-secondary-color, #e73d5c);
+      
+      &:hover {
+        background-color: var(--lunasites-secondary-color, #e73d5c);
+        color: var(--lunasites-primary-color, #094ce1);
+      }
+    }
+    
+    &.luna-button--warning {
+      color: #ffc107;
+      border-color: #ffc107;
+      
+      &:hover {
+        background-color: #ffc107;
+        color: #212529;
+      }
+    }
+    
+    &.luna-button--tertiary {
+      color: var(--lunasites-primary-color, #094ce1);
+      border-color: var(--lunasites-tertiary-color, #6bb535);
+      
+      &:hover {
+        background-color: var(--lunasites-tertiary-color, #6bb535);
+        color: var(--lunasites-primary-color, #094ce1);
+      }
+    }
+    
+    &.luna-button--white {
+      color: var(--lunasites-primary-color, #094ce1);
+      border-color: #ffffff;
+      
+      &:hover {
+        background-color: #ffffff;
+        color: var(--lunasites-primary-color, #094ce1);
+      }
+    }
+    
+    &.luna-button--black {
+      color: #000000;
+      border-color: #000000;
+      
+      &:hover {
+        background-color: #000000;
+        color: white;
+      }
+    }
+  }
+  
+  &--text {
+    background-color: transparent;
+    border-color: transparent;
+    
+    &.luna-button--primary {
+      color: var(--lunasites-primary-color, #094ce1);
+      
+      &:hover {
+        background-color: var(--lunasites-primary-light, rgba(9, 76, 225, 0.1));
+      }
+    }
+    
+    &.luna-button--secondary {
+      color: var(--lunasites-primary-color, #094ce1);
+      
+      &:hover {
+        background-color: var(--lunasites-secondary-light, rgba(231, 61, 92, 0.1));
+      }
+    }
+    
+    &.luna-button--warning {
+      color: #ffc107;
+      
+      &:hover {
+        background-color: rgba(255, 193, 7, 0.1);
+      }
+    }
+    
+    &.luna-button--tertiary {
+      color: var(--lunasites-primary-color, #094ce1);
+      
+      &:hover {
+        background-color: var(--lunasites-tertiary-light, rgba(107, 181, 53, 0.1));
+        color: var(--lunasites-primary-color, #094ce1);
+      }
+    }
+    
+    &.luna-button--white {
+      color: var(--lunasites-primary-color, #094ce1);
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+    
+    &.luna-button--black {
+      color: #000000;
+      
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    }
+  }
+  
+  // Inline editable text
+  &__text {
+    display: inline-block;
+    outline: none;
+    min-width: 40px;
+    
+    &:focus {
+      outline: 2px dashed rgba(0, 123, 177, 0.3);
+      outline-offset: 2px;
+    }
+    
+    // Remove contenteditable styling in edit mode
+    &[contenteditable="true"] {
+      cursor: text;
+    }
+  }
+}
+
+// Ensure links styled as buttons maintain button appearance
+a.luna-button {
+  &:hover {
+    text-decoration: none !important;
+  }
+  
+  &:focus {
+    text-decoration: none !important;
+    outline-offset: 2px;
+  }
+}
+
+// Edit mode specific styles
+.block-editor-button {
+  .luna-button {
+    pointer-events: none;
+    
+    &__text {
+      pointer-events: auto;
+    }
+  }
+}

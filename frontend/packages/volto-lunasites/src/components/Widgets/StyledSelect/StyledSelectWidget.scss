@@ -1,0 +1,190 @@
+// StyledSelect Widget - Inline field with 2-column layout
+.styled-select-field {
+  &.inline.field {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 1rem;
+
+    .wrapper {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      align-items: center;
+      gap: 1rem;
+
+      label {
+        margin: 0;
+        padding-right: 0.5rem;
+        text-align: left;
+        font-size: 14px;
+        font-weight: normal;
+        color: #333;
+      }
+    }
+  }
+}
+
+.styled-select {
+  width: 100%;
+  position: relative;
+
+  // React Aria should set --trigger-width automatically,
+  // but as a fallback we ensure the popover matches the button
+  [data-react-aria-top-layer] {
+    width: 100%;
+  }
+}
+
+.styled-select-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  outline: none;
+  min-height: 36px;
+  text-align: left;
+
+  &:hover {
+    border-color: #4a90e2;
+  }
+
+  &[data-focused],
+  &[aria-expanded='true'] {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 1px rgba(74, 144, 226, 0.2);
+
+    .styled-select-arrow {
+      color: #4a90e2;
+    }
+  }
+
+  &[aria-expanded='true'] {
+    .styled-select-arrow {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.styled-select-value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 1rem;
+
+  &[data-placeholder] {
+    color: #999;
+  }
+}
+
+.styled-select-arrow {
+  flex-shrink: 0;
+  margin-left: 8px;
+  color: #666;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+
+  svg {
+    display: block;
+  }
+}
+
+.styled-select-popover {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-top: 4px;
+  overflow: hidden;
+  outline: none;
+  z-index: 10000;
+  width: var(--trigger-width);
+  min-width: var(--trigger-width);
+  max-width: var(--trigger-width);
+
+  &[data-entering] {
+    animation: slideDown 0.15s ease;
+  }
+
+  &[data-exiting] {
+    animation: slideUp 0.1s ease;
+  }
+}
+
+.styled-select-listbox {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 4px 0;
+  outline: none;
+}
+
+.styled-select-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  outline: none;
+
+  &:hover,
+  &[data-focused] {
+    background-color: #f0f0f0;
+  }
+
+  &[aria-selected='true'] {
+    background-color: #e8f4fd;
+    color: #166db5;
+
+    .styled-select-item-label {
+      font-weight: 500;
+    }
+  }
+}
+
+.styled-select-item-label {
+  flex: 1;
+}
+
+.styled-select-item-check {
+  flex-shrink: 0;
+  margin-left: 8px;
+  color: #52c41a;
+
+  svg {
+    display: block;
+  }
+}
+
+// Simple animations
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,123 @@
+// ColorCircles Widget - Beautiful color selection circles
+.color-circles-widget {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  padding: 1rem;
+}
+
+.color-circles-container {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(2, auto);
+  gap: 0.75rem;
+  padding: 0.25rem 0;
+  width: fit-content;
+}
+
+.color-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+  }
+
+  &--selected {
+    border-color: #333;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      transform: scale(1.15);
+    }
+  }
+
+  // Special handling for white color
+  &--white {
+    border: 2px solid #e0e0e0;
+
+    &.color-circle--selected {
+      border-color: #333;
+    }
+  }
+
+  // Special handling for black color
+  &--black {
+    &.color-circle--selected {
+      border-color: #666;
+    }
+  }
+}
+
+.color-circle-check {
+  width: 20px;
+  height: 20px;
+  color: white;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  animation: checkIn 0.2s ease;
+
+  // Use dark check for light colors
+  .color-circle--white & {
+    color: #333;
+  }
+
+  .color-circle--selected.color-circle--warning & {
+    color: #333;
+  }
+}
+
+// Animation for check mark
+@keyframes checkIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Inline field layout (matching other widgets)
+.inline.field {
+  .color-circles-widget {
+    .wrapper {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+      // padding: 1rem;
+
+      label {
+        margin: 0;
+        text-align: left;
+      }
+
+      .color-circles-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        .color-circles-container {
+          padding: 0;
+        }
+      }
+    }
+  }
+}

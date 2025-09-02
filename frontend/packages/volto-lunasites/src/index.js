@@ -63,6 +63,13 @@ import { CardsGridView, CardsGridEdit } from './components/Blocks/CardsGrid';
 import SimpleImageWidget from './components/Blocks/CardsGrid/SimpleImageWidget';
 import gridCardsSVG from '@plone/volto/icons/apps.svg';
 
+// Button Block
+import ButtonBlock from './components/Blocks/Button';
+
+// Custom Widgets
+import StyledSelectWidget from './components/Widgets/StyledSelect';
+import ColorCirclesWidget from './components/Widgets/ColorCircles';
+
 // Design Schema System
 import { ColorSchemaField } from './components';
 import HeaderVariationField from './ThemeEngine/widgets/HeaderVariationField/HeaderVariationField';
@@ -72,6 +79,16 @@ import * as reducers from './reducers';
 import ToolsHeaderField from './components/Widgets/ToolsHeaderField';
 import SimpleColorPicker from './components/Widgets/SimpleColorPicker';
 import SimpleIconPicker from './components/Widgets/SimpleIconPicker';
+
+// Custom Section Block
+import {
+  CustomSectionBlockEdit,
+  CustomSectionBlockView,
+  CustomSectionBlockSchema,
+} from './components';
+
+// Custom keyboard handler
+import { customEnterHandler } from './keyboard/customEnterHandler';
 
 const isBlockClassActive = (editor, format) => {
   if (!editor.selection) return false;
@@ -117,16 +134,6 @@ function BlockClassButton({ format, icon, ...props }) {
     />
   );
 }
-
-// Custom Section Block
-import {
-  CustomSectionBlockEdit,
-  CustomSectionBlockView,
-  CustomSectionBlockSchema,
-} from './components';
-
-// Custom keyboard handler
-import { customEnterHandler } from './keyboard/customEnterHandler';
 
 const BG_COLORS = [
   { name: 'transparent', label: 'Transparent' },
@@ -174,6 +181,12 @@ const applyConfig = (config) => {
 
   // Register simple image widget for Cards Grid
   config.widgets.widget.simple_image = SimpleImageWidget;
+
+  // Register the beautiful StyledSelect widget
+  config.widgets.widget.styled_select = StyledSelectWidget;
+
+  // Register the ColorCircles widget for visual color selection
+  config.widgets.widget.color_circles = ColorCirclesWidget;
 
   config.blocks.blocksConfig.title.restricted = false;
   config.settings.enableAutoBlockGroupingByBackgroundColor = true;
@@ -303,10 +316,10 @@ const applyConfig = (config) => {
   config.settings.slidingSearchAnimation = true;
   config.settings.openExternalLinkInNewTab = true;
 
-  config.blocks.blocksConfig.__button = {
-    ...config.blocks.blocksConfig.__button,
-    colors: BG_COLORS,
-  };
+  // Remove the original kitconcept button block from the slash menu
+  if (config.blocks.blocksConfig.__button) {
+    delete config.blocks.blocksConfig.__button;
+  }
   config.settings.appExtras = [
     ...config.settings.appExtras,
     {
@@ -355,8 +368,14 @@ const applyConfig = (config) => {
     allowed_headline_tags: [['h2', 'h2']],
     schemaEnhancer: listingSchemaEnhancer,
     variations: [
-      ...config.blocks.blocksConfig.listing.variations.map(variation => 
-        variation.id === 'default' ? { ...variation, title: 'Summary', template: InlineListingBlockTemplate } : variation
+      ...config.blocks.blocksConfig.listing.variations.map((variation) =>
+        variation.id === 'default'
+          ? {
+              ...variation,
+              title: 'Summary',
+              template: InlineListingBlockTemplate,
+            }
+          : variation,
       ),
       {
         id: 'grid',
@@ -530,6 +549,9 @@ const applyConfig = (config) => {
     restricted: false,
     mostUsed: true,
   };
+
+  // Replace all button blocks with our single Button implementation
+  config.blocks.blocksConfig.button = ButtonBlock;
 
   // Check if the separator is present before enhancing it
   if (config.blocks.blocksConfig?.separator?.id) {

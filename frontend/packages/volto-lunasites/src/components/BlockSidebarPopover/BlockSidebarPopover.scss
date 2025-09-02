@@ -1,0 +1,130 @@
+// BlockSidebarPopover Styles
+.block-sidebar-popover {
+  h2 {
+    font-size: 18px !important;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  }
+  z-index: 1000;
+  pointer-events: none;
+
+  &__container {
+    position: relative;
+    pointer-events: auto;
+    width: 260px;
+    max-height: inherit;
+    overflow-y: auto;
+
+    // Reuse the block-sidebar-wrapper styles
+    background: white;
+    border-radius: 10px;
+    box-shadow:
+      0 6px 24px rgba(0, 0, 0, 0.1),
+      0 3px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    // Smooth entrance animation
+    animation: popoverFadeIn 0.2s ease-out;
+
+    // Hide scrollbar but keep scroll functionality
+    &::-webkit-scrollbar {
+      width: 0;
+      display: none;
+    }
+    
+    // For Firefox
+    scrollbar-width: none;
+    
+    // For IE/Edge
+    -ms-overflow-style: none;
+  }
+
+  &__content {
+    padding: 0;
+
+    // Ensure form elements have proper spacing
+    .field {
+      margin-bottom: 0.75rem;
+      padding: 0 1rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    // Style the title if present
+    .ui.form .ui.dividing.header {
+      margin-top: 0;
+      padding-top: 0;
+    }
+    
+    // Remove padding for tabbed sidebar
+    .tabbed-sidebar {
+      height: 100%;
+    }
+  }
+
+  // Arrow pointing to the block
+  &__arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+  }
+
+  // Arrow on the right side (popover on left of block)
+  &.left &__arrow {
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 8px 0 8px 8px;
+    border-color: transparent transparent transparent white;
+    filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.05));
+  }
+
+  // Arrow on the left side (popover on right of block)
+  &.right &__arrow {
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 8px 8px 8px 0;
+    border-color: transparent white transparent transparent;
+    filter: drop-shadow(-2px 0 2px rgba(0, 0, 0, 0.05));
+  }
+
+  // Arrow on top (popover below block) - positioned on the right
+  &.bottom &__arrow {
+    top: -8px;
+    right: 30px;
+    border-width: 0 8px 8px 8px;
+    border-color: transparent transparent white transparent;
+    filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.05));
+  }
+
+  // Arrow on bottom (popover above block) - positioned on the right
+  &.top &__arrow {
+    bottom: -8px;
+    right: 30px;
+    border-width: 8px 8px 0 8px;
+    border-color: white transparent transparent transparent;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.05));
+  }
+}
+
+// Animation for smooth appearance
+@keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Hide the traditional right sidebar when using popover mode
+.has-sidebar-popover {
+  .sidebar-container {
+    display: none !important;
+  }
+}
