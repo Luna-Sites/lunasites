@@ -9,7 +9,7 @@ const Edit = (props) => {
   const { data, block, onChangeBlock, selected } = props;
   const [text, setText] = useState(data.text || 'Button');
   const editable = useRef(null);
-  const blockRef = useRef(null);
+  const buttonRef = useRef(null);
 
   useEffect(() => {
     if (selected && editable.current) {
@@ -39,8 +39,8 @@ const Edit = (props) => {
 
   return (
     <>
-      <div ref={blockRef} className={wrapperClasses}>
-        <div className={buttonClasses}>
+      <div className={wrapperClasses}>
+        <div ref={buttonRef} className={buttonClasses}>
           <ContentEditable
             innerRef={editable}
             html={text}
@@ -59,7 +59,7 @@ const Edit = (props) => {
       
       <BlockSidebarPopover 
         selected={selected}
-        blockNode={blockRef.current}
+        blockNode={buttonRef.current}
         className="button-sidebar-popover"
       >
         <ButtonSidebar
