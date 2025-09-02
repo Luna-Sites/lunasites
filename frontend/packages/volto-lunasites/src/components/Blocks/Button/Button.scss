@@ -1,3 +1,33 @@
+// Override Semantic UI styles for Luna button block only
+.ui.drag.block.inner.button {
+  &:has(.luna-button-wrapper),
+  &:has(.luna-button-edit-container) {
+    width: 100% !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    
+    &:hover,
+    &:focus,
+    &:active,
+    &:focus-visible,
+    &:focus-within {
+      background: transparent !important;
+      background-color: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    
+    // Remove any pseudo elements that might add backgrounds
+    &:before,
+    &:after {
+      display: none !important;
+    }
+  }
+}
+
 // Button Block Styles
 .luna-button-wrapper {
   display: block;
