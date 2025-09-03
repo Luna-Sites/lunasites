@@ -5,9 +5,8 @@ import { compose } from 'redux';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable/Loadable';
 import { getLunaTheming } from '../../actions';
 
-const AppExtras = (props) => {
+const AppExtrasEdit = (props) => {
   const { content, dispatch, pathname } = props;
-  const [siteSettings, setSiteSettings] = React.useState(null);
   const lunaTheming = useSelector((state) => state.lunaTheming);
 
   const viewClass = content?.view
@@ -116,12 +115,11 @@ const AppExtras = (props) => {
     );
 
     // Apply header variations from registry
-
     applyHeaderVariation(
       headerVariation?.variation || 'primary_navigation',
       colors,
     );
-    // Apply container width
+    // Apply container width for edit mode
     applyContainerWidth(containerWidth || 'normal');
   };
 
@@ -129,7 +127,6 @@ const AppExtras = (props) => {
     const root = document.documentElement;
     switch (variation) {
       case 'primary_navigation':
-        // Header bg → Primary, Header text → Tertiary, Dropdown bg → Neutral, Dropdown text → Tertiary
         root.style.setProperty(
           '--lunasites-header-bg-color',
           colors.primary_color || '#094ce1',
@@ -149,7 +146,6 @@ const AppExtras = (props) => {
         break;
 
       case 'neutral_navigation':
-        // Header bg → Neutral, Header text → Tertiary, Dropdown bg → Background, Dropdown text → Neutral
         root.style.setProperty(
           '--lunasites-header-bg-color',
           colors.neutral_color || '#222222',
@@ -169,7 +165,6 @@ const AppExtras = (props) => {
         break;
 
       case 'light_background_navigation':
-        // Header bg → Background, Header text → Neutral, Dropdown bg → Tertiary, Dropdown text → Neutral
         root.style.setProperty(
           '--lunasites-header-bg-color',
           colors.background_color || '#ffffff',
@@ -189,7 +184,6 @@ const AppExtras = (props) => {
         break;
 
       case 'secondary_accent_navigation':
-        // Header bg → Secondary, Header text → Tertiary, Dropdown bg → Primary, Dropdown text → Tertiary
         root.style.setProperty(
           '--lunasites-header-bg-color',
           colors.secondary_color || '#e73d5c',
@@ -209,7 +203,6 @@ const AppExtras = (props) => {
         break;
 
       case 'minimal_white_navigation':
-        // Header bg → Tertiary, Header text → Neutral, Dropdown bg → Primary, Dropdown text → Tertiary
         root.style.setProperty(
           '--lunasites-header-bg-color',
           colors.tertiary_color || '#6bb535',
@@ -229,7 +222,6 @@ const AppExtras = (props) => {
         break;
 
       case 'inverted_neutral_navigation':
-        // Header bg → Neutral, Header text → Background/Secondary, Dropdown bg → Tertiary, Dropdown text → Neutral
         root.style.setProperty(
           '--lunasites-header-bg-color',
           colors.neutral_color || '#222222',
@@ -249,7 +241,6 @@ const AppExtras = (props) => {
         break;
 
       default:
-        // Fallback to primary_navigation
         root.style.setProperty(
           '--lunasites-header-bg-color',
           colors.primary_color || '#094ce1',
@@ -281,15 +272,16 @@ const AppExtras = (props) => {
 
     const configuredValue = widthMapping[width] || widthMapping.normal;
     
-    // Calculate available screen width (considering sidebars, edit mode, etc.)
-    const screenWidth = window.innerWidth;
-    const availableWidth = screenWidth - 300; // Reserve space for sidebars/edit UI
+    // Calculate available width for edit mode (using #page-edit width)
+    const pageEditElement = document.getElementById('page-edit');
+    const editAreaWidth = pageEditElement ? pageEditElement.clientWidth : window.innerWidth;
+    const availableWidth = editAreaWidth - 80; // Reserve space for edit UI margins
     
     // Parse configured value to number (assuming px)
     const configuredPx = parseInt(configuredValue.replace('px', '')) || 1200;
     
-    // Use the smaller of configured width or available screen width
-    const finalWidth = width === 'full' ? '100vw' : `${Math.min(configuredPx, availableWidth)}px`;
+    // Use the smaller of configured width or available edit area width
+    const finalWidth = width === 'full' ? '95%' : `${Math.min(configuredPx, availableWidth)}px`;
     
     root.style.setProperty('--lunasites-container-width', finalWidth);
   };
@@ -303,6 +295,6 @@ export default compose(
     content: state.content.data,
     lunaTheming: state.lunaTheming,
     pathname: state.router?.location?.pathname,
-    portal: state.content.data?.parent || state.content.data, // Get portal data
+    portal: state.content.data?.parent || state.content.data,
   })),
-)(AppExtras);
+)(AppExtrasEdit);

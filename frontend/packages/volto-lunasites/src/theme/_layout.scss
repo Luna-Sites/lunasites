@@ -27,6 +27,7 @@
   max-width: var(--layout-container-width);
   margin-right: auto;
   margin-left: auto;
+  padding: 0 20px;
 }
 
 // One still cannot use CSS custom properties directly on @container queries

@@ -15,7 +15,8 @@ import { disableBgColorSchema } from './components/Blocks/disableBgColorSchema';
 import BlockSettingsSchema from '@plone/volto/components/manage/Blocks/Block/Schema';
 
 import ContainerQueriesPolyfill from './components/CQPolyfill';
-import AppExtras from './components/AppExtras/AppExtras';
+import AppExtrasView from './components/AppExtras/AppExtrasView';
+import AppExtrasEdit from './components/AppExtras/AppExtrasEdit';
 import { Container } from '@plone/components';
 import TopSideFacets from './components/Blocks/Search/TopSideFacets';
 
@@ -325,19 +326,19 @@ const applyConfig = (config) => {
     ...config.settings.appExtras,
     {
       match: '',
-      component: AppExtras,
+      component: AppExtrasView,
     },
     {
       match: '/add',
-      component: AppExtras,
+      component: AppExtrasEdit,
     },
     {
       match: '/edit',
-      component: AppExtras,
+      component: AppExtrasEdit,
     },
     {
       match: '*/edit',
-      component: AppExtras,
+      component: AppExtrasEdit,
     },
   ];
 
