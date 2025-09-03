@@ -13,7 +13,7 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
 
 
   // Add Card Settings fieldset only for our custom variations
-  if (['grid', 'default', 'pinterest'].includes(formData.variation)) {
+  if (['grid', 'default', 'pinterest', 'slider'].includes(formData.variation)) {
     schema.fieldsets.push({
       id: 'card_settings',
       title: 'Card Settings',
@@ -25,9 +25,10 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
         'titleLength',
         'descriptionLength',
         'imageAspectRatio',
-        ...(formData.variation !== 'default' ? ['cardStyle'] : []),
+        ...(formData.variation !== 'default' && formData.variation !== 'slider' ? ['cardStyle'] : []),
         ...(formData.cardStyle === 'default' && formData.variation !== 'default' ? ['filled'] : []),
         ...(formData.variation === 'grid' ? ['maxNumberOfColumns'] : []),
+        ...(formData.variation === 'slider' ? ['visibleItems'] : []),
         ...(formData.variation === 'default' ? ['showImage'] : []),
         ...(formData.variation === 'default' && formData.showImage ? ['imagePlacement'] : []),
       ],
@@ -127,6 +128,14 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
       ['right', 'Right'],
     ],
     default: 'left',
+  };
+
+  schema.properties.visibleItems = {
+    title: 'Visible Items',
+    type: 'number',
+    default: 3,
+    minimum: 1,
+    maximum: 6,
   };
 
   return schema;

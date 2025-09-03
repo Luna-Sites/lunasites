@@ -22,6 +22,7 @@ import TopSideFacets from './components/Blocks/Search/TopSideFacets';
 import GridListingBlockTemplate from './components/Blocks/Listing/GridTemplate';
 import InlineListingBlockTemplate from './components/Blocks/Listing/InlineTemplate';
 import PinterestListingBlockTemplate from './components/Blocks/Listing/PinterestTemplate';
+import SliderListingBlockTemplate from './components/Blocks/Listing/SliderTemplate';
 import { listingSchemaEnhancer } from './components/Blocks/Listing/listingSchema';
 
 import { Editor, Transforms } from 'slate';
@@ -386,6 +387,11 @@ const applyConfig = (config) => {
         id: 'pinterest',
         title: 'Art Gallery',
         template: PinterestListingBlockTemplate,
+      },
+      {
+        id: 'slider',
+        title: 'Slider',
+        template: SliderListingBlockTemplate,
       },
     ],
   };
