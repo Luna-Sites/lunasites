@@ -389,11 +389,11 @@ const applyConfig = (config) => {
         title: 'Art Gallery',
         template: PinterestListingBlockTemplate,
       },
-      {
-        id: 'slider',
-        title: 'Slider',
-        template: SliderListingBlockTemplate,
-      },
+      // {
+      //   id: 'slider',
+      //   title: 'Slider',
+      //   template: SliderListingBlockTemplate,
+      // },
     ],
   };
 

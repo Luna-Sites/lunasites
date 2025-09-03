@@ -30,9 +30,12 @@ export const smartMutateBlock = (editor, blockId, newBlockData, formData) => {
     return { formData, newBlockId: null };
   }
 
-  const [currentBlock] = match;
+  const [currentBlock, blockPath] = match;
   const blockText = Node.string(currentBlock);
-  const cursorOffset = selection.anchor.offset;
+  const cursorOffset = Editor.string(editor, {
+    anchor: Editor.start(editor, blockPath),
+    focus: selection.anchor,
+  }).length;
 
   // Find the current line where slash was typed
   const textBeforeCursor = blockText.slice(0, cursorOffset);

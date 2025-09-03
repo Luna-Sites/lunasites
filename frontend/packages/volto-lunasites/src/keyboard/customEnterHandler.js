@@ -33,7 +33,10 @@ export const customEnterHandler = ({ editor, event }) => {
   const blockText = Node.string(block);
 
   // Get cursor position within the block
-  const cursorOffset = selection.anchor.offset;
+  const cursorOffset = Editor.string(editor, {
+    anchor: Editor.start(editor, blockPath),
+    focus: selection.anchor,
+  }).length;
 
   // Check if cursor is at the end of a line that ends with newline
   const textBeforeCursor = blockText.slice(0, cursorOffset);
@@ -43,7 +46,7 @@ export const customEnterHandler = ({ editor, event }) => {
   const isOnEmptyLine =
     textBeforeCursor.endsWith('\n') ||
     (textBeforeCursor === '' && isAtEndOfBlock);
-
+  console.log(textBeforeCursor);
   // Double Enter scenario: cursor is on an empty line (after a newline or at start of empty block)
   if (isOnEmptyLine && (textBeforeCursor.endsWith('\n') || blockText === '')) {
     // If we're on an empty line that was created by a previous newline, remove it first
