@@ -1,18 +1,22 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import cx from 'classnames';
 import './ColorCirclesWidget.scss';
 
 const ColorCirclesWidget = (props) => {
   const { id, title, required, value, onChange, choices = [] } = props;
+  const lunaTheming = useSelector((state) => state.lunaTheming);
+  
+  // Get colors from global theme
+  const colors = lunaTheming?.data?.colors || {};
+  const getColorValue = (colorKey) => colors[colorKey] || '#666666';
 
-  // Define the actual colors for each option
+  // Define the actual colors for each option using theme colors
   const colorMap = {
-    primary: 'var(--lunasites-primary-color, #094ce1)',
-    secondary: 'var(--lunasites-secondary-color, #e73d5c)',
-    tertiary: 'var(--lunasites-tertiary-color, #6bb535)',
-    warning: '#ffc107',
-    white: '#ffffff',
-    black: '#000000',
+    primary: getColorValue('primary_color'),
+    secondary: getColorValue('secondary_color'),
+    tertiary: getColorValue('tertiary_color'),
+    neutral: getColorValue('neutral_color'),
   };
 
   return (

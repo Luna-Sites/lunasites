@@ -7,7 +7,7 @@
 
 .color-circles-container {
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(2, auto);
   gap: 0.75rem;
   padding: 0.25rem 0;
@@ -35,7 +35,7 @@
   }
 
   &:focus {
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+    box-shadow: 0 0 0 3px var(--lunasites-cms-primary-color, rgba(66, 153, 225, 0.3));
   }
 
   &--selected {

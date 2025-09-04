@@ -159,13 +159,7 @@
 }
 
 .styled-select-item-check {
-  flex-shrink: 0;
-  margin-left: 8px;
-  color: #52c41a;
-
-  svg {
-    display: block;
-  }
+  display: none;
 }
 
 // Simple animations

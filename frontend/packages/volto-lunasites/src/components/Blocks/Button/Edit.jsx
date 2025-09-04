@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ContentEditable from 'react-contenteditable';
+import { useSelector } from 'react-redux';
 import cx from 'classnames';
 import ButtonSidebar from './ButtonSidebar';
 import BlockSidebarPopover from '../../BlockSidebarPopover';
@@ -10,6 +11,11 @@ const Edit = (props) => {
   const [text, setText] = useState(data.text || 'Button');
   const editable = useRef(null);
   const buttonRef = useRef(null);
+  const lunaTheming = useSelector((state) => state.lunaTheming);
+  
+  // Get colors from global theme
+  const colors = lunaTheming?.data?.colors || {};
+  const getColorValue = (colorKey) => colors[colorKey] || '#666666';
 
   useEffect(() => {
     if (selected && editable.current) {
@@ -37,10 +43,70 @@ const Edit = (props) => {
     [`align-${data.align || 'left'}`]: true,
   });
 
+  // Generate inline styles based on global theme colors
+  const getButtonStyles = () => {
+    const colorType = data.color || 'primary';
+    const buttonType = data.buttonType || 'filled';
+    
+    const colorMap = {
+      primary: {
+        main: getColorValue('primary_color'),
+        text: getColorValue('tertiary_color'),
+      },
+      secondary: {
+        main: getColorValue('secondary_color'), 
+        text: getColorValue('tertiary_color'),
+      },
+      tertiary: {
+        main: getColorValue('tertiary_color'),
+        text: getColorValue('neutral_color'),
+      },
+      neutral: {
+        main: getColorValue('neutral_color'),
+        text: getColorValue('tertiary_color'),
+      },
+      background: {
+        main: getColorValue('background_color'),
+        text: getColorValue('neutral_color'),
+      },
+    };
+
+    const selectedColors = colorMap[colorType] || colorMap.primary;
+
+    switch (buttonType) {
+      case 'filled':
+        return {
+          backgroundColor: selectedColors.main,
+          color: selectedColors.text,
+          borderColor: selectedColors.main,
+        };
+      case 'outline':
+        return {
+          backgroundColor: 'transparent',
+          color: selectedColors.main,
+          borderColor: selectedColors.main,
+        };
+      case 'text':
+        return {
+          backgroundColor: 'transparent',
+          color: selectedColors.main,
+          borderColor: 'transparent',
+        };
+      default:
+        return {
+          backgroundColor: selectedColors.main,
+          color: selectedColors.text,
+          borderColor: selectedColors.main,
+        };
+    }
+  };
+
+  const inlineStyles = getButtonStyles();
+
   return (
     <>
       <div className={wrapperClasses}>
-        <div ref={buttonRef} className={buttonClasses}>
+        <div ref={buttonRef} className={buttonClasses} style={inlineStyles}>
           <ContentEditable
             innerRef={editable}
             html={text}

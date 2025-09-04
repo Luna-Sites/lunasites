@@ -88,7 +88,7 @@
     
     &.active {
       background: white;
-      color: var(--lunasites-primary-color, #094ce1);
+      color: var(--lunasites-cms-primary-color, #094ce1);
       box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
       
       // Create connection to content area
@@ -103,7 +103,7 @@
       }
       
       svg {
-        fill: var(--lunasites-primary-color, #094ce1);
+        fill: var(--lunasites-cms-primary-color, #094ce1);
       }
     }
     
