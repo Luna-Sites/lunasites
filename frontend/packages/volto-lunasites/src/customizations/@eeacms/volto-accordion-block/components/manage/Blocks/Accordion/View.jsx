@@ -282,10 +282,11 @@ const View = (props) => {
 
           // Create inline styles for the panel
           const panelInlineStyles = {
-            ...(themeStyles && themeStyles.border !== 'none' && {
-              borderRadius: '8px',
-              marginBottom: '8px',
-            }),
+            ...(themeStyles &&
+              themeStyles.border !== 'none' && {
+                borderRadius: '8px',
+                marginBottom: '8px',
+              }),
           };
 
           return accordionBlockHasValue(panel) ? (
@@ -328,16 +329,19 @@ const View = (props) => {
                     padding: '12px 16px',
                     display: 'flex',
                     alignItems: 'center',
-                    borderRadius: themeStyles && themeStyles.border !== 'none' ? '8px 8px 0 0' : '8px',
-                    ...(themeStyles && themeStyles.border !== 'none' && {
-                      border: themeStyles.border,
-                      borderBottom: 'none',
-                    }),
+                    borderRadius:
+                      themeStyles && themeStyles.border !== 'none'
+                        ? '8px 8px 0 0'
+                        : '8px',
+                    ...(themeStyles &&
+                      themeStyles.border !== 'none' && {
+                        border: themeStyles.border,
+                      }),
                   }}
                 >
-                  <span 
-                    style={{ 
-                      fontSize: '14px', 
+                  <span
+                    style={{
+                      fontSize: '14px',
                       color: panelStyles.titleColor,
                       marginRight: iconOnRight ? '0' : '8px',
                       marginLeft: iconOnRight ? '8px' : '0',
@@ -367,11 +371,12 @@ const View = (props) => {
                       background: panelStyles.backgroundColor,
                       color: panelStyles.textColor,
                       padding: '16px',
-                      ...(themeStyles && themeStyles.border !== 'none' && {
-                        border: themeStyles.border,
-                        borderTop: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '0 0 8px 8px',
-                      }),
+                      ...(themeStyles &&
+                        themeStyles.border !== 'none' && {
+                          border: themeStyles.border,
+                          borderTop: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '0 0 8px 8px',
+                        }),
                     }}
                   >
                     <RenderBlocks
