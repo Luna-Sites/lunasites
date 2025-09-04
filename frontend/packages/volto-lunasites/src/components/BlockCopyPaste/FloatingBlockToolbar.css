@@ -2,17 +2,23 @@
   position: fixed !important;
   bottom: 20px !important;
   right: 20px !important;
-  background: white !important;
-  border: 1px solid #e0e0e0 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  background: #f8f8f8 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
   padding: 16px !important;
   z-index: 999999 !important;
-  min-width: 250px !important;
+  width: 250px !important;
+  max-width: 250px !important;
+  height: fit-content !important;
   animation: slideIn 0.3s ease-out;
   pointer-events: all !important;
   display: block !important;
   opacity: 1 !important;
+  user-select: none !important;
+  resize: none !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
 }
 
 @keyframes slideIn {
@@ -29,11 +35,12 @@
 .floating-block-toolbar .toolbar-title {
   font-size: 12px;
   font-weight: 600;
-  color: #666;
+  color: #333;
   text-transform: uppercase;
   margin-bottom: 8px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #666;
+  cursor: move;
 }
 
 .floating-block-toolbar .toolbar-buttons {
@@ -48,7 +55,7 @@
   flex-direction: column;
   align-items: center;
   padding: 8px 4px;
-  border: 1px solid #ddd;
+  border: none;
   border-radius: 4px;
   background: white;
   cursor: pointer;
@@ -56,23 +63,27 @@
   font-size: 11px;
   color: #333;
   min-width: 50px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  user-select: none;
 }
 
 .floating-block-toolbar .toolbar-button:hover:not(:disabled) {
-  background: #f0f8ff;
-  border-color: #007bb1;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #e8e8e8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  color: #333;
 }
 
 .floating-block-toolbar .toolbar-button:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .floating-block-toolbar .toolbar-button:disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: not-allowed;
+  background: #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .floating-block-toolbar .toolbar-button svg {
@@ -80,16 +91,8 @@
   fill: currentColor;
 }
 
-.floating-block-toolbar .toolbar-button.copy {
-  color: #007bb1;
-}
-
-.floating-block-toolbar .toolbar-button.cut {
-  color: #ff6b6b;
-}
-
-.floating-block-toolbar .toolbar-button.paste {
-  color: #51cf66;
+.floating-block-toolbar .toolbar-button:hover:not(:disabled) svg {
+  fill: #333;
 }
 
 .floating-block-toolbar .toolbar-button span {
@@ -108,14 +111,16 @@
 .floating-block-toolbar .selection-info,
 .floating-block-toolbar .clipboard-info {
   display: block;
-  padding: 4px 6px;
-  background: #f5f5f5;
+  padding: 4px 0;
+  background: transparent;
   border-radius: 3px;
+  color: #666;
 }
 
 .floating-block-toolbar .clipboard-info {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: transparent;
+  color: #555;
+  font-weight: 500;
 }
 
 /* Mobile responsive */

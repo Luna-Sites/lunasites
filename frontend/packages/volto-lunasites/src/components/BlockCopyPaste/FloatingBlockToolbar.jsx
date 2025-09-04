@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -30,6 +30,12 @@ const FloatingBlockToolbar = ({
   );
   const selectedBlock = useSelector((state) => state?.form?.ui?.selected);
   const blocksClipboard = useSelector((state) => state.blocksClipboard || {});
+
+  // Dragging state
+  const [position, setPosition] = useState({ x: null, y: null });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const toolbarRef = useRef(null);
 
   const blocksFieldname = getBlocksFieldname(properties);
   const blocksLayoutFieldname = getBlocksLayoutFieldname(properties);
@@ -204,6 +210,57 @@ const FloatingBlockToolbar = ({
     );
   };
 
+  // Dragging handlers
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDragging || !toolbarRef.current) return;
+      
+      const toolbar = toolbarRef.current;
+      const rect = toolbar.getBoundingClientRect();
+      
+      // Calculate new position
+      let newX = e.clientX - dragStart.x;
+      let newY = e.clientY - dragStart.y;
+      
+      // Constrain to viewport bounds
+      const maxX = window.innerWidth - rect.width - 20; // 20px margin
+      const maxY = window.innerHeight - rect.height - 20;
+      const minX = 20;
+      const minY = 20;
+      
+      newX = Math.min(Math.max(newX, minX), maxX);
+      newY = Math.min(Math.max(newY, minY), maxY);
+      
+      setPosition({ x: newX, y: newY });
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, dragStart]);
+
+  const handleMouseDown = (e) => {
+    if (!toolbarRef.current) return;
+    
+    const rect = toolbarRef.current.getBoundingClientRect();
+    setDragStart({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+    setIsDragging(true);
+    e.preventDefault(); // Prevent text selection while dragging
+  };
+
   // Always render in edit mode to show users the feature exists
   // Previously: if (!hasSelection && !hasClipboard) return null;
 
@@ -212,12 +269,28 @@ const FloatingBlockToolbar = ({
     return null;
   }
 
+  // Calculate style with position
+  const toolbarStyle = position.x !== null && position.y !== null
+    ? {
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        right: 'auto',
+        bottom: 'auto',
+      }
+    : {};
+
   const toolbarContent = (
-    <div className="floating-block-toolbar">
-      <div className="toolbar-title">Block Actions</div>
+    <div 
+      className="floating-block-toolbar" 
+      ref={toolbarRef}
+      style={toolbarStyle}
+    >
+      <div className="toolbar-title" onMouseDown={handleMouseDown}>
+        Block Actions
+      </div>
       <div className="toolbar-buttons">
         <button
-          className="toolbar-button copy"
+          className="toolbar-button"
           onClick={copyBlocks}
           disabled={!hasSelection}
           title="Copy blocks (Ctrl/Cmd+C)"
@@ -227,7 +300,7 @@ const FloatingBlockToolbar = ({
         </button>
 
         <button
-          className="toolbar-button cut"
+          className="toolbar-button"
           onClick={cutBlocks}
           disabled={!hasSelection}
           title="Cut blocks (Ctrl/Cmd+X)"
@@ -237,7 +310,7 @@ const FloatingBlockToolbar = ({
         </button>
 
         <button
-          className="toolbar-button paste"
+          className="toolbar-button"
           onClick={pasteBlocks}
           disabled={!hasClipboard}
           title="Paste blocks (Ctrl/Cmd+V)"
