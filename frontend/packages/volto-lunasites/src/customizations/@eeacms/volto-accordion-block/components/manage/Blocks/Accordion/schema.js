@@ -1,5 +1,4 @@
 import { defineMessages } from 'react-intl';
-import config from '@plone/volto/registry';
 import { v4 as uuid } from 'uuid';
 
 const messages = defineMessages({
@@ -11,27 +10,14 @@ const messages = defineMessages({
     id: 'Default',
     defaultMessage: 'Default',
   },
-  styling: {
-    id: 'Styling',
-    defaultMessage: 'Styling',
-  },
   panels: {
     id: 'Accordion Panels',
     defaultMessage: 'Accordion Panels',
-  },
-  panelStyling: {
-    id: 'Panel Styling',
-    defaultMessage: 'Panel Styling',
   },
   // Panel content
   panelTitle: {
     id: 'Panel title',
     defaultMessage: 'Panel title',
-  },
-  // Panel styling
-  panelTitleColor: {
-    id: 'Panel title color',
-    defaultMessage: 'Title color',
   },
   // Accordion theme
   accordionTheme: {
@@ -50,23 +36,12 @@ export const accordionPanelSchema = (intl) => {
         title: intl.formatMessage(messages.default),
         fields: ['panel_title'],
       },
-      {
-        id: 'styling',
-        title: intl.formatMessage(messages.panelStyling),
-        fields: ['panel_titleColor'],
-      },
     ],
     properties: {
       // Panel content
       panel_title: {
         title: intl.formatMessage(messages.panelTitle),
         type: 'string',
-      },
-      panel_titleColor: {
-        title: intl.formatMessage(messages.panelTitleColor),
-        type: 'color',
-        widget: 'style_simple_color',
-        available_colors: config.settings.available_colors,
       },
     },
     required: [],
@@ -98,26 +73,14 @@ export const AccordionBlockSchema = (props) => {
           {
             '@id': uuid(),
             panel_title: 'Panel 1',
-            panel_backgroundColor: null,
-            panel_textColor: null,
-            panel_titleColor: null,
-            panel_border: false,
           },
           {
             '@id': uuid(),
             panel_title: 'Panel 2',
-            panel_backgroundColor: null,
-            panel_textColor: null,
-            panel_titleColor: null,
-            panel_border: false,
           },
           {
             '@id': uuid(),
             panel_title: 'Panel 3',
-            panel_backgroundColor: null,
-            panel_textColor: null,
-            panel_titleColor: null,
-            panel_border: false,
           },
         ],
       },

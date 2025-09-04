@@ -97,42 +97,36 @@ const View = (props) => {
       titleText: 'tertiary_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: 'none',
     },
     neutral_accordion: {
       titleBg: 'neutral_color',
       titleText: 'tertiary_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: '1px solid #e1e5e9',
     },
     minimal_accordion: {
       titleBg: 'transparent',
       titleText: 'neutral_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: '1px solid #f1f3f5',
     },
     inverted_accordion: {
       titleBg: 'neutral_color',
       titleText: 'background_color',
       contentBg: 'transparent',
       contentText: 'neutral_color',
-      border: 'none',
     },
     secondary_accent_accordion: {
       titleBg: 'secondary_color',
       titleText: 'tertiary_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: 'none',
     },
     soft_bordered_accordion: {
       titleBg: 'background_color',
       titleText: 'neutral_color',
       contentBg: 'tertiary_color',
       contentText: 'neutral_color',
-      border: '1px solid #e1e5e9',
     },
   };
 
@@ -282,11 +276,8 @@ const View = (props) => {
 
           // Create inline styles for the panel
           const panelInlineStyles = {
-            ...(themeStyles &&
-              themeStyles.border !== 'none' && {
-                borderRadius: '8px',
-                marginBottom: '8px',
-              }),
+            borderRadius: '8px',
+            marginBottom: '8px',
           };
 
           return accordionBlockHasValue(panel) ? (
@@ -329,14 +320,9 @@ const View = (props) => {
                     padding: '12px 16px',
                     display: 'flex',
                     alignItems: 'center',
-                    borderRadius:
-                      themeStyles && themeStyles.border !== 'none'
-                        ? '8px 8px 0 0'
-                        : '8px',
-                    ...(themeStyles &&
-                      themeStyles.border !== 'none' && {
-                        border: themeStyles.border,
-                      }),
+                    borderRadius: '8px 8px 0 0',
+                    border: `1px solid ${getColorValue(themeStyles.contentBg)}`,
+                    borderBottom: 'none',
                   }}
                 >
                   <span
@@ -371,12 +357,9 @@ const View = (props) => {
                       background: panelStyles.backgroundColor,
                       color: panelStyles.textColor,
                       padding: '16px',
-                      ...(themeStyles &&
-                        themeStyles.border !== 'none' && {
-                          border: themeStyles.border,
-                          borderTop: '1px solid rgba(255,255,255,0.1)',
-                          borderRadius: '0 0 8px 8px',
-                        }),
+                      border: `1px solid ${getColorValue(themeStyles.contentBg)}`,
+                      borderTop: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '0 0 8px 8px',
                     }}
                   >
                     <RenderBlocks

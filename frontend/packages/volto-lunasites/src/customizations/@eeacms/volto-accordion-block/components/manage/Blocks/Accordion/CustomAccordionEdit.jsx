@@ -75,13 +75,6 @@ const CustomAccordionEdit = (props) => {
 
   // Create inline styles for the panel
   const panelInlineStyles = {
-    ...(panelStyles.backgroundColor && {
-      background: panelStyles.backgroundColor,
-    }),
-    ...(themeStyles &&
-      themeStyles.border !== 'none' && {
-        border: themeStyles.border,
-      }),
     borderRadius: '8px',
     marginBottom: '8px',
   };
@@ -112,11 +105,9 @@ const CustomAccordionEdit = (props) => {
             padding: '12px 16px',
             display: 'flex',
             alignItems: 'center',
-            borderRadius: themeStyles && themeStyles.border !== 'none' ? '8px 8px 0 0' : '8px',
-            ...(themeStyles && themeStyles.border !== 'none' && {
-              border: themeStyles.border,
-              borderBottom: 'none',
-            }),
+            borderRadius: '8px 8px 0 0',
+            border: `1px solid ${getColorValue(themeStyles.contentBg)}`,
+            borderBottom: 'none',
           }}
         >
           <span 
@@ -177,11 +168,9 @@ const CustomAccordionEdit = (props) => {
               background: panelStyles.backgroundColor,
               color: panelStyles.textColor,
               padding: '16px',
-              ...(themeStyles &&
-                themeStyles.border !== 'none' && {
-                  borderTop: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: '0 0 8px 8px',
-                }),
+              border: `1px solid ${getColorValue(themeStyles.contentBg)}`,
+              borderTop: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '0 0 8px 8px',
             }}
           >
             {children}

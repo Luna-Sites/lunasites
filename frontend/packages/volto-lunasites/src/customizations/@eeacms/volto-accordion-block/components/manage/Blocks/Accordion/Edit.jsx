@@ -69,42 +69,36 @@ const Edit = (props) => {
       titleText: 'tertiary_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: 'none',
     },
     neutral_accordion: {
       titleBg: 'neutral_color',
       titleText: 'tertiary_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: '1px solid #e1e5e9',
     },
     minimal_accordion: {
       titleBg: 'transparent',
       titleText: 'neutral_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: '1px solid #f1f3f5',
     },
     inverted_accordion: {
       titleBg: 'neutral_color',
       titleText: 'background_color',
       contentBg: 'transparent',
       contentText: 'neutral_color',
-      border: 'none',
     },
     secondary_accent_accordion: {
       titleBg: 'secondary_color',
       titleText: 'tertiary_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: 'none',
     },
     soft_bordered_accordion: {
       titleBg: 'background_color',
       titleText: 'neutral_color',
       contentBg: 'tertiary_color',
       contentText: 'neutral_color',
-      border: '1px solid #e1e5e9',
     },
   };
 

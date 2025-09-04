@@ -23,29 +23,26 @@ const AccordionVariationField = (props) => {
       titleText: 'tertiary_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: 'none',
     },
     {
       key: 'neutral_accordion',
       value: 'neutral_accordion', 
       text: 'Neutral Accordion',
-      description: 'Neutral background with clean borders',
+      description: 'Neutral background with clean styling',
       titleBg: 'neutral_color',
       titleText: 'tertiary_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: '1px solid #e1e5e9',
     },
     {
       key: 'minimal_accordion',
       value: 'minimal_accordion',
       text: 'Minimal Accordion',
-      description: 'Clean transparent with subtle borders',
+      description: 'Clean transparent with subtle styling',
       titleBg: 'transparent',
       titleText: 'neutral_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: '1px solid #f1f3f5',
     },
     {
       key: 'inverted_accordion',
@@ -56,7 +53,6 @@ const AccordionVariationField = (props) => {
       titleText: 'background_color',
       contentBg: 'transparent',
       contentText: 'neutral_color',
-      border: 'none',
     },
     {
       key: 'secondary_accent_accordion',
@@ -67,18 +63,16 @@ const AccordionVariationField = (props) => {
       titleText: 'tertiary_color',
       contentBg: 'background_color',
       contentText: 'neutral_color',
-      border: 'none',
     },
     {
       key: 'soft_bordered_accordion',
       value: 'soft_bordered_accordion',
       text: 'Soft Bordered',
-      description: 'Light background with subtle borders',
+      description: 'Light background with soft styling',
       titleBg: 'background_color',
       titleText: 'neutral_color',
       contentBg: 'tertiary_color',
       contentText: 'neutral_color',
-      border: '1px solid #e1e5e9',
     },
   ];
 
@@ -194,7 +188,7 @@ const AccordionVariationField = (props) => {
               color: getColorValue(currentVariation.contentText),
               padding: '12px 20px',
               fontSize: '12px',
-              borderTop: currentVariation.titleBg === 'transparent' ? 'none' : '1px solid rgba(255,255,255,0.1)',
+              borderTop: '1px solid rgba(255,255,255,0.1)',
             }}
           >
             Accordion content area
@@ -279,7 +273,7 @@ const AccordionVariationField = (props) => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        border: variation.border,
+                        border: `1px solid ${getColorValue(variation.contentBg)}`,
                         borderBottom: 'none',
                       }}
                     >
@@ -296,8 +290,8 @@ const AccordionVariationField = (props) => {
                         padding: '8px 12px',
                         fontSize: '10px',
                         borderRadius: '0 0 4px 4px',
-                        border: variation.border,
-                        borderTop: variation.titleBg === 'transparent' ? variation.border : '1px solid rgba(255,255,255,0.1)',
+                        border: `1px solid ${getColorValue(variation.contentBg)}`,
+                        borderTop: '1px solid rgba(255,255,255,0.1)',
                       }}
                     >
                       Content
