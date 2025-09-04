@@ -241,15 +241,7 @@ const useBlockCopyPaste = ({
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      // Debug logging
-      console.log(
-        'Key pressed:',
-        event.key,
-        'Ctrl/Cmd:',
-        event.ctrlKey || event.metaKey,
-      );
-
-      // Check if we're in a text input or textarea
+      // Check if we're in a text input, textarea, or Slate editor
       const activeElement = document.activeElement;
       const isTextInput =
         activeElement &&
@@ -257,35 +249,34 @@ const useBlockCopyPaste = ({
           activeElement.tagName === 'TEXTAREA' ||
           activeElement.contentEditable === 'true' ||
           activeElement.closest('[contenteditable="true"]') ||
-          activeElement.closest('.slate-editor'));
+          activeElement.closest('.slate-editor') ||
+          activeElement.closest('[data-slate-editor="true"]') ||
+          activeElement.closest('[data-slate-node]') ||
+          activeElement.closest('.block-editor-slate'));
 
       // Don't intercept if user is editing text
       if (isTextInput) {
-        console.log('In text input, ignoring keyboard shortcut');
+        return;
+      }
+
+      // Also check if we're in a slate block by looking for slate-specific classes
+      const isInSlateBlock = document.querySelector('.slate-editor:focus-within') || 
+                             document.querySelector('[data-slate-editor="true"]:focus-within');
+      
+      if (isInSlateBlock) {
         return;
       }
 
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       const isCtrlCmd = isMac ? event.metaKey : event.ctrlKey;
 
-      console.log(
-        'Selected block:',
-        selectedBlock,
-        'Selected blocks:',
-        selectedBlocks,
-      );
-
       // Copy: Ctrl/Cmd + C
       if (isCtrlCmd && event.key === 'c' && !event.shiftKey && !event.altKey) {
-        console.log('Copy shortcut detected!');
         // Check if blocks are selected
         if (selectedBlock || selectedBlocks.length > 0) {
-          console.log('Copying blocks...');
           event.preventDefault();
           event.stopPropagation();
           copyBlocksToClipboard();
-        } else {
-          console.log('No blocks selected to copy');
         }
       }
 
@@ -301,16 +292,12 @@ const useBlockCopyPaste = ({
 
       // Paste: Ctrl/Cmd + V
       if (isCtrlCmd && event.key === 'v' && !event.shiftKey && !event.altKey) {
-        console.log('Paste shortcut detected!');
         // Check if we have something to paste
         const stored = window.localStorage.getItem('volto:blocksClipboard');
         if (blocksClipboard?.copy?.length || blocksClipboard?.cut?.length || stored) {
-          console.log('Pasting blocks...');
           event.preventDefault();
           event.stopPropagation();
           pasteBlocks();
-        } else {
-          console.log('Nothing in clipboard to paste');
         }
       }
     };
