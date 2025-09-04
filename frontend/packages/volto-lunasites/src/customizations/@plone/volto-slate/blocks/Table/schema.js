@@ -88,10 +88,6 @@ function TableSchema(props) {
         title: intl.formatMessage(messages.striped),
         type: 'boolean',
       },
-      compact: {
-        title: intl.formatMessage(messages.compact),
-        type: 'boolean',
-      },
     },
     required: [],
   };
