@@ -1,0 +1,132 @@
+// Button that opens the popup
+.header-variation-button {
+  width: 100%;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: white;
+  margin-right: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--lunasites-cms-primary-color, #4a90e2);
+    background: white;
+  }
+
+  .button-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .variation-text {
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+.table-variation-preview {
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  font-size: 0.7rem;
+}
+
+.table-variation-header {
+  padding: 0.3rem 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  border: 1px solid;
+  border-bottom: none;
+  text-align: center;
+}
+
+.table-variation-cell {
+  padding: 0.3rem 0.4rem;
+  font-size: 0.65rem;
+  border: 1px solid;
+  border-top: none;
+  text-align: center;
+}
+
+// Popup content
+.table-variation-popup {
+  padding: 1.5rem;
+  min-width: 400px;
+
+  h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+.table-variation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.table-variation-option {
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+
+  &:hover {
+    border-color: #c0c0c0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &.selected {
+    border-color: var(--lunasites-cms-primary-color, #094ce1);
+    box-shadow: 0 0 0 1px var(--lunasites-cms-primary-color, #094ce1);
+    transform: translateY(-1px);
+  }
+}
+
+.table-variation-preview {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+.table-variation-header {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid;
+  border-bottom: none;
+}
+
+.table-variation-cell {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.75rem;
+  border: 1px solid;
+  border-top: none;
+}
+
+.table-variation-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #666;
+}

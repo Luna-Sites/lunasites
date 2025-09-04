@@ -76,6 +76,7 @@ import ColorCirclesWidget from './components/Widgets/ColorCircles';
 import { ColorSchemaField } from './components';
 import HeaderVariationField from './ThemeEngine/widgets/HeaderVariationField/HeaderVariationField';
 import AccordionVariationField from './ThemeEngine/widgets/AccordionVariationField/AccordionVariationField';
+import TableVariationField from './ThemeEngine/widgets/TableVariationField/TableVariationField';
 import LogoConfigField from './ThemeEngine/widgets/LogoConfigField/LogoConfigField';
 import ContainerWidthField from './ThemeEngine/widgets/ContainerWidthField/ContainerWidthField';
 import * as reducers from './reducers';
@@ -169,6 +170,7 @@ const applyConfig = (config) => {
 
   // Register accordion variation widget
   config.widgets.widget.accordion_variation = AccordionVariationField;
+  config.widgets.widget.table_variation = TableVariationField;
 
   // Register logo config widget
   config.widgets.widget.logo_config = LogoConfigField;
