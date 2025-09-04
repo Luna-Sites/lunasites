@@ -5,7 +5,7 @@ import { Table } from 'semantic-ui-react';
 import cx from 'classnames';
 import map from 'lodash/map';
 
-import { serializeNodesToText } from '@plone/volto-slate/editor/render';
+import { serializeNodesToText, serializeNodes } from '@plone/volto-slate/editor/render';
 
 /**
  * View component for the Slate Table block type in Volto.
@@ -139,7 +139,7 @@ const TableBlockView = ({ data, ...props }) => {
                   onClick={() => handleSort(cellIndex)}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span>{serializeNodesToText(cell.value || [])}</span>
+                    <span>{serializeNodes(cell.value || [])}</span>
                     {data.table.sortable && (
                       <span style={{ marginLeft: '0.5rem', fontSize: '0.8rem' }}>
                         {sortConfig.key === cellIndex
@@ -169,7 +169,7 @@ const TableBlockView = ({ data, ...props }) => {
                       : themeStyles.cellStyle
                   }
                 >
-                  {serializeNodesToText(cell.value || [])}
+                  {serializeNodes(cell.value || [])}
                 </Table.Cell>
               ))}
             </Table.Row>
