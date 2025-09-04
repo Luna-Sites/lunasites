@@ -11,6 +11,10 @@ const messages = defineMessages({
     id: 'Default',
     defaultMessage: 'Default',
   },
+  styling: {
+    id: 'Styling',
+    defaultMessage: 'Styling',
+  },
   panels: {
     id: 'Accordion Panels',
     defaultMessage: 'Accordion Panels',
@@ -28,6 +32,11 @@ const messages = defineMessages({
   panelTitleColor: {
     id: 'Panel title color',
     defaultMessage: 'Title color',
+  },
+  // Accordion theme
+  accordionTheme: {
+    id: 'Accordion Theme',
+    defaultMessage: 'Accordion Theme',
   },
 });
 
@@ -74,7 +83,7 @@ export const AccordionBlockSchema = (props) => {
       {
         id: 'default',
         title: intl.formatMessage(messages.default),
-        fields: ['panels'],
+        fields: ['panels', 'accordion_theme'],
       },
     ],
     properties: {
@@ -111,6 +120,12 @@ export const AccordionBlockSchema = (props) => {
             panel_border: false,
           },
         ],
+      },
+      // Accordion theme variation
+      accordion_theme: {
+        title: intl.formatMessage(messages.accordionTheme),
+        widget: 'accordion_variation',
+        default: 'primary_accordion',
       },
     },
     required: [],

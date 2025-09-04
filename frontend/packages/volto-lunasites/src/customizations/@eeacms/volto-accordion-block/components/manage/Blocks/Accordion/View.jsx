@@ -7,6 +7,7 @@ import {
 import { Accordion } from 'semantic-ui-react';
 import { withBlockExtensions } from '@plone/volto/helpers';
 import { useLocation, useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import cx from 'classnames';
 import { RenderBlocks } from '@plone/volto/components';
 import AnimateHeight from 'react-animate-height';
@@ -61,6 +62,7 @@ const View = (props) => {
   const { data, className } = props;
   const location = useLocation();
   const history = useHistory();
+  const lunaTheming = useSelector((state) => state.lunaTheming);
 
   // Handle both old data structure (data.data) and new structure (data.panels)
   const panels = data.panels
@@ -87,6 +89,62 @@ const View = (props) => {
   const { titleIcons } = accordionConfig;
   const iconOnRight = data.right_arrows;
   const iconPosition = iconOnRight ? 'rightPosition' : 'leftPosition';
+
+  // Get accordion theme variations
+  const accordionVariations = {
+    primary_accordion: {
+      titleBg: 'primary_color',
+      titleText: 'tertiary_color',
+      contentBg: 'background_color',
+      contentText: 'neutral_color',
+      border: 'none',
+    },
+    neutral_accordion: {
+      titleBg: 'neutral_color',
+      titleText: 'tertiary_color',
+      contentBg: 'background_color',
+      contentText: 'neutral_color',
+      border: '1px solid #e1e5e9',
+    },
+    minimal_accordion: {
+      titleBg: 'transparent',
+      titleText: 'neutral_color',
+      contentBg: 'background_color',
+      contentText: 'neutral_color',
+      border: '1px solid #f1f3f5',
+    },
+    inverted_accordion: {
+      titleBg: 'neutral_color',
+      titleText: 'background_color',
+      contentBg: 'transparent',
+      contentText: 'neutral_color',
+      border: 'none',
+    },
+    secondary_accent_accordion: {
+      titleBg: 'secondary_color',
+      titleText: 'tertiary_color',
+      contentBg: 'background_color',
+      contentText: 'neutral_color',
+      border: 'none',
+    },
+    soft_bordered_accordion: {
+      titleBg: 'background_color',
+      titleText: 'neutral_color',
+      contentBg: 'tertiary_color',
+      contentText: 'neutral_color',
+      border: '1px solid #e1e5e9',
+    },
+  };
+
+  const currentTheme = data.accordion_theme || 'primary_accordion';
+  const themeStyles =
+    accordionVariations[currentTheme] || accordionVariations.primary_accordion;
+  const colors = lunaTheming?.data?.colors || {};
+
+  const getColorValue = (colorKey) => {
+    if (colorKey === 'transparent') return 'transparent';
+    return colors[colorKey] || '#666666';
+  };
 
   const query = useQuery(location);
   const activePanels = query.get('activeAccordion')?.split(',');
@@ -208,22 +266,25 @@ const View = (props) => {
                 .includes(filterValue.toLowerCase())),
         )
         .map(([id, panel], index) => {
-          const active = isExclusive(id);
+          const active = activeIndex.includes(index) || isExclusive(id);
 
-          // Extract panel styling - same logic as in CustomAccordionEdit
+          // Extract panel styling - combine theme styles with individual panel styles
           const panelStyles = {
-            backgroundColor: panel?.panel_backgroundColor,
-            textColor: panel?.panel_textColor,
-            titleColor: panel?.panel_titleColor,
+            backgroundColor:
+              panel?.panel_backgroundColor ||
+              getColorValue(themeStyles.contentBg),
+            textColor:
+              panel?.panel_textColor || getColorValue(themeStyles.contentText),
+            titleColor:
+              panel?.panel_titleColor || getColorValue(themeStyles.titleText),
+            titleBg: getColorValue(themeStyles.titleBg),
           };
 
           // Create inline styles for the panel
           const panelInlineStyles = {
-            ...(panelStyles.backgroundColor && {
-              background: panelStyles.backgroundColor,
-            }),
-            ...(panelStyles.titleColor && {
-              '--title-color': panelStyles.titleColor,
+            ...(themeStyles && themeStyles.border !== 'none' && {
+              borderRadius: '8px',
+              marginBottom: '8px',
             }),
           };
 
@@ -261,24 +322,33 @@ const View = (props) => {
                   }}
                   role="button"
                   tabIndex={0}
+                  style={{
+                    color: panelStyles.titleColor,
+                    backgroundColor: panelStyles.titleBg,
+                    padding: '12px 16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    borderRadius: themeStyles && themeStyles.border !== 'none' ? '8px 8px 0 0' : '8px',
+                    ...(themeStyles && themeStyles.border !== 'none' && {
+                      border: themeStyles.border,
+                      borderBottom: 'none',
+                    }),
+                  }}
                 >
-                  <Icon
-                    options={titleIcons}
-                    name={
-                      active
-                        ? titleIcons.opened[iconPosition]
-                        : titleIcons.closed[iconPosition]
-                    }
-                  />
-                  <span
-                    style={{
-                      ...(panelStyles.titleColor && {
-                        color: panelStyles.titleColor,
-                      }),
+                  <span 
+                    style={{ 
+                      fontSize: '14px', 
+                      color: panelStyles.titleColor,
+                      marginRight: iconOnRight ? '0' : '8px',
+                      marginLeft: iconOnRight ? '8px' : '0',
+                      transform: active ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.3s ease',
+                      display: 'inline-block',
                     }}
                   >
-                    {panel?.panel_title || panel?.title}
+                    ▼
                   </span>
+                  <span>{panel?.panel_title || panel?.title}</span>
                 </Accordion.Title>
                 <AnimateHeight
                   animateOpacity
@@ -294,11 +364,13 @@ const View = (props) => {
                   <Accordion.Content
                     active={diffView ? true : active}
                     style={{
-                      ...(panelStyles.backgroundColor && {
-                        background: panelStyles.backgroundColor,
-                      }),
-                      ...(panelStyles.textColor && {
-                        color: panelStyles.textColor,
+                      background: panelStyles.backgroundColor,
+                      color: panelStyles.textColor,
+                      padding: '16px',
+                      ...(themeStyles && themeStyles.border !== 'none' && {
+                        border: themeStyles.border,
+                        borderTop: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '0 0 8px 8px',
                       }),
                     }}
                   >

@@ -6,6 +6,7 @@ import { Icon } from '@eeacms/volto-accordion-block/components/manage/Blocks/Acc
 import config from '@plone/volto/registry';
 import { defineMessages, injectIntl } from 'react-intl';
 import './title-styles.less';
+import { useSelector } from 'react-redux';
 
 const messages = defineMessages({
   EnterTitle: {
@@ -24,6 +25,8 @@ const CustomAccordionEdit = (props) => {
     data,
     index,
     intl,
+    themeStyles,
+    getColorValue,
   } = props;
   const [activeIndex, setActiveIndex] = React.useState([0]);
   const accordionConfig = config.blocks.blocksConfig.accordion;
@@ -55,11 +58,19 @@ const CustomAccordionEdit = (props) => {
     return data.collapsed ? setActiveIndex([]) : setActiveIndex([0]);
   }, [data.collapsed]);
 
-  // Extract panel styling - same logic as in View
+  // Extract panel styling - combine theme styles with individual panel styles
   const panelStyles = {
-    backgroundColor: panel?.panel_backgroundColor,
-    textColor: panel?.panel_textColor,
-    titleColor: panel?.panel_titleColor,
+    backgroundColor:
+      panel?.panel_backgroundColor ||
+      (themeStyles ? getColorValue(themeStyles.contentBg) : undefined),
+    textColor:
+      panel?.panel_textColor ||
+      (themeStyles ? getColorValue(themeStyles.contentText) : undefined),
+    titleColor:
+      panel?.panel_titleColor ||
+      (themeStyles ? getColorValue(themeStyles.titleText) : undefined),
+    titleBg: themeStyles ? getColorValue(themeStyles.titleBg) : undefined,
+    border: themeStyles ? themeStyles.border : undefined,
   };
 
   // Create inline styles for the panel
@@ -67,9 +78,12 @@ const CustomAccordionEdit = (props) => {
     ...(panelStyles.backgroundColor && {
       background: panelStyles.backgroundColor,
     }),
-    ...(panelStyles.titleColor && {
-      '--title-color': panelStyles.titleColor,
-    }),
+    ...(themeStyles &&
+      themeStyles.border !== 'none' && {
+        border: themeStyles.border,
+      }),
+    borderRadius: '8px',
+    marginBottom: '8px',
   };
 
   return (
@@ -91,17 +105,33 @@ const CustomAccordionEdit = (props) => {
           className={cx('accordion-title', {
             'align-arrow-left': !iconOnRight,
             'align-arrow-right': iconOnRight,
-            'custom-title-color': panelStyles.titleColor,
           })}
+          style={{
+            color: panelStyles.titleColor,
+            backgroundColor: panelStyles.titleBg,
+            padding: '12px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            borderRadius: themeStyles && themeStyles.border !== 'none' ? '8px 8px 0 0' : '8px',
+            ...(themeStyles && themeStyles.border !== 'none' && {
+              border: themeStyles.border,
+              borderBottom: 'none',
+            }),
+          }}
         >
-          <Icon
-            options={titleIcons}
-            name={
-              isActive
-                ? titleIcons.opened[iconPosition]
-                : titleIcons.closed[iconPosition]
-            }
-          />
+          <span 
+            style={{ 
+              fontSize: '14px', 
+              color: panelStyles.titleColor,
+              marginRight: iconOnRight ? '0' : '8px',
+              marginLeft: iconOnRight ? '8px' : '0',
+              transform: isActive ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.3s ease',
+              display: 'inline-block',
+            }}
+          >
+            ▼
+          </span>
           {!data.readOnlyTitles ? (
             <Input
               fluid
@@ -114,9 +144,26 @@ const CustomAccordionEdit = (props) => {
                 e.stopPropagation();
               }}
               onChange={(e) => handleTitleChange(e, [uid, panel])}
+              style={{
+                color: panelStyles.titleColor,
+                fontSize: '16px',
+                fontWeight: '500',
+                background: 'transparent',
+                border: 'none',
+                flex: 1,
+              }}
             />
           ) : (
-            <span>{panel?.panel_title || panel?.title}</span>
+            <span
+              style={{
+                color: panelStyles.titleColor,
+                fontSize: '16px',
+                fontWeight: '500',
+                flex: 1,
+              }}
+            >
+              {panel?.panel_title || panel?.title}
+            </span>
           )}
         </Accordion.Title>
         <AnimateHeight
@@ -127,10 +174,14 @@ const CustomAccordionEdit = (props) => {
           <Accordion.Content
             active={isActive}
             style={{
-              ...(panelStyles.backgroundColor && {
-                background: panelStyles.backgroundColor,
-              }),
-              ...(panelStyles.textColor && { color: panelStyles.textColor }),
+              background: panelStyles.backgroundColor,
+              color: panelStyles.textColor,
+              padding: '16px',
+              ...(themeStyles &&
+                themeStyles.border !== 'none' && {
+                  borderTop: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '0 0 8px 8px',
+                }),
             }}
           >
             {children}

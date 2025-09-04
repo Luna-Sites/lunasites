@@ -10,11 +10,8 @@
 .block-editor-accordion {
   .ui.styled.accordion {
     overflow: hidden;
-    padding-left: 10px;
-    border-top: 1px solid currentColor;
 
     &:last-child {
-      border-bottom: 1px solid currentColor;
     }
     .title.accordion-title {
       background-color: unset;

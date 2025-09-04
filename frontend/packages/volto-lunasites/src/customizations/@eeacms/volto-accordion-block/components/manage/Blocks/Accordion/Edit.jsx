@@ -14,6 +14,7 @@ import { cloneDeepSchema } from '@plone/volto/helpers/Utils/Utils';
 import helpSVG from '@plone/volto/icons/help.svg';
 import { isEmpty, without, pickBy } from 'lodash';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Button, Segment } from 'semantic-ui-react';
 import { defineMessages, useIntl } from 'react-intl';
 import CustomAccordionEdit from './CustomAccordionEdit';
@@ -57,8 +58,65 @@ const Edit = (props) => {
     manage,
     formDescription,
   } = props;
+  const lunaTheming = useSelector((state) => state.lunaTheming);
 
   const intl = useIntl();
+
+  // Get accordion theme variations
+  const accordionVariations = {
+    primary_accordion: {
+      titleBg: 'primary_color',
+      titleText: 'tertiary_color',
+      contentBg: 'background_color',
+      contentText: 'neutral_color',
+      border: 'none',
+    },
+    neutral_accordion: {
+      titleBg: 'neutral_color',
+      titleText: 'tertiary_color',
+      contentBg: 'background_color',
+      contentText: 'neutral_color',
+      border: '1px solid #e1e5e9',
+    },
+    minimal_accordion: {
+      titleBg: 'transparent',
+      titleText: 'neutral_color',
+      contentBg: 'background_color',
+      contentText: 'neutral_color',
+      border: '1px solid #f1f3f5',
+    },
+    inverted_accordion: {
+      titleBg: 'neutral_color',
+      titleText: 'background_color',
+      contentBg: 'transparent',
+      contentText: 'neutral_color',
+      border: 'none',
+    },
+    secondary_accent_accordion: {
+      titleBg: 'secondary_color',
+      titleText: 'tertiary_color',
+      contentBg: 'background_color',
+      contentText: 'neutral_color',
+      border: 'none',
+    },
+    soft_bordered_accordion: {
+      titleBg: 'background_color',
+      titleText: 'neutral_color',
+      contentBg: 'tertiary_color',
+      contentText: 'neutral_color',
+      border: '1px solid #e1e5e9',
+    },
+  };
+
+  const currentTheme = data.accordion_theme || 'primary_accordion';
+  const themeStyles =
+    accordionVariations[currentTheme] || accordionVariations.primary_accordion;
+  const colors = lunaTheming?.data?.colors || {};
+
+  const getColorValue = (colorKey) => {
+    if (colorKey === 'transparent') return 'transparent';
+    return colors[colorKey] || '#666666';
+  };
 
   // Handle both new panels structure and old data structure
   let properties;
@@ -443,6 +501,8 @@ const Edit = (props) => {
               data={data}
               index={index}
               key={`accordion-${index}`}
+              themeStyles={themeStyles}
+              getColorValue={getColorValue}
             >
               <BlocksForm
                 key={uid}

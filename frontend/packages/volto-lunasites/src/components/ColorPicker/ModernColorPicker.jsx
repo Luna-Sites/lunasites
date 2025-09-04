@@ -3,6 +3,39 @@ import { HexColorPicker } from 'react-colorful';
 
 const ModernColorPicker = ({ field, currentColor, onColorChange, onClose }) => {
   const [color, setColor] = React.useState(currentColor || '#ffffff');
+  const [position, setPosition] = React.useState({ top: '100%', left: '0', right: 'auto' });
+  const pickerRef = React.useRef(null);
+
+  // Calculate smart positioning
+  React.useEffect(() => {
+    if (pickerRef.current) {
+      const rect = pickerRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const pickerWidth = 250; // Approximate width including padding
+      const pickerHeight = 400; // Approximate height
+
+      let newPosition = { top: '100%', left: '0', right: 'auto' };
+
+      // Check if picker would overflow on the right
+      if (rect.left + pickerWidth > viewportWidth) {
+        newPosition.left = 'auto';
+        newPosition.right = '0';
+      }
+
+      // Check if picker would overflow on the bottom
+      if (rect.bottom + pickerHeight > viewportHeight) {
+        // Only move to top if there's enough space above
+        if (rect.top - pickerHeight > 0) {
+          newPosition.top = 'auto';
+          newPosition.bottom = '100%';
+        }
+        // Otherwise keep it below but adjust viewport scrolling if needed
+      }
+
+      setPosition(newPosition);
+    }
+  }, []);
 
   React.useEffect(() => {
     if (currentColor) {
@@ -60,10 +93,13 @@ const ModernColorPicker = ({ field, currentColor, onColorChange, onClose }) => {
 
   return (
     <div
+      ref={pickerRef}
       style={{
         position: 'absolute',
-        top: '100%',
-        left: '0',
+        top: position.top,
+        left: position.left,
+        right: position.right,
+        bottom: position.bottom,
         zIndex: 1000,
         backgroundColor: 'white',
         border: '1px solid #e1e5e9',
@@ -71,7 +107,8 @@ const ModernColorPicker = ({ field, currentColor, onColorChange, onClose }) => {
         padding: '16px',
         boxShadow: '0 12px 28px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1)',
         minWidth: '200px',
-        marginTop: '8px',
+        marginTop: position.top === '100%' ? '8px' : '0',
+        marginBottom: position.bottom === '100%' ? '8px' : '0',
       }}
       onClick={(e) => e.stopPropagation()}
     >
