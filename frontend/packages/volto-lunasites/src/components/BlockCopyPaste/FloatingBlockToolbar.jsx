@@ -1,0 +1,281 @@
+import React from 'react';
+import { createPortal } from 'react-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import {
+  setBlocksClipboard,
+  resetBlocksClipboard,
+} from '@plone/volto/actions/blocksClipboard/blocksClipboard';
+import {
+  getBlocksFieldname,
+  getBlocksLayoutFieldname,
+} from '@plone/volto/helpers';
+import { cloneBlocks } from '@plone/volto/helpers/Blocks/cloneBlocks';
+import { v4 as uuid } from 'uuid';
+import Icon from '@plone/volto/components/theme/Icon/Icon';
+import copySVG from '@plone/volto/icons/copy.svg';
+import cutSVG from '@plone/volto/icons/cut.svg';
+import pasteSVG from '@plone/volto/icons/paste.svg';
+
+import './FloatingBlockToolbar.css';
+
+const FloatingBlockToolbar = ({
+  properties,
+  onChangeFormData,
+  onSelectBlock,
+}) => {
+  const dispatch = useDispatch();
+  const selectedBlocks = useSelector(
+    (state) => state?.form?.ui?.multiSelected || [],
+  );
+  const selectedBlock = useSelector((state) => state?.form?.ui?.selected);
+  const blocksClipboard = useSelector((state) => state.blocksClipboard || {});
+
+  const blocksFieldname = getBlocksFieldname(properties);
+  const blocksLayoutFieldname = getBlocksLayoutFieldname(properties);
+
+  // Determine if we have any blocks selected
+  const hasSelection = selectedBlocks.length > 0 || selectedBlock;
+  const hasClipboard =
+    blocksClipboard?.copy?.length > 0 || blocksClipboard?.cut?.length > 0;
+  
+  console.log('🎯 FloatingBlockToolbar - hasSelection:', hasSelection, 'selectedBlock:', selectedBlock, 'selectedBlocks:', selectedBlocks);
+  console.log('📋 FloatingBlockToolbar - hasClipboard:', hasClipboard, 'clipboard:', blocksClipboard);
+
+  const copyBlocks = () => {
+    const blocks = properties?.[blocksFieldname] || {};
+    const blocksToCopy =
+      selectedBlocks.length > 0
+        ? selectedBlocks
+        : selectedBlock
+        ? [selectedBlock]
+        : [];
+
+    if (blocksToCopy.length === 0) {
+      toast.warning('No blocks selected');
+      return;
+    }
+
+    const copiedBlocks = blocksToCopy
+      .filter((blockId) => blocks[blockId])
+      .map((blockId) => [blockId, blocks[blockId]]);
+
+    if (copiedBlocks.length > 0) {
+      dispatch(setBlocksClipboard({ copy: copiedBlocks }));
+
+      // Sync to localStorage for cross-tab support
+      window.localStorage.setItem(
+        'volto:blocksClipboard',
+        JSON.stringify({ copy: copiedBlocks }),
+      );
+
+      toast.success(
+        `Copied ${copiedBlocks.length} block${
+          copiedBlocks.length > 1 ? 's' : ''
+        } to clipboard`,
+      );
+    }
+  };
+
+  const cutBlocks = () => {
+    const blocks = properties?.[blocksFieldname] || {};
+    const blocks_layout = properties?.[blocksLayoutFieldname] || {};
+
+    const blocksToCut =
+      selectedBlocks.length > 0
+        ? selectedBlocks
+        : selectedBlock
+        ? [selectedBlock]
+        : [];
+
+    if (blocksToCut.length === 0) {
+      toast.warning('No blocks selected');
+      return;
+    }
+
+    const cutBlocksData = blocksToCut
+      .filter((blockId) => blocks[blockId])
+      .map((blockId) => [blockId, blocks[blockId]]);
+
+    if (cutBlocksData.length > 0) {
+      dispatch(setBlocksClipboard({ cut: cutBlocksData }));
+
+      window.localStorage.setItem(
+        'volto:blocksClipboard',
+        JSON.stringify({ cut: cutBlocksData }),
+      );
+
+      // Remove cut blocks from the form
+      const newBlocks = { ...blocks };
+      const newBlocksLayout = { ...blocks_layout };
+
+      blocksToCut.forEach((blockId) => {
+        delete newBlocks[blockId];
+        const index = newBlocksLayout.items?.indexOf(blockId);
+        if (index > -1) {
+          newBlocksLayout.items.splice(index, 1);
+        }
+      });
+
+      onChangeFormData({
+        [blocksFieldname]: newBlocks,
+        [blocksLayoutFieldname]: newBlocksLayout,
+      });
+
+      toast.success(
+        `Cut ${cutBlocksData.length} block${
+          cutBlocksData.length > 1 ? 's' : ''
+        } to clipboard`,
+      );
+    }
+  };
+
+  const pasteBlocks = () => {
+    const blocks = properties?.[blocksFieldname] || {};
+    const blocks_layout = properties?.[blocksLayoutFieldname] || {};
+
+    let clipboardData = blocksClipboard;
+
+    if (!clipboardData?.copy?.length && !clipboardData?.cut?.length) {
+      const stored = window.localStorage.getItem('volto:blocksClipboard');
+      if (stored) {
+        try {
+          clipboardData = JSON.parse(stored);
+        } catch (e) {
+          console.error('Failed to parse clipboard data', e);
+          return;
+        }
+      }
+    }
+
+    const mode = clipboardData?.cut?.length > 0 ? 'cut' : 'copy';
+    const blocksData = clipboardData[mode];
+
+    if (!blocksData?.length) {
+      toast.info('Clipboard is empty');
+      return;
+    }
+
+    const targetBlock =
+      selectedBlock || blocks_layout.items?.[blocks_layout.items.length - 1];
+    const targetIndex = targetBlock
+      ? blocks_layout.items?.indexOf(targetBlock)
+      : blocks_layout.items?.length - 1;
+
+    const newBlocks = { ...blocks };
+    const newBlocksLayout = { ...blocks_layout };
+    const newIds = [];
+
+    if (mode === 'copy') {
+      const clonedBlocks = cloneBlocks(blocksData);
+
+      clonedBlocks.forEach(([, blockData], index) => {
+        const newId = uuid();
+        newIds.push(newId);
+        newBlocks[newId] = blockData;
+
+        const insertIndex = targetIndex + 1 + index;
+        newBlocksLayout.items.splice(insertIndex, 0, newId);
+      });
+    } else {
+      blocksData.forEach(([blockId, blockData], index) => {
+        newIds.push(blockId);
+        newBlocks[blockId] = blockData;
+
+        const insertIndex = targetIndex + 1 + index;
+        newBlocksLayout.items.splice(insertIndex, 0, blockId);
+      });
+
+      dispatch(resetBlocksClipboard());
+      window.localStorage.removeItem('volto:blocksClipboard');
+    }
+
+    onChangeFormData({
+      [blocksFieldname]: newBlocks,
+      [blocksLayoutFieldname]: newBlocksLayout,
+    });
+
+    if (newIds.length > 0) {
+      onSelectBlock(newIds[0]);
+    }
+
+    toast.success(
+      `Pasted ${newIds.length} block${newIds.length > 1 ? 's' : ''}`,
+    );
+  };
+
+  // Always render in edit mode to show users the feature exists
+  // Previously: if (!hasSelection && !hasClipboard) return null;
+
+  // Check if document is available (client-side only)
+  if (typeof document === 'undefined') {
+    return null;
+  }
+
+  const toolbarContent = (
+    <div className="floating-block-toolbar">
+      <div className="toolbar-title">Block Actions</div>
+      <div className="toolbar-buttons">
+        <button
+          className="toolbar-button copy"
+          onClick={copyBlocks}
+          disabled={!hasSelection}
+          title="Copy blocks (Ctrl/Cmd+C)"
+        >
+          <Icon name={copySVG} size="20px" />
+          <span>Copy</span>
+        </button>
+
+        <button
+          className="toolbar-button cut"
+          onClick={cutBlocks}
+          disabled={!hasSelection}
+          title="Cut blocks (Ctrl/Cmd+X)"
+        >
+          <Icon name={cutSVG} size="20px" />
+          <span>Cut</span>
+        </button>
+
+        <button
+          className="toolbar-button paste"
+          onClick={pasteBlocks}
+          disabled={!hasClipboard}
+          title="Paste blocks (Ctrl/Cmd+V)"
+        >
+          <Icon name={pasteSVG} size="20px" />
+          <span>Paste</span>
+        </button>
+      </div>
+
+      <div className="toolbar-info">
+        {hasSelection ? (
+          <span className="selection-info">
+            {selectedBlocks.length > 0
+              ? `${selectedBlocks.length} blocks selected`
+              : '1 block selected'}
+          </span>
+        ) : (
+          <span className="selection-info">
+            Click on a block to select it
+            <br />
+            <small>Ctrl+Click for multi-select</small>
+          </span>
+        )}
+        {hasClipboard && (
+          <span className="clipboard-info">
+            {blocksClipboard?.cut?.length > 0
+              ? `${blocksClipboard.cut.length} blocks in clipboard (cut)`
+              : blocksClipboard?.copy?.length > 0
+              ? `${blocksClipboard.copy.length} blocks in clipboard`
+              : ''}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+  
+  // Use React Portal to render at the body level
+  return createPortal(toolbarContent, document.body);
+};
+
+export default FloatingBlockToolbar;

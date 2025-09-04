@@ -1,0 +1,66 @@
+/* Container for copy-paste buttons in toolbar */
+.block-copy-paste-container {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.block-copy-paste-toolbar-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 2px;
+}
+
+.block-copy-paste-toolbar-buttons .toolbar-divider {
+  width: 80%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 8px 0;
+}
+
+.block-copy-paste-toolbar-buttons .toolbar-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  border-radius: 50%;
+  color: white;
+  width: 60px;
+  height: 60px;
+}
+
+.block-copy-paste-toolbar-buttons .toolbar-button:hover:not(.disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.block-copy-paste-toolbar-buttons .toolbar-button:active:not(.disabled) {
+  transform: scale(0.95);
+}
+
+.block-copy-paste-toolbar-buttons .toolbar-button.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.block-copy-paste-toolbar-buttons .toolbar-button svg {
+  fill: white;
+  width: 30px;
+  height: 30px;
+}
+
+.block-copy-paste-toolbar-buttons .toolbar-info {
+  color: white;
+  font-size: 10px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  white-space: nowrap;
+  margin-top: 4px;
+  text-align: center;
+}
