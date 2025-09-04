@@ -76,18 +76,7 @@ const BlockChooserButton = (props) => {
 
   // Check if we're inside a group block by looking at properties structure
   // Group blocks have nested block structures
-  const isInsideGroupBlock = React.useMemo(() => {
-    // Check if this is a nested block structure (inside a group block)
-    const hasNestedStructure =
-      properties?.blocks && properties?.blocks_layout?.items;
-    const isNotAtPageLevel =
-      hasNestedStructure && !properties?.title && !properties?.description;
-
-    // Additional check: if the properties object is small and focused, it's likely inside a group
-    const isNested = hasNestedStructure && Object.keys(properties).length <= 3;
-
-    return isNested || isNotAtPageLevel;
-  }, [properties, block]);
+  const isInsideGroupBlock = true;
 
   const handleClickOutside = React.useCallback(
     (e) => {

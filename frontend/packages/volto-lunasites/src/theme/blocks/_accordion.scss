@@ -120,3 +120,24 @@
     background-color: inherit;
   }
 }
+
+.block-editor-accordion fieldset legend {
+  position: absolute;
+  z-index: 3;
+  top: -1.3em;
+  left: 0;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 0 1rem;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: #FFFFFF;
+  color: var(--lunasites-cms-primary-color, rgba(120, 192, 215, 0.75));
+  cursor: pointer;
+  text-align: center;
+}
+
+.block-editor-accordion .block.accordion.selected::before, 
+.block-editor-accordion .block.accordion:hover::before {
+  border-style: solid;
+}

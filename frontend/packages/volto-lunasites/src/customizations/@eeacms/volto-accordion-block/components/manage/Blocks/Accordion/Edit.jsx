@@ -27,6 +27,8 @@ import {
   getPanels,
 } from '@eeacms/volto-accordion-block/components/manage/Blocks/Accordion/util';
 import config from '@plone/volto/registry';
+import BlockChooserButton from '@plone/volto/components/manage/BlockChooser/BlockChooserButton';
+import addSVG from '@plone/volto/icons/circle-plus.svg';
 
 const messages = defineMessages({
   SectionHelp: {

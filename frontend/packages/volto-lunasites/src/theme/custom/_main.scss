@@ -1407,3 +1407,21 @@ footer .blocks-form {
     padding-right: $horizontal-space-small-screens;
   }
 }
+
+.block-editor-accordion {
+  .block:last-child {
+    margin-bottom: 1em;
+  }
+
+  [data-rbd-draggable-context-id] {
+    margin-bottom: 1rem;
+  }
+
+  [class^='block-editor-'] {
+    margin-bottom: 2rem;
+  }
+
+  .block-add-button {
+    display: block !important;
+  }
+}
