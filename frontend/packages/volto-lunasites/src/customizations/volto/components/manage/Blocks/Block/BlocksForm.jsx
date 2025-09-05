@@ -30,7 +30,6 @@ import config from '@plone/volto/registry';
 import { createPortal } from 'react-dom';
 
 import Order from '@plone/volto/components/manage/Blocks/Block/Order/Order';
-import FloatingBlockToolbar from 'volto-lunasites/components/BlockCopyPaste/FloatingBlockToolbar';
 import useBlockCopyPaste from 'volto-lunasites/hooks/useBlockCopyPaste';
 
 const BlocksForm = (props) => {
@@ -304,14 +303,6 @@ const BlocksForm = (props) => {
           </div>,
           document.getElementById('sidebar-order'),
         )}
-      {/* Render floating toolbar for copy/paste operations */}
-      {isMainForm && editable && (
-        <FloatingBlockToolbar
-          properties={properties}
-          onChangeFormData={onChangeFormData}
-          onSelectBlock={onSelectBlock}
-        />
-      )}
       <div
         className="blocks-form"
         role="presentation"
