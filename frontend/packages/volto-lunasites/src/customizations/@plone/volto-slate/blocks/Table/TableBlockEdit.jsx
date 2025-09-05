@@ -418,6 +418,12 @@ class Edit extends Component {
         })),
       },
     });
+    this.setState({
+      selected: {
+        row: this.state.selected.row,
+        cell: this.state.selected.cell + 1,
+      },
+    });
   }
 
   /**
